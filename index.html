@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- SEO Principal -->
+    <title>Vilela Engenharia | Projetos e Obras em São Paulo</title>
+    <meta name="description" content="Engenharia civil especializada em projetos estruturais, gerenciamento de obras, laudos técnicos e reformas. Soluções seguras e econômicas.">
+    <meta name="keywords" content="engenharia civil, projetos, obras, laudos, reforma, engenheiro são paulo, vilela engenharia">
+    <meta name="author" content="Vilela Engenharia">
+
+    <!-- Open Graph / Facebook / WhatsApp (Importante para o link do cartão digital) -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://vilela.eng.br/">
+    <meta property="og:title" content="Vilela Engenharia | Soluções em Engenharia Civil">
+    <meta property="og:description" content="Transformando ideias em estruturas sólidas. Projetos, Obras e Laudos.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#0f172a', // Slate 900
+              secondary: '#eab308', // Yellow 500
+              accent: '#0284c7', // Sky 600
+            },
+            animation: {
+              'bounce-slow': 'bounce 3s infinite',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      /* Ajuste fino para scroll */
+      html {
+        scroll-behavior: smooth;
+      }
+      /* Remove o highlight azul no mobile ao tocar */
+      * {
+        -webkit-tap-highlight-color: transparent;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+    "react/": "https://aistudiocdn.com/react@^19.2.1/",
+    "react": "https://aistudiocdn.com/react@^19.2.1",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
