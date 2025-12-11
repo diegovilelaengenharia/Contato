@@ -4,8 +4,8 @@
     "start_url": "./",
     "scope": "./",
     "display": "standalone",
-    "background_color": "#0f6f5c",
-    "theme_color": "#0f6f5c",
+    "background_color": "#197e63",
+    "theme_color": "#197e63",
     "description": "Contatos oficiais e atalhos da Vilela Engenharia.",
     "icons": [
         {
