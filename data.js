@@ -1,29 +1,38 @@
 export const profile = {
     name: "Diego Tarcisio Nunes Vilela",
-    role: "Engenheiro Civil &middot; CREA 235.474/D",
+    role: "CREA 235.474/D",
     badge: "Engenheiro Civil",
     title: "Vilela Engenharia",
     logo: "assets/logo.jpg",
     clientAreaLink: "https://vilela.eng.br/portal",
-    bio: "Especialista em transformar necessidades em soluções técnicas seguras e eficientes. Atuação focada em regularização de imóveis, projetos residenciais personalizados e consultoria técnica especializada."
+    bio: ""
 };
 
 export const heroActions = {
     main: {
         label: "(35) 98452-9577",
         href: "https://wa.me/5535984529577?text=Ola%20Vilela%20Engenharia",
-        icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M8.53 7.33C8.37 7.33 8.1 7.39 7.87 7.64C7.65 7.9 7.03 8.48 7.03 9.65C7.03 10.82 7.88 11.96 8 12.12C8.12 12.27 9.63 14.61 11.96 15.6C13.58 16.29 14.22 16.22 14.92 16.14C15.91 16.03 17.14 15.42 17.55 14.69C17.81 14.23 17.81 13.84 17.75 13.73C17.69 13.62 17.53 13.56 17.14 13.37C16.92 13.26 15.42 12.53 15.22 12.44C15.03 12.35 14.82 12.26 14.65 12.56C14.45 12.86 13.89 13.51 13.72 13.71C13.55 13.91 13.39 13.93 13 13.74C12.61 13.54 11.36 13.13 9.88 11.81C8.74 10.79 7.97 9.54 7.78 9.2C7.58 8.87 7.75 8.69 7.95 8.49C8.12 8.32 8.33 8.06 8.53 7.83C8.73 7.6 8.8 7.42 8.93 7.16C9.06 6.9 9 6.68 8.91 6.5C8.82 6.33 8.1 4.54 7.8 3.84C7.5 3.16 7.2 3.25 7 3.25H8.53Z" /></svg>`,
+        // Whatsapp modern icon
+        icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>`,
         className: "hero-btn-primary"
     },
     secondary: {
         label: "Instagram",
         href: "https://www.instagram.com/diegovilela.eng/",
-        icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.8 2H16.2C19.4 2 22 4.6 22 7.8V16.2C22 19.4 19.4 22 16.2 22H7.8C4.6 22 2 19.4 2 16.2V7.8C2 4.6 4.6 2 7.8 2ZM7.6 4C5.6 4 4 5.6 4 7.6V16.4C4 18.4 5.6 20 7.6 20H16.4C18.4 20 20 18.4 20 16.4V7.6C20 5.6 18.4 4 16.4 4H7.6ZM12 7C14.8 7 17 9.2 17 12C17 14.8 14.8 17 12 17C9.2 17 7 14.8 7 12C7 9.2 9.2 7 12 7ZM12 9C10.3 9 9 10.3 9 12C9 13.7 10.3 15 12 15C13.7 15 15 13.7 15 12C15 10.3 13.7 9 12 9ZM16.5 6.5C16.5 5.9 16.9 5.5 17.5 5.5C18.1 5.5 18.5 5.9 18.5 6.5C18.5 7.1 18.1 7.5 17.5 7.5C16.9 7.5 16.5 7.1 16.5 6.5Z"/></svg>`,
+        // Instagram modern icon
+        icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>`,
         className: "hero-btn-secondary"
     },
     share: {
         label: "Compartilhar",
-        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>`,
+        // Share outline icon
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>`,
+        className: "hero-btn-icon"
+    },
+    qr: {
+        label: "QR Code",
+        // QR Code outline icon
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><path d="M3 14h1v1h-1z"></path><path d="M5 14h1v1h-1z"></path><path d="M3 16h1v1h-1z"></path><path d="M5 16h1v1h-1z"></path><path d="M3 18h1v1h-1z"></path><path d="M5 18h1v1h-1z"></path><path d="M7 14h1v1h-1z"></path><path d="M7 16h1v1h-1z"></path><path d="M7 18h1v1h-1z"></path><path d="M9 14h1v1h-1z"></path><path d="M9 16h1v1h-1z"></path><path d="M9 18h1v1h-1z"></path></svg>`,
         className: "hero-btn-icon"
     }
 };
@@ -34,24 +43,27 @@ export const links = [
         title: "Regularização de Imóvel",
         subtitle: "Regularize sua obra",
         href: "https://wa.me/5535984529577?text=Ola,%20gostaria%20de%20saber%20mais%20sobre%20Regularizacao%20de%20Imovel",
-        icon: `<svg viewBox="0 0 24 24" role="presentation"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 2l5 5h-5V4zM6 20V4h5v7h7v9H6z"></path></svg>`,
-        className: "link-card--service"
+        // Document Check Icon
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M9 15l2 2 4-4"></path></svg>`,
+        className: "link-card--regularization"
     },
     {
         id: "project-residential",
         title: "Projeto Residencial",
         subtitle: "Projetos personalizados",
         href: "https://wa.me/5535984529577?text=Ola,%20gostaria%20de%20saber%20mais%20sobre%20Projeto%20Residencial",
-        icon: `<svg viewBox="0 0 24 24" role="presentation"><path d="M12 2L2 12h3v8h6v-6h2v6h6v-8h3L12 2zm0 2.84L19.5 12h-1.5v6h-2v-6h-8v6h-2v-6H4.5L12 4.84z"></path></svg>`,
-        className: "link-card--service"
+        // House/Home Icon
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>`,
+        className: "link-card--project"
     },
     {
         id: "consulting",
         title: "Consultoria",
         subtitle: "Tire suas dúvidas técnicas",
         href: "https://wa.me/5535984529577?text=Ola,%20gostaria%20de%20saber%20mais%20sobre%20Consultoria",
-        icon: `<svg viewBox="0 0 24 24" role="presentation"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm0 14H6l-2 2V4h16v12z"></path></svg>`,
-        className: "link-card--service"
+        // Chat/Bubble Icon
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>`,
+        className: "link-card--consulting"
     }
 ];
 
