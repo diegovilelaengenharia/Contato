@@ -55,19 +55,6 @@ export const links = [
         type: "link"
     },
     {
-        id: "budget",
-        title: "Orçamento online",
-        subtitle: "Envie seu briefing",
-        href: "#",
-        icon: `<svg viewBox="0 0 24 24" role="presentation"><path d="M20 4H4a2 2 0 0 0-2 2v3h2V6h16v12H4v-3H2v3a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm-9 7H3v2h8l-3 3 1.41 1.41L14.83 12 9.41 6.59 8 8z"></path></svg>`,
-        className: "link-card--budget",
-        type: "button",
-        attrs: {
-            "data-open-budget": "",
-            "aria-controls": "budget-modal"
-        }
-    },
-    {
         id: "instagram",
         title: "Instagram",
         subtitle: "@diegovilela.eng",

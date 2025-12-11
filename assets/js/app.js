@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. Preencher Header
     renderHeader();
 
-    // 2. Renderizar Hero Actions (WhatsApp, VCard)
+    // 2. Renderizar Hero Actions (WhatsApp, VCard, Share)
     renderHeroActions();
 
     // 3. Renderizar Links
@@ -13,8 +13,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. Inicializar Animações de Entrada
     initializeAnimations();
 
-    // 5. Anexar eventos do Modal
-    attachModalEvents();
+    // 5. Inicializar Status de Negócio (Aberto/Fechado)
+    initBusinessStatus();
+
+    // 6. Inicializar Dark Mode
+    initDarkMode();
 });
 
 function renderHeader() {
@@ -37,14 +40,23 @@ function renderHeroActions() {
     const container = document.querySelector('.hero-actions');
     if (!container) return;
 
-    container.innerHTML = heroActions.map(action => {
-        const isLink = action.type === 'link';
-        // Se quisermos suportar buttons também na hero, podemos adaptar.
-        // Por enquanto, assumimos links baseados no data.js
+    // Adicionar botão de compartilhar manualmente ou via data.js se quisermos
+    // Vamos injetar o botão de compartilhar como o último item
+    const shareAction = {
+        label: "Compartilhar",
+        icon: null,
+        className: "hero-share",
+        type: "action",
+        id: "share"
+    };
 
+    // Combinar actions existentes com o share (opcional, ou podemos adicionar no HTML)
+    // Mas vamos seguir a lógica de renderizar o que está no data.js + inject
+    // Para simplificar e atender o pedido, vamos adicionar o botão Share aqui.
+
+    let html = heroActions.map(action => {
         const downloadAttr = action.download ? 'download' : '';
         const targetAttr = action.target !== false ? 'target="_blank" rel="noopener"' : '';
-
         return `
         <a class="${action.className}" href="${action.href}" 
            ${downloadAttr} 
@@ -53,6 +65,42 @@ function renderHeroActions() {
         </a>
         `;
     }).join('');
+
+    // Append Share Button
+    html += `
+        <button class="hero-share" type="button" data-share-button aria-label="Compartilhar cartão">
+            Compartilhar
+        </button>
+    `;
+
+    container.innerHTML = html;
+
+    // Attach Listener
+    const shareBtn = container.querySelector('[data-share-button]');
+    if (shareBtn) {
+        shareBtn.addEventListener('click', async () => {
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: profile.title,
+                        text: `${profile.title} - ${profile.role}`,
+                        url: window.location.href
+                    });
+                } catch (err) {
+                    console.error('Share failed:', err);
+                }
+            } else {
+                try {
+                    await navigator.clipboard.writeText(window.location.href);
+                    const originalText = shareBtn.textContent;
+                    shareBtn.textContent = "Copiado!";
+                    setTimeout(() => shareBtn.textContent = originalText, 2000);
+                } catch (err) {
+                    alert('Copie o link: ' + window.location.href);
+                }
+            }
+        });
+    }
 }
 
 function renderLinks() {
@@ -63,38 +111,19 @@ function renderLinks() {
 
     links.forEach((link, index) => {
         const li = document.createElement('li');
-        // Define variavel CSS para o delay da animação
         const delay = (index + 1) * 0.1;
         li.style.setProperty('--animation-delay', `${delay}s`);
 
-        let cardElement;
+        const cardElement = document.createElement('a');
+        cardElement.className = `link-card ${link.className || ''}`;
+        cardElement.href = link.href;
+        cardElement.target = '_blank';
+        cardElement.rel = 'noopener';
+        cardElement.setAttribute('aria-label', link.title);
 
-        // Verifica se é botão de ação (modal) ou link
-        if (link.type === 'button') {
-            cardElement = document.createElement('button');
-            cardElement.type = 'button';
-            cardElement.className = `link-card link-card--action ${link.className || ''}`;
-
-            // Atributos específicos para modal se definidos
-            if (link.attrs) {
-                Object.entries(link.attrs).forEach(([key, value]) => {
-                    cardElement.setAttribute(key, value);
-                });
-            }
-
-            cardElement.setAttribute('aria-label', link.title);
-        } else {
-            cardElement = document.createElement('a');
-            cardElement.className = `link-card ${link.className || ''}`;
-            cardElement.href = link.href;
-            cardElement.target = '_blank';
-            cardElement.rel = 'noopener';
-            cardElement.setAttribute('aria-label', link.title);
-
-            if (link.href.startsWith('tel:') || link.href.startsWith('mailto:')) {
-                cardElement.removeAttribute('target');
-                cardElement.removeAttribute('rel');
-            }
+        if (link.href.startsWith('tel:') || link.href.startsWith('mailto:')) {
+            cardElement.removeAttribute('target');
+            cardElement.removeAttribute('rel');
         }
 
         cardElement.innerHTML = `
@@ -118,177 +147,52 @@ function initializeAnimations() {
     });
 }
 
-function attachModalEvents() {
-    const budgetModal = document.getElementById('budget-modal');
-    if (!budgetModal) return;
+function initBusinessStatus() {
+    // Lógica: Seg-Sex, 08:00 - 18:00
+    const now = new Date();
+    const day = now.getDay(); // 0 = Domingo, 6 = Sábado
+    const hour = now.getHours();
 
-    // Seleciona botões APÓS eles serem renderizados
-    const openBudgetButtons = document.querySelectorAll('[data-open-budget]');
-    const budgetForm = document.getElementById('budget-form');
-    const statusMessage = document.querySelector('[data-budget-status]');
+    // Aberto se for dia de semana (1-5) e entre 8h e 18h (não inclui 18h)
+    const isOpen = (day >= 1 && day <= 5) && (hour >= 8 && hour < 18);
 
-    // Trap Focus helpers
-    const focusableSelectors = 'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
-    let lastFocusedElement = null;
-    let focusableElements = [];
-    let closeTimeoutId = null;
+    const statusText = isOpen ? "Aberto agora" : "Fechado agora";
+    const statusClass = isOpen ? "status-open" : "status-closed";
 
-    const resetStatus = () => {
-        if (!statusMessage) return;
-        statusMessage.textContent = '';
-        statusMessage.classList.remove('is-visible');
-    };
-
-    const setStatus = (message) => {
-        if (!statusMessage) return;
-        statusMessage.textContent = message;
-        statusMessage.classList.toggle('is-visible', Boolean(message));
-    };
-
-    const updateFocusableElements = () => {
-        if (!budgetModal) return;
-        focusableElements = Array.from(
-            budgetModal.querySelectorAll(focusableSelectors)
-        ).filter((element) => !element.hasAttribute('disabled') && element.getAttribute('tabindex') !== '-1');
-    };
-
-    const trapFocus = (event) => {
-        if (event.key !== 'Tab' || focusableElements.length === 0) return;
-        const firstElement = focusableElements[0];
-        const lastElement = focusableElements[focusableElements.length - 1];
-
-        if (event.shiftKey && document.activeElement === firstElement) {
-            event.preventDefault();
-            lastElement.focus();
-        } else if (!event.shiftKey && document.activeElement === lastElement) {
-            event.preventDefault();
-            firstElement.focus();
-        }
-    };
-
-    const openBudgetModal = () => {
-        if (!budgetModal) return;
-        if (closeTimeoutId) {
-            window.clearTimeout(closeTimeoutId);
-            closeTimeoutId = null;
-        }
-        resetStatus();
-        lastFocusedElement = document.activeElement;
-        budgetModal.removeAttribute('hidden');
-        budgetModal.classList.add('is-open');
-        document.body.classList.add('modal-open');
-        updateFocusableElements();
-
-        const firstField = budgetForm ? budgetForm.querySelector('input, select, textarea') : null;
-        const firstInteractive = firstField || focusableElements.find(el => el.tagName !== 'DIV');
-
-        window.requestAnimationFrame(() => {
-            if (firstInteractive) firstInteractive.focus();
-            else budgetModal.focus();
-        });
-        budgetModal.addEventListener('keydown', trapFocus);
-    };
-
-    const closeBudgetModal = () => {
-        if (!budgetModal || !budgetModal.classList.contains('is-open')) return;
-        if (closeTimeoutId) {
-            window.clearTimeout(closeTimeoutId);
-            closeTimeoutId = null;
-        }
-        budgetModal.classList.remove('is-open');
-        budgetModal.setAttribute('hidden', '');
-        document.body.classList.remove('modal-open');
-        budgetModal.removeEventListener('keydown', trapFocus);
-        resetStatus();
-        if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
-            lastFocusedElement.focus();
-        }
-        lastFocusedElement = null;
-    };
-
-    // Listeners para os botões
-    openBudgetButtons.forEach((button) => {
-        button.addEventListener('click', openBudgetModal);
-    });
-
-    // Singleton check para listeners do modal
-    if (!budgetModal.dataset.listenersAttached) {
-        budgetModal.addEventListener('click', (event) => {
-            if (event.target.matches('[data-close-modal]')) {
-                closeBudgetModal();
-            }
-        });
-
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape' && budgetModal.classList.contains('is-open')) {
-                closeBudgetModal();
-            }
-        });
-
-        // Setup Form Logic
-        if (budgetForm) {
-            const validators = {
-                telefone(value) {
-                    const digits = value.replace(/\D/g, '');
-                    if (digits.length < 10 || digits.length > 11) return { valid: false, message: 'Informe um número com DDD.' };
-                    return { valid: true };
-                },
-                cidade(value) {
-                    // Validação simples para Cidade / UF
-                    if (!/^.+\s\/\s[A-Za-z]{2}$/.test(value)) return { valid: false, message: 'Use o formato Cidade / UF (ex: Pouso Alegre / MG).' };
-                    return { valid: true };
-                }
-            };
-
-            const validateField = (field) => {
-                if (!field) return true;
-                const value = field.value.trim();
-                field.setCustomValidity('');
-                if (field.required && !value) {
-                    field.setCustomValidity('Preencha este campo.');
-                    return false;
-                }
-                const validator = validators[field.name];
-                if (validator) {
-                    const res = validator(value);
-                    if (!res.valid) {
-                        field.setCustomValidity(res.message);
-                        return false;
-                    }
-                }
-                return field.checkValidity();
-            };
-
-            const handleFieldInteraction = (event) => validateField(event.target);
-
-            budgetForm.querySelectorAll('input, select, textarea').forEach(f => {
-                f.addEventListener('input', handleFieldInteraction);
-                f.addEventListener('blur', handleFieldInteraction);
-            });
-
-            budgetForm.addEventListener('submit', (event) => {
-                event.preventDefault();
-                let isValid = true;
-                budgetForm.querySelectorAll('input, select, textarea').forEach(f => {
-                    if (!validateField(f)) {
-                        isValid = false;
-                        f.reportValidity();
-                    }
-                });
-                if (!isValid) return;
-
-                const fd = new FormData(budgetForm);
-                const msg = `Olá, solicito orçamento.\n\nNome: ${fd.get('nome')}\nServiço: ${fd.get('servico')}\nCidade: ${fd.get('cidade')}\nWhatsApp: ${fd.get('telefone')}\nDetalhes: ${fd.get('detalhes')}`;
-
-                const whatsappUrl = `https://wa.me/5535984529577?text=${encodeURIComponent(msg)}`;
-                window.open(whatsappUrl, '_blank', 'noopener');
-
-                budgetForm.reset();
-                setStatus('Enviado! Verifique seu WhatsApp.');
-                closeTimeoutId = setTimeout(closeBudgetModal, 2200);
-            });
-        }
-
-        budgetModal.dataset.listenersAttached = "true";
+    // Inserir indicador na UI (após o badge)
+    const badgeEl = document.querySelector('.badge');
+    if (badgeEl && badgeEl.parentNode) {
+        const statusBadge = document.createElement('span');
+        statusBadge.className = `status-badge ${statusClass}`;
+        statusBadge.textContent = statusText;
+        // Inserir logo após o badge existente
+        badgeEl.parentNode.insertBefore(statusBadge, badgeEl.nextSibling);
     }
+}
+
+function initDarkMode() {
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = 'theme-toggle';
+    toggleBtn.setAttribute('aria-label', 'Alternar tema escuro');
+    toggleBtn.type = 'button';
+    toggleBtn.innerHTML = `
+        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    `;
+
+    document.body.appendChild(toggleBtn);
+
+    // Carregar preferência salva ou do sistema
+    const savedTheme = localStorage.getItem('theme');
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
+        document.body.classList.add('dark-mode');
+    }
+
+    toggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
 }
