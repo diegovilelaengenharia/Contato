@@ -378,9 +378,30 @@ body.dark-mode .hero-vcard {
 
 .content {
     margin-top: 44px;
-    display: grid;
-    gap: 56px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
 }
+
+.links-group {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.links-group-title {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-primary-strong);
+    padding-left: 8px;
+    border-left: 4px solid var(--color-accent);
+}
+
+body.dark-mode .links-group-title {
+    color: var(--color-text);
+}
+
 
 .section-heading {
     margin: 0 0 22px;
@@ -445,6 +466,12 @@ body.dark-mode .hero-vcard {
     --icon-bg: linear-gradient(135deg, #f58529, #dd2a7b 45%, #8134af 70%, #515bd4);
     --icon-glow: rgba(221, 42, 123, 0.5);
 }
+
+.link-card--service {
+    --icon-bg: linear-gradient(135deg, #2980b9, #3498db);
+    --icon-glow: rgba(52, 152, 219, 0.5);
+}
+
 
 .link-card::after {
     content: '';

@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Renderizar Hero Actions (WhatsApp, VCard, Share)
     renderHeroActions();
 
-    // 3. Renderizar Links
+    // 3. Renderizar Links (Agrupados)
     renderLinks();
 
     // 4. Inicializar Animações de Entrada
@@ -40,23 +40,19 @@ function renderHeroActions() {
     const container = document.querySelector('.hero-actions');
     if (!container) return;
 
-    // Adicionar botão de compartilhar manualmente ou via data.js se quisermos
-    // Vamos injetar o botão de compartilhar como o último item
-    const shareAction = {
-        label: "Compartilhar",
-        icon: null,
-        className: "hero-share",
-        type: "action",
-        id: "share"
-    };
+    container.innerHTML = heroActions.map(action => {
+        // Botão de compartilhar
+        if (action.type === 'action' && action.id === 'share') {
+            return `
+            <button class="${action.className}" type="button" data-share-button aria-label="${action.label}">
+               ${action.label}
+            </button>
+            `;
+        }
 
-    // Combinar actions existentes com o share (opcional, ou podemos adicionar no HTML)
-    // Mas vamos seguir a lógica de renderizar o que está no data.js + inject
-    // Para simplificar e atender o pedido, vamos adicionar o botão Share aqui.
-
-    let html = heroActions.map(action => {
         const downloadAttr = action.download ? 'download' : '';
         const targetAttr = action.target !== false ? 'target="_blank" rel="noopener"' : '';
+
         return `
         <a class="${action.className}" href="${action.href}" 
            ${downloadAttr} 
@@ -66,16 +62,7 @@ function renderHeroActions() {
         `;
     }).join('');
 
-    // Append Share Button
-    html += `
-        <button class="hero-share" type="button" data-share-button aria-label="Compartilhar cartão">
-            Compartilhar
-        </button>
-    `;
-
-    container.innerHTML = html;
-
-    // Attach Listener
+    // Attach Listeners
     const shareBtn = container.querySelector('[data-share-button]');
     if (shareBtn) {
         shareBtn.addEventListener('click', async () => {
@@ -83,7 +70,7 @@ function renderHeroActions() {
                 try {
                     await navigator.share({
                         title: profile.title,
-                        text: `${profile.title} - ${profile.role}`,
+                        text: `${profile.title} - ${profile.role} (Via WhatsApp)`,
                         url: window.location.href
                     });
                 } catch (err) {
@@ -93,7 +80,7 @@ function renderHeroActions() {
                 try {
                     await navigator.clipboard.writeText(window.location.href);
                     const originalText = shareBtn.textContent;
-                    shareBtn.textContent = "Copiado!";
+                    shareBtn.textContent = "Link copiado!";
                     setTimeout(() => shareBtn.textContent = originalText, 2000);
                 } catch (err) {
                     alert('Copie o link: ' + window.location.href);
@@ -104,40 +91,70 @@ function renderHeroActions() {
 }
 
 function renderLinks() {
-    const listContainer = document.querySelector('.links-grid');
-    if (!listContainer) return;
+    const container = document.querySelector('.content');
+    if (!container) return;
 
-    listContainer.innerHTML = '';
+    // Limpar container mas manter o titulo se houver (na arquitetura atual o 'links-grid' era filho direto de content? Não, era dentro de content.)
+    // Vamos recriar a estrutura dentro de .content para suportar grupos.
+    container.innerHTML = '';
 
-    links.forEach((link, index) => {
-        const li = document.createElement('li');
-        const delay = (index + 1) * 0.1;
-        li.style.setProperty('--animation-delay', `${delay}s`);
+    // O objeto links agora tem chaves: contact, services, social
+    // Vamos iterar sobre as chaves na ordem desejada
+    const groups = ['contact', 'social', 'services']; // Ordem requisitada: Contato, Redes, Serviços? O user pediu 3 grupos (contato, redes sociais, serviços)
+    // Mas no prompt: "Gostaria de ter 3 grupos (contato, redes sociais, serviços)"
+    // Vamos seguir essa ordem.
 
-        const cardElement = document.createElement('a');
-        cardElement.className = `link-card ${link.className || ''}`;
-        cardElement.href = link.href;
-        cardElement.target = '_blank';
-        cardElement.rel = 'noopener';
-        cardElement.setAttribute('aria-label', link.title);
+    let globalIndex = 0; // Para stagger animation continua
 
-        if (link.href.startsWith('tel:') || link.href.startsWith('mailto:')) {
-            cardElement.removeAttribute('target');
-            cardElement.removeAttribute('rel');
-        }
+    groups.forEach(groupKey => {
+        const group = links[groupKey];
+        if (!group) return;
 
-        cardElement.innerHTML = `
-            <span class="icon" aria-hidden="true">
-                ${link.icon}
-            </span>
-            <span class="text">
-                <span class="title">${link.title}</span>
-                <span class="subtitle">${link.subtitle}</span>
-            </span>
-        `;
+        const groupSection = document.createElement('section');
+        groupSection.className = 'links-group';
 
-        li.appendChild(cardElement);
-        listContainer.appendChild(li);
+        const groupTitle = document.createElement('h2');
+        groupTitle.className = 'links-group-title';
+        groupTitle.textContent = group.title;
+        groupSection.appendChild(groupTitle);
+
+        const list = document.createElement('ul');
+        list.className = 'links-grid';
+
+        group.items.forEach((link) => {
+            const li = document.createElement('li');
+            const delay = (globalIndex + 1) * 0.1;
+            li.style.setProperty('--animation-delay', `${delay}s`);
+            globalIndex++;
+
+            const cardElement = document.createElement('a');
+            cardElement.className = `link-card ${link.className || ''}`;
+            cardElement.href = link.href;
+            cardElement.target = '_blank';
+            cardElement.rel = 'noopener';
+            cardElement.setAttribute('aria-label', link.title);
+
+            if (link.href.startsWith('tel:') || link.href.startsWith('mailto:')) {
+                cardElement.removeAttribute('target');
+                cardElement.removeAttribute('rel');
+            }
+
+            cardElement.innerHTML = `
+                <span class="icon" aria-hidden="true">
+                    ${link.icon}
+                </span>
+                <span class="text">
+                    <span class="title">${link.title}</span>
+                    <span class="subtitle">${link.subtitle}</span>
+                </span>
+            `;
+
+            li.appendChild(cardElement);
+            list.appendChild(li);
+        });
+
+        groupSection.appendChild(list);
+        container.appendChild(groupSection);
     });
 }
 
@@ -148,29 +165,31 @@ function initializeAnimations() {
 }
 
 function initBusinessStatus() {
-    // Lógica: Seg-Sex, 08:00 - 18:00
     const now = new Date();
-    const day = now.getDay(); // 0 = Domingo, 6 = Sábado
+    const day = now.getDay();
     const hour = now.getHours();
-
-    // Aberto se for dia de semana (1-5) e entre 8h e 18h (não inclui 18h)
     const isOpen = (day >= 1 && day <= 5) && (hour >= 8 && hour < 18);
 
     const statusText = isOpen ? "Aberto agora" : "Fechado agora";
     const statusClass = isOpen ? "status-open" : "status-closed";
 
-    // Inserir indicador na UI (após o badge)
     const badgeEl = document.querySelector('.badge');
     if (badgeEl && badgeEl.parentNode) {
+        // Evitar duplicar se já existir (em hot reload ou re-render)
+        const existing = badgeEl.parentNode.querySelector('.status-badge');
+        if (existing) existing.remove();
+
         const statusBadge = document.createElement('span');
         statusBadge.className = `status-badge ${statusClass}`;
         statusBadge.textContent = statusText;
-        // Inserir logo após o badge existente
         badgeEl.parentNode.insertBefore(statusBadge, badgeEl.nextSibling);
     }
 }
 
 function initDarkMode() {
+    // Evitar criar botão duplicado
+    if (document.querySelector('.theme-toggle')) return;
+
     const toggleBtn = document.createElement('button');
     toggleBtn.className = 'theme-toggle';
     toggleBtn.setAttribute('aria-label', 'Alternar tema escuro');
@@ -182,7 +201,6 @@ function initDarkMode() {
 
     document.body.appendChild(toggleBtn);
 
-    // Carregar preferência salva ou do sistema
     const savedTheme = localStorage.getItem('theme');
     const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
