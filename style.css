@@ -135,6 +135,18 @@ body.dark-mode .theme-toggle .sun-icon {
     }
 }
 
+@keyframes floatIcon {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
 body.animations-ready .hero {
     animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
@@ -486,6 +498,16 @@ body.dark-mode .link-card {
     width: 24px;
     height: 24px;
     stroke-width: 2px;
+    /* Continuous subtle float animation */
+    animation: floatIcon 3s ease-in-out infinite;
+}
+
+/* Enhanced hover effect */
+.link-card:hover .icon svg {
+    animation: none;
+    /* Reset float to allow transform */
+    transform: scale(1.2) rotate(5deg);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .text {
