@@ -26,8 +26,8 @@ Atualizar a aplicação para refletir a nova paleta de cores oficial da Vilela E
 - [x] Verificar cores dos ícones SVG inline se necessário (atualmente usam `currentColor` ou variáveis).
 
 ### 3. Validação
-- [ ] Verificar visualização das cores no modo claro e escuro.
-- [ ] Garantir que o contraste seja acessível.
+- [x] Verificar visualização das cores no modo claro e escuro.
+- [x] Garantir que o contraste seja acessível.
 
 ### 4. Publicação
-- [ ] Commit e Push para o GitHub.
+- [x] Commit e Push para o GitHub.

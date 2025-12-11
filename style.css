@@ -48,7 +48,11 @@ body {
     min-height: 100vh;
     font-family: var(--font-base);
     line-height: 1.6;
-    background: radial-gradient(circle at top, rgba(255, 186, 53, 0.14), transparent 55%), var(--color-bg);
+    background-color: var(--color-bg);
+    /* Pattern sutil e elegante */
+    background-image: radial-gradient(var(--color-text-subtle) 1px, transparent 1px), radial-gradient(circle at top center, rgba(255, 186, 53, 0.08) 0%, transparent 60%);
+    background-size: 32px 32px, 100% 100%;
+    background-position: 0 0, 0 0;
     color: var(--color-text);
     display: flex;
     align-items: center;
@@ -57,6 +61,33 @@ body {
     transition: background 0.3s ease, color 0.3s ease;
     -webkit-font-smoothing: antialiased;
 }
+
+/* ... (mantendo o resto inalterado até as animations) */
+
+/* Animações refinadas */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+body.animations-ready .hero {
+    animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+body.animations-ready .links-grid li {
+    animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    animation-delay: var(--animation-delay, 0.1s);
+}
+
+/* Remover os delays hardcoded antigos, usando a var css agora */
+
 
 @media (prefers-reduced-motion: reduce) {
     body {
@@ -695,29 +726,7 @@ body.animations-ready .links-grid li {
     animation: fadeInUp 0.6s ease both;
 }
 
-body.animations-ready .links-grid li:nth-child(1) {
-    animation-delay: 0.12s;
-}
-
-body.animations-ready .links-grid li:nth-child(2) {
-    animation-delay: 0.18s;
-}
-
-body.animations-ready .links-grid li:nth-child(3) {
-    animation-delay: 0.24s;
-}
-
-body.animations-ready .links-grid li:nth-child(4) {
-    animation-delay: 0.3s;
-}
-
-body.animations-ready .links-grid li:nth-child(5) {
-    animation-delay: 0.36s;
-}
-
-body.animations-ready .links-grid li:nth-child(6) {
-    animation-delay: 0.42s;
-}
+/* Removido delays manuais (li:nth-child) em favor de var(--animation-delay) injetada via JS */
 
 @media (min-width: 560px) {
     body {
