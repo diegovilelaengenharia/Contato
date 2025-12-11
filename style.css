@@ -234,6 +234,9 @@ body.animations-ready .links-grid li {
     flex-direction: column;
     align-items: center;
     gap: 8px;
+    width: 100%;
+    max-width: 500px;
+    /* Readability limit for bio */
 }
 
 /* Status Badge (New) */
@@ -293,100 +296,103 @@ body.dark-mode .status-closed {
     color: var(--color-text-subtle);
 }
 
+.hero-bio {
+    margin: 12px 0 0;
+    font-size: 0.95rem;
+    color: var(--color-text);
+    line-height: 1.5;
+}
+
+body.dark-mode .hero-bio {
+    color: var(--color-text-subtle);
+}
+
 .hero-actions {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
     gap: 14px;
+    margin-top: 8px;
 }
 
-.hero-whatsapp,
-.hero-vcard,
-.hero-share,
-.hero-qr {
+.hero-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 12px 22px;
+    padding: 12px 24px;
     border-radius: 999px;
     font-weight: 600;
     letter-spacing: 0.02em;
     text-decoration: none;
-    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, color 0.25s ease;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
     border: none;
     font-family: inherit;
     cursor: pointer;
     font-size: 1rem;
 }
 
-.hero-whatsapp {
+.hero-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+.hero-btn-primary {
     background: linear-gradient(135deg, var(--color-primary-strong), #0b463a);
     color: #ffffff;
     box-shadow: 0 22px 48px -30px rgba(13, 81, 67, 0.8);
+    /* Phone button is prominent */
+    min-width: 200px;
 }
 
-.hero-whatsapp:hover,
-.hero-whatsapp:focus-visible {
+.hero-btn-primary:hover,
+.hero-btn-primary:focus-visible {
     transform: translateY(-3px);
     box-shadow: 0 26px 52px -32px rgba(255, 186, 53, 0.65);
     background: var(--color-accent);
     color: var(--color-primary-strong);
 }
 
-.hero-whatsapp:focus-visible {
-    outline: 3px solid var(--color-accent);
-    outline-offset: 4px;
-}
-
-.hero-vcard {
-    background: rgba(239, 181, 36, 0.16);
-    color: var(--color-primary-strong);
-    box-shadow: inset 0 0 0 1px rgba(239, 181, 36, 0.4);
-}
-
-body.dark-mode .hero-vcard {
-    background: rgba(79, 176, 155, 0.16);
-    color: var(--color-text);
-    box-shadow: inset 0 0 0 1px rgba(79, 176, 155, 0.4);
-}
-
-.hero-vcard:hover,
-.hero-vcard:focus-visible {
-    transform: translateY(-3px);
-    box-shadow: inset 0 0 0 1px var(--color-accent);
-    background: rgba(239, 181, 36, 0.26);
-}
-
-.hero-vcard:focus-visible {
-    outline: 3px solid var(--color-accent);
-    outline-offset: 4px;
-}
-
-.hero-share {
+.hero-btn-secondary {
     background: var(--color-surface-soft);
     color: var(--color-text);
     box-shadow: var(--shadow-soft);
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.hero-share:hover,
-.hero-share:focus-visible {
+body.dark-mode .hero-btn-secondary {
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+.hero-btn-secondary:hover,
+.hero-btn-secondary:focus-visible {
     transform: translateY(-3px);
-    background: var(--color-surface);
-    color: var(--color-primary);
+    background: linear-gradient(135deg, #f58529, #dd2a7b 45%, #8134af);
+    color: white;
+    border-color: transparent;
 }
 
-.hero-qr {
+.hero-btn-icon {
+    padding: 12px;
+    border-radius: 50%;
     background: transparent;
-    color: var(--color-primary);
-    box-shadow: inset 0 0 0 1px currentColor;
+    color: var(--color-text-subtle);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+    width: 44px;
+    height: 44px;
 }
 
-.hero-qr:hover,
-.hero-qr:focus-visible {
-    background: var(--color-primary);
-    color: #fff;
-    transform: translateY(-3px);
+body.dark-mode .hero-btn-icon {
+    color: var(--color-text-subtle);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.hero-btn-icon:hover,
+.hero-btn-icon:focus-visible {
+    transform: translateY(-2px);
+    color: var(--color-primary);
+    box-shadow: inset 0 0 0 1px var(--color-primary);
 }
 
 
@@ -396,26 +402,6 @@ body.dark-mode .hero-vcard {
     flex-direction: column;
     gap: 40px;
 }
-
-.links-group {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-}
-
-.links-group-title {
-    margin: 0;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--color-primary-strong);
-    padding-left: 8px;
-    border-left: 4px solid var(--color-accent);
-}
-
-body.dark-mode .links-group-title {
-    color: var(--color-text);
-}
-
 
 .section-heading {
     margin: 0 0 22px;
@@ -461,29 +447,9 @@ body.dark-mode .links-group-title {
     --icon-border: rgba(255, 255, 255, 0.24);
 }
 
-.link-card--whatsapp {
-    --icon-bg: linear-gradient(135deg, #2bd36d, #128c7e);
-    --icon-glow: rgba(37, 211, 102, 0.55);
-}
-
-.link-card--phone {
-    --icon-bg: linear-gradient(135deg, var(--color-primary-strong), var(--color-primary));
-    --icon-glow: rgba(25, 126, 99, 0.55);
-}
-
-.link-card--email {
-    --icon-bg: linear-gradient(135deg, #f7b733, #fc4a1a);
-    --icon-glow: rgba(252, 74, 26, 0.45);
-}
-
-.link-card--instagram {
-    --icon-bg: linear-gradient(135deg, #f58529, #dd2a7b 45%, #8134af 70%, #515bd4);
-    --icon-glow: rgba(221, 42, 123, 0.5);
-}
-
 .link-card--service {
-    --icon-bg: linear-gradient(135deg, #2980b9, #3498db);
-    --icon-glow: rgba(52, 152, 219, 0.5);
+    --icon-bg: linear-gradient(135deg, #197e63, #16a085);
+    --icon-glow: rgba(22, 160, 133, 0.5);
 }
 
 
@@ -590,75 +556,6 @@ body.dark-mode .links-group-title {
     letter-spacing: 0.04em;
 }
 
-/* Modal styles recycled for QR */
-body.modal-open {
-    overflow: hidden;
-}
-
-.modal {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
-    z-index: 1000;
-}
-
-.modal.is-open {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-.modal__overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px);
-}
-
-.modal__content.qr-modal-content {
-    position: relative;
-    background: var(--color-surface);
-    padding: 32px;
-    border-radius: var(--radius-large);
-    box-shadow: var(--shadow-soft);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    max-width: 90%;
-    z-index: 1;
-    text-align: center;
-}
-
-.qr-modal-content h3 {
-    margin: 0;
-    color: var(--color-primary-strong);
-}
-
-.qr-modal-content img {
-    border-radius: 8px;
-    max-width: 100%;
-    height: auto;
-}
-
-.modal__close {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background: transparent;
-    border: none;
-    font-size: 2rem;
-    line-height: 1;
-    color: var(--color-text-subtle);
-    cursor: pointer;
-}
-
-
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -689,8 +586,7 @@ body.animations-ready .links-grid li {
 @media (hover: hover) {
 
     .client-area-button,
-    .hero-whatsapp,
-    .hero-vcard,
+    .hero-btn,
     .link-card {
         will-change: transform, box-shadow;
     }
@@ -706,8 +602,7 @@ body.animations-ready .links-grid li {
     }
 
     .client-area-button,
-    .hero-whatsapp,
-    .hero-vcard,
+    .hero-btn,
     .link-card {
         transition: none !important;
     }

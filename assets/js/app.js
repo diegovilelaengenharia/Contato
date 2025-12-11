@@ -1,13 +1,13 @@
 import { profile, heroActions, links } from '../../data.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Preencher Header
+    // 1. Preencher Header (Logo, Nome, Bio)
     renderHeader();
 
-    // 2. Renderizar Hero Actions (WhatsApp, VCard, Share, QR)
+    // 2. Renderizar Hero Actions (WhatsApp, Insta, Share)
     renderHeroActions();
 
-    // 3. Renderizar Links (Agrupados)
+    // 3. Renderizar Serviços
     renderLinks();
 
     // 4. Inicializar Animações de Entrada
@@ -30,6 +30,7 @@ function renderHeader() {
     const roleEl = document.querySelector('.hero-role');
     const imgEl = document.querySelector('.logo img');
     const clientBtn = document.querySelector('.client-area-button');
+    const headingDiv = document.querySelector('.heading');
 
     if (badgeEl && profile.badge) badgeEl.textContent = profile.badge;
     if (titleEl) titleEl.textContent = profile.title || "Vilela Engenharia";
@@ -37,52 +38,61 @@ function renderHeader() {
     if (roleEl) roleEl.innerHTML = profile.role;
     if (imgEl && profile.logo) imgEl.src = profile.logo;
     if (clientBtn && profile.clientAreaLink) clientBtn.href = profile.clientAreaLink;
+
+    // Render BIO
+    if (profile.bio && headingDiv) {
+        let bioEl = headingDiv.querySelector('.hero-bio');
+        if (!bioEl) {
+            bioEl = document.createElement('p');
+            bioEl.className = 'hero-bio';
+            headingDiv.appendChild(bioEl);
+        }
+        bioEl.textContent = profile.bio;
+    }
 }
 
 function renderHeroActions() {
     const container = document.querySelector('.hero-actions');
     if (!container) return;
 
-    container.innerHTML = heroActions.map(action => {
-        // Botão de compartilhar
-        if (action.type === 'action' && action.id === 'share') {
-            return `
-            <button class="${action.className}" type="button" data-share-button aria-label="${action.label}">
-               ${action.label}
-            </button>
-            `;
-        }
+    container.innerHTML = ''; // Clear
 
-        // Botão de QR Code
-        if (action.type === 'action' && action.id === 'qr') {
-            return `
-            <button class="${action.className}" type="button" data-qr-button aria-label="${action.label}">
-               ${action.label}
-            </button>
-            `;
-        }
+    // 1. Phone Button (Main)
+    if (heroActions.main) {
+        const btn = document.createElement('a');
+        btn.className = `hero-btn ${heroActions.main.className}`;
+        btn.href = heroActions.main.href;
+        btn.target = '_blank';
+        btn.rel = 'noopener';
+        btn.innerHTML = `${heroActions.main.icon} <span>${heroActions.main.label}</span>`;
+        container.appendChild(btn);
+    }
 
-        const downloadAttr = action.download ? 'download' : '';
-        const targetAttr = action.target !== false ? 'target="_blank" rel="noopener"' : '';
+    // 2. Instagram Button (Secondary)
+    if (heroActions.secondary) {
+        const btn = document.createElement('a');
+        btn.className = `hero-btn ${heroActions.secondary.className}`;
+        btn.href = heroActions.secondary.href;
+        btn.target = '_blank';
+        btn.rel = 'noopener';
+        btn.innerHTML = `${heroActions.secondary.icon} <span>${heroActions.secondary.label}</span>`;
+        container.appendChild(btn);
+    }
 
-        return `
-        <a class="${action.className}" href="${action.href}" 
-           ${downloadAttr} 
-           ${targetAttr}>
-           ${action.label}
-        </a>
-        `;
-    }).join('');
+    // 3. Share Button (Icon only)
+    if (heroActions.share) {
+        const btn = document.createElement('button');
+        btn.className = `hero-btn ${heroActions.share.className}`;
+        btn.type = 'button';
+        btn.setAttribute('aria-label', heroActions.share.label);
+        btn.innerHTML = heroActions.share.icon;
 
-    // Attach Listeners
-    const shareBtn = container.querySelector('[data-share-button]');
-    if (shareBtn) {
-        shareBtn.addEventListener('click', async () => {
+        btn.addEventListener('click', async () => {
             if (navigator.share) {
                 try {
                     await navigator.share({
                         title: profile.title,
-                        text: `${profile.title} - ${profile.role} (Via WhatsApp)`,
+                        text: `${profile.title} - ${profile.role}`,
                         url: window.location.href
                     });
                 } catch (err) {
@@ -91,19 +101,14 @@ function renderHeroActions() {
             } else {
                 try {
                     await navigator.clipboard.writeText(window.location.href);
-                    const originalText = shareBtn.textContent;
-                    shareBtn.textContent = "Link copiado!";
-                    setTimeout(() => shareBtn.textContent = originalText, 2000);
+                    alert('Link copiado para a área de transferência!');
                 } catch (err) {
                     alert('Copie o link: ' + window.location.href);
                 }
             }
         });
-    }
 
-    const qrBtn = container.querySelector('[data-qr-button]');
-    if (qrBtn) {
-        qrBtn.addEventListener('click', openQRModal);
+        container.appendChild(btn);
     }
 }
 
@@ -113,59 +118,53 @@ function renderLinks() {
 
     container.innerHTML = '';
 
-    const groups = ['contact', 'social', 'services'];
-    let globalIndex = 0;
+    // Renderizar apenas a lista de serviços, sem grupos
+    const section = document.createElement('section');
+    section.className = 'links-section';
 
-    groups.forEach(groupKey => {
-        const group = links[groupKey];
-        if (!group) return;
+    // Opcional: Titulo "Serviços" se desejar, mas o user pediu "Na parte de baixo, Colocar apenas os serviços"
+    // Vamos colocar um titulo discreto ou sem titulo. "Serviços" fica bom para semântica.
+    const heading = document.createElement('h2');
+    heading.className = 'section-heading';
+    heading.textContent = 'Serviços';
+    section.appendChild(heading);
 
-        const groupSection = document.createElement('section');
-        groupSection.className = 'links-group';
+    const list = document.createElement('ul');
+    list.className = 'links-grid';
 
-        const groupTitle = document.createElement('h2');
-        groupTitle.className = 'links-group-title';
-        groupTitle.textContent = group.title;
-        groupSection.appendChild(groupTitle);
+    links.forEach((link, index) => {
+        const li = document.createElement('li');
+        const delay = (index + 1) * 0.1;
+        li.style.setProperty('--animation-delay', `${delay}s`);
 
-        const list = document.createElement('ul');
-        list.className = 'links-grid';
+        const cardElement = document.createElement('a');
+        cardElement.className = `link-card ${link.className || ''}`;
+        cardElement.href = link.href;
+        cardElement.target = '_blank';
+        cardElement.rel = 'noopener';
+        cardElement.setAttribute('aria-label', link.title);
 
-        group.items.forEach((link) => {
-            const li = document.createElement('li');
-            const delay = (globalIndex + 1) * 0.1;
-            li.style.setProperty('--animation-delay', `${delay}s`);
-            globalIndex++;
+        if (link.href.startsWith('tel:') || link.href.startsWith('mailto:')) {
+            cardElement.removeAttribute('target');
+            cardElement.removeAttribute('rel');
+        }
 
-            const cardElement = document.createElement('a');
-            cardElement.className = `link-card ${link.className || ''}`;
-            cardElement.href = link.href;
-            cardElement.target = '_blank';
-            cardElement.rel = 'noopener';
-            cardElement.setAttribute('aria-label', link.title);
+        cardElement.innerHTML = `
+            <span class="icon" aria-hidden="true">
+                ${link.icon}
+            </span>
+            <span class="text">
+                <span class="title">${link.title}</span>
+                <span class="subtitle">${link.subtitle}</span>
+            </span>
+        `;
 
-            if (link.href.startsWith('tel:') || link.href.startsWith('mailto:')) {
-                cardElement.removeAttribute('target');
-                cardElement.removeAttribute('rel');
-            }
-
-            cardElement.innerHTML = `
-                <span class="icon" aria-hidden="true">
-                    ${link.icon}
-                </span>
-                <span class="text">
-                    <span class="title">${link.title}</span>
-                    <span class="subtitle">${link.subtitle}</span>
-                </span>
-            `;
-
-            li.appendChild(cardElement);
-            list.appendChild(li);
-        });
-
-        groupSection.appendChild(list);
-        container.appendChild(groupSection);
+        li.appendChild(cardElement);
+        list.appendChild(li);
     });
+
+    section.appendChild(list);
+    container.appendChild(section);
 }
 
 function initializeAnimations() {
@@ -223,48 +222,6 @@ function initDarkMode() {
     });
 }
 
-function openQRModal() {
-    const existingModal = document.getElementById('qr-modal');
-    if (existingModal) {
-        existingModal.classList.add('is-open');
-        document.body.classList.add('modal-open');
-        return;
-    }
-
-    const modal = document.createElement('div');
-    modal.id = 'qr-modal';
-    modal.className = 'modal is-open';
-    modal.innerHTML = `
-        <div class="modal__overlay" data-close></div>
-        <div class="modal__content qr-modal-content">
-            <button class="modal__close" data-close>&times;</button>
-            <h3>Escaneie para salvar</h3>
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(window.location.href)}" alt="QR Code do site" width="250" height="250" />
-            <p>Aponte a câmera do seu celular</p>
-        </div>
-    `;
-
-    document.body.appendChild(modal);
-    document.body.classList.add('modal-open');
-
-    modal.addEventListener('click', (e) => {
-        if (e.target.hasAttribute('data-close')) {
-            modal.classList.remove('is-open');
-            document.body.classList.remove('modal-open');
-            // Remove from DOM to refresh URL if needed later
-            setTimeout(() => modal.remove(), 300);
-        }
-    });
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('is-open')) {
-            modal.classList.remove('is-open');
-            document.body.classList.remove('modal-open');
-            setTimeout(() => modal.remove(), 300);
-        }
-    });
-}
-
 function initSEO() {
     // Schema.org Structured Data
     const schema = {
@@ -272,7 +229,7 @@ function initSEO() {
         "@type": "EngineeringService",
         "name": profile.title,
         "image": new URL(profile.logo, window.location.href).href,
-        "description": `${profile.title} - ${profile.role}`,
+        "description": profile.bio || `${profile.title} - ${profile.role}`,
         "telephone": "+5535984529577",
         "address": {
             "@type": "PostalAddress",
