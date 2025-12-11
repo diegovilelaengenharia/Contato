@@ -1,25 +1,28 @@
-import { profile, heroActions, links } from '../../data.js';
+import { profile, heroActions, links, footer } from '../../data.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Preencher Header (Logo, Nome, Bio)
+    // 1. Preencher Header
     renderHeader();
 
-    // 2. Renderizar Hero Actions (WhatsApp, Insta, Share)
+    // 2. Renderizar Hero Actions
     renderHeroActions();
 
     // 3. Renderizar Serviços
     renderLinks();
 
-    // 4. Inicializar Animações de Entrada
+    // 4. Renderizar Footer (Novo)
+    renderFooter();
+
+    // 5. Inicializar Animações
     initializeAnimations();
 
-    // 5. Inicializar Status de Negócio (Aberto/Fechado)
+    // 6. Inicializar Status
     initBusinessStatus();
 
-    // 6. Inicializar Dark Mode
+    // 7. Inicializar Dark Mode
     initDarkMode();
 
-    // 7. Inicializar SEO (Schema.org)
+    // 8. Inicializar SEO
     initSEO();
 });
 
@@ -39,7 +42,6 @@ function renderHeader() {
     if (imgEl && profile.logo) imgEl.src = profile.logo;
     if (clientBtn && profile.clientAreaLink) clientBtn.href = profile.clientAreaLink;
 
-    // Render BIO
     if (profile.bio && headingDiv) {
         let bioEl = headingDiv.querySelector('.hero-bio');
         if (!bioEl) {
@@ -55,75 +57,92 @@ function renderHeroActions() {
     const container = document.querySelector('.hero-actions');
     if (!container) return;
 
-    container.innerHTML = ''; // Clear
+    container.innerHTML = '';
 
-    // 1. Phone Button (Main)
-    if (heroActions.main) {
-        const btn = document.createElement('a');
-        btn.className = `hero-btn ${heroActions.main.className}`;
-        btn.href = heroActions.main.href;
-        btn.target = '_blank';
-        btn.rel = 'noopener';
-        btn.innerHTML = `${heroActions.main.icon} <span>${heroActions.main.label}</span>`;
+    const createButton = (action, type) => {
+        if (!action) return;
+        const btn = document.createElement(type === 'button' ? 'button' : 'a');
+        btn.className = `hero-btn ${action.className}`;
+
+        if (type === 'link') {
+            btn.href = action.href;
+            btn.target = '_blank';
+            btn.rel = 'noopener';
+        } else {
+            btn.type = 'button';
+        }
+
+        if (action.label) {
+            btn.innerHTML = `${action.icon} <span>${action.label}</span>`;
+            btn.setAttribute('aria-label', action.label);
+        } else {
+            btn.innerHTML = action.icon;
+            // If no label, ensure flex centering in CSS works for single item
+        }
+
+        if (action.label === "") {
+            // Treat as icon-only visual style override if needed, 
+            // or just rely on the class. 
+            // For buttons that were 'primary/secondary' but now have no text:
+            btn.style.padding = "12px";
+            btn.style.width = "48px";
+            btn.style.height = "48px";
+            btn.style.borderRadius = "50%";
+            btn.style.flex = "0 0 48px";
+        }
+
         container.appendChild(btn);
-    }
+        return btn;
+    };
 
-    // 2. Instagram Button (Secondary)
-    if (heroActions.secondary) {
-        const btn = document.createElement('a');
-        btn.className = `hero-btn ${heroActions.secondary.className}`;
-        btn.href = heroActions.secondary.href;
-        btn.target = '_blank';
-        btn.rel = 'noopener';
-        btn.innerHTML = `${heroActions.secondary.icon} <span>${heroActions.secondary.label}</span>`;
-        container.appendChild(btn);
-    }
+    createButton(heroActions.main, 'link');
+    createButton(heroActions.secondary, 'link');
 
-    // 3. Share Button (Icon only)
+    // Share button logic
     if (heroActions.share) {
-        const btn = document.createElement('button');
-        btn.className = `hero-btn ${heroActions.share.className}`;
-        btn.type = 'button';
-        btn.setAttribute('aria-label', heroActions.share.label);
-        btn.innerHTML = heroActions.share.icon;
-
-        btn.addEventListener('click', async () => {
-            if (navigator.share) {
-                try {
-                    await navigator.share({
-                        title: profile.title,
-                        text: `${profile.title} - ${profile.role}`,
-                        url: window.location.href
-                    });
-                } catch (err) {
-                    console.error('Share failed:', err);
+        const btn = createButton(heroActions.share, 'button');
+        if (btn) {
+            btn.addEventListener('click', async () => {
+                if (navigator.share) {
+                    try {
+                        await navigator.share({
+                            title: profile.title,
+                            text: `${profile.title} - ${profile.role}`,
+                            url: window.location.href
+                        });
+                    } catch (err) {
+                        console.error('Share failed:', err);
+                    }
+                } else {
+                    try {
+                        await navigator.clipboard.writeText(window.location.href);
+                        alert('Link copiado!');
+                    } catch (err) {
+                        console.error('Copy failed');
+                    }
                 }
-            } else {
-                try {
-                    await navigator.clipboard.writeText(window.location.href);
-                    alert('Link copiado para a área de transferência!');
-                } catch (err) {
-                    alert('Copie o link: ' + window.location.href);
-                }
-            }
-        });
-
-        container.appendChild(btn);
+            });
+        }
     }
+
+    // QR Code logic removed
 }
 
 function renderLinks() {
     const container = document.querySelector('.content');
     if (!container) return;
 
-    container.innerHTML = '';
+    // Check if wrapping section exists
+    let section = container.querySelector('.links-section');
+    if (!section) {
+        container.innerHTML = '';
+        section = document.createElement('section');
+        section.className = 'links-section';
+        container.appendChild(section);
+    } else {
+        section.innerHTML = '';
+    }
 
-    // Renderizar apenas a lista de serviços, sem grupos
-    const section = document.createElement('section');
-    section.className = 'links-section';
-
-    // Opcional: Titulo "Serviços" se desejar, mas o user pediu "Na parte de baixo, Colocar apenas os serviços"
-    // Vamos colocar um titulo discreto ou sem titulo. "Serviços" fica bom para semântica.
     const heading = document.createElement('h2');
     heading.className = 'section-heading';
     heading.textContent = 'Serviços';
@@ -144,11 +163,6 @@ function renderLinks() {
         cardElement.rel = 'noopener';
         cardElement.setAttribute('aria-label', link.title);
 
-        if (link.href.startsWith('tel:') || link.href.startsWith('mailto:')) {
-            cardElement.removeAttribute('target');
-            cardElement.removeAttribute('rel');
-        }
-
         cardElement.innerHTML = `
             <span class="icon" aria-hidden="true">
                 ${link.icon}
@@ -164,7 +178,41 @@ function renderLinks() {
     });
 
     section.appendChild(list);
-    container.appendChild(section);
+}
+
+function renderFooter() {
+    const footerEl = document.querySelector('.footer');
+    if (!footerEl) return;
+
+    let html = '';
+
+    // Contacts
+    if (footer.contacts) {
+        html += '<div class="footer-contacts">';
+        footer.contacts.forEach(c => {
+            html += `<a href="${c.href}" target="_blank" rel="noopener">${c.value}</a>`;
+        });
+        html += '</div>';
+    }
+
+    // Quotation
+    if (footer.quotation) {
+        html += `
+            <blockquote class="footer-quote">
+                <p>${footer.quotation.text}</p>
+                <cite>${footer.quotation.reference}</cite>
+            </blockquote>
+        `;
+    }
+
+    // Copy
+    html += `<div class="footer-copy"><small>${footer.copy}</small></div>`;
+
+    footerEl.innerHTML = html;
+
+    // Re-update year if dynamic
+    const yearSpan = document.getElementById('year');
+    if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 }
 
 function initializeAnimations() {
@@ -222,14 +270,54 @@ function initDarkMode() {
     });
 }
 
+function openQRModal() {
+    const existingModal = document.getElementById('qr-modal');
+    if (existingModal) {
+        existingModal.classList.add('is-open');
+        document.body.classList.add('modal-open');
+        return;
+    }
+
+    const modal = document.createElement('div');
+    modal.id = 'qr-modal';
+    modal.className = 'modal is-open';
+    modal.innerHTML = `
+        <div class="modal__overlay" data-close></div>
+        <div class="modal__content qr-modal-content">
+            <button class="modal__close" data-close>&times;</button>
+            <h3>Escaneie para salvar</h3>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(window.location.href)}" alt="QR Code do site" width="250" height="250" />
+            <p>Aponte a câmera do seu celular</p>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+    document.body.classList.add('modal-open');
+
+    modal.addEventListener('click', (e) => {
+        if (e.target.hasAttribute('data-close')) {
+            modal.classList.remove('is-open');
+            document.body.classList.remove('modal-open');
+            setTimeout(() => modal.remove(), 300);
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('is-open')) {
+            modal.classList.remove('is-open');
+            document.body.classList.remove('modal-open');
+            setTimeout(() => modal.remove(), 300);
+        }
+    });
+}
+
 function initSEO() {
-    // Schema.org Structured Data
     const schema = {
         "@context": "https://schema.org",
         "@type": "EngineeringService",
         "name": profile.title,
         "image": new URL(profile.logo, window.location.href).href,
-        "description": profile.bio || `${profile.title} - ${profile.role}`,
+        "description": `${profile.title} - ${profile.role}`,
         "telephone": "+5535984529577",
         "address": {
             "@type": "PostalAddress",
@@ -243,7 +331,11 @@ function initSEO() {
         ]
     };
 
+    const existing = document.getElementById('schema-json');
+    if (existing) existing.remove();
+
     const script = document.createElement('script');
+    script.id = 'schema-json';
     script.type = 'application/ld+json';
     script.text = JSON.stringify(schema);
     document.head.appendChild(script);
