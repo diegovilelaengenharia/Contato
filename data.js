@@ -1,6 +1,8 @@
-export const profile = {
+window.siteData = {};
+
+window.siteData.profile = {
     name: "Diego Tarcisio Nunes Vilela",
-    role: "CREA 235.474/D",
+    role: "Engenheiro Civil &middot; CREA 235.474/D",
     badge: "Engenheiro Civil",
     title: "Vilela Engenharia",
     logo: "assets/logo.jpg",
@@ -8,7 +10,7 @@ export const profile = {
     bio: ""
 };
 
-export const heroActions = {
+window.siteData.heroActions = {
     main: {
         label: "(35) 98452-9577",
         href: "https://wa.me/5535984529577?text=Ola%20Vilela%20Engenharia",
@@ -16,17 +18,15 @@ export const heroActions = {
         className: "hero-btn-primary"
     },
     secondary: {
-        label: "Instagram",
+        label: "Diego Vilela",
         href: "https://www.instagram.com/diegovilela.eng/",
         icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>`,
         className: "hero-btn-secondary"
     },
-    share: null, // Removed as requested
-    // QR removed
-    // QR removed
+    share: null,
 };
 
-export const links = [
+window.siteData.links = [
     {
         id: "regularization",
         title: "Regularização de Imóvel",
@@ -37,22 +37,31 @@ export const links = [
     },
     {
         id: "project-residential",
-        title: "Projetos Residenciais",
+        title: "Projeto Residencial",
         subtitle: "Projetos personalizados",
         href: "https://wa.me/5535984529577?text=Ola,%20gostaria%20de%20saber%20mais%20sobre%20Projeto%20Residencial",
         icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>`,
         className: "link-card--project"
     },
     {
-        id: "consulting",
-        title: "Consultoria",
-        subtitle: "Tire suas dúvidas técnicas",
-        href: "https://wa.me/5535984529577?text=Ola,%20gostaria%20de%20saber%20mais%20sobre%20Consultoria",
+        id: "laudos",
+        title: "Laudos e Vistorias",
+        subtitle: "Avaliação técnica",
+        href: "https://wa.me/5535984529577?text=Ola,%20gostaria%20de%20saber%20mais%20sobre%20Laudos%20e%20Vistorias",
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`,
+        className: "link-card--consulting"
+    },
+    {
+        id: "others",
+        title: "Entre Outros",
+        subtitle: "Ver mais serviços",
+        href: "https://wa.me/5535984529577?text=Ola,%20gostaria%20de%20saber%20sobre%20outros%20servicos",
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>`,
         className: "link-card--consulting"
     }
 ];
 
-export const faq = [
+window.siteData.faq = [
     {
         question: "Como funciona a regularização de imóvel?",
         answer: "O processo inicia com uma visita técnica para análise, seguido do levantamento de medidas e elaboração dos projetos. Após isso, entramos com o processo na prefeitura para aprovação e emissão do Habite-se."
@@ -71,15 +80,14 @@ export const faq = [
     }
 ];
 
-export const regularizationCTA = {
+window.siteData.regularizationCTA = {
     title: "Precisa Regularizar seu Imóvel?",
     text: "Evite multas e garanta a segurança jurídica do seu patrimônio. Baixe nossa lista de documentos necessários.",
     buttonLabel: "Ver Documentos Necessários",
-    // Link to a specifc section or PDF. Using WA for now with specific text
     href: "https://wa.me/5535984529577?text=Ola,%20gostaria%20da%20lista%20de%20documentos%20para%20regularizacao"
 };
 
-export const tips = [
+window.siteData.tips = [
     {
         title: "Evite Multas",
         text: "Construir sem projeto pode gerar multas de até 100% do valor da obra. Regularize antes de começar.",
@@ -97,8 +105,8 @@ export const tips = [
     }
 ];
 
-export const footer = {
-    contacts: [], // Removed as requested
-    quotation: null, // Removed as requested
+window.siteData.footer = {
+    contacts: [],
+    quotation: null,
     copy: "&copy; <span id='year'>2025</span> Vilela Engenharia. Todos os direitos reservados."
 };

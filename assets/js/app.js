@@ -1,4 +1,5 @@
-import { profile, heroActions, links, footer } from '../../data.js';
+// Import removed for local file support
+const { profile, heroActions, links, footer, faq, regularizationCTA, tips } = window.siteData || {};
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Preencher Header
@@ -31,14 +32,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // 10. Renderizar Floating WhatsApp
     renderFloatingWA();
 
-    // 11. Renderizar FAQ (Desativado a pedido)
-    // renderFAQ();
+    // 11. Renderizar FAQ
+    renderFAQ();
 
-    // 12. Renderizar Regularização CTA (Desativado a pedido)
-    // renderRegularizationCTA();
+    // 12. Renderizar Regularização CTA
+    renderRegularizationCTA();
 
-    // 13. Renderizar Dicas (Knowledge) (Desativado a pedido)
-    // renderTips();
+    // 13. Renderizar Dicas (Knowledge)
+    renderTips();
 });
 
 function renderHeader() {
@@ -406,7 +407,8 @@ function renderFAQ() {
     heading.style.textAlign = 'center';
     faqSection.appendChild(heading);
 
-    import('../../data.js').then(({ faq }) => {
+    // Dynamic import removed
+    if (faq) {
         if (!faq) return;
 
         faq.forEach(item => {
@@ -443,7 +445,7 @@ function renderFAQ() {
         });
 
         container.appendChild(faqSection);
-    });
+    }
 }
 
 function renderRegularizationCTA() {
@@ -452,7 +454,8 @@ function renderRegularizationCTA() {
 
     if (document.querySelector('.cta-box')) return;
 
-    import('../../data.js').then(({ regularizationCTA }) => {
+    // Dynamic import removed
+    if (regularizationCTA) {
         if (!regularizationCTA) return;
 
         const cta = document.createElement('div');
@@ -473,7 +476,7 @@ function renderRegularizationCTA() {
         } else {
             container.appendChild(cta);
         }
-    });
+    }
 }
 
 function renderTips() {
@@ -481,7 +484,8 @@ function renderTips() {
     if (!container) return;
     if (document.querySelector('.tips-section')) return;
 
-    import('../../data.js').then(({ tips }) => {
+    // Dynamic import removed
+    if (tips) {
         if (!tips) return;
 
         const section = document.createElement('section');
@@ -519,5 +523,5 @@ function renderTips() {
         } else {
             container.appendChild(section);
         }
-    });
+    }
 }
