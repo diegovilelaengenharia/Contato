@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. Preencher Header
     renderHeader();
 
-    // 2. Renderizar Hero Actions (WhatsApp, VCard, Share)
+    // 2. Renderizar Hero Actions (WhatsApp, VCard, Share, QR)
     renderHeroActions();
 
     // 3. Renderizar Links (Agrupados)
@@ -18,6 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 6. Inicializar Dark Mode
     initDarkMode();
+
+    // 7. Inicializar SEO (Schema.org)
+    initSEO();
 });
 
 function renderHeader() {
@@ -45,6 +48,15 @@ function renderHeroActions() {
         if (action.type === 'action' && action.id === 'share') {
             return `
             <button class="${action.className}" type="button" data-share-button aria-label="${action.label}">
+               ${action.label}
+            </button>
+            `;
+        }
+
+        // Botão de QR Code
+        if (action.type === 'action' && action.id === 'qr') {
+            return `
+            <button class="${action.className}" type="button" data-qr-button aria-label="${action.label}">
                ${action.label}
             </button>
             `;
@@ -88,23 +100,21 @@ function renderHeroActions() {
             }
         });
     }
+
+    const qrBtn = container.querySelector('[data-qr-button]');
+    if (qrBtn) {
+        qrBtn.addEventListener('click', openQRModal);
+    }
 }
 
 function renderLinks() {
     const container = document.querySelector('.content');
     if (!container) return;
 
-    // Limpar container mas manter o titulo se houver (na arquitetura atual o 'links-grid' era filho direto de content? Não, era dentro de content.)
-    // Vamos recriar a estrutura dentro de .content para suportar grupos.
     container.innerHTML = '';
 
-    // O objeto links agora tem chaves: contact, services, social
-    // Vamos iterar sobre as chaves na ordem desejada
-    const groups = ['contact', 'social', 'services']; // Ordem requisitada: Contato, Redes, Serviços? O user pediu 3 grupos (contato, redes sociais, serviços)
-    // Mas no prompt: "Gostaria de ter 3 grupos (contato, redes sociais, serviços)"
-    // Vamos seguir essa ordem.
-
-    let globalIndex = 0; // Para stagger animation continua
+    const groups = ['contact', 'social', 'services'];
+    let globalIndex = 0;
 
     groups.forEach(groupKey => {
         const group = links[groupKey];
@@ -175,7 +185,6 @@ function initBusinessStatus() {
 
     const badgeEl = document.querySelector('.badge');
     if (badgeEl && badgeEl.parentNode) {
-        // Evitar duplicar se já existir (em hot reload ou re-render)
         const existing = badgeEl.parentNode.querySelector('.status-badge');
         if (existing) existing.remove();
 
@@ -187,7 +196,6 @@ function initBusinessStatus() {
 }
 
 function initDarkMode() {
-    // Evitar criar botão duplicado
     if (document.querySelector('.theme-toggle')) return;
 
     const toggleBtn = document.createElement('button');
@@ -213,4 +221,73 @@ function initDarkMode() {
         const isDark = document.body.classList.contains('dark-mode');
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
     });
+}
+
+function openQRModal() {
+    const existingModal = document.getElementById('qr-modal');
+    if (existingModal) {
+        existingModal.classList.add('is-open');
+        document.body.classList.add('modal-open');
+        return;
+    }
+
+    const modal = document.createElement('div');
+    modal.id = 'qr-modal';
+    modal.className = 'modal is-open';
+    modal.innerHTML = `
+        <div class="modal__overlay" data-close></div>
+        <div class="modal__content qr-modal-content">
+            <button class="modal__close" data-close>&times;</button>
+            <h3>Escaneie para salvar</h3>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(window.location.href)}" alt="QR Code do site" width="250" height="250" />
+            <p>Aponte a câmera do seu celular</p>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+    document.body.classList.add('modal-open');
+
+    modal.addEventListener('click', (e) => {
+        if (e.target.hasAttribute('data-close')) {
+            modal.classList.remove('is-open');
+            document.body.classList.remove('modal-open');
+            // Remove from DOM to refresh URL if needed later
+            setTimeout(() => modal.remove(), 300);
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('is-open')) {
+            modal.classList.remove('is-open');
+            document.body.classList.remove('modal-open');
+            setTimeout(() => modal.remove(), 300);
+        }
+    });
+}
+
+function initSEO() {
+    // Schema.org Structured Data
+    const schema = {
+        "@context": "https://schema.org",
+        "@type": "EngineeringService",
+        "name": profile.title,
+        "image": new URL(profile.logo, window.location.href).href,
+        "description": `${profile.title} - ${profile.role}`,
+        "telephone": "+5535984529577",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Pouso Alegre",
+            "addressRegion": "MG",
+            "addressCountry": "BR"
+        },
+        "url": window.location.href,
+        "sameAs": [
+            "https://www.instagram.com/diegovilela.eng/"
+        ]
+    };
+
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(schema);
+    document.head.appendChild(script);
 }

@@ -29,6 +29,13 @@ export const heroActions = [
         className: "hero-share",
         type: "action",
         id: "share"
+    },
+    {
+        label: "QR Code",
+        icon: null,
+        className: "hero-qr",
+        type: "action",
+        id: "qr"
     }
 ];
 

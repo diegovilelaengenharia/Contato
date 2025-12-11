@@ -302,7 +302,8 @@ body.dark-mode .status-closed {
 
 .hero-whatsapp,
 .hero-vcard,
-.hero-share {
+.hero-share,
+.hero-qr {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -373,6 +374,19 @@ body.dark-mode .hero-vcard {
     transform: translateY(-3px);
     background: var(--color-surface);
     color: var(--color-primary);
+}
+
+.hero-qr {
+    background: transparent;
+    color: var(--color-primary);
+    box-shadow: inset 0 0 0 1px currentColor;
+}
+
+.hero-qr:hover,
+.hero-qr:focus-visible {
+    background: var(--color-primary);
+    color: #fff;
+    transform: translateY(-3px);
 }
 
 
@@ -576,9 +590,74 @@ body.dark-mode .links-group-title {
     letter-spacing: 0.04em;
 }
 
+/* Modal styles recycled for QR */
 body.modal-open {
     overflow: hidden;
 }
+
+.modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 1000;
+}
+
+.modal.is-open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+}
+
+.modal__content.qr-modal-content {
+    position: relative;
+    background: var(--color-surface);
+    padding: 32px;
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-soft);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    max-width: 90%;
+    z-index: 1;
+    text-align: center;
+}
+
+.qr-modal-content h3 {
+    margin: 0;
+    color: var(--color-primary-strong);
+}
+
+.qr-modal-content img {
+    border-radius: 8px;
+    max-width: 100%;
+    height: auto;
+}
+
+.modal__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--color-text-subtle);
+    cursor: pointer;
+}
+
 
 @keyframes fadeInUp {
     from {
