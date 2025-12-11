@@ -31,14 +31,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // 10. Renderizar Floating WhatsApp
     renderFloatingWA();
 
-    // 11. Renderizar FAQ
-    renderFAQ();
+    // 11. Renderizar FAQ (Desativado a pedido)
+    // renderFAQ();
 
-    // 12. Renderizar Regularização CTA
-    renderRegularizationCTA();
+    // 12. Renderizar Regularização CTA (Desativado a pedido)
+    // renderRegularizationCTA();
 
-    // 13. Renderizar Dicas (Knowledge)
-    renderTips();
+    // 13. Renderizar Dicas (Knowledge) (Desativado a pedido)
+    // renderTips();
 });
 
 function renderHeader() {
