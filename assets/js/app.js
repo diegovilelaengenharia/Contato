@@ -24,6 +24,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 8. Inicializar SEO
     initSEO();
+
+    // 9. Inicializar Animações de Scroll
+    initScrollAnimations();
+
+    // 10. Renderizar Floating WhatsApp
+    renderFloatingWA();
+
+    // 11. Renderizar FAQ
+    renderFAQ();
+
+    // 12. Renderizar Regularização CTA
+    renderRegularizationCTA();
+
+    // 13. Renderizar Dicas (Knowledge)
+    renderTips();
 });
 
 function renderHeader() {
@@ -77,19 +92,9 @@ function renderHeroActions() {
             btn.setAttribute('aria-label', action.label);
         } else {
             btn.innerHTML = action.icon;
-            // If no label, ensure flex centering in CSS works for single item
         }
 
-        if (action.label === "") {
-            // Treat as icon-only visual style override if needed, 
-            // or just rely on the class. 
-            // For buttons that were 'primary/secondary' but now have no text:
-            btn.style.padding = "12px";
-            btn.style.width = "48px";
-            btn.style.height = "48px";
-            btn.style.borderRadius = "50%";
-            btn.style.flex = "0 0 48px";
-        }
+        // Removed icon-only hack
 
         container.appendChild(btn);
         return btn;
@@ -153,8 +158,10 @@ function renderLinks() {
 
     links.forEach((link, index) => {
         const li = document.createElement('li');
-        const delay = (index + 1) * 0.1;
-        li.style.setProperty('--animation-delay', `${delay}s`);
+        // Removed inline animation-delay in favor of class-based scroll reveal or keep hybrid
+        li.className = 'fade-in-section';
+        // We can add stagger inline if we want precise control or just rely on natural scroll
+        li.style.transitionDelay = `${index * 0.1}s`;
 
         const cardElement = document.createElement('a');
         cardElement.className = `link-card ${link.className || ''}`;
@@ -339,4 +346,178 @@ function initSEO() {
     script.type = 'application/ld+json';
     script.text = JSON.stringify(schema);
     document.head.appendChild(script);
+}
+
+function initScrollAnimations() {
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target); // Animate only once
+            }
+        });
+    }, observerOptions);
+
+    const elements = document.querySelectorAll('.fade-in-section');
+    elements.forEach(el => observer.observe(el));
+
+    // Also add footer to animation
+    const footer = document.querySelector('.footer');
+    if (footer) {
+        footer.classList.add('fade-in-section');
+        observer.observe(footer);
+    }
+}
+
+function renderFloatingWA() {
+    if (document.querySelector('.floating-wa')) return;
+
+    const link = document.createElement('a');
+    link.href = heroActions.main.href; // Use same link as Hero
+    link.className = 'floating-wa';
+    link.target = '_blank';
+    link.rel = 'noopener';
+    link.setAttribute('aria-label', 'Falar no WhatsApp');
+    link.innerHTML = heroActions.main.icon; // Reuse valid SVG
+
+    document.body.appendChild(link);
+}
+
+function renderFAQ() {
+    // Append to content container, after links
+    const container = document.querySelector('.content');
+    if (!container) return;
+
+    // Check if FAQ section exists
+    if (document.querySelector('.faq-section')) return;
+
+    const faqSection = document.createElement('section');
+    faqSection.className = 'faq-section fade-in-section';
+
+    const heading = document.createElement('h2');
+    heading.className = 'section-heading';
+    heading.textContent = 'Perguntas Frequentes';
+    heading.style.textAlign = 'center';
+    faqSection.appendChild(heading);
+
+    import('../../data.js').then(({ faq }) => {
+        if (!faq) return;
+
+        faq.forEach(item => {
+            const accordionItem = document.createElement('div');
+            accordionItem.className = 'accordion-item';
+
+            accordionItem.innerHTML = `
+                <button class="accordion-header" aria-expanded="false">
+                    ${item.question}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+                <div class="accordion-content">
+                    <p>${item.answer}</p>
+                </div>
+            `;
+
+            const header = accordionItem.querySelector('.accordion-header');
+            header.addEventListener('click', () => {
+                const isOpen = accordionItem.classList.contains('active');
+
+                // Close others (optional - nice for mobile)
+                document.querySelectorAll('.accordion-item').forEach(i => {
+                    i.classList.remove('active');
+                    i.querySelector('.accordion-header').setAttribute('aria-expanded', 'false');
+                });
+
+                if (!isOpen) {
+                    accordionItem.classList.add('active');
+                    header.setAttribute('aria-expanded', 'true');
+                }
+            });
+
+            faqSection.appendChild(accordionItem);
+        });
+
+        container.appendChild(faqSection);
+    });
+}
+
+function renderRegularizationCTA() {
+    const container = document.querySelector('.content');
+    if (!container) return;
+
+    if (document.querySelector('.cta-box')) return;
+
+    import('../../data.js').then(({ regularizationCTA }) => {
+        if (!regularizationCTA) return;
+
+        const cta = document.createElement('div');
+        cta.className = 'cta-box fade-in-section';
+
+        cta.innerHTML = `
+            <h3>${regularizationCTA.title}</h3>
+            <p>${regularizationCTA.text}</p>
+            <a href="${regularizationCTA.href}" target="_blank" rel="noopener" class="cta-button">
+                ${regularizationCTA.buttonLabel}
+            </a>
+        `;
+
+        // Insert before FAQ if exists to maintain order Services -> Reg CTA -> FAQ
+        const faq = document.querySelector('.faq-section');
+        if (faq) {
+            container.insertBefore(cta, faq);
+        } else {
+            container.appendChild(cta);
+        }
+    });
+}
+
+function renderTips() {
+    const container = document.querySelector('.content');
+    if (!container) return;
+    if (document.querySelector('.tips-section')) return;
+
+    import('../../data.js').then(({ tips }) => {
+        if (!tips) return;
+
+        const section = document.createElement('section');
+        section.className = 'tips-section fade-in-section';
+
+        const heading = document.createElement('h2');
+        heading.className = 'section-heading';
+        heading.textContent = 'Dicas do Engenheiro';
+        section.appendChild(heading);
+
+        const list = document.createElement('div');
+        list.className = 'tips-grid';
+
+        tips.forEach(tip => {
+            const card = document.createElement('div');
+            card.className = 'tip-card';
+            card.innerHTML = `
+                <div class="tip-icon">${tip.icon}</div>
+                <div class="tip-title">${tip.title}</div>
+                <div class="tip-text">${tip.text}</div>
+            `;
+            list.appendChild(card);
+        });
+
+        section.appendChild(list);
+
+        // Insert before CTA if exists: Services -> Tips -> CTA -> FAQ
+        const cta = document.querySelector('.cta-box');
+        const faq = document.querySelector('.faq-section');
+
+        if (cta) {
+            container.insertBefore(section, cta);
+        } else if (faq) {
+            container.insertBefore(section, faq);
+        } else {
+            container.appendChild(section);
+        }
+    });
 }

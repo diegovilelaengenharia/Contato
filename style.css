@@ -57,9 +57,13 @@ body {
         radial-gradient(at 100% 100%, rgba(25, 126, 99, 0.08) 0px, transparent 50%);
     color: var(--color-text);
     display: flex;
+    flex-direction: column;
+    /* Ensure vertical stacking context */
     align-items: center;
-    justify-content: center;
-    padding: 32px 16px 52px;
+    justify-content: flex-start;
+    /* Start from top, don't center vertically */
+    padding: 32px 16px;
+    /* Reduced bottom padding */
     transition: background 0.35s ease, color 0.35s ease;
     -webkit-font-smoothing: antialiased;
 }
@@ -274,105 +278,107 @@ body.dark-mode .status-closed {
     opacity: 0.8;
 }
 
+.hero-main-content {
+    /* Container for profile & buttons */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
 .hero-actions {
     display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
-    align-items: center;
     gap: 12px;
     width: 100%;
-    margin-top: 8px;
 }
 
 .hero-btn {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 12px 24px;
-    border-radius: 18px;
-    /* Softer Radius */
+    padding: 10px 20px;
+    border-radius: 99px;
     font-weight: 500;
     text-decoration: none;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+    transition: all 0.2s ease;
     border: 1px solid transparent;
     cursor: pointer;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
+    min-width: 120px;
+    position: relative;
+    overflow: hidden;
+    flex: 1 1 auto;
 }
 
 .hero-btn svg {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
 }
 
-/* Suave Primary: Softer Green */
+/* Primary: WhatsApp (Glass/Solid) */
 .hero-btn-primary {
-    background: rgba(37, 211, 102, 0.1);
-    /* Transparent/Pastel feel */
-    color: #1c9e4b;
-    border-color: rgba(37, 211, 102, 0.2);
-    flex: 1 1 200px;
-}
-
-body.dark-mode .hero-btn-primary {
-    background: rgba(37, 211, 102, 0.15);
-    color: #4ade80;
-    border-color: rgba(37, 211, 102, 0.3);
+    background: #25D366;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
 }
 
 .hero-btn-primary:hover {
-    background: #25D366;
-    color: #fff;
+    background: #1ebc57;
     transform: translateY(-2px);
-    border-color: transparent;
+    box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
 }
 
-/* Suave Secondary: Softer Insta */
+/* Secondary: Instagram (Gradient Border / Glass) */
 .hero-btn-secondary {
-    background: var(--color-surface-soft);
+    background: var(--color-surface);
     color: var(--color-text);
-    border-color: transparent;
-    flex: 1 1 140px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode .hero-btn-secondary {
+    background: rgba(255, 255, 255, 0.05);
+    /* Glass */
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
 }
 
 .hero-btn-secondary:hover {
-    background: #fff0f5;
-    /* Subtle pink tinge */
-    color: #C13584;
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    color: white;
+    border-color: transparent;
     transform: translateY(-2px);
 }
 
-body.dark-mode .hero-btn-secondary:hover {
-    background: rgba(193, 53, 132, 0.15);
-}
-
-
-/* Small Action Icons: Outline & Soft */
+/* Share Button (Soft / Glass) */
 .hero-btn-icon {
-    padding: 12px;
-    border-radius: 14px;
-    background: transparent;
+    /* Actually a full label button now, keeping class name compatible */
+    background: var(--color-surface-soft);
     color: var(--color-text-subtle);
-    width: 48px;
-    height: 48px;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    /* Outline */
+    border: 1px dashed rgba(0, 0, 0, 0.1);
 }
 
 body.dark-mode .hero-btn-icon {
+    background: rgba(255, 255, 255, 0.03);
     border-color: rgba(255, 255, 255, 0.1);
+    color: var(--color-text-subtle);
 }
 
 .hero-btn-icon:hover {
-    background: var(--color-surface-soft);
-    color: var(--color-primary);
+    background: var(--color-primary);
+    color: white;
+    border-color: transparent;
     transform: translateY(-2px);
-    border-color: var(--color-primary);
 }
 
 
 .content {
-    margin-top: 32px;
+    margin-top: 24px;
+    /* Reduced from 32px */
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -499,37 +505,73 @@ body.dark-mode .link-card {
 }
 
 /* Service Colors (Refined Gradients) */
+/* Service Colors (Refined Soft Gradients) */
 .link-card--regularization .icon {
-    background: linear-gradient(135deg, #FFB75E, #ED8F03);
-    box-shadow: 0 8px 16px -4px rgba(237, 143, 3, 0.3);
+    background: linear-gradient(135deg, #fcd683, #ffba35);
+    /* Softer Amber */
+    box-shadow: 0 8px 16px -4px rgba(255, 186, 53, 0.25);
+    color: #5e4001;
+    /* Darker text for contrast on light bg if needed, but icon is white usually. Let's keep it consistent. */
+    color: #fff;
 }
 
 .link-card--regularization:hover {
-    border-color: #ED8F03;
+    border-color: #ffba35;
 }
 
 .link-card--project .icon {
-    background: linear-gradient(135deg, #00c6ff, #0072ff);
-    box-shadow: 0 8px 16px -4px rgba(0, 114, 255, 0.3);
+    background: linear-gradient(135deg, #89f7fe, #66a6ff);
+    /* Softer Blue */
+    box-shadow: 0 8px 16px -4px rgba(102, 166, 255, 0.25);
 }
 
 .link-card--project:hover {
-    border-color: #0072ff;
+    border-color: #66a6ff;
 }
 
 .link-card--consulting .icon {
-    background: linear-gradient(135deg, #11998e, #38ef7d);
-    box-shadow: 0 8px 16px -4px rgba(56, 239, 125, 0.3);
+    background: linear-gradient(135deg, #84fab0, #8fd3f4);
+    /* Softer Mint/Blue */
+    background: linear-gradient(135deg, #5ec7b0, #4fb09b);
+    /* Matching Theme Soft Green */
+    box-shadow: 0 8px 16px -4px rgba(79, 176, 155, 0.25);
 }
 
 .link-card--consulting:hover {
-    border-color: #38ef7d;
+    border-color: #4fb09b;
+}
+
+/* Animations Utility Classes */
+.fade-in-section {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: opacity, transform;
+}
+
+.fade-in-section.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Stagger delays for children if needed */
+.stagger-1 {
+    transition-delay: 0.1s;
+}
+
+.stagger-2 {
+    transition-delay: 0.2s;
+}
+
+.stagger-3 {
+    transition-delay: 0.3s;
 }
 
 
 /* Footer Styles */
 .footer {
-    margin-top: 48px;
+    margin-top: 32px;
+    /* Reduced from 48px */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -569,13 +611,14 @@ body.dark-mode .footer-contacts a {
     margin: 0;
     max-width: 480px;
     color: var(--color-text);
+    opacity: 0.7;
 }
 
 .footer-quote p {
     margin: 0 0 8px;
     font-size: 1rem;
-    font-style: italic;
-    font-weight: 500;
+    font-style: normal;
+    font-weight: 400;
     line-height: 1.5;
 }
 
@@ -604,6 +647,65 @@ body.dark-mode .footer-contacts a {
     pointer-events: none;
     transition: opacity 0.2s ease;
     z-index: 1000;
+}
+
+/* Floating WhatsApp Button */
+.floating-wa {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 60px;
+    height: 60px;
+    background: #25D366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+    z-index: 900;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+}
+
+.floating-wa:hover {
+    transform: scale(1.1);
+}
+
+.floating-wa svg {
+    width: 32px;
+    height: 32px;
+    fill: currentColor;
+}
+
+.floating-wa::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: #25D366;
+    opacity: 0.5;
+    z-index: -1;
+    animation: pulse-wa 2s infinite;
+}
+
+@keyframes pulse-wa {
+    0% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+
+    70% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
 }
 
 .modal.is-open {
@@ -685,5 +787,79 @@ body.dark-mode .skeleton {
 .skeleton-btn {
     height: 48px;
     width: 120px;
-    border-radius: 18px;
+}
+
+/* Added missing brace */
+
+/* FAQ Accordion */
+.faq-section {
+    margin-top: 32px;
+    /* Regularization CTA Box */
+}
+
+.cta-box {
+    margin-top: 24px;
+    /* Reduced from 32px */
+    width: 100%;
+    max-width: 600px;
+}
+
+border: 1px solid rgba(0, 0, 0, 0.05);
+border-radius: 16px;
+margin-bottom: 12px;
+overflow: hidden;
+transition: all 0.3s ease;
+}
+
+body.dark-mode .accordion-item {
+    background: var(--color-surface-soft);
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+.accordion-header {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: none;
+    border: none;
+    color: var(--color-text);
+    font-weight: 600;
+    font-size: 1rem;
+    text-align: left;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.accordion-header svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+    color: var(--color-text-subtle);
+}
+
+.accordion-item.active .accordion-header svg {
+    transform: rotate(180deg);
+    color: var(--color-primary);
+}
+
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s cubic-bezier(0, 1, 0, 1);
+}
+
+.accordion-content p {
+    padding: 0 20px 20px;
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--color-text-subtle);
+    line-height: 1.6;
+}
+
+.accordion-item.active .accordion-content {
+    max-height: 200px;
+    /* Approximation for animation */
+    transition: max-height 0.3s cubic-bezier(1, 0, 1, 0);
 }
