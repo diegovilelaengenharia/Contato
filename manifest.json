@@ -9,11 +9,6 @@
     "description": "Contatos oficiais e atalhos da Vilela Engenharia.",
     "icons": [
         {
-            "src": "assets/favicon.svg",
-            "sizes": "any",
-            "type": "image/svg+xml"
-        },
-        {
             "src": "assets/logo.png",
             "sizes": "192x192",
             "type": "image/png"
