@@ -1,10 +1,10 @@
-const CACHE_NAME = 'vilela-links-v6';
+const CACHE_NAME = 'vilela-links-v2';
 const ASSETS = [
     './',
     './index.html',
     './style.css',
-    './app.js',
-    './assets/lgo.png',
+    './assets/favicon.svg',
+    './assets/logo.jpg',
     './assets/diego-vilela.vcf',
     './manifest.json'
 ];
@@ -42,24 +42,6 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
-    // Network-First Strategy for Navigation (HTML)
-    if (event.request.mode === 'navigate') {
-        event.respondWith(
-            fetch(event.request)
-                .then((networkResponse) => {
-                    return caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(event.request, networkResponse.clone());
-                        return networkResponse;
-                    });
-                })
-                .catch(() => {
-                    return caches.match(event.request);
-                })
-        );
-        return;
-    }
-
-    // Cache-First Strategy for Assets (Styles, Images, etc)
     event.respondWith(
         caches.match(event.request).then((cachedResponse) => {
             if (cachedResponse) {
@@ -73,6 +55,12 @@ self.addEventListener('fetch', (event) => {
                         cache.put(event.request, clonedResponse);
                     });
                     return response;
+                })
+                .catch(() => {
+                    if (event.request.mode === 'navigate') {
+                        return caches.match('./index.html');
+                    }
+                    return undefined;
                 });
         })
     );
