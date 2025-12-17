@@ -1102,3 +1102,7 @@ body.animations-ready .links-grid li:nth-child(6) {
 .whatsapp-submit-btn { width: 100%; max-width: 100%; border-radius: 16px; padding: 18px 24px; font-size: 1.2rem; background: linear-gradient(135deg, #25d366 0%, #128c7e 100%); letter-spacing: 0.5px; box-shadow: 0 10px 25px -5px rgba(37, 211, 102, 0.5); text-transform: uppercase; margin-top: 8px; }
 .whatsapp-submit-btn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 15px 35px -5px rgba(37, 211, 102, 0.6); }
 .service-list { gap: 0; }
+
+/* --- USER REQUESTED BUTTON STYLE --- */
+.whatsapp-submit-btn { display: inline-flex !important; align-items: center; justify-content: center; padding: 10px 20px !important; border-radius: 999px !important; background: linear-gradient(135deg, #4fb09b, #136f5c) !important; color: #ffffff !important; font-weight: 600 !important; letter-spacing: 0.02em; text-decoration: none; box-shadow: 0 8px 24px -6px rgba(19, 111, 92, 0.4) !important; transition: transform 0.25s ease, box-shadow 0.25s ease !important; width: auto !important; max-width: 100% !important; margin-top: 0 !important; font-size: 1rem !important; text-transform: none !important; }
+.whatsapp-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px -6px rgba(19, 111, 92, 0.5) !important; }
