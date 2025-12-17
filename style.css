@@ -319,6 +319,21 @@ body.dark-mode .hero-vcard {
     --icon-glow: rgba(221, 42, 123, 0.5);
 }
 
+.link-card--city {
+    --icon-bg: linear-gradient(135deg, #0077b6, #0096c7);
+    --icon-glow: rgba(0, 150, 199, 0.5);
+}
+
+.link-card--federal {
+    --icon-bg: linear-gradient(135deg, #2d6a4f, #1b4332);
+    --icon-glow: rgba(45, 106, 79, 0.5);
+}
+
+.link-card--registry {
+    --icon-bg: linear-gradient(135deg, #7f5539, #9c6644);
+    --icon-glow: rgba(156, 102, 68, 0.5);
+}
+
 .link-card::after {
     content: '';
     position: absolute;
