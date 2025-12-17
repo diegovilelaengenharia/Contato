@@ -1065,3 +1065,5 @@ body.animations-ready .links-grid li:nth-child(6) {
 .service-option input[type='checkbox']::after { content: ''; position: absolute; left: 7px; top: 3px; width: 6px; height: 12px; border: solid #25d366; border-width: 0 3px 3px 0; transform: rotate(45deg) scale(0); transition: transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1); opacity: 0; }
 .service-option input[type='checkbox']:checked::after { transform: rotate(45deg) scale(1); opacity: 1; }
 .service-option:hover input[type='checkbox'] { border-color: #25d366; }
+
+.whatsapp-submit-btn { border-radius: 999px; }

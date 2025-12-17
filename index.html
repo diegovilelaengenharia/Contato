@@ -341,7 +341,7 @@
                             checkbox.id = `service-${index}`;
 
                             const span = document.createElement('span');
-                            span.textContent = service;
+                            span.textContent = `${index + 1}. ${service}`;
 
                             label.appendChild(checkbox);
                             label.appendChild(span);
