@@ -301,25 +301,32 @@ body.dark-mode .hero-vcard {
 
 .link-card--whatsapp {
     /* Background neutro para destacar o ícone verde */
-    --icon-bg: rgba(37, 211, 102, 0.1);
+    --icon-bg: rgba(37, 211, 102, 0.15);
     --icon-glow: rgba(37, 211, 102, 0.4);
     --icon-border: rgba(37, 211, 102, 0.3);
 }
 
+.link-card--whatsapp .icon,
+.link-card--phone .icon,
+.link-card--email .icon,
+.link-card--instagram .icon {
+    border-radius: 50%;
+}
+
 .link-card--phone {
-    --icon-bg: rgba(79, 176, 155, 0.1);
+    --icon-bg: rgba(79, 176, 155, 0.15);
     --icon-glow: rgba(79, 176, 155, 0.4);
     --icon-border: rgba(79, 176, 155, 0.3);
 }
 
 .link-card--email {
-    --icon-bg: rgba(252, 74, 26, 0.1);
+    --icon-bg: rgba(252, 74, 26, 0.15);
     --icon-glow: rgba(252, 74, 26, 0.4);
     --icon-border: rgba(252, 74, 26, 0.3);
 }
 
 .link-card--instagram {
-    --icon-bg: rgba(221, 42, 123, 0.1);
+    --icon-bg: rgba(221, 42, 123, 0.15);
     --icon-glow: rgba(221, 42, 123, 0.4);
     --icon-border: rgba(221, 42, 123, 0.3);
 }
