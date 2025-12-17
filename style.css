@@ -1,5 +1,5 @@
 :root {
-    --color-bg: #f9fcfb;
+    --color-bg: #e6f2ee;
     --color-surface: #ffffff;
     --color-surface-soft: #e6ede9;
     --color-primary: #1b9a80;
@@ -10,7 +10,11 @@
     --shadow-soft: 0 18px 48px -28px rgba(15, 111, 92, 0.55);
     --radius-large: 24px;
     --radius-small: 12px;
-    --font-base: "Outfit", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --font-base: "Outfit",
+        "Segoe UI",
+        "Helvetica Neue",
+        Arial,
+        sans-serif;
 }
 
 
@@ -26,7 +30,7 @@ body {
     min-height: 100vh;
     font-family: var(--font-base);
     line-height: 1.6;
-    background: radial-gradient(circle at top, rgba(19, 111, 92, 0.06), transparent 55%), var(--color-bg);
+    background: radial-gradient(circle at top, rgba(19, 111, 92, 0.12), transparent 55%), var(--color-bg);
     color: var(--color-text);
     display: flex;
     align-items: center;
