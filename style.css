@@ -182,13 +182,16 @@ body {
 }
 
 .tagline {
-    margin: 0;
-    font-size: 1.25rem;
-    color: var(--color-accent);
-    font-weight: 600;
+    margin: 4px 0 0;
+    font-size: 1.15rem;
+    color: #b48308;
+    font-weight: 700;
     font-style: normal;
-    position: relative;
     display: inline-block;
+    background: #fff8dc;
+    padding: 8px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(180, 131, 8, 0.2);
 }
 
 .tagline::before {
