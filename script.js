@@ -79,7 +79,6 @@
     const modal = document.getElementById('serviceModal');
     const modalTitle = document.getElementById('modalTitle');
     const serviceListContainer = document.getElementById('serviceListContainer');
-    const selectAllCheckbox = document.getElementById('selectAllServices');
     const whatsappSubmitBtn = document.getElementById('whatsappSubmit');
 
     let currentCategory = '';
@@ -89,11 +88,6 @@
         currentCategory = category;
         modalTitle.textContent = `${category}`;
         serviceListContainer.innerHTML = '';
-
-        // Resetar o "Selecionar Todos" ao abrir
-        if (selectAllCheckbox) {
-            selectAllCheckbox.checked = false;
-        }
 
         if (servicesData[category]) {
             servicesData[category].forEach((service, index) => {
@@ -120,16 +114,6 @@
         document.body.classList.add('modal-open');
         modal.removeAttribute('aria-hidden');
     };
-
-    // Lógica do "Selecionar Todos"
-    if (selectAllCheckbox) {
-        selectAllCheckbox.addEventListener('change', function () {
-            const checkboxes = serviceListContainer.querySelectorAll('.service-item-checkbox');
-            checkboxes.forEach(cb => {
-                cb.checked = this.checked;
-            });
-        });
-    }
 
     // Fechar modal
     function closeModal() {
