@@ -184,9 +184,9 @@ body {
 .tagline {
     margin: 0;
     font-size: 1.25rem;
-    color: var(--color-primary-strong);
+    color: var(--color-accent);
     font-weight: 600;
-    font-style: italic;
+    font-style: normal;
     position: relative;
     display: inline-block;
 }
