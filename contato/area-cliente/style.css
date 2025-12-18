@@ -59,7 +59,8 @@ body {
 .logo-area img {
     height: 80px;
     width: auto;
-    margin-bottom: 16px;
+    margin-bottom: 32px;
+    transform: scale(2);
 }
 
 .logo-area h1 {
