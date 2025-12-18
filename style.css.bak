@@ -1,4 +1,4 @@
-ï»¿:root {
+:root {
     --color-bg: #e6f2ee;
     --color-surface: #ffffff;
     --color-surface-soft: #e6ede9;
@@ -118,33 +118,6 @@ body {
 
 .client-area-button:focus-visible {
     outline: 3px solid var(--color-accent);
-    outline-offset: 3px;
-}
-
-.tips-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 20px;
-    border-radius: 999px;
-    background: linear-gradient(135deg, #efb524, #dfa210);
-    color: #1f2521;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    text-decoration: none;
-    box-shadow: 0 8px 24px -6px rgba(239, 181, 36, 0.4);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.tips-button:hover,
-.tips-button:focus-visible {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 32px -8px rgba(239, 181, 36, 0.5);
-    background: linear-gradient(135deg, #fcd05f, #e5ab15);
-}
-
-.tips-button:focus-visible {
-    outline: 3px solid var(--color-primary);
     outline-offset: 3px;
 }
 
@@ -414,7 +387,32 @@ body {
 }
 
 
+.link-card--whatsapp {
+    /* Background sÃ³lido gradiente para Ã­cone branco */
+    --icon-bg: linear-gradient(135deg, #25d366, #128c7e);
+    --icon-glow: rgba(37, 211, 102, 0.5);
+    --icon-border: rgba(255, 255, 255, 0.2);
+}
 
+.link-card--phone {
+    --icon-bg: linear-gradient(135deg, #4fb09b, #0f6f5c);
+    --icon-glow: rgba(79, 176, 155, 0.55);
+    --icon-border: rgba(255, 255, 255, 0.24);
+}
+
+
+
+.link-card--email {
+    --icon-bg: linear-gradient(135deg, #f7b733, #fc4a1a);
+    --icon-glow: rgba(252, 74, 26, 0.45);
+    --icon-border: rgba(255, 255, 255, 0.2);
+}
+
+.link-card--instagram {
+    --icon-bg: linear-gradient(135deg, #f58529, #dd2a7b 45%, #8134af 70%, #515bd4);
+    --icon-glow: rgba(221, 42, 123, 0.5);
+    --icon-border: rgba(255, 255, 255, 0.2);
+}
 
 .link-card--city {
     --icon-bg: linear-gradient(135deg, #48cae4, #0096c7);
@@ -429,11 +427,6 @@ body {
 .link-card--registry {
     --icon-bg: linear-gradient(135deg, #ddb892, #b08968);
     --icon-glow: rgba(156, 102, 68, 0.5);
-}
-
-.link-card--engineering {
-    --icon-bg: linear-gradient(135deg, #2b2d42, #8d99ae);
-    --icon-glow: rgba(43, 45, 66, 0.5);
 }
 
 .link-card::after {
@@ -509,11 +502,6 @@ body {
 
 #regularizacoes .icon img {
     /* Aumentando zoom em ~40% (28px * 1.4 = ~40px) */
-    width: 40px;
-    height: 40px;
-}
-
-#projetos .icon img {
     width: 40px;
     height: 40px;
 }
@@ -611,25 +599,6 @@ body {
 .floating-btn--instagram:hover {
     box-shadow: 0 6px 16px rgba(220, 39, 67, 0.4);
 }
-
-.floating-btn--email {
-    --btn-bg: linear-gradient(135deg, #f7b733, #fc4a1a);
-}
-
-.floating-btn--email:hover {
-    box-shadow: 0 6px 16px rgba(252, 74, 26, 0.4);
-}
-
-.floating-btn--phone {
-    --btn-bg: linear-gradient(135deg, #1cb5e0, #000851);
-}
-
-.floating-btn--phone:hover {
-    box-shadow: 0 6px 16px rgba(28, 181, 224, 0.4);
-}
-
-}
-
 
 .floating-btn:hover {
     transform: scale(1.1) rotate(-4deg);
@@ -992,512 +961,157 @@ body.animations-ready .links-grid li:nth-child(6) {
     .link-card {
         transition: none !important;
     }
-}
+}/ *   O p Ã § Ã µ e s   d e   S e r v i Ã § o   n o   M o d a l   * /  
+ . s e r v i c e - l i s t   {  
+         d i s p l a y :   f l e x ;  
+         f l e x - d i r e c t i o n :   c o l u m n ;  
+         g a p :   1 2 p x ;  
+         m a x - h e i g h t :   5 0 v h ;  
+         o v e r f l o w - y :   a u t o ;  
+         p a d d i n g :   4 p x ;  
+         m a r g i n :   0   - 4 p x ;  
+         / *   C o m p e n s a r   p a d d i n g   d o   s c r o l l   * /  
+ }  
+  
+ . s e r v i c e - o p t i o n   {  
+         d i s p l a y :   f l e x ;  
+         a l i g n - i t e m s :   f l e x - s t a r t ;  
+         g a p :   1 2 p x ;  
+         p a d d i n g :   1 2 p x ;  
+         b o r d e r - r a d i u s :   1 2 p x ;  
+         b o r d e r :   1 p x   s o l i d   r g b a ( 1 9 ,   1 1 1 ,   9 2 ,   0 . 1 ) ;  
+         b a c k g r o u n d :   v a r ( - - c o l o r - s u r f a c e - s o f t ) ;  
+         c u r s o r :   p o i n t e r ;  
+         t r a n s i t i o n :   b a c k g r o u n d   0 . 2 s   e a s e ,   b o r d e r - c o l o r   0 . 2 s   e a s e ;  
+ }  
+  
+ . s e r v i c e - o p t i o n : h o v e r   {  
+         b a c k g r o u n d :   r g b a ( 1 9 ,   1 1 1 ,   9 2 ,   0 . 0 8 ) ;  
+         b o r d e r - c o l o r :   r g b a ( 1 9 ,   1 1 1 ,   9 2 ,   0 . 2 5 ) ;  
+ }  
+  
+ . s e r v i c e - o p t i o n   i n p u t [ t y p e = " c h e c k b o x " ]   {  
+         m a r g i n - t o p :   4 p x ;  
+         w i d t h :   1 8 p x ;  
+         h e i g h t :   1 8 p x ;  
+         a c c e n t - c o l o r :   v a r ( - - c o l o r - p r i m a r y ) ;  
+         c u r s o r :   p o i n t e r ;  
+ }  
+  
+ . s e r v i c e - o p t i o n   s p a n   {  
+         f o n t - s i z e :   0 . 9 5 r e m ;  
+         c o l o r :   v a r ( - - c o l o r - t e x t ) ;  
+         l i n e - h e i g h t :   1 . 4 ;  
+ }  
+  
+ . m o d a l - f o o t e r   {  
+         d i s p l a y :   f l e x ;  
+         f l e x - d i r e c t i o n :   c o l u m n ;  
+         g a p :   1 2 p x ;  
+         m a r g i n - t o p :   2 4 p x ;  
+         p a d d i n g - t o p :   2 4 p x ;  
+         b o r d e r - t o p :   1 p x   s o l i d   r g b a ( 0 ,   0 ,   0 ,   0 . 0 6 ) ;  
+ }  
+  
+ . s e l e c t - a l l - c o n t a i n e r   {  
+         d i s p l a y :   f l e x ;  
+         a l i g n - i t e m s :   c e n t e r ;  
+         g a p :   8 p x ;  
+         f o n t - s i z e :   0 . 9 r e m ;  
+         c o l o r :   v a r ( - - c o l o r - p r i m a r y - s t r o n g ) ;  
+         c u r s o r :   p o i n t e r ;  
+         a l i g n - s e l f :   f l e x - s t a r t ;  
+         f o n t - w e i g h t :   5 0 0 ;  
+ }  
+  
+ . w h a t s a p p - s u b m i t - b t n   {  
+         d i s p l a y :   i n l i n e - f l e x ;  
+         a l i g n - i t e m s :   c e n t e r ;  
+         j u s t i f y - c o n t e n t :   c e n t e r ;  
+         g a p :   1 0 p x ;  
+         p a d d i n g :   1 4 p x   2 4 p x ;  
+         b o r d e r - r a d i u s :   9 9 9 p x ;  
+         b a c k g r o u n d :   # 2 5 d 3 6 6 ;  
+         c o l o r :   w h i t e ;  
+         f o n t - w e i g h t :   6 0 0 ;  
+         t e x t - d e c o r a t i o n :   n o n e ;  
+         t r a n s i t i o n :   t r a n s f o r m   0 . 2 s   e a s e ,   b a c k g r o u n d   0 . 2 s   e a s e ,   b o x - s h a d o w   0 . 2 s   e a s e ;  
+         b o x - s h a d o w :   0   4 p x   1 2 p x   r g b a ( 3 7 ,   2 1 1 ,   1 0 2 ,   0 . 3 ) ;  
+         b o r d e r :   n o n e ;  
+         c u r s o r :   p o i n t e r ;  
+         w i d t h :   1 0 0 % ;  
+         f o n t - s i z e :   1 r e m ;  
+ }  
+  
+ . w h a t s a p p - s u b m i t - b t n : h o v e r   {  
+         b a c k g r o u n d :   # 2 0 b d 5 a ;  
+         t r a n s f o r m :   t r a n s l a t e Y ( - 2 p x ) ;  
+         b o x - s h a d o w :   0   8 p x   2 0 p x   r g b a ( 3 7 ,   2 1 1 ,   1 0 2 ,   0 . 4 ) ;  
+ }  
+  
+ . w h a t s a p p - s u b m i t - b t n   s v g   {  
+         w i d t h :   2 4 p x ;  
+         h e i g h t :   2 4 p x ;  
+         f i l l :   c u r r e n t C o l o r ;  
+ }  
+ 
+.whatsapp-submit-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 24px; border-radius: 999px; background: linear-gradient(135deg, #25d366, #128c7e); color: #ffffff; font-weight: 600; text-decoration: none; transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease; box-shadow: 0 12px 32px -10px rgba(37, 211, 102, 0.5); border: none; cursor: pointer; width: 100%; font-size: 1rem; letter-spacing: 0.01em; } .whatsapp-submit-btn:hover, .whatsapp-submit-btn:focus-visible { transform: translateY(-3px); box-shadow: 0 16px 40px -12px rgba(37, 211, 102, 0.6); background: linear-gradient(135deg, #2cf576, #15a594); } .whatsapp-submit-btn:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 4px; } .service-list { gap: 14px; }
 
-/ *   O p Ãƒ Â§ Ãƒ Âµ e s   d e   S e r v i Ãƒ Â§ o   n o   M o d a l   * /     . s e r v i c e - l i s t    {
-                 d i s p l a y :    f l e x ;
-                 f l e x - d i r e c t i o n :    c o l u m n ;
-                 g a p :    1 2 p x ;
-                 m a x - h e i g h t :    5 0 v h ;
-                 o v e r f l o w - y :    a u t o ;
-                 p a d d i n g :    4 p x ;
-                 m a r g i n :    0   - 4 p x ;
-                 / *   C o m p e n s a r   p a d d i n g   d o   s c r o l l   * /     
-}
-
-         . s e r v i c e - o p t i o n    {
-                 d i s p l a y :    f l e x ;
-                 a l i g n - i t e m s :    f l e x - s t a r t ;
-                 g a p :    1 2 p x ;
-                 p a d d i n g :    1 2 p x ;
-                 b o r d e r - r a d i u s :    1 2 p x ;
-                 b o r d e r :    1 p x   s o l i d   r g b a ( 1 9 ,    1 1 1 ,    9 2 ,    0 . 1 ) ;
-                 b a c k g r o u n d :    v a r ( - - c o l o r - s u r f a c e - s o f t ) ;
-                 c u r s o r :    p o i n t e r ;
-                 t r a n s i t i o n :    b a c k g r o u n d   0 . 2 s   e a s e ,    b o r d e r - c o l o r   0 . 2 s   e a s e ;
-         
-}
-
-         . s e r v i c e - o p t i o n : h o v e r    {
-                 b a c k g r o u n d :    r g b a ( 1 9 ,    1 1 1 ,    9 2 ,    0 . 0 8 ) ;
-                 b o r d e r - c o l o r :    r g b a ( 1 9 ,    1 1 1 ,    9 2 ,    0 . 2 5 ) ;
-         
-}
-
-         . s e r v i c e - o p t i o n   i n p u t [ t y p e = " c h e c k b o x "  ]    {
-                 m a r g i n - t o p :    4 p x ;
-                 w i d t h :    1 8 p x ;
-                 h e i g h t :    1 8 p x ;
-                 a c c e n t - c o l o r :    v a r ( - - c o l o r - p r i m a r y ) ;
-                 c u r s o r :    p o i n t e r ;
-         
-}
-
-         . s e r v i c e - o p t i o n   s p a n    {
-                 f o n t - s i z e :    0 . 9 5 r e m ;
-                 c o l o r :    v a r ( - - c o l o r - t e x t ) ;
-                 l i n e - h e i g h t :    1 . 4 ;
-         
-}
-
-         . m o d a l - f o o t e r    {
-                 d i s p l a y :    f l e x ;
-                 f l e x - d i r e c t i o n :    c o l u m n ;
-                 g a p :    1 2 p x ;
-                 m a r g i n - t o p :    2 4 p x ;
-                 p a d d i n g - t o p :    2 4 p x ;
-                 b o r d e r - t o p :    1 p x   s o l i d   r g b a ( 0 ,    0 ,    0 ,    0 . 0 6 ) ;
-         
-}
-
-         . s e l e c t - a l l - c o n t a i n e r    {
-                 d i s p l a y :    f l e x ;
-                 a l i g n - i t e m s :    c e n t e r ;
-                 g a p :    8 p x ;
-                 f o n t - s i z e :    0 . 9 r e m ;
-                 c o l o r :    v a r ( - - c o l o r - p r i m a r y - s t r o n g ) ;
-                 c u r s o r :    p o i n t e r ;
-                 a l i g n - s e l f :    f l e x - s t a r t ;
-                 f o n t - w e i g h t :    5 0 0 ;
-         
-}
-
-         . w h a t s a p p - s u b m i t - b t n    {
-                 d i s p l a y :    i n l i n e - f l e x ;
-                 a l i g n - i t e m s :    c e n t e r ;
-                 j u s t i f y - c o n t e n t :    c e n t e r ;
-                 g a p :    1 0 p x ;
-                 p a d d i n g :    1 4 p x   2 4 p x ;
-                 b o r d e r - r a d i u s :    9 9 9 p x ;
-                 b a c k g r o u n d :    # 2 5 d 3 6 6 ;
-                 c o l o r :    w h i t e ;
-                 f o n t - w e i g h t :    6 0 0 ;
-                 t e x t - d e c o r a t i o n :    n o n e ;
-                 t r a n s i t i o n :    t r a n s f o r m   0 . 2 s   e a s e ,    b a c k g r o u n d   0 . 2 s   e a s e ,    b o x - s h a d o w   0 . 2 s   e a s e ;
-                 b o x - s h a d o w :    0   4 p x   1 2 p x   r g b a ( 3 7 ,    2 1 1 ,    1 0 2 ,    0 . 3 ) ;
-                 b o r d e r :    n o n e ;
-                 c u r s o r :    p o i n t e r ;
-                 w i d t h :    1 0 0 % ;
-                 f o n t - s i z e :    1 r e m ;
-         
-}
-
-         . w h a t s a p p - s u b m i t - b t n : h o v e r    {
-                 b a c k g r o u n d :    # 2 0 b d 5 a ;
-                 t r a n s f o r m :    t r a n s l a t e Y ( - 2 p x ) ;
-                 b o x - s h a d o w :    0   8 p x   2 0 p x   r g b a ( 3 7 ,    2 1 1 ,    1 0 2 ,    0 . 4 ) ;
-         
-}
-
-         . w h a t s a p p - s u b m i t - b t n   s v g    {
-                 w i d t h :    2 4 p x ;
-                 h e i g h t :    2 4 p x ;
-                 f i l l :    c u r r e n t C o l o r ;
-         
-}
-
-      .whatsapp-submit-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 14px 24px;
-    border-radius: 999px;
-    background: linear-gradient(135deg, #25d366, #128c7e);
-    color: #ffffff;
-    font-weight: 600;
-    text-decoration: none;
-    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
-    box-shadow: 0 12px 32px -10px rgba(37, 211, 102, 0.5);
-    border: none;
-    cursor: pointer;
-    width: 100%;
-    font-size: 1rem;
-    letter-spacing: 0.01em;
-}
-
-.whatsapp-submit-btn:hover,
-.whatsapp-submit-btn:focus-visible {
-    transform: translateY(-3px);
-    box-shadow: 0 16px 40px -12px rgba(37, 211, 102, 0.6);
-    background: linear-gradient(135deg, #2cf576, #15a594);
-}
-
-.whatsapp-submit-btn:focus-visible {
-    outline: 3px solid var(--color-accent);
-    outline-offset: 4px;
-}
-
-.service-list {
-    gap: 14px;
-}
-
-.service-option {
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid rgba(19, 111, 92, 0.1);
-    border-radius: 0;
-    padding: 16px 8px;
-    margin: 0;
-}
-
-.service-option:last-child {
-    border-bottom: none;
-}
-
-.service-option:hover {
-    background: rgba(19, 111, 92, 0.04);
-}
-
-.whatsapp-submit-btn {
-    border-radius: 12px;
-}
+.service-option { background: transparent; border: none; border-bottom: 1px solid rgba(19, 111, 92, 0.1); border-radius: 0; padding: 16px 8px; margin: 0; } .service-option:last-child { border-bottom: none; } .service-option:hover { background: rgba(19, 111, 92, 0.04); } .whatsapp-submit-btn { border-radius: 12px; }
 
 /* Custom Checkbox Design */
-.service-option input[type='checkbox'] {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 22px;
-    height: 22px;
-    border: 2px solid #d1d5db;
-    border-radius: 6px;
-    margin-right: 12px;
-    position: relative;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    flex-shrink: 0;
-    outline: none;
-    background: #fff;
-}
+.service-option input[type='checkbox'] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; border: 2px solid #d1d5db; border-radius: 6px; margin-right: 12px; position: relative; cursor: pointer; transition: all 0.2s ease; flex-shrink: 0; outline: none; background: #fff; }
+.service-option input[type='checkbox']:checked { border-color: #25d366; background-color: #fff; }
+.service-option input[type='checkbox']::after { content: ''; position: absolute; left: 7px; top: 3px; width: 6px; height: 12px; border: solid #25d366; border-width: 0 3px 3px 0; transform: rotate(45deg) scale(0); transition: transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1); opacity: 0; }
+.service-option input[type='checkbox']:checked::after { transform: rotate(45deg) scale(1); opacity: 1; }
+.service-option:hover input[type='checkbox'] { border-color: #25d366; }
 
-.service-option input[type='checkbox']:checked {
-    border-color: #25d366;
-    background-color: #fff;
-}
-
-.service-option input[type='checkbox']::after {
-    content: '';
-    position: absolute;
-    left: 7px;
-    top: 3px;
-    width: 6px;
-    height: 12px;
-    border: solid #25d366;
-    border-width: 0 3px 3px 0;
-    transform: rotate(45deg) scale(0);
-    transition: transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
-    opacity: 0;
-}
-
-.service-option input[type='checkbox']:checked::after {
-    transform: rotate(45deg) scale(1);
-    opacity: 1;
-}
-
-.service-option:hover input[type='checkbox'] {
-    border-color: #25d366;
-}
-
-.whatsapp-submit-btn {
-    border-radius: 999px;
-}
+.whatsapp-submit-btn { border-radius: 999px; }
 
 /* --- REDESIGN DO MODAL (CLEAN SLATE) --- */
-.modal__content {
-    padding: 0;
-    background: #fff;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    max-height: 85vh;
-    border-radius: 24px;
-    width: min(500px, 92%);
-}
-
-.modal__header {
-    padding: 24px 24px 16px;
-    border-bottom: 1px solid #f0f0f0;
-    background: #fff;
-    flex-shrink: 0;
-}
-
-.modal__header h2 {
-    font-size: 1.4rem;
-    color: #1b9a80;
-    margin-bottom: 4px;
-}
-
-.modal__subtitle {
-    font-size: 0.95rem;
-    color: #666;
-    margin: 0;
-}
-
-.service-list {
-    padding: 0;
-    margin: 0;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    max-height: none;
-}
-
-.service-option {
-    display: flex;
-    align-items: center;
-    padding: 16px 24px;
-    border-bottom: 1px solid #f0f0f0;
-    margin: 0;
-    border: none;
-    background: transparent;
-    transition: background 0.2s;
-    cursor: pointer;
-    border-radius: 0;
-}
-
-.service-option:last-child {
-    border-bottom: none;
-}
-
-.service-option:hover {
-    background: #f9fdfc;
-}
-
-.service-option span {
-    font-size: 1rem;
-    color: #333;
-    flex: 1;
-    line-height: 1.4;
-}
-
+.modal__content { padding: 0; background: #fff; overflow: hidden; display: flex; flex-direction: column; max-height: 85vh; border-radius: 24px; width: min(500px, 92%); }
+.modal__header { padding: 24px 24px 16px; border-bottom: 1px solid #f0f0f0; background: #fff; flex-shrink: 0; }
+.modal__header h2 { font-size: 1.4rem; color: #1b9a80; margin-bottom: 4px; }
+.modal__subtitle { font-size: 0.95rem; color: #666; margin: 0; }
+.service-list { padding: 0; margin: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 0; max-height: none; }
+.service-option { display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid #f0f0f0; margin: 0; border: none; background: transparent; transition: background 0.2s; cursor: pointer; border-radius: 0; }
+.service-option:last-child { border-bottom: none; }
+.service-option:hover { background: #f9fdfc; }
+.service-option span { font-size: 1rem; color: #333; flex: 1; line-height: 1.4; }
 /* Checkbox Customizado */
-.service-option input[type='checkbox'] {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 24px;
-    height: 24px;
-    border: 2px solid #ddd;
-    border-radius: 6px;
-    margin-right: 16px;
-    position: relative;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    flex-shrink: 0;
-    outline: none;
-    background: #fff;
-}
-
-.service-option input[type='checkbox']:checked {
-    border-color: #25d366;
-    background-color: #25d366;
-}
-
-.service-option input[type='checkbox']::after {
-    content: '';
-    position: absolute;
-    left: 7px;
-    top: 3px;
-    width: 6px;
-    height: 12px;
-    border: solid white;
-    border-width: 0 3px 3px 0;
-    transform: rotate(45deg) scale(0);
-    transition: transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
-    opacity: 0;
-}
-
-.service-option input[type='checkbox']:checked::after {
-    transform: rotate(45deg) scale(1);
-    opacity: 1;
-}
-
-.modal-footer {
-    padding: 20px 24px 24px;
-    background: #fff;
-    border-top: 1px solid #f0f0f0;
-    margin: 0;
-    flex-shrink: 0;
-}
-
-.select-all-container {
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    font-size: 0.9rem;
-    color: #1b9a80;
-    font-weight: 600;
-}
-
-.select-all-container input {
-    margin-right: 8px;
-    accent-color: #1b9a80;
-}
-
-.whatsapp-submit-btn {
-    width: 100%;
-    padding: 18px;
-    border-radius: 999px;
-    background: linear-gradient(135deg, #25d366, #128c7e);
-    color: white;
-    font-size: 1.1rem;
-    font-weight: 700;
-    box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
-    letter-spacing: 0.5px;
-    text-transform: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    transition: transform 0.2s, box-shadow 0.2s;
-    border: none;
-    cursor: pointer;
-}
-
-.whatsapp-submit-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 28px rgba(37, 211, 102, 0.4);
-}
-
-.modal__close {
-    top: 16px;
-    right: 16px;
-    background: #25d366;
-    color: #fff;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
-}
-
-.modal__close:hover {
-    background: #128c7e;
-    transform: scale(1.1);
-}
+.service-option input[type='checkbox'] { appearance: none; -webkit-appearance: none; width: 24px; height: 24px; border: 2px solid #ddd; border-radius: 6px; margin-right: 16px; position: relative; cursor: pointer; transition: all 0.2s ease; flex-shrink: 0; outline: none; background: #fff; }
+.service-option input[type='checkbox']:checked { border-color: #25d366; background-color: #25d366; }
+.service-option input[type='checkbox']::after { content: ''; position: absolute; left: 7px; top: 3px; width: 6px; height: 12px; border: solid white; border-width: 0 3px 3px 0; transform: rotate(45deg) scale(0); transition: transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1); opacity: 0; }
+.service-option input[type='checkbox']:checked::after { transform: rotate(45deg) scale(1); opacity: 1; }
+.modal-footer { padding: 20px 24px 24px; background: #fff; border-top: 1px solid #f0f0f0; margin: 0; flex-shrink: 0; }
+.select-all-container { margin-bottom: 16px; display: flex; align-items: center; font-size: 0.9rem; color: #1b9a80; font-weight: 600; }
+.select-all-container input { margin-right: 8px; accent-color: #1b9a80; }
+.whatsapp-submit-btn { width: 100%; padding: 18px; border-radius: 999px; background: linear-gradient(135deg, #25d366, #128c7e); color: white; font-size: 1.1rem; font-weight: 700; box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3); letter-spacing: 0.5px; text-transform: none; display: flex; justify-content: center; align-items: center; gap: 10px; transition: transform 0.2s, box-shadow 0.2s; border: none; cursor: pointer; }
+.whatsapp-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(37, 211, 102, 0.4); }
+.modal__close { top: 16px; right: 16px; background: #f5f5f5; width: 32px; height: 32px; }
 
 
 /* Button Resize Override */
-.whatsapp-submit-btn {
-    width: auto;
-    min-width: 240px;
-    max-width: 90%;
-    padding: 12px 32px;
-    font-size: 1rem;
-    margin: 0 auto;
-}
-
-.modal-footer {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-}
-
-.select-all-container {
-    margin-bottom: 0;
-    align-self: center;
-}
+.whatsapp-submit-btn { width: auto; min-width: 240px; max-width: 90%; padding: 12px 32px; font-size: 1rem; margin: 0 auto; }
+.modal-footer { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.select-all-container { margin-bottom: 0; align-self: center; }
 
 /* --- REFINEMENTS (FONT SIZE, SPACING, BUTTON) --- */
-.service-option {
-    padding: 10px 24px;
-}
-
-.service-option span {
-    font-size: 1.15rem;
-    font-weight: 500;
-}
-
-.whatsapp-submit-btn {
-    width: 100%;
-    max-width: 100%;
-    border-radius: 16px;
-    padding: 18px 24px;
-    font-size: 1.2rem;
-    background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
-    letter-spacing: 0.5px;
-    box-shadow: 0 10px 25px -5px rgba(37, 211, 102, 0.5);
-    text-transform: uppercase;
-    margin-top: 8px;
-}
-
-.whatsapp-submit-btn:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 15px 35px -5px rgba(37, 211, 102, 0.6);
-}
-
-.service-list {
-    gap: 0;
-}
+.service-option { padding: 10px 24px; }
+.service-option span { font-size: 1.15rem; font-weight: 500; }
+.whatsapp-submit-btn { width: 100%; max-width: 100%; border-radius: 16px; padding: 18px 24px; font-size: 1.2rem; background: linear-gradient(135deg, #25d366 0%, #128c7e 100%); letter-spacing: 0.5px; box-shadow: 0 10px 25px -5px rgba(37, 211, 102, 0.5); text-transform: uppercase; margin-top: 8px; }
+.whatsapp-submit-btn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 15px 35px -5px rgba(37, 211, 102, 0.6); }
+.service-list { gap: 0; }
 
 /* --- USER REQUESTED BUTTON STYLE --- */
-.whatsapp-submit-btn {
-    display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 20px !important;
-    border-radius: 999px !important;
-    background: linear-gradient(135deg, #4fb09b, #136f5c) !important;
-    color: #ffffff !important;
-    font-weight: 600 !important;
-    letter-spacing: 0.02em;
-    text-decoration: none;
-    box-shadow: 0 8px 24px -6px rgba(19, 111, 92, 0.4) !important;
-    transition: transform 0.25s ease, box-shadow 0.25s ease !important;
-    width: auto !important;
-    max-width: 100% !important;
-    margin-top: 0 !important;
-    font-size: 1rem !important;
-    text-transform: none !important;
-}
-
-.whatsapp-submit-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 28px -6px rgba(19, 111, 92, 0.5) !important;
-}
+.whatsapp-submit-btn { display: inline-flex !important; align-items: center; justify-content: center; padding: 10px 20px !important; border-radius: 999px !important; background: linear-gradient(135deg, #4fb09b, #136f5c) !important; color: #ffffff !important; font-weight: 600 !important; letter-spacing: 0.02em; text-decoration: none; box-shadow: 0 8px 24px -6px rgba(19, 111, 92, 0.4) !important; transition: transform 0.25s ease, box-shadow 0.25s ease !important; width: auto !important; max-width: 100% !important; margin-top: 0 !important; font-size: 1rem !important; text-transform: none !important; }
+.whatsapp-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px -6px rgba(19, 111, 92, 0.5) !important; }
 
 /* --- USER REQUESTED 'LONGO' BUTTON --- */
-.btn-whatsapp-longo {
-    display: flex;
-    width: 100%;
-    box-sizing: border-box;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    background-color: #25D366;
-    color: white;
-    text-decoration: none;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    font-weight: 600;
-    font-size: 18px;
-    padding: 16px 24px;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    border: none;
-    cursor: pointer;
-}
-
-.btn-whatsapp-longo:hover {
-    background-color: #128C7E;
-    transform: translateY(-2px);
-    box-shadow: 0 7px 14px rgba(37, 211, 102, 0.3);
-}
-
-.btn-whatsapp-longo svg {
-    flex-shrink: 0;
-}
+.btn-whatsapp-longo { display: flex; width: 100%; box-sizing: border-box; align-items: center; justify-content: center; gap: 12px; background-color: #25D366; color: white; text-decoration: none; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-weight: 600; font-size: 18px; padding: 16px 24px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.3s ease; border: none; cursor: pointer; }
+.btn-whatsapp-longo:hover { background-color: #128C7E; transform: translateY(-2px); box-shadow: 0 7px 14px rgba(37, 211, 102, 0.3); }
+.btn-whatsapp-longo svg { flex-shrink: 0; }
 
 
 /* --- MODERN BOX BUTTON --- */
-.btn-whatsapp-longo {
-    border-radius: 12px !important;
-    box-shadow: 0 10px 30px -10px rgba(37, 211, 102, 0.6) !important;
-    background: linear-gradient(135deg, #1fa855 0%, #128c7e 100%) !important;
-}
+.btn-whatsapp-longo { border-radius: 12px !important; box-shadow: 0 10px 30px -10px rgba(37, 211, 102, 0.6) !important; background: linear-gradient(135deg, #1fa855 0%, #128c7e 100%) !important; }

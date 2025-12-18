@@ -39,8 +39,10 @@
         <header class="hero" role="banner">
             <div class="hero-top">
 
-                <a class="client-area-button" href="https://vilela.eng.br/portal" target="_blank"
-                    rel="noopener">&Aacute;rea do Cliente</a>
+
+
+                <a class="client-area-button" href="./contato/area-cliente/" target="_blank" rel="noopener">&Aacute;rea
+                    do Cliente</a>
             </div>
             <picture class="logo">
                 <img src="assets/logo.png" alt="Logotipo da Vilela Engenharia" width="160" height="160" loading="lazy"
@@ -117,76 +119,29 @@
                 </ul>
             </section>
 
-            <section id="acesso-rapido" class="links" aria-label="Op&ccedil;&otilde;es principais">
-                <h2 class="section-heading">Acesso r&aacute;pido</h2>
+            </section>
+
+            <section id="projetos" class="links" aria-label="Projetos de Engenharia">
+                <h2 class="section-heading">Projetos de Engenharia</h2>
                 <ul class="links-grid">
                     <li>
-                        <a class="link-card link-card--whatsapp"
-                            href="https://wa.me/5535984529577?text=Ola%20Vilela%20Engenharia"
-                            aria-label="Falar com Vilela Engenharia pelo WhatsApp" target="_blank" rel="noopener">
+                        <button class="link-card link-card--engineering" onclick="openModal('Projetos de Engenharia')">
                             <span class="icon" aria-hidden="true">
-                                <svg viewBox="0 0 24 24" role="presentation">
-                                    <path
-                                        d="M12 2a10 10 0 0 0-8.66 15.14L2 22l5-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.08-1.13l-.29-.18-3 .79.8-2.91-.19-.3A8 8 0 1 1 12 20zm4.37-5.73-.52-.26a1.32 1.32 0 0 0-1.15.04l-.4.21a.5.5 0 0 1-.49 0 8.14 8.14 0 0 1-2.95-2.58.5.5 0 0 1 0-.49l.21-.4a1.32 1.32 0 0 0 .04-1.15l-.26-.52a1.32 1.32 0 0 0-1.18-.73h-.37a1 1 0 0 0-1 .86 3.47 3.47 0 0 0 .18 1.52A10.2 10.2 0 0 0 13 15.58a3.47 3.47 0 0 0 1.52.18 1 1 0 0 0 .86-1v-.37a1.32 1.32 0 0 0-.73-1.18z">
-                                    </path>
-                                </svg>
+                                <img src="assets/icon-projetos.png" alt="" width="28" height="28">
                             </span>
                             <span class="text">
-                                <span class="title">WhatsApp</span>
-                                <span class="subtitle">Fale com a equipe agora</span>
+                                <span class="title">Projetos de Engenharia</span>
+                                <span class="subtitle">Arquitetônico, Estrutural e mais</span>
                             </span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="link-card link-card--instagram" href="https://www.instagram.com/diegovilela.eng/"
-                            aria-label="Abrir Instagram de Diego Vilela" target="_blank" rel="noopener">
-                            <span class="icon" aria-hidden="true">
-                                <svg viewBox="0 0 24 24" role="presentation">
-                                    <path
-                                        d="M7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4zm0 2a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm5 3.5A3.5 3.5 0 1 1 8.5 12 3.5 3.5 0 0 1 12 8.5zm0 5A1.5 1.5 0 1 0 10.5 12 1.5 1.5 0 0 0 12 13.5zm4.25-6.75a1 1 0 1 1-1-1 1 1 0 0 1 1 1z">
-                                    </path>
-                                </svg>
-                            </span>
-                            <span class="text">
-                                <span class="title">Instagram</span>
-                                <span class="subtitle">@diegovilela.eng</span>
-                            </span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="link-card link-card--email" href="mailto:diegonunesvilela@gmail.com"
-                            aria-label="Enviar e-mail para Vilela Engenharia">
-                            <span class="icon" aria-hidden="true">
-                                <svg viewBox="0 0 24 24" role="presentation">
-                                    <path
-                                        d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5z">
-                                    </path>
-                                </svg>
-                            </span>
-                            <span class="text">
-                                <span class="title">E-mail</span>
-                                <span class="subtitle">diegonunesvilela@gmail.com</span>
-                            </span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="link-card link-card--phone" href="tel:+5535984529577"
-                            aria-label="Ligar agora para Vilela Engenharia">
-                            <span class="icon" aria-hidden="true">
-                                <svg viewBox="0 0 24 24" role="presentation">
-                                    <path
-                                        d="M6.62 10.79a15.91 15.91 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1-.24 12.36 12.36 0 0 0 3.88.62 1 1 0 0 1 1 1v3.57a1 1 0 0 1-1 1A17 17 0 0 1 3 5a1 1 0 0 1 1-1h3.55a1 1 0 0 1 1 1 12.36 12.36 0 0 0 .62 3.88 1 1 0 0 1-.24 1z">
-                                    </path>
-                                </svg>
-                            </span>
-                            <span class="text">
-                                <span class="title">Ligar agora</span>
-                                <span class="subtitle">(35) 98452-9577</span>
-                            </span>
-                        </a>
+                        </button>
                     </li>
                 </ul>
             </section>
+
+
+
+
+
         </main>
         <footer class="footer">
             <small>&copy; <span id="year">2025</span> Vilela Engenharia. Todos os direitos reservados.</small>
@@ -196,7 +151,13 @@
         <div id="serviceModal" class="modal" aria-hidden="true">
             <div class="modal__overlay" tabindex="-1" data-micromodal-close></div>
             <div class="modal__content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-                <button class="modal__close" aria-label="Fechar modal" data-micromodal-close></button>
+                <button class="modal__close" aria-label="Fechar modal" data-micromodal-close>
+                    <svg viewBox="0 0 24 24" role="presentation">
+                        <path
+                            d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z">
+                        </path>
+                    </svg>
+                </button>
 
                 <header class="modal__header">
                     <h2 id="modalTitle">Selecione os servi&ccedil;os</h2>
@@ -235,6 +196,21 @@
                 <svg viewBox="0 0 24 24" role="presentation">
                     <path
                         d="M7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4zm0 2a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm5 3.5A3.5 3.5 0 1 1 8.5 12 3.5 3.5 0 0 1 12 8.5zm0 5A1.5 1.5 0 1 0 10.5 12 1.5 1.5 0 0 0 12 13.5zm4.25-6.75a1 1 0 1 1-1-1 1 1 0 0 1 1 1z">
+                    </path>
+                </svg>
+            </a>
+            <a href="mailto:diegonunesvilela@gmail.com" class="floating-btn floating-btn--email"
+                aria-label="Enviar E-mail">
+                <svg viewBox="0 0 24 24" role="presentation">
+                    <path
+                        d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5z">
+                    </path>
+                </svg>
+            </a>
+            <a href="tel:+5535984529577" class="floating-btn floating-btn--phone" aria-label="Ligar agora">
+                <svg viewBox="0 0 24 24" role="presentation">
+                    <path
+                        d="M6.62 10.79a15.91 15.91 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1-.24 12.36 12.36 0 0 0 3.88.62 1 1 0 0 1 1 1v3.57a1 1 0 0 1-1 1A17 17 0 0 1 3 5a1 1 0 0 1 1-1h3.55a1 1 0 0 1 1 1 12.36 12.36 0 0 0 .62 3.88 1 1 0 0 1-.24 1z">
                     </path>
                 </svg>
             </a>
@@ -309,6 +285,14 @@
                         "Registro de Usucapião Extrajudicial",
                         "Unificação e Desmembramento de Lotes",
                         "Averbação de Demolição"
+                    ],
+                    'Projetos de Engenharia': [
+                        "Projeto Arquitetônico (Obra Nova/Reforma)",
+                        "BIM e Renderização 3D",
+                        "Projeto Estrutural (Concreto/Metálica)",
+                        "Laudo Estrutural",
+                        "Projetos Elétrico e Hidrossanitário",
+                        "Projeto de Prevenção a Incêndio (AVCB/CLCB)"
                     ]
                 };
 
@@ -385,6 +369,9 @@
                     });
                 }
             }());
+
+
+
         </script>
 </body>
 
