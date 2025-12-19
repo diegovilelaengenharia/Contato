@@ -8,7 +8,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuario = $_POST['usuario'];
     $senha = $_POST['senha'];
 
-    // Busca o usuário
+    // 1. Verifica se é ADMIN
+    // Defina sua senha mestra aqui ou busque de um config, mas hardcoded é seguro o suficiente para este escopo se o arquivo não for exposto
+    $senhaMestraAdmin = "VilelaAdmin2025"; 
+    
+    if (($usuario === 'admin' || $usuario === 'vilela') && $senha === $senhaMestraAdmin) {
+        $_SESSION['admin_logado'] = true;
+        header("Location: gestao_admin_99.php");
+        exit;
+    }
+
+    // 2. Se não for Admin, busca Cliente no banco
     $stmt = $pdo->prepare("SELECT * FROM clientes WHERE usuario = ?");
     $stmt->execute([$usuario]);
     $user = $stmt->fetch();

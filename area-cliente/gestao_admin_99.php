@@ -3,53 +3,19 @@ session_start();
 require 'db.php';
 
 // --- Configuração e Segurança ---
-$minha_senha_mestra = "VilelaAdmin2025"; // Troque por sua senha
+$minha_senha_mestra = "VilelaAdmin2025"; // Mantida para referência ou dupla checagem futura
 
-// Login
-if (isset($_POST['login_admin'])) {
-    if ($_POST['senha_mestra'] === $minha_senha_mestra) {
-        $_SESSION['admin_logado'] = true;
-    } else {
-        $erro_login = "Senha incorreta.";
-    }
+// Verifica Sessão
+if (!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true) {
+    // Se não estiver logado, manda para o login unificado
+    header("Location: index.php");
+    exit;
 }
 
 // Logout
 if (isset($_GET['sair'])) {
     session_destroy();
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit;
-}
-
-// Se não estiver logado, exibe apenas o formulário de login
-if (!isset($_SESSION['admin_logado'])) {
-    ?>
-    <!DOCTYPE html>
-    <html lang="pt-BR">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Login Admin | Vilela</title>
-        <link rel="stylesheet" href="../style.css">
-        <style>
-            body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: var(--color-bg); }
-            .login-card { background: white; padding: 2rem; border-radius: 16px; box-shadow: var(--shadow-soft); text-align: center; width: 100%; max-width: 350px; }
-            input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 8px; }
-            button { width: 100%; padding: 12px; background: var(--color-primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        </style>
-    </head>
-    <body>
-        <div class="login-card">
-            <h2>Gestão Vilela</h2>
-            <?php if(isset($erro_login)) echo "<p style='color:red'>$erro_login</p>"; ?>
-            <form method="POST">
-                <input type="password" name="senha_mestra" placeholder="Senha Mestra" required autofocus>
-                <button type="submit" name="login_admin">Entrar</button>
-            </form>
-        </div>
-    </body>
-    </html>
-    <?php
+    header("Location: index.php");
     exit;
 }
 
@@ -149,8 +115,45 @@ if (isset($_GET['cliente_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel de Gestão | Vilela Engenharia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
+    <link rel="icon" href="../assets/logo.png" type="image/png">
     <style>
+        /* CSS Específico para o Painel Admin - Extensão do style.css */
+        body { background-color: var(--color-bg); }
+        
+        .admin-header {
+            background: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 2rem;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-brand img {
+            height: 40px;
+            width: auto;
+        }
+        
+        .admin-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px 40px 20px;
+            align-items: start;
+        }
         /* CSS Específico para o Painel Admin */
         body { background-color: #f4f7f6; display: block; padding: 0; }
         
@@ -267,8 +270,14 @@ if (isset($_GET['cliente_id'])) {
 <body>
 
     <header class="admin-header">
-        <div style="font-weight: bold; font-size: 1.2rem;">Vilela Engenharia <span style="font-weight:400; font-size:1rem; opacity:0.8;">| Painel Admin</span></div>
-        <a href="?sair=true" style="color: white; text-decoration: none; border: 1px solid white; padding: 5px 15px; border-radius: 20px;">Sair</a>
+        <div class="header-brand">
+            <img src="../assets/logo.png" alt="Logo">
+            <div>
+                <h1 style="margin:0; font-size:1.2rem; color:var(--color-primary-strong);">Painel de Gestão</h1>
+                <span style="font-size:0.9rem; color:#666;">Administração Vilela Engenharia</span>
+            </div>
+        </div>
+        <a href="?sair=true" class="btn-logout" style="color: #d32f2f; text-decoration: none; font-weight: 600; padding: 8px 16px; border: 1px solid #d32f2f; border-radius: 12px; transition: 0.2s;">Sair</a>
     </header>
 
     <div class="admin-container">
