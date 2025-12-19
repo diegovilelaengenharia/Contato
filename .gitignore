@@ -1,2 +1,9 @@
-# Build artifacts\nnode_modules/\ndist/\n.DS_Store\nthumbs.db\n
-desktop.ini\n
+# Build artifacts
+/node_modules
+/.pnp
+.pnp.js
+/area-cliente/db.phpt/
+.DS_Store
+thumbs.db
+
+desktop.ini
