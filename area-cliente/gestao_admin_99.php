@@ -105,10 +105,9 @@ if (isset($_GET['cliente_id'])) {
     $stmt->execute([$id_selecionado]);
     $cliente_ativo = $stmt->fetch();
 
-    // Histórico
-    $stmt = $pdo->prepare("SELECT * FROM progresso WHERE cliente_id = ? ORDER BY data_fase DESC, id DESC");
-    $stmt->execute([$id_selecionado]);
-    $progresso_ativo = $stmt->fetchAll();
+    // Histórico (Legado removido, agora usa processo_movimentos na view)
+    // $progresso_ativo mantido vazio por compatibilidade se necessário, ou pode ser removido
+    $progresso_ativo = [];
 
     // Documentos
     $stmt = $pdo->prepare("SELECT * FROM documentos WHERE cliente_id = ? ORDER BY id DESC");
@@ -352,7 +351,7 @@ if (isset($_GET['cliente_id'])) {
                     
                     <!-- Formulário Expandido para Processos -->
                     <form method="POST" style="background:#fafafa; padding:20px; border-radius:8px; margin-bottom:25px; border: 1px solid #eee;">
-                        <input type="hidden" name="cliente_id" value="<?= $ativo['id'] ?>">
+                        <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
                         
                         <!-- Linha 1: Título e Data -->
                         <div class="flex-row">
@@ -418,7 +417,7 @@ if (isset($_GET['cliente_id'])) {
                             <?php 
                             // Busca na tabela nova
                             $movs = $pdo->prepare("SELECT * FROM processo_movimentos WHERE cliente_id = ? ORDER BY data_movimento DESC");
-                            $movs->execute([$ativo['id']]);
+                            $movs->execute([$cliente_ativo['id']]);
                             $lista_movs = $movs->fetchAll();
                             
                             foreach($lista_movs as $m): ?>
@@ -431,7 +430,7 @@ if (isset($_GET['cliente_id'])) {
                                 </td>
                                 <td><?= $m['departamento_origem'] ?> ➝ <?= $m['departamento_destino'] ?></td>
                                 <td><span style="padding:2px 6px; border-radius:4px; font-size:10px; text-transform:uppercase; background:#eee;"><?= $m['status_tipo'] ?></span></td>
-                                <td style="text-align:right;"><a href="?cid=<?= $ativo['id'] ?>&del_mov=<?= $m['id'] ?>" class="del" onclick="return confirm('Apagar este movimento?')">Apagar</a></td>
+                                <td style="text-align:right;"><a href="?cid=<?= $cliente_ativo['id'] ?>&del_mov=<?= $m['id'] ?>" class="del" onclick="return confirm('Apagar este movimento?')">Apagar</a></td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
