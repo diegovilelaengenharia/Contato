@@ -1,14 +1,12 @@
 <?php
 session_start();
-// Debug mode - remover em produção se desejar
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
+// Conexão com banco de dados
 try {
     if (!file_exists('db.php')) {
         throw new Exception("Arquivo 'db.php' não encontrado na pasta area-cliente.");
     }
     require 'db.php';
+
     
     // Verifica se a variável $pdo foi criada corretamente
     if (!isset($pdo)) {
