@@ -154,14 +154,53 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             --shadow: 0 4px 20px rgba(20, 108, 67, 0.08);
             --header-bg: #146c43;
         }
-        body.dark-mode {
-            --color-bg: #121212; --color-surface: #1e1e1e; --color-text: #e0e0e0; --color-text-subtle: #a0a0a0; --color-border: #333333;
-            --shadow: 0 4px 20px rgba(0,0,0,0.3); --header-bg: #0b3d26;
-        }
-        body { background: var(--color-bg); color: var(--color-text); font-family: 'Outfit', sans-serif; padding:0; margin:0; }
 
-        .admin-header { background: var(--header-bg); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top:0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-        .admin-container { display: grid; grid-template-columns: 260px 1fr; gap: 24px; max-width: 1600px; margin: 30px auto; padding: 0 20px; align-items: start; }
+        body.dark-mode {
+            --color-bg: #121212;
+            --color-surface: #1e1e1e;
+            --color-text: #e0e0e0;
+            --color-text-subtle: #a0a0a0;
+            --color-border: #333333;
+            --shadow: 0 4px 20px rgba(0,0,0,0.3);
+            --header-bg: #0b3d26;
+        }
+
+        /* FIX CRÍTICO DE LAYOUT */
+        body { 
+            background: var(--color-bg) !important; 
+            color: var(--color-text); 
+            font-family: 'Outfit', sans-serif; 
+            display: block !important; /* Override flex from style.css */
+            padding: 0 !important; 
+            margin: 0 !important;
+            height: auto !important;
+            min-height: 100vh;
+        }
+
+        .admin-header { 
+            background: var(--header-bg); 
+            color: white; 
+            padding: 1rem 2rem; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            position: sticky; 
+            top: 0; 
+            z-index: 999; 
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2); 
+        }
+
+        .admin-container { 
+            display: grid; 
+            grid-template-columns: 260px 1fr; 
+            gap: 24px; 
+            max-width: 1600px; 
+            margin: 30px auto; 
+            padding: 0 20px; 
+            align-items: start; 
+        }
         
         .sidebar { background: var(--color-surface); border-radius: 12px; box-shadow: var(--shadow); padding: 20px; position: sticky; top: 90px; border: 1px solid var(--color-border); }
         .client-list li a { display: block; padding: 12px; border-radius: 8px; text-decoration: none; color: var(--color-text); border-bottom: 1px solid var(--color-border); font-size: 0.95rem; margin-bottom:5px; transition:0.2s; }
@@ -169,10 +208,9 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
         .client-list li a.active { background: var(--color-primary); color: white; }
 
         .tabs-header { display: flex; gap: 10px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 5px; flex-wrap:wrap; }
-        .tab-btn { padding: 10px 24px; background: var(--color-surface); border: 2px solid transparent; border-radius: 99px; cursor: pointer; font-weight: 600; color: var(--color-text-subtle); text-decoration: none; box-shadow: var(--shadow); transition:0.2s; display:flex; align-items:center; gap:6px; }
+        .tab-btn { padding: 10px 24px; background: var(--color-surface); border: 2px solid transparent; border-radius: 99px; cursor: pointer; font-weight: 600; color: var(--color-text-subtle); text-decoration: none; box-shadow: var(--shadow); transition:0.2s; display:flex; align-items:center; gap:6px; white-space:nowrap; }
         .tab-btn:hover { transform: translateY(-2px); color: var(--color-primary); }
         .tab-btn.active { background: var(--color-primary); color: white; box-shadow: 0 5px 15px rgba(20,108,67,0.3); }
-        /* Botão Arquivos Azul */
         .tab-btn.blue { border-color: #2196f3; color: #1976d2; }
         .tab-btn.blue.active { background: #2196f3; color: white; }
 
@@ -189,12 +227,65 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
         .btn-save { background: var(--color-primary); color: white; padding: 16px 32px; border: none; border-radius: 12px; cursor: pointer; font-size: 1.1rem; font-weight: 700; width: 100%; transition: 0.2s; margin-top: 20px; }
         .btn-save:hover { background: #0f5132; transform: translateY(-2px); }
 
-        /* Timeline Simples */
-        .simple-timeline { display: flex; gap: 5px; margin: 15px 0 30px; background: var(--color-surface); padding: 15px; border-radius: 12px; box-shadow: var(--shadow); border: 1px solid var(--color-border); overflow-x:auto; }
-        .st-item { flex: 0 0 auto; text-align: center; font-size: 0.8rem; color: var(--color-text-subtle); padding: 8px; min-width: 80px; display:flex; flex-direction:column; align-items:center; opacity: 0.6; }
-        .st-item.active { color: var(--color-primary); font-weight: 700; opacity: 1; transform: scale(1.05); }
-        .st-item.past { color: var(--color-primary); opacity: 0.9; }
-        .st-dot { width: 10px; height: 10px; background: currentColor; border-radius: 50%; margin-bottom: 5px; }
+        /* Timeline Simples - FIX VISUAL */
+        .simple-timeline { 
+            display: flex; 
+            gap: 10px; 
+            margin: 15px 0 30px; 
+            background: var(--color-surface); 
+            padding: 25px 20px; 
+            border-radius: 12px; 
+            box-shadow: var(--shadow); 
+            border: 1px solid var(--color-border); 
+            overflow-x:auto; 
+            align-items: flex-start;
+        }
+        .st-item { 
+            flex: 1; 
+            text-align: center; 
+            min-width: 100px; 
+            display:flex; 
+            flex-direction:column; 
+            align-items:center; 
+            opacity: 0.6; 
+            position: relative;
+        }
+         /* Linha conectora */
+        .st-item::after {
+            content: ''; position: absolute; top: 9px; left: 50%; width: 100%; height: 2px; background: #ddd; z-index: 0;
+        }
+        .st-item:last-child::after { display: none; }
+
+        .st-dot { 
+            width: 20px; 
+            height: 20px; 
+            background: #ddd; 
+            border-radius: 50%; 
+            margin-bottom: 10px; 
+            position: relative; 
+            z-index: 1; 
+            border: 3px solid var(--color-surface);
+            transition: 0.3s;
+        }
+        .st-item span {
+            font-size: 0.9rem; /* Maior */
+            color: var(--color-text-subtle); 
+            line-height: 1.3;
+            font-weight: 500;
+        }
+        
+        /* Estados */
+        .st-item.past .st-dot { background: var(--color-primary); }
+        .st-item.past span { color: var(--color-primary); }
+        
+        .st-item.active { opacity: 1; }
+        .st-item.active .st-dot { background: white; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(20,108,67,0.2); transform: scale(1.2); }
+        .st-item.active span { font-weight: 800; color: var(--color-primary); font-size: 0.95rem; }
+
+        @media (max-width: 768px) {
+            .admin-container { grid-template-columns: 1fr; }
+            .sidebar { position: static; margin-bottom: 20px; }
+        }
     </style>
 </head>
 <body>
