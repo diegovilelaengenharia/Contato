@@ -25,7 +25,7 @@ $fases_padrao = [
     "Confecção de Documentos", "Avaliação (ITBI/Averbação)", "Processo Finalizado (Documentos Prontos)"
 ];
 
-// --- Processamento (Dividido por Contexto para evitar Overwrite) ---
+// --- Processamento ---
 
 // 1. Atualizar Etapa (Aba Andamento)
 if (isset($_POST['atualizar_etapa'])) {
@@ -39,7 +39,12 @@ if (isset($_POST['atualizar_etapa'])) {
         
         // Registra histórico
         $titulo = "Mudança de Fase: " . $nova_etapa;
-        $desc = "Fase atualizada pelo administrador.\n" . $obs_etapa;
+        
+        // Formatação do comentário: Título padrão + Delimitador + Obs do usuário (se houver)
+        $desc = "Fase atualizada pelo administrador.";
+        if (trim($obs_etapa) !== '') {
+            $desc .= "\n||COMENTARIO_USER||" . $obs_etapa;
+        }
         
         $sql = "INSERT INTO processo_movimentos (cliente_id, titulo_fase, data_movimento, descricao, status_tipo) VALUES (?, ?, NOW(), ?, 'conclusao')";
         $pdo->prepare($sql)->execute([$cid, $titulo, $desc]);
@@ -89,11 +94,12 @@ if (isset($_POST['btn_salvar_pendencias'])) {
 }
 
 // 4. Salvar Arquivos/Links (Aba Arquivos)
+// [REMOVIDO: link_doc_iniciais e link_doc_finais a pedido do usuário]
 if (isset($_POST['btn_salvar_arquivos'])) {
     $cid = $_POST['cliente_id'];
     try {
-        $sql = "UPDATE processo_detalhes SET link_drive_pasta = ?, link_doc_iniciais = ?, link_doc_finais = ? WHERE cliente_id = ?";
-        $pdo->prepare($sql)->execute([$_POST['link_drive_pasta'], $_POST['link_doc_iniciais'], $_POST['link_doc_finais'], $cid]);
+        $sql = "UPDATE processo_detalhes SET link_drive_pasta = ? WHERE cliente_id = ?";
+        $pdo->prepare($sql)->execute([$_POST['link_drive_pasta'], $cid]);
         $sucesso = "Links de arquivos atualizados!";
     } catch(PDOException $e) { $erro = "Erro: " . $e->getMessage(); }
 }
@@ -154,15 +160,9 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             --shadow: 0 4px 20px rgba(20, 108, 67, 0.08);
             --header-bg: #146c43;
         }
-
         body.dark-mode {
-            --color-bg: #121212;
-            --color-surface: #1e1e1e;
-            --color-text: #e0e0e0;
-            --color-text-subtle: #a0a0a0;
-            --color-border: #333333;
-            --shadow: 0 4px 20px rgba(0,0,0,0.3);
-            --header-bg: #0b3d26;
+            --color-bg: #121212; --color-surface: #1e1e1e; --color-text: #e0e0e0; --color-text-subtle: #a0a0a0; --color-border: #333333;
+            --shadow: 0 4px 20px rgba(0,0,0,0.3); --header-bg: #0b3d26;
         }
 
         /* FIX CRÍTICO DE LAYOUT */
@@ -170,38 +170,15 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             background: var(--color-bg) !important; 
             color: var(--color-text); 
             font-family: 'Outfit', sans-serif; 
-            display: block !important; /* Override flex from style.css */
+            display: block !important; 
             padding: 0 !important; 
             margin: 0 !important;
             height: auto !important;
             min-height: 100vh;
         }
 
-        .admin-header { 
-            background: var(--header-bg); 
-            color: white; 
-            padding: 1rem 2rem; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            position: sticky; 
-            top: 0; 
-            z-index: 999; 
-            width: 100%;
-            box-sizing: border-box;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2); 
-        }
-
-        .admin-container { 
-            display: grid; 
-            grid-template-columns: 260px 1fr; 
-            gap: 24px; 
-            max-width: 1600px; 
-            margin: 30px auto; 
-            padding: 0 20px; 
-            align-items: start; 
-        }
-        
+        .admin-header { background: var(--header-bg); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 999; width: 100%; box-sizing: border-box; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .admin-container { display: grid; grid-template-columns: 260px 1fr; gap: 24px; max-width: 1600px; margin: 30px auto; padding: 0 20px; align-items: start; }
         .sidebar { background: var(--color-surface); border-radius: 12px; box-shadow: var(--shadow); padding: 20px; position: sticky; top: 90px; border: 1px solid var(--color-border); }
         .client-list li a { display: block; padding: 12px; border-radius: 8px; text-decoration: none; color: var(--color-text); border-bottom: 1px solid var(--color-border); font-size: 0.95rem; margin-bottom:5px; transition:0.2s; }
         .client-list li a:hover { background: var(--color-primary-light); color: var(--color-primary); }
@@ -227,57 +204,15 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
         .btn-save { background: var(--color-primary); color: white; padding: 16px 32px; border: none; border-radius: 12px; cursor: pointer; font-size: 1.1rem; font-weight: 700; width: 100%; transition: 0.2s; margin-top: 20px; }
         .btn-save:hover { background: #0f5132; transform: translateY(-2px); }
 
-        /* Timeline Simples - FIX VISUAL */
-        .simple-timeline { 
-            display: flex; 
-            gap: 10px; 
-            margin: 15px 0 30px; 
-            background: var(--color-surface); 
-            padding: 25px 20px; 
-            border-radius: 12px; 
-            box-shadow: var(--shadow); 
-            border: 1px solid var(--color-border); 
-            overflow-x:auto; 
-            align-items: flex-start;
-        }
-        .st-item { 
-            flex: 1; 
-            text-align: center; 
-            min-width: 100px; 
-            display:flex; 
-            flex-direction:column; 
-            align-items:center; 
-            opacity: 0.6; 
-            position: relative;
-        }
-         /* Linha conectora */
-        .st-item::after {
-            content: ''; position: absolute; top: 9px; left: 50%; width: 100%; height: 2px; background: #ddd; z-index: 0;
-        }
+        /* Timeline */
+        .simple-timeline { display: flex; gap: 10px; margin: 15px 0 30px; background: var(--color-surface); padding: 25px 20px; border-radius: 12px; box-shadow: var(--shadow); border: 1px solid var(--color-border); overflow-x:auto; align-items: flex-start; }
+        .st-item { flex: 1; text-align: center; min-width: 100px; display:flex; flex-direction:column; align-items:center; opacity: 0.6; position: relative; }
+        .st-item::after { content: ''; position: absolute; top: 9px; left: 50%; width: 100%; height: 2px; background: #ddd; z-index: 0; }
         .st-item:last-child::after { display: none; }
-
-        .st-dot { 
-            width: 20px; 
-            height: 20px; 
-            background: #ddd; 
-            border-radius: 50%; 
-            margin-bottom: 10px; 
-            position: relative; 
-            z-index: 1; 
-            border: 3px solid var(--color-surface);
-            transition: 0.3s;
-        }
-        .st-item span {
-            font-size: 0.9rem; /* Maior */
-            color: var(--color-text-subtle); 
-            line-height: 1.3;
-            font-weight: 500;
-        }
-        
-        /* Estados */
+        .st-dot { width: 20px; height: 20px; background: #ddd; border-radius: 50%; margin-bottom: 10px; position: relative; z-index: 1; border: 3px solid var(--color-surface); transition: 0.3s; }
+        .st-item span { font-size: 0.9rem; color: var(--color-text-subtle); line-height: 1.3; font-weight: 500; }
         .st-item.past .st-dot { background: var(--color-primary); }
         .st-item.past span { color: var(--color-primary); }
-        
         .st-item.active { opacity: 1; }
         .st-item.active .st-dot { background: white; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(20,108,67,0.2); transform: scale(1.2); }
         .st-item.active span { font-weight: 800; color: var(--color-primary); font-size: 0.95rem; }
@@ -334,7 +269,6 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
         <?php elseif($cliente_ativo): ?>
             
-            <!-- HEADER INFO -->
             <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap;">
                 <div>
                     <h1 style="margin: 0; color: var(--color-text); font-size: 1.8rem;"><?= htmlspecialchars($cliente_ativo['nome']) ?></h1>
@@ -351,7 +285,6 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 </div>
             </div>
 
-            <!-- VISUAL TIMELINE -->
             <div class="simple-timeline">
                 <?php 
                 $found_idx = array_search(($detalhes['etapa_atual']??''), $fases_padrao);
@@ -366,7 +299,6 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 <?php endforeach; ?>
             </div>
 
-            <!-- MENU ABAS -->
             <div class="tabs-header">
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=cadastro" class="tab-btn <?= $active_tab=='cadastro'?'active':'' ?>">📝 Cadastro</a>
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="tab-btn <?= $active_tab=='andamento'?'active':'' ?>">📊 Andamento</a>
@@ -374,7 +306,6 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=arquivos" class="tab-btn blue <?= $active_tab=='arquivos'?'active':'' ?>">📂 Arquivos do Cliente</a>
             </div>
 
-            <!-- ABA 1: CADASTRO -->
             <?php if($active_tab == 'cadastro'): ?>
                 <form method="POST">
                     <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
@@ -390,7 +321,6 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             <div class="form-group"><label>Telefone</label><input type="text" name="contato_tel" value="<?= $detalhes['contato_tel']??'' ?>"></div>
                             <div class="form-group"><label>Endereço</label><input type="text" name="endereco_residencial" value="<?= $detalhes['endereco_residencial']??'' ?>"></div>
                         </div>
-
                         <div>
                             <div class="form-card">
                                 <h3>🏠 Imóvel</h3>
@@ -415,7 +345,6 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     <button type="submit" name="btn_salvar_cadastro" class="btn-save">Salvar Dados Cadastrais</button>
                 </form>
             
-            <!-- ABA 2: ANDAMENTO -->
             <?php elseif($active_tab == 'andamento'): ?>
                 <div class="form-card">
                     <h3>🔄 Atualizar Fase do Processo</h3>
@@ -452,8 +381,22 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                         <?= date('d/m/Y H:i', strtotime($h['data_movimento'])) ?>
                                     </td>
                                     <td style="padding:15px;">
-                                        <div style="font-weight:bold; margin-bottom:5px;"><?= htmlspecialchars($h['titulo_fase']) ?></div>
-                                        <div style="white-space:pre-wrap; color:var(--color-text-subtle);"><?= htmlspecialchars($h['descricao']) ?></div>
+                                        <div style="font-weight:bold; margin-bottom:5px; color:#212529;"><?= htmlspecialchars($h['titulo_fase']) ?></div>
+                                        <?php 
+                                            // Lógica de exibição de comentários estilizados
+                                            $parts = explode("||COMENTARIO_USER||", $h['descricao']);
+                                            $sys_desc = nl2br(htmlspecialchars($parts[0]));
+                                            echo "<div style='color:var(--color-text-subtle);'>{$sys_desc}</div>";
+                                            
+                                            // Se tiver comentário do usuário
+                                            if (count($parts) > 1) {
+                                                $user_comment = nl2br(htmlspecialchars($parts[1]));
+                                                echo "<div style='margin-top:8px; border-left: 3px solid #d32f2f; padding-left:10px;'>
+                                                        <span style='font-weight:800; color:black;'>Comentário Diego Vilela:</span>
+                                                        <div style='color:#d32f2f; font-weight:bold; margin-top:2px;'>{$user_comment}</div>
+                                                      </div>";
+                                            }
+                                        ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -461,7 +404,6 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     </table>
                 </div>
 
-            <!-- ABA 3: PENDÊNCIAS -->
             <?php elseif($active_tab == 'pendencias'): ?>
                 <div class="form-card" style="border-left: 6px solid #ffc107;">
                     <h3>⚠️ Quadro de Pendências</h3>
@@ -479,7 +421,6 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     </form>
                 </div>
 
-            <!-- ABA 4: ARQUIVOS (NOVA) -->
             <?php elseif($active_tab == 'arquivos'): ?>
                 <div class="form-card" style="border-left: 6px solid #2196f3;">
                     <h3 style="color:#1976d2;">📂 Arquivos do Cliente</h3>
@@ -490,16 +431,6 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         <div class="form-group">
                             <label>🔗 Link da Pasta Geral (Backup/Drive)</label>
                             <input type="text" name="link_drive_pasta" value="<?= $detalhes['link_drive_pasta']??'' ?>" placeholder="https://drive.google.com/...">
-                        </div>
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label>🔗 Link Docs Iniciais</label>
-                                <input type="text" name="link_doc_iniciais" value="<?= $detalhes['link_doc_iniciais']??'' ?>">
-                            </div>
-                            <div class="form-group">
-                                <label>🔗 Link Docs Finais (Entregáveis)</label>
-                                <input type="text" name="link_doc_finais" value="<?= $detalhes['link_doc_finais']??'' ?>">
-                            </div>
                         </div>
                         <button type="submit" name="btn_salvar_arquivos" class="btn-save" style="background:#1976d2;">Salvar Links</button>
                     </form>
