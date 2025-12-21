@@ -1,6 +1,28 @@
 <?php
 session_start();
-require 'db.php';
+// Debug mode - remover em produção se desejar
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+try {
+    if (!file_exists('db.php')) {
+        throw new Exception("Arquivo 'db.php' não encontrado na pasta area-cliente.");
+    }
+    require 'db.php';
+    
+    // Verifica se a variável $pdo foi criada corretamente
+    if (!isset($pdo)) {
+         throw new Exception("O arquivo db.php foi carregado, mas a conexão (\$pdo) não foi estabelecida.");
+    }
+} catch (Exception $e) {
+    // Exibe erro amigável (mas técnico o suficiente para debug)
+    die("<div style='font-family:sans-serif; color:#721c24; background-color:#f8d7da; padding:20px; margin:20px; border:1px solid #f5c6cb; border-radius:5px;'>
+            <h2 style='margin-top:0'>Erro Crítico no Sistema</h2>
+            <p><strong>Mensagem:</strong> " . htmlspecialchars($e->getMessage()) . "</p>
+            <hr>
+            <p>Dica: Verifique se o arquivo <code>db.php</code> existe no servidor e se as credenciais do banco (usuário, senha, nome do banco) estão corretas.</p>
+         </div>");
+}
 
 $erro = '';
 
