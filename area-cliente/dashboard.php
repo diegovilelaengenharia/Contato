@@ -80,21 +80,93 @@ $documentos = $stmtDoc->fetchAll();
         .btn-logout:hover { background: #fdecea; }
     </style>
 </head>
+</head>
 <body>
     <div class="container">
         <header class="header-panel">
-            <div>
-                <h1>Olá, <?= htmlspecialchars($_SESSION['cliente_nome']) ?></h1>
-                <span class="badge-panel">Acompanhamento Online</span>
-                <?php if(!empty($detalhes['link_drive_pasta'])): ?>
-                    <div style="margin-top: 15px;">
-                        <a href="<?= htmlspecialchars($detalhes['link_drive_pasta']) ?>" target="_blank" class="btn-drive">
-                            📂 Acessar Pasta de Documentos
-                        </a>
+            <div style="width:100%;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <div>
+                        <h1>Olá, <?= htmlspecialchars($_SESSION['cliente_nome']) ?></h1>
+                        <span class="badge-panel">Acompanhamento Online</span>
                     </div>
+                    <a href="logout.php" class="btn-logout">Sair</a>
+                </div>
+
+                <!-- Drive Button -->
+                <?php if(!empty($detalhes['link_drive_pasta'])): ?>
+                    <a href="<?= htmlspecialchars($detalhes['link_drive_pasta']) ?>" target="_blank" class="btn-drive">
+                        📂 Acessar Pasta de Documentos
+                    </a>
                 <?php endif; ?>
+
+                <!-- Visual Stepper Client -->
+                <style>
+                    .client-stepper { display: flex; align-items: center; justify-content: space-between; margin-top: 30px; position: relative; overflow-x: auto; padding-bottom: 10px; }
+                    .client-stepper::before { content: ''; position: absolute; top: 15px; left: 0; right: 0; height: 3px; background: #e0e0e0; z-index: 0; }
+                    .s-item { position: relative; z-index: 1; text-align: center; min-width: 80px; display: flex; flex-direction: column; align-items: center; }
+                    .s-circle { width: 32px; height: 32px; background: #fff; border: 3px solid #ccc; border-radius: 50%;display: flex;align-items: center;justify-content: center;font-weight: bold;color: #ccc;font-size: 14px;transition: 0.3s; }
+                    .s-label { margin-top: 8px; font-size: 0.75rem; color: #999; max-width: 100px; line-height: 1.2; font-weight: 500; transition: 0.3s;}
+                    
+                    /* States */
+                    .s-item.active .s-circle { border-color: var(--color-primary); background: var(--color-primary); color: white; }
+                    .s-item.active .s-label { color: var(--color-primary-strong); font-weight: 700; }
+                    .s-item.completed .s-circle { border-color: var(--color-primary); background: #e8f5e9; color: var(--color-primary); }
+                    .s-item.completed .s-label { color: var(--color-primary); }
+
+                    @media (max-width: 700px) {
+                        .client-stepper { flex-wrap: nowrap; justify-content: flex-start; gap: 20px; }
+                        .s-label { font-size: 0.7rem; }
+                    }
+                </style>
+
+                <?php 
+                $fases_padrao = [
+                    "Guichê", "Fiscalização", "Triagem", "Pendências", "Engenharia", "Taxas", "Docs", "Avaliação", "Finalizado"
+                ]; 
+                // Mapa simples para índices (pois o nome completo no banco é longo)
+                // Vamos tentar achar 'like' ou correspondência exata
+                // Para simplificar, vamos assumir que a ordem é fixa.
+                // Mas o banco tem o texto inteiro. Vamos usar busca de substring pra "highlight"
+                
+                $etapa_atual = $detalhes['etapa_atual'] ?? '';
+                $found_index = -1;
+               
+                // Tenta achar o index da etapa atual baseada nos nomes curtos vs longos
+                // Mapeamento Longo -> Curto (Key -> Label)
+                $mapa_fases = [
+                    "Abertura de Processo (Guichê)" => "Guichê",
+                    "Fiscalização (Parecer Fiscal)" => "Fiscalização",
+                    "Triagem (Documentos Necessários)" => "Triagem",
+                    "Comunicado de Pendências (Triagem)" => "Pendências",
+                    "Análise Técnica (Engenharia)" => "Engenharia",
+                    "Comunicado (Pendências e Taxas)" => "Taxas",
+                    "Confecção de Documentos" => "Docs",
+                    "Avaliação (ITBI/Averbação)" => "Avaliação",
+                    "Processo Finalizado (Documentos Prontos)" => "Finalizado"
+                ];
+                
+                $keys = array_keys($mapa_fases);
+                $found_index = array_search($etapa_atual, $keys);
+                if($found_index === false) $found_index = -1;
+                ?>
+
+                <div class="client-stepper">
+                    <?php 
+                    $i = 0;
+                    foreach($mapa_fases as $full => $label): 
+                        $status_class = '';
+                        if ($i < $found_index) $status_class = 'completed';
+                        else if ($i === $found_index) $status_class = 'active';
+                    ?>
+                        <div class="s-item <?= $status_class ?>">
+                            <div class="s-circle"><?= ($i < $found_index) ? '✔' : ($i + 1) ?></div>
+                            <span class="s-label"><?= $label ?></span>
+                        </div>
+                    <?php $i++; endforeach; ?>
+                </div>
+
             </div>
-            <a href="logout.php" class="btn-logout">Sair</a>
         </header>
 
         <section class="timeline-section">
