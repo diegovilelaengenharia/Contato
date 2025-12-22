@@ -623,8 +623,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px;">
                         <!-- Coluna 1: Acesso + Pessoais -->
                         <div>
-                             <!-- Card Acesso -->
-                            <div class="form-card" style="border-left: 6px solid #efb524;">
+                            <!-- Card Acesso -->
                             <div class="form-card" style="border-left: 6px solid #efb524;">
                                 <h3>🔐 Dados de Acesso (Login)</h3>
                                 <div style="display: grid; grid-template-columns: 1.5fr 1fr 1fr auto; gap: 15px; align-items: end;">
@@ -636,40 +635,57 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                 </div>
                             </div>
 
+                            <!-- CARD REQUERENTE COLLAPSIBLE -->
                             <div class="form-card">
-                                <h3>👤 Detalhes do Requerente</h3>
-                            <div class="form-grid">
-                                <div class="form-group"><label>Tipo</label><select name="tipo_pessoa" disabled style="background:var(--color-bg);"><option value="Fisica">Física</option><option value="Juridica">Jurídica</option></select></div>
-                                <div class="form-group"><label>CPF/CNPJ</label><input type="text" name="cpf_cnpj" value="<?= $detalhes['cpf_cnpj']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                                <div class="collapsible-header" onclick="toggleSection('sec_requerente')">
+                                    <h3>👤 Detalhes do Requerente</h3>
+                                    <span id="icon_sec_requerente">▼</span>
+                                </div>
+                                <div id="sec_requerente" class="collapsible-content" style="display:none;">
+                                    <div class="form-grid">
+                                        <div class="form-group"><label>Tipo</label><select name="tipo_pessoa" disabled style="background:var(--color-bg);"><option value="Fisica">Física</option><option value="Juridica">Jurídica</option></select></div>
+                                        <div class="form-group"><label>CPF/CNPJ</label><input type="text" name="cpf_cnpj" value="<?= $detalhes['cpf_cnpj']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                                    </div>
+                                    <div class="form-group"><label>Identidade (RG)</label><input type="text" name="rg_ie" value="<?= $detalhes['rg_ie']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                                    <div class="form-group"><label>Email</label><input type="text" name="contato_email" value="<?= $detalhes['contato_email']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                                    <div class="form-group"><label>Telefone</label><input type="text" name="contato_tel" value="<?= $detalhes['contato_tel']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                                    <div class="form-group"><label>Endereço</label><input type="text" name="endereco_residencial" value="<?= $detalhes['endereco_residencial']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                                </div>
                             </div>
-                            <div class="form-group"><label>Identidade (RG)</label><input type="text" name="rg_ie" value="<?= $detalhes['rg_ie']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                            <div class="form-group"><label>Email</label><input type="text" name="contato_email" value="<?= $detalhes['contato_email']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                            <div class="form-group"><label>Telefone</label><input type="text" name="contato_tel" value="<?= $detalhes['contato_tel']??'' ?>" readonly style="background:var(--color-bg);"></div>
-
-                            <div class="form-group"><label>Endereço</label><input type="text" name="endereco_residencial" value="<?= $detalhes['endereco_residencial']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                        </div>
                         </div> <!-- Fim Coluna 1 -->
                         
                         <!-- Coluna 2 -->
                         <div>
+                            <!-- CARD IMOVEL COLLAPSIBLE -->
                             <div class="form-card">
-                                <h3>🏠 Imóvel</h3>
-                                <div class="form-group"><label>Endereço da Obra</label><input type="text" name="endereco_imovel" value="<?= $detalhes['endereco_imovel']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                                <div class="form-grid">
-                                    <div class="form-group"><label>Inscrição</label><input type="text" name="inscricao_imob" value="<?= $detalhes['inscricao_imob']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                                    <div class="form-group"><label>Matrícula</label><input type="text" name="num_matricula" value="<?= $detalhes['num_matricula']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                                    <div class="form-group"><label>Área Terreno</label><input type="text" name="area_terreno" value="<?= $detalhes['area_terreno']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                                    <div class="form-group"><label>Área Constr.</label><input type="text" name="area_construida" value="<?= $detalhes['area_construida']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                                <div class="collapsible-header" onclick="toggleSection('sec_imovel')">
+                                    <h3>🏠 Imóvel</h3>
+                                    <span id="icon_sec_imovel">▼</span>
+                                </div>
+                                <div id="sec_imovel" class="collapsible-content" style="display:none;">
+                                    <div class="form-group"><label>Endereço da Obra</label><input type="text" name="endereco_imovel" value="<?= $detalhes['endereco_imovel']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                                    <div class="form-grid">
+                                        <div class="form-group"><label>Inscrição</label><input type="text" name="inscricao_imob" value="<?= $detalhes['inscricao_imob']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                                        <div class="form-group"><label>Matrícula</label><input type="text" name="num_matricula" value="<?= $detalhes['num_matricula']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                                        <div class="form-group"><label>Área Terreno</label><input type="text" name="area_terreno" value="<?= $detalhes['area_terreno']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                                        <div class="form-group"><label>Área Constr.</label><input type="text" name="area_construida" value="<?= $detalhes['area_construida']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                                    </div>
                                 </div>
                             </div>
+
+                            <!-- CARD TECNICO COLLAPSIBLE -->
                             <div class="form-card">
-                                <h3>👷 Técnico</h3>
-                                <div class="form-group"><label>Nome Responsável</label><input type="text" name="resp_tecnico" value="<?= $detalhes['resp_tecnico']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                                <div class="form-grid">
-                                    <div class="form-group"><label>CAU/CREA</label><input type="text" name="registro_prof" value="<?= $detalhes['registro_prof']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                                    <div class="form-group"><label>ART/RRT</label><input type="text" name="num_art_rrt" value="<?= $detalhes['num_art_rrt']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                                <div class="collapsible-header" onclick="toggleSection('sec_tecnico')">
+                                    <h3>👷 Técnico</h3>
+                                    <span id="icon_sec_tecnico">▼</span>
                                 </div>
-                            </div>
+                                <div id="sec_tecnico" class="collapsible-content" style="display:none;">
+                                    <div class="form-group"><label>Nome Responsável</label><input type="text" name="resp_tecnico" value="<?= $detalhes['resp_tecnico']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                                    <div class="form-grid">
+                                        <div class="form-group"><label>CAU/CREA</label><input type="text" name="registro_prof" value="<?= $detalhes['registro_prof']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                                        <div class="form-group"><label>ART/RRT</label><input type="text" name="num_art_rrt" value="<?= $detalhes['num_art_rrt']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -682,6 +698,18 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 </div>
 
                 <script>
+                    function toggleSection(id) {
+                        const el = document.getElementById(id);
+                        const icon = document.getElementById('icon_' + id);
+                        if (el.style.display === 'none') {
+                            el.style.display = 'block';
+                            icon.innerText = '▲';
+                        } else {
+                            el.style.display = 'none';
+                            icon.innerText = '▼';
+                        }
+                    }
+
                     function toggleEditMode() {
                         const form = document.getElementById('form_dados_detalhados');
                         const inputs = form.querySelectorAll('input, select');
@@ -707,6 +735,13 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             btnSalvar.style.display = 'block';
                             btnUnlock.innerText = '🔒 Bloquear Edição';
                             btnUnlock.style.background = '#dc3545';
+                            
+                            // Opcional: Expandir todas ao editar para facilitar
+                            ['sec_requerente', 'sec_imovel', 'sec_tecnico'].forEach(id => {
+                                document.getElementById(id).style.display = 'block';
+                                document.getElementById('icon_' + id).innerText = '▲';
+                            });
+
                         } else {
                             btnSalvar.style.display = 'none';
                             btnUnlock.innerText = '🔓 Liberar Edição';

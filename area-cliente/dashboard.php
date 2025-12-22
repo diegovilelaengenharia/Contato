@@ -19,6 +19,20 @@ $stmt = $pdo->prepare("SELECT * FROM processo_movimentos WHERE cliente_id = ? OR
 $stmt->execute([$cliente_id]);
 $timeline = $stmt->fetchAll();
 
+// Buscar Financeiro
+$stmtFin = $pdo->prepare("SELECT * FROM processo_financeiro WHERE cliente_id = ? ORDER BY data_vencimento ASC");
+$stmtFin->execute([$cliente_id]);
+$financeiro = $stmtFin->fetchAll();
+
+$total_hon = 0; $total_taxas = 0; $total_pago = 0; $total_pendente = 0;
+foreach($financeiro as $item) {
+    if($item['categoria']=='honorarios') $total_hon += $item['valor'];
+    else $total_taxas += $item['valor'];
+    
+    if($item['status']=='pago') $total_pago += $item['valor'];
+    elseif($item['status']=='pendente' || $item['status']=='atrasado') $total_pendente += $item['valor'];
+}
+
 // Função ID Drive
 function getDriveFolderId($url) {
     if (preg_match('/folders\/([a-zA-Z0-9-_]+)/', $url, $matches)) return $matches[1];
@@ -29,6 +43,11 @@ function getDriveFolderId($url) {
 $drive_folder_id = null;
 if (!empty($detalhes['link_drive_pasta'])) {
     $drive_folder_id = getDriveFolderId($detalhes['link_drive_pasta']);
+}
+
+$drive_pagamentos_id = null;
+if (!empty($detalhes['link_pasta_pagamentos'])) {
+    $drive_pagamentos_id = getDriveFolderId($detalhes['link_pasta_pagamentos']);
 }
 ?>
 <!DOCTYPE html>
@@ -121,6 +140,28 @@ if (!empty($detalhes['link_drive_pasta'])) {
 
         .drive-embed-container { width: 100%; height: 600px; background: var(--color-surface); border-radius: 12px; border: 1px solid var(--color-border); overflow: hidden; margin-top: 20px; }
         iframe { border: 0; width: 100%; height: 100%; }
+
+        /* Financeiro Styles */
+        .fin-summary { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 25px; }
+        .fin-card { flex: 1; min-width: 150px; background: #fff; border: 1px solid var(--color-border); padding: 15px; border-radius: 12px; text-align: center; }
+        .fin-card strong { display: block; font-size: 0.9rem; color: var(--color-text-subtle); margin-bottom: 5px; }
+        .fin-card span { font-size: 1.25rem; font-weight: 700; color: var(--color-primary); }
+        .fin-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+        .fin-table th, .fin-table td { padding: 12px; border-bottom: 1px solid var(--color-border); text-align: left; }
+        .fin-table th { background: rgba(0,0,0,0.02); color: var(--color-text-subtle); }
+        .status-badge { padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
+        .st-pago { background: #d1e7dd; color: #0f5132; }
+        .st-pend { background: #fff3cd; color: #856404; }
+        .st-atra { background: #f8d7da; color: #842029; }
+
+        /* Modal Popup */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(4px); }
+        .modal-overlay.active { display: flex; animation: fadeIn 0.3s; }
+        .modal-content { background: var(--color-surface); width: 90%; max-width: 1000px; height: 85vh; border-radius: 16px; position: relative; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+        .modal-header { padding: 15px 20px; border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center; background: var(--color-bg); }
+        .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--color-text); }
+        .modal-body { flex: 1; padding: 0; }
+        .modal-iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
@@ -132,6 +173,7 @@ if (!empty($detalhes['link_drive_pasta'])) {
                     <span class="badge-panel">Acompanhamento Online</span>
                 </div>
                 <div style="display:flex; align-items:center;">
+                    <a href="exportar_resumo.php" target="_blank" class="btn-toggle-theme" style="text-decoration:none; margin-right:10px;">📄 Resumo</a>
                     <button class="btn-toggle-theme" onclick="toggleTheme()">🌓 Tema</button>
                     <a href="logout.php" class="btn-logout">Sair</a>
                 </div>
@@ -180,6 +222,33 @@ if (!empty($detalhes['link_drive_pasta'])) {
                 <span class="nav-icon">⚠️</span>
                 Quadro de Pendências
             </button>
+            <button class="nav-btn" onclick="switchView('financeiro', this)">
+                <span class="nav-icon">💰</span>
+                Financeiro & Taxas
+            </button>
+            <button class="nav-btn" onclick="openDriveModal()">
+                <span class="nav-icon">📂</span>
+                Drive do Cliente
+            </button>
+        </div>
+
+        <!-- DRIVE MODAL POPUP -->
+        <div id="drive-modal" class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 style="margin:0;">📂 Pasta de Arquivos do Processo</h3>
+                    <button class="modal-close" onclick="closeDriveModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <?php if ($drive_folder_id): ?>
+                        <iframe class="modal-iframe" src="https://drive.google.com/embeddedfolderview?id=<?= htmlspecialchars($drive_folder_id) ?>#list"></iframe>
+                    <?php else: ?>
+                        <div style="display:flex; align-items:center; justify-content:center; height:100%; color:var(--color-text-subtle);">
+                            <p>Pasta do Drive ainda não vinculada a este processo.</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
         </div>
 
         <!-- VIEW 1: TIMELINE (Histórico + Drive) -->
@@ -267,7 +336,81 @@ if (!empty($detalhes['link_drive_pasta'])) {
                 <?php endif; ?>
             </section>
         </div>
+        
+        <!-- VIEW 4: FINANCEIRO -->
+        <div id="view-financeiro" class="view-section">
+            <section class="card">
+                <h2 style="margin-top:0;">Histórico Financeiro e Taxas</h2>
+                
+                <div class="fin-summary">
+                    <div class="fin-card">
+                        <strong>Total Honorários</strong>
+                        <span>R$ <?= number_format($total_hon, 2, ',', '.') ?></span>
+                    </div>
+                    <div class="fin-card">
+                        <strong>Total Taxas</strong>
+                        <span>R$ <?= number_format($total_taxas, 2, ',', '.') ?></span>
+                    </div>
+                    <div class="fin-card" style="border-color: #d1e7dd; background: #f0fdf4;">
+                        <strong>Pago</strong>
+                        <span style="color: #198754;">R$ <?= number_format($total_pago, 2, ',', '.') ?></span>
+                    </div>
+                    <div class="fin-card" style="border-color: #f8d7da; background: #fdf2f2;">
+                        <strong>Pendente</strong>
+                        <span style="color: #dc3545;">R$ <?= number_format($total_pendente, 2, ',', '.') ?></span>
+                    </div>
+                </div>
+
+                <div style="overflow-x:auto;">
+                    <table class="fin-table">
+                        <thead>
+                            <tr>
+                                <th>Vencimento</th>
+                                <th>Categoria</th>
+                                <th>Descrição</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if(count($financeiro) > 0): ?>
+                                <?php foreach($financeiro as $fin): 
+                                    $cls = '';
+                                    if($fin['status']=='pago')$cls='st-pago';
+                                    elseif($fin['status']=='atrasado')$cls='st-atra';
+                                    else $cls='st-pend';
+                                ?>
+                                <tr>
+                                    <td><?= date('d/m/Y', strtotime($fin['data_vencimento'])) ?></td>
+                                    <td><?= ucfirst($fin['categoria']) ?></td>
+                                    <td>
+                                        <?= htmlspecialchars($fin['descricao']) ?>
+                                        <?php if(!empty($fin['link_comprovante'])): ?>
+                                            <a href="<?= htmlspecialchars($fin['link_comprovante']) ?>" target="_blank" style="margin-left:5px; font-size:0.8rem;">📎 Comprovante</a>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>R$ <?= number_format($fin['valor'], 2, ',', '.') ?></td>
+                                    <td><span class="status-badge <?= $cls ?>"><?= strtoupper($fin['status']) ?></span></td>
+                                </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr><td colspan="5" style="text-align:center; padding:20px;">Nenhum registro financeiro encontrado.</td></tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+
+                <?php if ($drive_pagamentos_id): ?>
+                    <div style="margin-top: 20px; text-align: center;">
+                        <a href="https://drive.google.com/drive/folders/<?= $drive_pagamentos_id ?>" target="_blank" class="nav-btn" style="display: inline-block; padding: 10px 20px; text-decoration: none;">
+                            📂 Acessar Pasta de Comprovantes no Drive
+                        </a>
+                    </div>
+                <?php endif; ?>
+            </section>
+        </div>
     </div>
+
 
     <script>
         function toggleTheme() {
@@ -288,8 +431,22 @@ if (!empty($detalhes['link_drive_pasta'])) {
             // Deactivate all buttons
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
             // Activate clicked button
-            btn.classList.add('active');
+            if (btn) btn.classList.add('active');
         }
+
+        function openDriveModal() {
+            document.getElementById('drive-modal').classList.add('active');
+            document.body.style.overflow = 'hidden'; // Stop scrolling
+        }
+        function closeDriveModal() {
+            document.getElementById('drive-modal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close modal on outside click
+        document.getElementById('drive-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeDriveModal();
+        });
     </script>
 </body>
 </html>
