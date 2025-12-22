@@ -852,6 +852,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         const btnUnlock = document.querySelector('button[onclick="toggleEditMode()"]');
                         const btnAccess = document.getElementById('btn_save_access_container');
                         
+                        // Toggle Inputs
                         inputs.forEach(input => {
                             if (input.hasAttribute('readonly') || input.hasAttribute('disabled')) {
                                 input.removeAttribute('readonly');
@@ -868,18 +869,20 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             }
                         });
 
+                        // Toggle Buttons
                         if (btnSalvar.style.display === 'none') {
+                            // Enable Edit Mode
                             btnSalvar.style.display = 'block';
                             if(btnAccess) btnAccess.style.display = 'block';
-
-
-                        if (btnSalvar.style.display === 'none') {
-                            btnSalvar.style.display = 'block';
+                            
                             btnUnlock.innerText = '🔒 Bloquear e Cancelar Edição';
                             btnUnlock.style.background = '#dc3545';
                             btnUnlock.style.color = '#fff';
                         } else {
+                            // Disable Edit Mode
                             btnSalvar.style.display = 'none';
+                            if(btnAccess) btnAccess.style.display = 'none';
+                            
                             btnUnlock.innerText = '✏️ Editar Cadastro';
                             btnUnlock.style.background = 'var(--color-primary)';
                             btnUnlock.style.color = '#fff';
