@@ -415,10 +415,32 @@ if (isset($_GET['exportar_cliente'])) {
     exit;
 }
 
-// --- Consultas Iniciais ---
+// --- Consultas Iniciais e Dashboard Data ---
 $clientes = $pdo->query("SELECT * FROM clientes ORDER BY nome ASC")->fetchAll();
 $cliente_ativo = null;
 $detalhes = [];
+
+// Dados para Dashboard
+try {
+    // 1. Total Clientes
+    $kpi_total_clientes = count($clientes);
+
+    // 2. Pré-Cadastros Pendentes
+    $stmt_pre = $pdo->query("SELECT COUNT(*) FROM pre_cadastros WHERE status='pendente'");
+    $kpi_pre_pendentes = $stmt_pre ? $stmt_pre->fetchColumn() : 0;
+
+    // 3. Financeiro Pendente (Soma Global)
+    $stmt_fin = $pdo->query("SELECT SUM(valor) FROM processo_financeiro WHERE status IN ('pendente', 'atrasado')");
+    $kpi_fin_pendente = $stmt_fin ? $stmt_fin->fetchColumn() : 0;
+    
+    // 4. Processos Ativos (Não finalizados)
+    $stmt_proc = $pdo->query("SELECT COUNT(*) FROM processo_detalhes WHERE etapa_atual != 'Processo Finalizado (Documentos Prontos)' AND etapa_atual IS NOT NULL AND etapa_atual != ''");
+    $kpi_proc_ativos = $stmt_proc ? $stmt_proc->fetchColumn() : 0;
+
+} catch (Exception $e) {
+    // Silencia erro se tabelas não existirem ainda
+    $kpi_total_clientes = 0; $kpi_pre_pendentes = 0; $kpi_fin_pendente = 0; $kpi_proc_ativos = 0;
+}
 
 if (isset($_GET['cliente_id'])) {
     $id = $_GET['cliente_id'];
@@ -1011,6 +1033,80 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 }
                 ?>
             <?php endif; ?>
+
+        <?php else: ?>
+            
+            <!-- DASHBOARD GERAL (Visão do Gestor) -->
+            <div style="margin-bottom:30px;">
+                <h2 style="color:var(--color-primary); margin-bottom:10px;">Visão Geral do Escritório</h2>
+                <p style="color:var(--color-text-subtle);">Resumo de atividades e indicadores de performance.</p>
+            </div>
+
+            <!-- KPI Cards -->
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:20px; margin-bottom:40px;">
+                
+                <div class="form-card" style="padding:20px; text-align:center; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; border-left:5px solid #2196f3;">
+                    <div style="font-size:2.5rem; margin-bottom:10px;">👥</div>
+                    <div style="font-size:2rem; font-weight:800; color:#2196f3;"><?= $kpi_total_clientes ?></div>
+                    <div style="color:#666; font-weight:600;">Clientes Cadastrados</div>
+                </div>
+
+                <div class="form-card" style="padding:20px; text-align:center; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; border-left:5px solid #efb524;">
+                    <div style="font-size:2.5rem; margin-bottom:10px;">🏗️</div>
+                    <div style="font-size:2rem; font-weight:800; color:#efb524;"><?= $kpi_proc_ativos ?></div>
+                    <div style="color:#666; font-weight:600;">Obras em Andamento</div>
+                </div>
+
+                <div class="form-card" style="padding:20px; text-align:center; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; border-left:5px solid #dc3545;">
+                    <div style="font-size:2.5rem; margin-bottom:10px;">📥</div>
+                    <div style="font-size:2rem; font-weight:800; color:#dc3545;"><?= $kpi_pre_pendentes ?></div>
+                    <div style="color:#666; font-weight:600;">Solicitações Web</div>
+                    <?php if($kpi_pre_pendentes > 0): ?>
+                        <a href="?importar=true" class="btn-save btn-danger" style="margin-top:10px; padding:5px 15px; font-size:0.8rem; width:auto;">Ver Pendentes</a>
+                    <?php endif; ?>
+                </div>
+
+                <div class="form-card" style="padding:20px; text-align:center; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; border-left:5px solid #198754;">
+                    <div style="font-size:2.5rem; margin-bottom:10px;">💰</div>
+                    <div style="font-size:2rem; font-weight:800; color:#198754;">R$ <?= number_format($kpi_fin_pendente, 2, ',', '.') ?></div>
+                    <div style="color:#666; font-weight:600;">Recebíveis Pendentes</div>
+                </div>
+
+            </div>
+
+            <!-- Tabela Geral de Clientes -->
+            <div class="form-card">
+                <h3>📋 Situação da Carteira de Clientes</h3>
+                <div style="overflow-x:auto;">
+                    <table style="width:100%; border-collapse:collapse; margin-top:15px;">
+                        <thead>
+                            <tr style="background:#f8f9fa; border-bottom:2px solid #ddd;">
+                                <th style="padding:12px; text-align:left;">Cliente</th>
+                                <th style="padding:12px; text-align:left;">Fase Atual</th>
+                                <th style="padding:12px; text-align:left;">Contato</th>
+                                <th style="padding:12px; text-align:center;">Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($clientes as $c): 
+                                // Busca detalhes rápidos (poderia ser otimizado com JOIN, mas mantendo simples)
+                                $dt = $pdo->query("SELECT etapa_atual, contato_tel FROM processo_detalhes WHERE cliente_id={$c['id']}")->fetch();
+                                $etapa = $dt['etapa_atual'] ?? '<span style="color:#ccc; font-style:italic;">Não iniciado</span>';
+                                $tel = $dt['contato_tel'] ?? '--';
+                            ?>
+                            <tr style="border-bottom:1px solid #eee;">
+                                <td style="padding:12px; font-weight:bold; color:var(--color-primary);"><?= htmlspecialchars($c['nome']) ?></td>
+                                <td style="padding:12px;"><?= $etapa ?></td>
+                                <td style="padding:12px;"><?= $tel ?></td>
+                                <td style="padding:12px; text-align:center;">
+                                    <a href="?cliente_id=<?= $c['id'] ?>" class="btn-save btn-info" style="padding:5px 10px; font-size:0.85rem; text-decoration:none;">Gerenciar ➡️</a>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
         <?php endif; ?>
     </main>
