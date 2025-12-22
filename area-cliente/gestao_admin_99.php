@@ -941,22 +941,34 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             <?php elseif($active_tab == 'pendencias'): ?>
                 <div class="form-card" style="border-left: 6px solid #ffc107;">
                     <h3>Gestão de Pendências do Projeto</h3>
-                    <p style="color:#666; margin-bottom:15px;">Escreva o comunicado abaixo e clique em <b>Emitir Pendência</b>. O texto será publicado na lista abaixo e o quadro será limpo.</p>
+                    <p style="color:#666; margin-bottom:15px;">Gerencie os comunicados e pendências abaixo.</p>
 
-                    <form method="POST">
-                        <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
-                        <input type="hidden" name="pendencia_id" id="pendencia_id_input">
-                        
-                        <div class="form-group">
-                            <label>Descrição da Pendência (Texto Rico)</label>
-                            <textarea name="texto_pendencias" id="editor_pendencias" rows="4" style="background:#fffbf2; border:1px solid #ffeeba;"><?= htmlspecialchars($detalhes['texto_pendencias']??'') ?></textarea>
+                    <!-- Button to Open Modal -->
+                    <button type="button" onclick="openPendenciaModal()" class="btn-save btn-warning" style="color:#000; width:auto; font-weight:bold;">➕ Criar Comunicado</button>
+                    
+                    <!-- Modal de Criação/Edição de Pendência -->
+                    <dialog id="modalPendencia" style="border:none; border-radius:12px; padding:0; width:90%; max-width:600px; box-shadow:0 10px 40px rgba(0,0,0,0.2);">
+                        <div style="padding:20px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center; background:#ffc107;">
+                            <h3 style="margin:0; color:#000;">📝 Comunicado / Pendência</h3>
+                            <button type="button" onclick="closePendenciaModal()" style="border:none; background:none; font-size:1.5rem; cursor:pointer;">&times;</button>
                         </div>
-                        
-                        <div style="display:flex; gap:10px; align-items:center;">
-                            <button type="submit" name="btn_emitir_pendencia" class="btn-save btn-warning" style="color:#000; margin-bottom:0; width:auto;">Emitir Pendência</button>
-                            <button type="button" onclick="resetPendenciaFormText()" id="btn_cancel_edit_text" style="display:none; padding:10px 15px; border:none; background:#ccc; border-radius:8px; cursor:pointer; font-weight:bold;">Cancelar Edição</button>
+                        <div style="padding:20px;">
+                            <form method="POST">
+                                <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
+                                <input type="hidden" name="pendencia_id" id="pendencia_id_input">
+                                
+                                <div class="form-group">
+                                    <label>Descrição do Comunicado (Texto Rico)</label>
+                                    <textarea name="texto_pendencias" id="editor_pendencias" rows="6" style="background:#fffbf2; border:1px solid #ffeeba; width:100%;"><?= htmlspecialchars($detalhes['texto_pendencias']??'') ?></textarea>
+                                </div>
+                                
+                                <div style="display:flex; gap:10px; align-items:center; justify-content:flex-end; margin-top:20px;">
+                                    <button type="button" onclick="closePendenciaModal()" style="padding:10px 15px; border:1px solid #ccc; background:#fff; border-radius:8px; cursor:pointer;">Cancelar</button>
+                                    <button type="submit" name="btn_emitir_pendencia" id="btn_submit_pendencia" class="btn-save btn-warning" style="color:#000; margin:0; width:auto;">Emitir Comunicado</button>
+                                </div>
+                            </form>
                         </div>
-                    </form>
+                    </dialog>
                     
                     <hr style="margin: 30px 0; border: 0; border-top: 1px solid #eee;">
 
@@ -1437,6 +1449,25 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 </div>
 
 <script>
+function openPendenciaModal() {
+    // Reset form for new entry
+    document.getElementById('pendencia_id_input').value = '';
+    
+    if (typeof ClassicEditor !== 'undefined' && document.querySelector('#editor_pendencias').nextSibling) {
+        const editorInstance = document.querySelector('#editor_pendencias').nextSibling.ckeditorInstance;
+        if(editorInstance) editorInstance.setData('');
+    } else {
+        document.getElementById('editor_pendencias').value = '';
+    }
+    
+    document.getElementById('btn_submit_pendencia').innerText = "Emitir Comunicado";
+    document.getElementById('modalPendencia').showModal();
+}
+
+function closePendenciaModal() {
+    document.getElementById('modalPendencia').close();
+}
+
 function editPendencia(id, texto) {
     // Populate the form ID
     document.getElementById('pendencia_id_input').value = id;
@@ -1452,27 +1483,10 @@ function editPendencia(id, texto) {
     }
     
     // Change Button Text (Visual Feedback)
-    document.querySelector("button[name='btn_emitir_pendencia']").innerHTML = "Salvar Alteração (Editar)";
+    document.getElementById('btn_submit_pendencia').innerText = "Salvar Alteração (Editar)";
     
-    // Show Cancel Button
-    document.getElementById('btn_cancel_edit_text').style.display = 'inline-block';
-    
-    // Scroll to Top
-    document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth' });
-}
-
-function resetPendenciaFormText() {
-    document.getElementById('pendencia_id_input').value = '';
-    
-    if (typeof ClassicEditor !== 'undefined' && document.querySelector('#editor_pendencias').nextSibling) {
-        const editorInstance = document.querySelector('#editor_pendencias').nextSibling.ckeditorInstance;
-        if(editorInstance) editorInstance.setData('');
-    } else {
-        document.getElementById('editor_pendencias').value = '';
-    }
-    
-    document.querySelector("button[name='btn_emitir_pendencia']").innerHTML = "Emitir Pendência";
-    document.getElementById('btn_cancel_edit_text').style.display = 'none';
+    // Open Modal
+    document.getElementById('modalPendencia').showModal();
 }
 </script>
 
