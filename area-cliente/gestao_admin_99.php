@@ -261,9 +261,9 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
         .tab-btn.active { border-bottom-color: var(--color-primary); color: var(--color-primary); opacity: 1; font-weight: 700; background: transparent; box-shadow: none; }
         .tab-btn.blue.active { border-bottom-color: #2196f3; color: #1976d2; }
 
-        .form-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 16px; padding: 30px; margin-bottom: 30px; box-shadow: var(--shadow); position: relative; overflow: hidden; }
-        .form-card::before { content: ''; position: absolute; top:0; left:0; width: 6px; height: 100%; background: var(--color-primary); opacity: 0.5; }
-        .form-card h3 { margin-top: 0; color: var(--color-primary); font-size: 1.25rem; font-weight: 700; border-bottom: 1px solid var(--color-border); padding-bottom: 15px; margin-bottom: 25px; }
+        .form-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 25px; margin-bottom: 25px; box-shadow: var(--shadow); position: relative; overflow: hidden; }
+        .form-card::before { content: ''; position: absolute; top:0; left:0; width: 4px; height: 100%; background: var(--color-primary); opacity: 0.5; }
+        .form-card h3 { margin-top: 0; color: var(--color-primary); font-size: 1.15rem; font-weight: 700; border-bottom: 1px solid var(--color-border); padding-bottom: 10px; margin-bottom: 20px; }
 
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; }
         .form-group { margin-bottom:15px; }
@@ -271,8 +271,17 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 14px; border: 1px solid var(--color-border); background: var(--color-bg); color: var(--color-text); border-radius: 10px; box-sizing: border-box; font-family: inherit; font-size: 1rem; }
         .form-group input:focus { border-color: var(--color-primary); outline: none; background: var(--color-surface); }
 
-        .btn-save { background: var(--color-primary); color: white; padding: 16px 32px; border: none; border-radius: 12px; cursor: pointer; font-size: 1.1rem; font-weight: 700; width: 100%; transition: 0.2s; margin-top: 20px; }
-        .btn-save:hover { background: #0f5132; transform: translateY(-2px); }
+        .btn-save { background: var(--color-primary); color: white; padding: 10px 24px; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 600; width: auto; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: inline-flex; justify-content: center; align-items: center; gap: 8px; }
+        .btn-save:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        .btn-save.full-mobile { width: auto; }
+        
+        /* Cores de Botões */
+        .btn-primary { background: var(--color-primary); }
+        .btn-danger { background: #dc3545; }
+        .btn-warning { background: #ffc107; color: #333; }
+        .btn-info { background: #0dcaf0; color: #fff; }
+        .btn-success { background: #198754; }
+        .btn-secondary { background: #6c757d; color: white; }
 
         /* Timeline */
         .simple-timeline { display: flex; gap: 10px; margin: 15px 0 30px; background: var(--color-surface); padding: 25px 20px; border-radius: 12px; box-shadow: var(--shadow); border: 1px solid var(--color-border); overflow-x:auto; align-items: flex-start; }
@@ -288,8 +297,13 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
         .st-item.active span { font-weight: 800; color: var(--color-primary); font-size: 0.95rem; }
 
         @media (max-width: 768px) {
-            .admin-container { grid-template-columns: 1fr; }
-            .sidebar { position: static; margin-bottom: 20px; }
+            .admin-container { grid-template-columns: 1fr; margin: 15px auto; padding: 0 15px; gap: 15px; }
+            .sidebar { position: static; margin-bottom: 20px; padding: 15px; }
+            .admin-header { padding: 0.8rem 1rem; flex-direction: column; gap: 10px; align-items: flex-start; }
+            .admin-header > div { width: 100%; justify-content: space-between; }
+            .form-card { padding: 15px; }
+            .form-grid { grid-template-columns: 1fr; gap: 15px; }
+            .btn-save.full-mobile { width: 100%; }
         }
         
         .iframe-container { width:100%; height:600px; border:1px solid var(--color-border); border-radius:8px; display:none; margin-top:15px; }
@@ -317,7 +331,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
 <div class="admin-container">
     <aside class="sidebar">
-        <a href="?novo=true" style="display:block; text-align:center; background:#efb524; padding:12px; border-radius:6px; color:black; font-weight:bold; text-decoration:none; margin-bottom:20px;">+ Novo Cliente</a>
+        <a href="?novo=true" style="display:block; text-align:center; padding:12px; border-radius:6px; font-weight:bold; text-decoration:none; margin-bottom:20px;" class="btn-warning">+ Novo Cliente</a>
         <h4 style="margin: 10px 0; color: var(--color-text-subtle);">Meus Clientes</h4>
         <ul class="client-list" style="list-style:none; padding:0;">
             <?php foreach($clientes as $c): ?>
@@ -355,7 +369,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 </div>
                 <div>
                     <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" onclick="return confirm('ATENÇÃO EXTREMA!\n\nVocê tem certeza absoluta que deseja EXCLUIR este cliente?\n\nEssa ação apagará todo o histórico e dados permanentemente.')" 
-                       style="background: #d32f2f; color:white; padding: 10px 20px; border-radius: 8px; text-decoration:none; font-weight:bold; display:inline-block; margin-top:10px;">
+                       class="btn-save btn-danger" style="text-decoration:none; margin-top:10px;">
                        🗑️ Excluir Cliente
                     </a>
                 </div>
@@ -406,7 +420,8 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                     <div class="form-group" style="margin-bottom:0;"><label>Nome (Sistema)</label><input type="text" name="nome" value="<?= htmlspecialchars($cliente_ativo['nome']) ?>" required></div>
                                     <div class="form-group" style="margin-bottom:0;"><label>Usuário</label><input type="text" name="usuario" value="<?= htmlspecialchars($cliente_ativo['usuario']) ?>" required></div>
                                     <div class="form-group" style="margin-bottom:0;"><label>Nova Senha</label><input type="text" name="nova_senha" placeholder="Opcional"></div>
-                                    <button type="submit" name="btn_salvar_acesso" class="btn-save" style="background:#efb524; color:black; margin:0; padding: 14px 20px; white-space:nowrap; width:auto; height:52px;">Salvar Acesso</button>
+                                    <div class="form-group" style="margin-bottom:0;"><label>Nova Senha</label><input type="text" name="nova_senha" placeholder="Opcional"></div>
+                                    <button type="submit" name="btn_salvar_acesso" class="btn-save btn-warning" style="color:black; margin:0; padding: 10px 20px; white-space:nowrap; width:auto; height:auto;">Salvar Acesso</button>
                                 </div>
                             </div>
 
@@ -451,8 +466,8 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 
                 <!-- Botão Salvar Geral (Cadastrais) -->
                 <div style="margin-top: -20px; margin-bottom: 40px; display:flex; gap:15px; align-items:center;">
-                     <button type="button" onclick="toggleEditMode()" class="btn-save" style="background:#6c757d; width:auto;">🔓 Liberar Edição</button>
-                     <button type="submit" form="form_dados_detalhados" name="btn_salvar_cadastro" id="btn_salvar_dados" class="btn-save" style="display:none;">Salvar Detalhes Cadastrais</button>
+                     <button type="button" onclick="toggleEditMode()" class="btn-save btn-secondary" style="width:auto;">🔓 Liberar Edição</button>
+                     <button type="submit" form="form_dados_detalhados" name="btn_salvar_cadastro" id="btn_salvar_dados" class="btn-save btn-success" style="display:none;">Salvar Detalhes Cadastrais</button>
                 </div>
 
                 <script>
@@ -561,7 +576,11 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             <label>Link Pasta Pendências (Drive)</label>
                             <input type="text" name="link_doc_pendencias" value="<?= $detalhes['link_doc_pendencias']??'' ?>">
                         </div>
-                        <button type="submit" name="btn_salvar_pendencias" class="btn-save" style="background:#d97706;">Salvar Pendências</button>
+                        <div class="form-group">
+                            <label>Link Pasta Pendências (Drive)</label>
+                            <input type="text" name="link_doc_pendencias" value="<?= $detalhes['link_doc_pendencias']??'' ?>">
+                        </div>
+                        <button type="submit" name="btn_salvar_pendencias" class="btn-save btn-warning" style="color:#000;">Salvar Pendências</button>
                     </form>
                 </div>
 
@@ -580,7 +599,11 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             <label>🔗 Link da Pasta Geral (Backup/Drive)</label>
                             <input type="text" name="link_drive_pasta" value="<?= $detalhes['link_drive_pasta']??'' ?>" placeholder="https://drive.google.com/...">
                         </div>
-                        <button type="submit" name="btn_salvar_arquivos" class="btn-save" style="background:#1976d2;">Salvar Links</button>
+                        <div class="form-group">
+                            <label>🔗 Link da Pasta Geral (Backup/Drive)</label>
+                            <input type="text" name="link_drive_pasta" value="<?= $detalhes['link_drive_pasta']??'' ?>" placeholder="https://drive.google.com/...">
+                        </div>
+                        <button type="submit" name="btn_salvar_arquivos" class="btn-save btn-info">Salvar Links</button>
                     </form>
 
                     <?php 
@@ -617,7 +640,9 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             <label>Link da Pasta (Google Drive) para Cliente ver Boletos/Comprovantes</label>
                             <div style="display:flex; gap:10px;">
                                 <input type="text" name="link_pasta_pagamentos" value="<?= $detalhes['link_pasta_pagamentos']??'' ?>" placeholder="https://drive.google.com/..." style="flex:1;">
-                                <button type="submit" name="btn_salvar_dados_financeiros" class="btn-save" style="margin:0; width:auto; padding:10px 20px; background:#198754;">Salvar Link</button>
+                            <div style="display:flex; gap:10px;">
+                                <input type="text" name="link_pasta_pagamentos" value="<?= $detalhes['link_pasta_pagamentos']??'' ?>" placeholder="https://drive.google.com/..." style="flex:1;">
+                                <button type="submit" name="btn_salvar_dados_financeiros" class="btn-save btn-success" style="margin:0;">Salvar Link</button>
                             </div>
                         </div>
                     </form>
@@ -662,7 +687,12 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                 <input type="text" name="link_comprovante" placeholder="https://...">
                             </div>
                         </div>
-                        <button type="submit" name="btn_salvar_financeiro" class="btn-save" style="background:#28a745;">Adicionar Lançamento</button>
+                            <div class="form-group">
+                                <label>Link Comprovante/Boleto (Opcional)</label>
+                                <input type="text" name="link_comprovante" placeholder="https://...">
+                            </div>
+                        </div>
+                        <button type="submit" name="btn_salvar_financeiro" class="btn-save btn-success">Adicionar Lançamento</button>
                     </form>
                 </div>
 
