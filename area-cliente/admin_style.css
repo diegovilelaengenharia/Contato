@@ -357,19 +357,36 @@ body {
         gap: 20px;
     }
 
-    /* Sidebar fica no topo, mas compacta */
+    /* Sidebar Hidden by Default */
     .sidebar {
-        position: relative;
-        margin-bottom: 20px;
-        padding: 15px;
+        display: none;
+        /* Esconde menu */
         border-bottom: 2px solid var(--color-border);
+        margin-bottom: 20px;
+        animation: slideDown 0.3s ease-out;
+    }
+
+    .sidebar.show {
+        display: block;
+        /* Mostra quando ativo */
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     .client-list {
-        max-height: 200px;
+        max-height: 300px;
+        /* Mais espaço já que está colapsado */
     }
-
-    /* Menor lista no mobile para não ocupar tudo */
 
     .admin-header {
         padding: 1rem;
@@ -395,7 +412,6 @@ body {
         overflow-x: hidden;
     }
 
-    /* Previne quebra lateral */
     .form-grid {
         grid-template-columns: 1fr;
         gap: 15px;
@@ -405,7 +421,6 @@ body {
         width: 100%;
     }
 
-    /* Ajuste de Texto */
     h1 {
         font-size: 1.2rem !important;
     }
@@ -413,6 +428,31 @@ body {
     h2 {
         font-size: 1.1rem !important;
     }
+
+    /* Botão flutuante do Menu */
+    .mobile-menu-toggle {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        padding: 12px;
+        background: var(--color-surface);
+        border: 2px solid var(--color-primary);
+        color: var(--color-primary);
+        font-weight: 700;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+}
+
+/* Desktop: Esconde botão menu */
+.mobile-menu-toggle {
+    display: none;
 }
 
 /* Helper para tabelas rolarem no mobile */

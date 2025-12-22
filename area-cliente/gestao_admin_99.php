@@ -492,7 +492,10 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 </header>
 
 <div class="admin-container">
-    <aside class="sidebar">
+    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+        ☰ Menu de Navegação
+    </button>
+    <aside class="sidebar" id="mobileSidebar">
         <nav class="sidebar-menu">
             <a href="gestao_admin_99.php" class="btn-menu <?= (!isset($_GET['cliente_id']) && !isset($_GET['novo']) && !isset($_GET['importar'])) ? 'active' : '' ?>">
                 🏠 Página Inicial
@@ -1044,6 +1047,10 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 </div>
 
 <script>
+    function toggleSidebar() {
+        document.getElementById('mobileSidebar').classList.toggle('show');
+    }
+
     // 1. Loading nos Botões
     document.querySelectorAll('form').forEach(form => {
         form.addEventListener('submit', function() {
