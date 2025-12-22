@@ -194,6 +194,84 @@ if (isset($_GET['delete_cliente'])) {
     header("Location: ?"); exit;
 }
 
+// 8. Importar Pré-Cadastro (Aprovar)
+if (isset($_GET['aprovar_cadastro'])) {
+    $pid = $_GET['aprovar_cadastro'];
+    try {
+        $pre = $pdo->query("SELECT * FROM pre_cadastros WHERE id=$pid")->fetch();
+        if ($pre) {
+            // Cria Cliente
+            $nome = $pre['nome'];
+            $user_sugerido = strtolower(explode(' ', trim($nome))[0]) . rand(100,999);
+            $pass_padrao = password_hash("Mudar123", PASSWORD_DEFAULT); // Senha temporaria
+            
+            $pdo->prepare("INSERT INTO clientes (nome, usuario, senha) VALUES (?, ?, ?)")->execute([$nome, $user_sugerido, $pass_padrao]);
+            $nid = $pdo->lastInsertId();
+            
+            // Renomeia
+            $nome_final = sprintf("Cliente %03d - %s", $nid, $nome);
+            $pdo->prepare("UPDATE clientes SET nome = ? WHERE id = ?")->execute([$nome_final, $nid]);
+            
+            // Cria Detalhes e popula com o que veio
+            $sql_det = "INSERT INTO processo_detalhes (cliente_id, cpf_cnpj, contato_email, contato_tel, endereco_imovel, profissao) VALUES (?, ?, ?, ?, ?, ?)";
+            // Usamos 'profissao' para guardar tipo servico temp, ou observacao
+            $pdo->prepare($sql_det)->execute([$nid, $pre['cpf_cnpj'], $pre['email'], $pre['telefone'], $pre['endereco_obra'], $pre['tipo_servico']]);
+
+            // Atualiza status do pré
+            $pdo->query("UPDATE pre_cadastros SET status='aprovado' WHERE id=$pid");
+            
+            $sucesso = "Cadastro importado com sucesso! Cliente criado: $nome_final (Login: $user_sugerido / Senha: Mudar123)";
+        }
+    } catch (Exception $e) { $erro = "Erro ao importar: " . $e->getMessage(); }
+}
+
+// 9. Exportar Relatório (Simples HTML para Impressão)
+if (isset($_GET['exportar_cliente'])) {
+    $cid = $_GET['exportar_cliente'];
+    $c = $pdo->query("SELECT * FROM clientes WHERE id=$cid")->fetch();
+    $d = $pdo->query("SELECT * FROM processo_detalhes WHERE cliente_id=$cid")->fetch();
+    $f = $pdo->query("SELECT * FROM processo_financeiro WHERE cliente_id=$cid")->fetchAll();
+    
+    echo "<html><head><title>Relatório - {$c['nome']}</title><style>body{font-family:sans-serif; padding:40px;} h1{border-bottom:2px solid #333;} table{width:100%; border-collapse:collapse; margin-top:10px;} th,td{border:1px solid #ddd; padding:8px; text-align:left;} .section{margin-bottom:30px;}</style></head>
+    <body onload='window.print()'>
+        <div style='text-align:center;'>
+            <img src='../assets/logo.png' style='height:60px;'>
+            <h1>Ficha Cadastral do Cliente</h1>
+            <p>Gerado em: ".date('d/m/Y H:i')."</p>
+        </div>
+        
+        <div class='section'>
+            <h2>Dados Pessoais</h2>
+            <p><strong>Nome:</strong> {$c['nome']}<br>
+            <strong>CPF/CNPJ:</strong> ".($d['cpf_cnpj']??'')."<br>
+            <strong>Email:</strong> ".($d['contato_email']??'')."<br>
+            <strong>Telefone:</strong> ".($d['contato_tel']??'')."</p>
+        </div>
+
+        <div class='section'>
+            <h2>Dados da Obra</h2>
+            <p><strong>Endereço:</strong> ".($d['endereco_imovel']??'')."<br>
+            <strong>Matrícula:</strong> ".($d['num_matricula']??'')."<br>
+            <strong>Área:</strong> ".($d['area_construida']??'')."</p>
+        </div>
+
+        <div class='section'>
+            <h2>Financeiro</h2>
+            <table>
+                <tr><th>Descrição</th><th>Valor</th><th>Vencimento</th><th>Status</th></tr>";
+                foreach($f as $fin){
+                    echo "<tr>
+                        <td>{$fin['descricao']}</td>
+                        <td>R$ ".number_format($fin['valor'],2,',','.')."</td>
+                        <td>".date('d/m/Y', strtotime($fin['data_vencimento']))."</td>
+                        <td>{$fin['status']}</td>
+                    </tr>";
+                }
+    echo "</table></div>
+    </body></html>";
+    exit;
+}
+
 // --- Consultas Iniciais ---
 $clientes = $pdo->query("SELECT * FROM clientes ORDER BY nome ASC")->fetchAll();
 $cliente_ativo = null;
@@ -332,8 +410,16 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 <div class="admin-container">
     <aside class="sidebar">
         <a href="?novo=true" style="display:block; text-align:center; padding:12px; border-radius:6px; font-weight:bold; text-decoration:none; margin-bottom:20px;" class="btn-warning">+ Novo Cliente</a>
+        
+        <div style="margin-bottom:20px; display:grid; gap:10px;">
+            <a href="?importar=true" class="btn-save btn-info" style="display:block; text-align:center; padding:10px; margin:0; text-decoration:none; font-size:0.9rem;">📥 Importar Site</a>
+            <?php if($cliente_ativo): ?>
+                <a href="?exportar_cliente=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save btn-secondary" style="display:block; text-align:center; padding:10px; margin:0; text-decoration:none; font-size:0.9rem;">📄 Exportar PDF</a>
+            <?php endif; ?>
+        </div>
+
         <h4 style="margin: 10px 0; color: var(--color-text-subtle);">Meus Clientes</h4>
-        <ul class="client-list" style="list-style:none; padding:0;">
+        <ul class="client-list" style="list-style:none; padding:0; max-height:500px; overflow-y:auto;">
             <?php foreach($clientes as $c): ?>
                 <li><a href="?cliente_id=<?= $c['id'] ?>" class="<?= ($cliente_ativo && $cliente_ativo['id'] == $c['id']) ? 'active' : '' ?>"><?= htmlspecialchars($c['nome']) ?></a></li>
             <?php endforeach; ?>
@@ -344,7 +430,35 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
         <?php if(isset($sucesso)): ?><div style="background:#d1e7dd; color:#0f5132; padding:15px; margin-bottom:20px; border-radius:8px;"><?= $sucesso ?></div><?php endif; ?>
         <?php if(isset($erro)): ?><div style="background:#f8d7da; color:#842029; padding:15px; margin-bottom:20px; border-radius:8px;"><?= $erro ?></div><?php endif; ?>
 
-        <?php if(isset($_GET['novo'])): ?>
+        <?php if(isset($_GET['importar'])): ?>
+            <div class="form-card">
+                <h2>Importar Cadastros do Site</h2>
+                <p>Abaixo estão as solicitações de cadastro vindas da página pública.</p>
+                <table style="width:100%; border-collapse:collapse; margin-top:20px;">
+                    <thead><tr style="background:#eee;"><th style="padding:10px;">Data</th><th style="padding:10px;">Nome</th><th style="padding:10px;">Contato</th><th style="padding:10px;">Serviço</th><th style="padding:10px;">Ação</th></tr></thead>
+                    <tbody>
+                        <?php 
+                        try {
+                            $pendentes = $pdo->query("SELECT * FROM pre_cadastros WHERE status='pendente' ORDER BY data_solicitacao DESC")->fetchAll();
+                            if(count($pendentes) == 0) echo "<tr><td colspan='5' style='padding:20px; text-align:center;'>Nenhuma solicitação pendente.</td></tr>";
+                            foreach($pendentes as $p): ?>
+                            <tr style="border-bottom:1px solid #eee;">
+                                <td style="padding:10px;"><?= date('d/m/Y H:i', strtotime($p['data_solicitacao'])) ?></td>
+                                <td style="padding:10px;"><strong><?= htmlspecialchars($p['nome']) ?></strong><br><small><?= $p['cpf_cnpj'] ?></small></td>
+                                <td style="padding:10px;"><?= $p['telefone'] ?><br><small><?= $p['email'] ?></small></td>
+                                <td style="padding:10px;"><?= $p['tipo_servico'] ?></td>
+                                <td style="padding:10px; text-align:center;">
+                                    <a href="?aprovar_cadastro=<?= $p['id'] ?>" class="btn-save btn-success" style="padding:5px 10px; font-size:0.8rem; text-decoration:none;">✅ Aprovar</a>
+                                </td>
+                            </tr>
+                        <?php endforeach; 
+                        } catch(Exception $e) { echo "<tr><td colspan='5'>Erro: Rode o setup_cadastro_db.php</td></tr>"; }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+
+        <?php elseif(isset($_GET['novo'])): ?>
             <div class="form-card">
                 <h2>Cadastrar Novo Cliente</h2>
                 <form method="POST">
