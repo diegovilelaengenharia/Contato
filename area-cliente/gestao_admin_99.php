@@ -283,7 +283,7 @@ if (isset($_GET['exportar_cliente'])) {
 
         <div class="header">
             <div>
-                <h1>Dossiê do Processo</h1>
+                <h1>Resumo do Processo</h1>
                 <div style="font-size: 14px; margin-top: 5px;">Relatório Técnico Administrativo</div>
             </div>
             <div class="header-info">
