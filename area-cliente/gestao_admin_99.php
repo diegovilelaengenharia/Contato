@@ -906,7 +906,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         </div>
                         <div class="form-group">
                             <label>Observação sobre a mudança (opcional)</label>
-                            <textarea name="observacao_etapa" rows="3" placeholder="Ex: Protocolado na prefeitura sob nº 123..."></textarea>
+                            <textarea name="observacao_etapa" id="editor_etapa" rows="3" placeholder="Ex: Protocolado na prefeitura sob nº 123..."></textarea>
                         </div>
                         <button type="submit" name="atualizar_etapa" class="btn-save">Atualizar Status</button>
                     </form>
@@ -931,8 +931,11 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                             <?php 
                                                 // Lógica de exibição de comentários estilizados
                                                 $parts = explode("||COMENTARIO_USER||", $h['descricao']);
-                                                $sys_desc = nl2br(htmlspecialchars($parts[0]));
-                                                echo "<div style='color:var(--color-text-subtle);'>{$sys_desc}</div>";
+                                                // Permite HTML rico da primeira parte (descrição do sistema/admin)
+                                                // Mas previne XSS grosseiro se quiser, porem aqui confiamos no admin.
+                                                // removemos htmlspecialchars e nl2br pois o CKEditor já formata p/ html
+                                                $sys_desc = $parts[0]; 
+                                                echo "<div style='color:var(--color-text-subtle); line-height:1.5;'>{$sys_desc}</div>";
                                                 
                                                 // Se tiver comentário do usuário
                                                 if (count($parts) > 1) {
@@ -1058,6 +1061,15 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     ClassicEditor
                         .create( document.querySelector( '#editor_pendencias' ), {
                             toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'undo', 'redo' ],
+                            language: 'pt-br'
+                        } )
+                        .catch( error => {
+                            console.error( error );
+                        } );
+
+                    ClassicEditor
+                        .create( document.querySelector( '#editor_etapa' ), {
+                            toolbar: [ 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'undo', 'redo' ],
                             language: 'pt-br'
                         } )
                         .catch( error => {
