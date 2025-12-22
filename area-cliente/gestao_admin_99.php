@@ -383,13 +383,14 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         <div>
                              <!-- Card Acesso -->
                             <div class="form-card" style="border-left: 6px solid #efb524;">
+                            <div class="form-card" style="border-left: 6px solid #efb524;">
                                 <h3>🔐 Dados de Acesso (Login)</h3>
-                                <div class="form-group"><label>Nome do Cliente (Sistema)</label><input type="text" name="nome" value="<?= htmlspecialchars($cliente_ativo['nome']) ?>" required></div>
-                                <div class="form-grid">
-                                    <div class="form-group"><label>Usuário/Login</label><input type="text" name="usuario" value="<?= htmlspecialchars($cliente_ativo['usuario']) ?>" required></div>
-                                    <div class="form-group"><label>Nova Senha (Opcional)</label><input type="text" name="nova_senha" placeholder="Deixe em branco p/ manter"></div>
+                                <div style="display: grid; grid-template-columns: 1.5fr 1fr 1fr auto; gap: 15px; align-items: end;">
+                                    <div class="form-group" style="margin-bottom:0;"><label>Nome (Sistema)</label><input type="text" name="nome" value="<?= htmlspecialchars($cliente_ativo['nome']) ?>" required></div>
+                                    <div class="form-group" style="margin-bottom:0;"><label>Usuário</label><input type="text" name="usuario" value="<?= htmlspecialchars($cliente_ativo['usuario']) ?>" required></div>
+                                    <div class="form-group" style="margin-bottom:0;"><label>Nova Senha</label><input type="text" name="nova_senha" placeholder="Opcional"></div>
+                                    <button type="submit" name="btn_salvar_acesso" class="btn-save" style="background:#efb524; color:black; margin:0; padding: 14px 20px; white-space:nowrap; width:auto; height:52px;">Salvar Acesso</button>
                                 </div>
-                                <button type="submit" name="btn_salvar_acesso" class="btn-save" style="background:#efb524; color:black; margin-top:10px;">Salvar Acesso</button>
                             </div>
 
                             <div class="form-card">
