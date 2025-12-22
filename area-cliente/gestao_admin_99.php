@@ -121,6 +121,33 @@ if (isset($_POST['novo_cliente'])) {
     } catch (PDOException $e) { $erro = "Erro ao criar cliente."; }
 }
 
+// 6. Financeiro - Adicionar
+if (isset($_POST['btn_salvar_financeiro'])) {
+    $cid = $_POST['cliente_id'];
+    try {
+        $stmt = $pdo->prepare("INSERT INTO processo_financeiro (cliente_id, categoria, descricao, valor, data_vencimento, status, link_comprovante) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([
+            $cid, 
+            $_POST['categoria'], 
+            $_POST['descricao'], 
+            str_replace(',', '.', $_POST['valor']), 
+            $_POST['data_vencimento'], 
+            $_POST['status'], 
+            $_POST['link_comprovante']
+        ]);
+        $sucesso = "Lançamento financeiro adicionado!";
+    } catch(PDOException $e) { $erro = "Erro: " . $e->getMessage(); }
+}
+
+// 7. Financeiro - Excluir
+if (isset($_GET['del_fin'])) {
+    $fid = $_GET['del_fin'];
+    $cid = $_GET['cliente_id']; // para manter na pag
+    $pdo->prepare("DELETE FROM processo_financeiro WHERE id=? AND cliente_id=?")->execute([$fid, $cid]);
+    header("Location: ?cliente_id=$cid&tab=financeiro");
+    exit;
+}
+
 // Delete
 if (isset($_GET['delete_cliente'])) {
     $pdo->prepare("DELETE FROM clientes WHERE id = ?")->execute([$_GET['delete_cliente']]);
@@ -313,7 +340,8 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=cadastro" class="tab-btn <?= $active_tab=='cadastro'?'active':'' ?>">📝 Cadastro</a>
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="tab-btn <?= $active_tab=='andamento'?'active':'' ?>">📊 Andamento</a>
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="tab-btn <?= $active_tab=='pendencias'?'active':'' ?>">⚠️ Pendências</a>
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=arquivos" class="tab-btn blue <?= $active_tab=='arquivos'?'active':'' ?>">📂 Arquivos do Cliente</a>
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=arquivos" class="tab-btn blue <?= $active_tab=='arquivos'?'active':'' ?>">📂 Arquivos</a>
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=financeiro" class="tab-btn <?= $active_tab=='financeiro'?'active':'' ?>" style="border-color:#28a745; color:#198754;">💰 Financeiro</a>
             </div>
 
             <?php if($active_tab == 'cadastro'): ?>
@@ -471,6 +499,116 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         </div>
                     <?php endif; ?>
                 </div>
+            <?php endif; ?>
+
+            <?php elseif($active_tab == 'financeiro'): ?>
+                <!-- Form de Adição -->
+                <div class="form-card">
+                    <h3>➕ Novo Lançamento Financeiro</h3>
+                    <form method="POST">
+                        <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Descrição</label>
+                                <input type="text" name="descricao" required placeholder="Ex: Taxa de Habite-se">
+                            </div>
+                            <div class="form-group">
+                                <label>Categoria</label>
+                                <select name="categoria" required>
+                                    <option value="honorarios">Honorários (Vilela Engenharia)</option>
+                                    <option value="taxas">Taxas e Multas (Governo/Prefeitura)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Valor (R$)</label>
+                                <input type="number" step="0.01" name="valor" required placeholder="0.00">
+                            </div>
+                            <div class="form-group">
+                                <label>Vencimento</label>
+                                <input type="date" name="data_vencimento" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Status</label>
+                                <select name="status">
+                                    <option value="pendente">⏳ Pendente</option>
+                                    <option value="pago">✅ Pago</option>
+                                    <option value="atrasado">❌ Atrasado</option>
+                                    <option value="isento">⚪ Isento</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Link Comprovante/Boleto (Opcional)</label>
+                                <input type="text" name="link_comprovante" placeholder="https://...">
+                            </div>
+                        </div>
+                        <button type="submit" name="btn_salvar_financeiro" class="btn-save" style="background:#28a745;">Adicionar Lançamento</button>
+                    </form>
+                </div>
+
+                <!-- Tabelas -->
+                <?php 
+                try {
+                    // Verifica se tabela existe (silencioso) ou só roda
+                    $fin_honorarios = $pdo->prepare("SELECT * FROM processo_financeiro WHERE cliente_id=? AND categoria='honorarios' ORDER BY data_vencimento ASC");
+                    $fin_honorarios->execute([$cliente_ativo['id']]);
+                    
+                    $fin_taxas = $pdo->prepare("SELECT * FROM processo_financeiro WHERE cliente_id=? AND categoria='taxas' ORDER BY data_vencimento ASC");
+                    $fin_taxas->execute([$cliente_ativo['id']]);
+
+                    function renderFinTable($stmt, $title, $color, $cid) {
+                        $rows = $stmt->fetchAll();
+                        echo "<div class='form-card' style='border-left: 6px solid $color;'>
+                                <h3 style='color:$color;'>$title</h3>";
+                        
+                        if(count($rows) == 0) {
+                            echo "<p style='color:#666; font-style:italic;'>Nenhum lançamento encontrado nesta categoria.</p>";
+                        } else {
+                            echo "<div style='overflow-x:auto;'>
+                                  <table style='width:100%; border-collapse:collapse; font-size:0.95rem; min-width:600px;'>
+                                    <thead><tr style='background:#f8f9fa; border-bottom:2px solid #dee2e6;'>
+                                        <th style='padding:12px; text-align:left;'>Descrição</th>
+                                        <th style='padding:12px; text-align:left;'>Valor</th>
+                                        <th style='padding:12px; text-align:left;'>Vencimento</th>
+                                        <th style='padding:12px; text-align:center;'>Status</th>
+                                        <th style='padding:12px; text-align:center;'>Ação</th>
+                                        <th style='padding:12px;'></th>
+                                    </tr></thead><tbody>";
+                            foreach($rows as $r) {
+                                $st_color = 'black';
+                                $st_icon = '';
+                                switch($r['status']){
+                                    case 'pago': $st_color='#198754'; $st_icon='✅ Pago'; break;
+                                    case 'pendente': $st_color='#ffc107'; $st_icon='⏳ Pendente'; break;
+                                    case 'atrasado': $st_color='#dc3545'; $st_icon='❌ Atrasado'; break;
+                                    default: $st_icon=$r['status'];
+                                }
+                                $valor = number_format($r['valor'], 2, ',', '.');
+                                $data = date('d/m/Y', strtotime($r['data_vencimento']));
+                                $link = $r['link_comprovante'] ? "<a href='{$r['link_comprovante']}' target='_blank' style='color:white; background:#0d6efd; padding:4px 8px; border-radius:4px; text-decoration:none; font-size:0.8rem;'>📄 Ver Doc</a>" : "<span style='opacity:0.5'>--</span>";
+                                
+                                echo "<tr style='border-bottom:1px solid #eee;'>
+                                        <td style='padding:12px;'>{$r['descricao']}</td>
+                                        <td style='padding:12px; font-weight:bold;'>R$ {$valor}</td>
+                                        <td style='padding:12px;'>{$data}</td>
+                                        <td style='padding:12px; text-align:center; color:{$st_color}; font-weight:bold;'>{$st_icon}</td>
+                                        <td style='padding:12px; text-align:center;'>{$link}</td>
+                                        <td style='padding:12px; text-align:right;'>
+                                            <a href='?cliente_id={$cid}&tab=financeiro&del_fin={$r['id']}' onclick='return confirm(\"Tem certeza que deseja EXCLUIR este lançamento financeiro?\")' style='color:#dc3545; text-decoration:none; font-size:1.1rem;'>🗑️</a>
+                                        </td>
+                                      </tr>";
+                            }
+                            echo "</tbody></table></div>";
+                        }
+                        echo "</div>";
+                    }
+
+                    renderFinTable($fin_honorarios, "💰 Honorários e Serviços (Vilela Engenharia)", "#2196f3", $cliente_ativo['id']);
+                    renderFinTable($fin_taxas, "🏛️ Taxas e Multas Governamentais", "#efb524", $cliente_ativo['id']);
+
+                } catch (Exception $e) {
+                    echo "<div style='color:red'>Erro ao carregar dados financeiros. Verifique se o Setup de Banco de Dados foi rodado. <br>". $e->getMessage() ."</div>";
+                }
+                ?>
             <?php endif; ?>
 
         <?php endif; ?>
