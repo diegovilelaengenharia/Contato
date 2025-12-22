@@ -16,6 +16,15 @@ try {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
 
     $pdo->exec($sql);
+    echo "Tabela 'processo_financeiro' configurada.<br>";
+
+    // Adicionar coluna de link de pasta de pagamentos na tabela de detalhes se não existir
+    try {
+        $pdo->exec("ALTER TABLE processo_detalhes ADD COLUMN link_pasta_pagamentos TEXT");
+        echo "Coluna 'link_pasta_pagamentos' adicionada em processo_detalhes.<br>";
+    } catch (PDOException $e) {
+        // Ignora erro se coluna já existir
+    }
     echo "Tabela 'processo_financeiro' criada ou já existente com sucesso!<br>";
     echo "Pode apagar este arquivo se desejar.";
 

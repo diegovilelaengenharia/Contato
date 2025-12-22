@@ -160,6 +160,16 @@ if (isset($_POST['btn_salvar_financeiro'])) {
         ]);
         $sucesso = "Lançamento financeiro adicionado!";
     } catch(PDOException $e) { $erro = "Erro: " . $e->getMessage(); }
+    } catch(PDOException $e) { $erro = "Erro: " . $e->getMessage(); }
+}
+
+// 6.5 Salvar Dados Gerais Financeiro (Link da Pasta)
+if (isset($_POST['btn_salvar_dados_financeiros'])) {
+    $cid = $_POST['cliente_id'];
+    try {
+        $pdo->prepare("UPDATE processo_detalhes SET link_pasta_pagamentos = ? WHERE cliente_id = ?")->execute([$_POST['link_pasta_pagamentos'], $cid]);
+        $sucesso = "Link da pasta de pagamentos salvo!";
+    } catch(PDOException $e) { $erro = "Erro: " . $e->getMessage(); }
 }
 
 // 7. Financeiro - Excluir
@@ -591,6 +601,21 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
 
             <?php elseif($active_tab == 'financeiro'): ?>
+                <!-- ConfigFinanceiro -->
+                <div class="form-card" style="border-left: 6px solid #28a745; background:#f0fff4;">
+                    <h3 style="color:#28a745;">📂 Pasta de Comprovantes/Pagamentos</h3>
+                    <form method="POST">
+                        <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
+                        <div class="form-group">
+                            <label>Link da Pasta (Google Drive) para Cliente ver Boletos/Comprovantes</label>
+                            <div style="display:flex; gap:10px;">
+                                <input type="text" name="link_pasta_pagamentos" value="<?= $detalhes['link_pasta_pagamentos']??'' ?>" placeholder="https://drive.google.com/..." style="flex:1;">
+                                <button type="submit" name="btn_salvar_dados_financeiros" class="btn-save" style="margin:0; width:auto; padding:10px 20px; background:#198754;">Salvar Link</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
                 <!-- Form de Adição -->
                 <div class="form-card">
                     <h3>➕ Novo Lançamento Financeiro</h3>
