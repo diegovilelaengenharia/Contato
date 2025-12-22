@@ -349,11 +349,17 @@ if (!empty($detalhes['link_pasta_pagamentos'])) {
             <section class="card">
                 <h2 style="margin-top:0;">Quadro de Avisos e Pendências</h2>
                 <?php 
+                if(!empty($detalhes['texto_pendencias'])): ?>
+                    <div class="pendency-board" style="margin-bottom:20px;">
+                        <div class="pendency-text"><?= nl2br($detalhes['texto_pendencias']) ?></div>
+                    </div>
+                <?php endif;
+
                 $stmtPend = $pdo->prepare("SELECT * FROM processo_pendencias WHERE cliente_id=? AND status='pendente' ORDER BY id DESC");
                 $stmtPend->execute([$cliente_id]);
                 $pendencias = $stmtPend->fetchAll();
                 
-                <?php if(count($pendencias) > 0): ?>
+                if(count($pendencias) > 0): ?>
                     <div style="overflow-x:auto;">
                         <table class="history-table">
                             <thead>

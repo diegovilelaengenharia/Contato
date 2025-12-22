@@ -931,7 +931,17 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
             <?php elseif($active_tab == 'pendencias'): ?>
                 <div class="form-card" style="border-left: 6px solid #ffc107;">
-                    <h3>⚠️ Quadro de Pendências</h3>
+                    <h3>⚠️ Quadro de Avisos Gerais</h3>
+                    <form method="POST">
+                        <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
+                        <div class="form-group">
+                            <label>Texto Livre (Avisos Gerais)</label>
+                            <textarea name="texto_pendencias" id="editor_pendencias" rows="8" style="background:#fffbf2; border:1px solid #ffeeba;"><?= htmlspecialchars($detalhes['texto_pendencias']??'') ?></textarea>
+                        </div>
+                        <button type="submit" name="btn_salvar_pendencias" class="btn-save btn-warning" style="color:#000; margin-bottom:20px;">Salvar Avisos Gerais</button>
+                    </form>
+                    
+                    <h3>📋 Lista de Pendências Individuais</h3>
 
                     <!-- Adicionar/Editar Pendência -->
                     <form method="POST" id="form-pendencia" style="margin-bottom:25px; padding-bottom:20px; border-bottom:1px solid #eee;">
@@ -997,6 +1007,15 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 </div>
 
                 <script>
+                    ClassicEditor
+                        .create( document.querySelector( '#editor_pendencias' ), {
+                            toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'undo', 'redo' ],
+                            language: 'pt-br'
+                        } )
+                        .catch( error => {
+                            console.error( error );
+                        } );
+
                     function editPendencia(id, text) {
                         document.getElementById('pendencia_id_input').value = id;
                         document.getElementById('nova_pendencia_input').value = text;
