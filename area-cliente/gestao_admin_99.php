@@ -224,14 +224,19 @@ if (isset($_POST['btn_emitir_pendencia'])) {
             // EDITAR existente
             $pdo->prepare("UPDATE processo_pendencias SET descricao=? WHERE id=? AND cliente_id=?")->execute([$texto, $pid, $cid]);
             $sucesso = "Pendência atualizada com sucesso!";
+            $redirect_msg = "pendencia_updated";
         } else {
             // CRIAR nova (Do quadro)
             $pdo->prepare("INSERT INTO processo_pendencias (cliente_id, descricao, status, data_criacao) VALUES (?, ?, 'pendente', NOW())")->execute([$cid, $texto]);
             $sucesso = "Pendência publicada!";
+            $redirect_msg = "pendencia_emitted";
         }
         
         // Limpar o texto do quadro (banco de dados) para garantir que não fique "salvo" como rascunho persistente antigo
         $pdo->prepare("UPDATE clientes SET texto_pendencias = NULL WHERE id = ?")->execute([$cid]);
+        
+        header("Location: gestao_admin_99.php?tab=pendencias&client_id=$cid&msg=$redirect_msg");
+        exit;
     }
 }
 // Delete Pendencia
@@ -985,7 +990,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                         <?= $data_criacao ?>
                                     </td>
                                     <td style="padding:12px; color:var(--color-text); text-decoration: <?= $is_solved ? 'line-through' : 'none' ?>; opacity: <?= $is_solved ? '0.6' : '1' ?>;">
-                                        <?= htmlspecialchars($p['descricao']) ?>
+                                        <?= mb_strimwidth(strip_tags($p['descricao']), 0, 80, "...") ?>
                                     </td>
                                     <td style="padding:12px; text-align:center;">
                                         <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias&toggle_pend=<?= $p['id'] ?>" 
@@ -994,7 +999,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                         </a>
                                     </td>
                                     <td style="padding:12px; text-align:center;">
-                                        <button type="button" onclick="editPendencia(<?= $p['id'] ?>, '<?= addslashes($p['descricao']) ?>')" style="border:none; background:none; cursor:pointer;" title="Editar">✏️</button>
+                                        <button type="button" onclick="editPendencia(<?= $p['id'] ?>, '<?= addslashes(htmlspecialchars_decode($p['descricao'])) ?>')" style="border:none; background:none; cursor:pointer;" title="Editar">✏️</button>
                                         <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias&del_pend=<?= $p['id'] ?>" onclick="return confirm('Excluir esta pendência?')" style="text-decoration:none; margin-left:5px;">🗑️</a>
                                     </td>
                                 </tr>
@@ -1503,4 +1508,43 @@ function resetPendenciaFormText() {
     });
 </script>
 <?php endif; ?>
+
+<div id="successModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:10000; justify-content:center; align-items:center;">
+    <div style="background:white; padding:30px; border-radius:12px; text-align:center; box-shadow:0 4px 15px rgba(0,0,0,0.2); max-width:400px; width:90%;">
+        <div style="font-size:3rem; margin-bottom:10px;">✅</div>
+        <h3 id="successModalTitle" style="margin:0 0 10px 0; color:var(--color-primary);">Sucesso!</h3>
+        <p id="successModalText" style="color:#666; margin-bottom:20px;">Operação realizada com sucesso.</p>
+        <button onclick="closeSuccessModal()" class="btn-save" style="width:100%; margin:0;">OK</button>
+    </div>
+</div>
+
+<script>
+// Check URL for success messages
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const msg = urlParams.get('msg');
+    
+    if(msg === 'pendencia_emitted') {
+        showSuccessModal('Pendência Emitida!', 'A pendência foi publicada na lista e o quadro foi limpo com sucesso.');
+    } else if (msg === 'pendencia_updated') {
+        showSuccessModal('Pendência Atualizada!', 'As alterações foram salvas com sucesso.');
+    }
+    
+    // Clean URL
+    if(msg) {
+        const newUrl = window.location.pathname + window.location.search.replace(/&?msg=[^&]*/, '');
+        window.history.replaceState({}, document.title, newUrl);
+    }
+});
+
+function showSuccessModal(title, text) {
+    document.getElementById('successModalTitle').innerText = title;
+    document.getElementById('successModalText').innerText = text;
+    document.getElementById('successModal').style.display = 'flex';
+}
+
+function closeSuccessModal() {
+    document.getElementById('successModal').style.display = 'none';
+}
+</script>
 </html>
