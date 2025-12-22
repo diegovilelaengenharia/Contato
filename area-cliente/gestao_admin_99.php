@@ -402,7 +402,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             <div class="form-group"><label>Identidade (RG)</label><input type="text" name="rg_ie" value="<?= $detalhes['rg_ie']??'' ?>"></div>
                             <div class="form-group"><label>Email</label><input type="text" name="contato_email" value="<?= $detalhes['contato_email']??'' ?>"></div>
                             <div class="form-group"><label>Telefone</label><input type="text" name="contato_tel" value="<?= $detalhes['contato_tel']??'' ?>"></div>
-                            <div class="form-group"><label>Telefone</label><input type="text" name="contato_tel" value="<?= $detalhes['contato_tel']??'' ?>"></div>
+
                             <div class="form-group"><label>Endereço</label><input type="text" name="endereco_residencial" value="<?= $detalhes['endereco_residencial']??'' ?>"></div>
                         </div>
                         </div> <!-- Fim Coluna 1 -->
@@ -553,7 +553,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         </div>
                     <?php endif; ?>
                 </div>
-            <?php endif; ?>
+
 
             <?php elseif($active_tab == 'financeiro'): ?>
                 <!-- Form de Adição -->
