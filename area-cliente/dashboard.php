@@ -328,7 +328,7 @@ if (!empty($detalhes['link_pasta_pagamentos'])) {
                                 <tr>
                                     <td style="white-space:nowrap;"><?= date('d/m/Y H:i', strtotime($t['data_movimento'])) ?></td>
                                     <td><strong><?= htmlspecialchars($t['titulo_fase']) ?></strong></td>
-                                    <td><?= nl2br(htmlspecialchars($t['descricao'])) ?></td>
+                                    <td><?= $t['descricao'] ?></td>
                                 </tr>
                                 <?php endforeach; ?>
                             </tbody>
