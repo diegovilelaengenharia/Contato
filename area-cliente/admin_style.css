@@ -8,17 +8,20 @@
     --color-primary-light: #d1e7dd;
     --shadow: 0 4px 20px rgba(20, 108, 67, 0.08);
     --header-bg: #146c43;
+
+    /* Semantic Colors (Light) */
+    --bg-warning: #fff3cd;
+    --text-warning: #856404;
+    --border-warning: #ffeeba;
+
+    --bg-success: #d4edda;
+    --text-success: #155724;
+
+    --bg-danger: #f8d7da;
+    --text-danger: #721c24;
 }
 
-body.dark-mode {
-    --color-bg: #121212;
-    --color-surface: #1e1e1e;
-    --color-text: #e0e0e0;
-    --color-text-subtle: #a0a0a0;
-    --color-border: #333333;
-    --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    --header-bg: #0b3d26;
-}
+
 
 /* Default: Hidden on Desktop */
 .mobile-menu-toggle {
@@ -129,6 +132,8 @@ body {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
 }
+
+
 
 .tab-btn.active {
     font-weight: 700;
@@ -338,6 +343,30 @@ body {
 .btn-secondary {
     background: #6c757d;
     color: white;
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.status-badge.st-pago {
+    background: var(--bg-success);
+    color: var(--text-success);
+}
+
+.status-badge.st-pend {
+    background: var(--bg-warning);
+    color: var(--text-warning);
+}
+
+.status-badge.st-atra {
+    background: var(--bg-danger);
+    color: var(--text-danger);
 }
 
 /* Timeline */

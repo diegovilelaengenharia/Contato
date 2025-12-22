@@ -82,6 +82,15 @@ if (!empty($detalhes['link_pasta_pagamentos'])) {
             --color-primary-light: #d1e7dd;
             --shadow: 0 4px 20px rgba(20, 108, 67, 0.08);
             --header-bg: #146c43;
+            
+            /* Semantic Colors (Light) */
+            --bg-warning: #fff3cd;
+            --text-warning: #856404;
+            --border-warning: #ffeeba;
+            --bg-success: #d4edda;
+            --text-success: #155724;
+            --bg-danger: #f8d7da;
+            --text-danger: #721c24;
         }
 
         body.dark-mode {
@@ -91,11 +100,26 @@ if (!empty($detalhes['link_pasta_pagamentos'])) {
             --color-text-subtle: #a0a0a0;
             --color-border: #333333;
             --shadow: 0 4px 20px rgba(0,0,0,0.3);
+            
+            /* Semantic Colors (Dark) */
+            --bg-warning: #3e300a;
+            --text-warning: #ffc107;
+            --border-warning: #5e4b10;
+            --bg-success: #0b3d26;
+            --text-success: #d4edda;
+            --bg-danger: #3e1015;
+            --text-danger: #f8d7da;
         }
 
         body { background-color: var(--color-bg); color: var(--color-text); font-family: 'Outfit', sans-serif; margin: 0; padding: 0; transition: background-color 0.3s, color 0.3s; }
         .container { width: min(1000px, 95%); margin: 40px auto; }
         
+        /* Badges */
+        .status-badge { padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; display: inline-block; }
+        .status-badge.st-pago { background: var(--bg-success); color: var(--text-success); }
+        .status-badge.st-pend { background: var(--bg-warning); color: var(--text-warning); }
+        .status-badge.st-atra { background: var(--bg-danger); color: var(--text-danger); }
+
         .header-panel { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .card { background: var(--color-surface); padding: 30px; border-radius: 16px; box-shadow: var(--shadow); margin-bottom: 30px; border: 1px solid var(--color-border); }
         
@@ -324,9 +348,29 @@ if (!empty($detalhes['link_pasta_pagamentos'])) {
         <div id="view-pendencias" class="view-section">
             <section class="card">
                 <h2 style="margin-top:0;">Quadro de Avisos e Pendências</h2>
-                <?php if(!empty($detalhes['texto_pendencias'])): ?>
-                    <div class="pendency-board">
-                        <div class="pendency-text"><?= nl2br($detalhes['texto_pendencias']) ?></div>
+                <?php 
+                $stmtPend = $pdo->prepare("SELECT * FROM processo_pendencias WHERE cliente_id=? AND status='pendente' ORDER BY id DESC");
+                $stmtPend->execute([$cliente_id]);
+                $pendencias = $stmtPend->fetchAll();
+                
+                if(count($pendencias) > 0): ?>
+                    <div style="overflow-x:auto;">
+                        <table class="history-table">
+                            <thead>
+                                <tr><th>Data</th><th>Status</th><th>Descrição/Detalhes</th></tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach($pendencias as $p): 
+                                     $data = isset($p['data_criacao']) ? date('d/m/Y H:i', strtotime($p['data_criacao'])) : '-';
+                                ?>
+                                <tr style="background:var(--bg-warning);">
+                                    <td style="white-space:nowrap; color:var(--text-warning);"><?= $data ?></td>
+                                    <td><span class="status-badge st-pend">PENDENTE</span></td>
+                                    <td style="color:var(--text-warning); font-weight:500;"><?= htmlspecialchars($p['descricao']) ?></td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
                     </div>
                 <?php else: ?>
                     <div style="padding:40px; text-align:center; color:var(--color-text-subtle); background:rgba(0,0,0,0.02); border-radius:12px;">

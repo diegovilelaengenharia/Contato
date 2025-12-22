@@ -25,6 +25,16 @@ if (isset($_GET['sair'])) {
     exit;
 }
 
+// Ensure Table Exists
+$pdo->exec("CREATE TABLE IF NOT EXISTS processo_pendencias (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id INT NOT NULL,
+    descricao TEXT NOT NULL,
+    status ENUM('pendente', 'resolvido') DEFAULT 'pendente',
+    data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
+)");
+
 // --- Fases Padrão ---
 $fases_padrao = [
     "Abertura de Processo (Guichê)", "Fiscalização (Parecer Fiscal)", "Triagem (Documentos Necessários)",
@@ -198,6 +208,36 @@ if (isset($_POST['btn_salvar_financeiro'])) {
         $sucesso = "Lançamento financeiro adicionado!";
     } catch(PDOException $e) { $erro = "Erro: " . $e->getMessage(); }
 
+
+}
+
+// 6.6 Nova Lógica de Pendências (Lista Individual)
+// Adicionar
+if (isset($_POST['btn_add_pendencia'])) {
+    $cid = $_POST['cliente_id'];
+    $desc = $_POST['nova_pendencia'];
+    if(!empty($desc)) {
+        $pdo->prepare("INSERT INTO processo_pendencias (cliente_id, descricao) VALUES (?, ?)")->execute([$cid, $desc]);
+        $sucesso = "Pendência adicionada!";
+    }
+}
+// Delete Pendencia
+if (isset($_GET['del_pend'])) {
+    $pid = $_GET['del_pend'];
+    $cid = $_GET['cliente_id'];
+    $pdo->prepare("DELETE FROM processo_pendencias WHERE id=? AND cliente_id=?")->execute([$pid, $cid]);
+    header("Location: ?cliente_id=$cid&tab=pendencias");
+    exit;
+}
+// Toggle Status Pendencia
+if (isset($_GET['toggle_pend'])) {
+    $pid = $_GET['toggle_pend'];
+    $cid = $_GET['cliente_id'];
+    $curr = $pdo->query("SELECT status FROM processo_pendencias WHERE id=$pid")->fetchColumn();
+    $new = ($curr == 'pendente') ? 'resolvido' : 'pendente';
+    $pdo->prepare("UPDATE processo_pendencias SET status=? WHERE id=?")->execute([$new, $pid]);
+    header("Location: ?cliente_id=$cid&tab=pendencias");
+    exit;
 }
 
 // 6.5 Salvar Dados Gerais Financeiro (Link da Pasta)
@@ -883,27 +923,65 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             <?php elseif($active_tab == 'pendencias'): ?>
                 <div class="form-card" style="border-left: 6px solid #ffc107;">
                     <h3>⚠️ Quadro de Pendências</h3>
-                    <form method="POST">
+
+                    <!-- Adicionar Pendência -->
+                    <form method="POST" style="margin-bottom:25px; padding-bottom:20px; border-bottom:1px solid #eee;">
                         <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
                         <div class="form-group">
-                            <label>Texto descritivo das pendências (Cliente visualizará isso)</label>
-                            <textarea name="texto_pendencias" id="editor_pendencias" rows="12" style="background:#fffbf2; border:1px solid #ffeeba;"><?= htmlspecialchars($detalhes['texto_pendencias']??'') ?></textarea>
+                            <label>Nova Pendência (Descrição)</label>
+                            <div style="display:flex; gap:10px;">
+                                <input type="text" name="nova_pendencia" placeholder="Ex: Enviar comprovante de endereço..." style="flex:1;">
+                                <button type="submit" name="btn_add_pendencia" class="btn-save btn-warning" style="width:auto; color:black; margin:0;">Adicionar</button>
+                            </div>
                         </div>
-
-                        <button type="submit" name="btn_salvar_pendencias" class="btn-save btn-warning" style="color:#000;">Salvar Pendências</button>
                     </form>
+
+                    <!-- Lista de Pendências -->
+                    <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+                        <thead>
+                            <tr style="background:var(--bg-warning); color:var(--text-warning);">
+                                <th style="padding:10px; text-align:center; width:140px;">Data</th>
+                                <th style="padding:10px; text-align:left;">Descrição</th>
+                                <th style="padding:10px; text-align:center; width:120px;">Status</th>
+                                <th style="padding:10px; text-align:center; width:80px;">Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php 
+                            $pends = $pdo->prepare("SELECT * FROM processo_pendencias WHERE cliente_id=? ORDER BY id DESC");
+                            $pends->execute([$cliente_ativo['id']]);
+                            $lista_pend = $pends->fetchAll();
+                            
+                            if(count($lista_pend) == 0): ?>
+                                <tr><td colspan="4" style="padding:20px; text-align:center; color:var(--color-text-subtle);">Nenhuma pendência registrada.</td></tr>
+                            <?php else: foreach($lista_pend as $p): 
+                                $is_solved = ($p['status'] == 'resolvido');
+                                $color = $is_solved ? 'var(--text-success)' : 'var(--text-danger)';
+                                $bg = $is_solved ? 'var(--bg-success)' : 'var(--bg-danger)';
+                                $status_text = $is_solved ? 'RESOLVIDO' : 'PENDENTE';
+                                $data_criacao = isset($p['data_criacao']) ? date('d/m/Y H:i', strtotime($p['data_criacao'])) : '-';
+                            ?>
+                                <tr style="border-bottom:1px solid var(--color-border);">
+                                    <td style="padding:12px; text-align:center; color:var(--color-text-subtle); font-size:0.85rem;">
+                                        <?= $data_criacao ?>
+                                    </td>
+                                    <td style="padding:12px; color:var(--color-text); text-decoration: <?= $is_solved ? 'line-through' : 'none' ?>; opacity: <?= $is_solved ? '0.6' : '1' ?>;">
+                                        <?= htmlspecialchars($p['descricao']) ?>
+                                    </td>
+                                    <td style="padding:12px; text-align:center;">
+                                        <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias&toggle_pend=<?= $p['id'] ?>" 
+                                           style="display:inline-block; padding:4px 10px; border-radius:12px; font-size:0.75rem; font-weight:bold; text-decoration:none; background:<?= $bg ?>; color:<?= $color ?>;">
+                                           <?= $status_text ?>
+                                        </a>
+                                    </td>
+                                    <td style="padding:12px; text-align:center;">
+                                        <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias&del_pend=<?= $p['id'] ?>" onclick="return confirm('Excluir esta pendência?')" style="text-decoration:none;">🗑️</a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; endif; ?>
+                        </tbody>
+                    </table>
                 </div>
-                
-                <script>
-                    ClassicEditor
-                        .create( document.querySelector( '#editor_pendencias' ), {
-                            toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'undo', 'redo' ],
-                            language: 'pt-br'
-                        } )
-                        .catch( error => {
-                            console.error( error );
-                        } );
-                </script>
 
             <?php elseif($active_tab == 'arquivos'): ?>
                 <div class="form-card" style="border-left: 6px solid #2196f3;">
