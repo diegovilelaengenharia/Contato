@@ -944,11 +944,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                 <input type="text" name="link_comprovante" placeholder="https://...">
                             </div>
                         </div>
-                            <div class="form-group">
-                                <label>Link Comprovante/Boleto (Opcional)</label>
-                                <input type="text" name="link_comprovante" placeholder="https://...">
-                            </div>
-                        </div>
+
                         <button type="submit" name="btn_salvar_financeiro" class="btn-save btn-success">Adicionar Lançamento</button>
                     </form>
                 </div>
