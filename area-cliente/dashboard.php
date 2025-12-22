@@ -14,6 +14,16 @@ $stmtDet = $pdo->prepare("SELECT * FROM processo_detalhes WHERE cliente_id = ?")
 $stmtDet->execute([$cliente_id]);
 $detalhes = $stmtDet->fetch();
 
+// Montar Endereço Completo
+$end_parts = [];
+if(!empty($detalhes['imovel_rua'])) $end_parts[] = $detalhes['imovel_rua'];
+if(!empty($detalhes['imovel_numero'])) $end_parts[] = $detalhes['imovel_numero'];
+if(!empty($detalhes['imovel_bairro'])) $end_parts[] = "Bairro " . $detalhes['imovel_bairro'];
+if(!empty($detalhes['imovel_complemento'])) $end_parts[] = $detalhes['imovel_complemento'];
+if(!empty($detalhes['imovel_cidade'])) $end_parts[] = $detalhes['imovel_cidade'] . "/" . $detalhes['imovel_uf'];
+
+$endereco_final = !empty($end_parts) ? implode(', ', $end_parts) : ($detalhes['endereco_imovel'] ?? 'Endereço não cadastrado');
+
 // Buscar Movimentos (Timeline)
 $stmt = $pdo->prepare("SELECT * FROM processo_movimentos WHERE cliente_id = ? ORDER BY data_movimento DESC");
 $stmt->execute([$cliente_id]);
@@ -170,14 +180,23 @@ if (!empty($detalhes['link_pasta_pagamentos'])) {
             <div class="header-panel">
                 <div>
                     <h1>Olá, <?= htmlspecialchars($_SESSION['cliente_nome']) ?></h1>
-                    <span class="badge-panel">Acompanhamento Online</span>
+                    <span class="badge-panel"><?= htmlspecialchars($endereco_final) ?></span>
                 </div>
-                <div style="display:flex; align-items:center;">
-                    <a href="exportar_resumo.php" target="_blank" class="btn-toggle-theme" style="text-decoration:none; margin-right:10px;">📄 Resumo</a>
-                    <button class="btn-toggle-theme" onclick="toggleTheme()">🌓 Tema</button>
-                    <a href="logout.php" class="btn-logout">Sair</a>
+                <div class="header-actions" style="display:flex; align-items:center;">
+                    <a href="exportar_resumo.php" target="_blank" class="btn-icon-mobile" title="Resumo PDF">📄 <span class="desktop-only">Resumo</span></a>
+                    <button class="btn-icon-mobile" onclick="toggleTheme()" title="Alternar Tema">🌓 <span class="desktop-only">Tema</span></button>
+                    <a href="logout.php" class="btn-logout btn-icon-mobile" title="Sair">🚪 <span class="desktop-only">Sair</span></a>
                 </div>
             </div>
+            
+            <style>
+                @media (max-width: 600px) {
+                    .desktop-only { display: none; }
+                    .btn-icon-mobile { padding: 10px; font-size: 1.2rem; background: transparent; border: 1px solid var(--color-border); border-radius: 8px; margin-left: 5px; text-decoration: none; color: var(--color-text); cursor: pointer; }
+                    .header-panel { flex-direction: column; align-items: flex-start; gap: 15px; }
+                    .header-actions { width: 100%; justify-content: flex-end; }
+                }
+            </style>
 
             <!-- Stepper -->
             <?php 
@@ -209,26 +228,23 @@ if (!empty($detalhes['link_pasta_pagamentos'])) {
         </header>
 
         <!-- Navegação Principal (3 Botões) -->
+        <!-- Navegação Principal -->
         <div class="nav-grid">
             <button class="nav-btn active" onclick="switchView('timeline', this)">
                 <span class="nav-icon">📊</span>
-                Linha do Tempo & Arquivos
+                Linha do Tempo
             </button>
-            <button class="nav-btn" onclick="switchView('dados', this)">
-                <span class="nav-icon">📋</span>
-                Meus Dados Cadastrais
-            </button>
-            <button class="nav-btn" onclick="switchView('pendencias', this)">
-                <span class="nav-icon">⚠️</span>
-                Quadro de Pendências
+            <button class="nav-btn" onclick="openDriveModal()">
+                <span class="nav-icon">☁️</span>
+                Documentos na Nuvem
             </button>
             <button class="nav-btn" onclick="switchView('financeiro', this)">
                 <span class="nav-icon">💰</span>
                 Financeiro & Taxas
             </button>
-            <button class="nav-btn" onclick="openDriveModal()">
-                <span class="nav-icon">📂</span>
-                Drive do Cliente
+            <button class="nav-btn" onclick="switchView('pendencias', this)">
+                <span class="nav-icon">⚠️</span>
+                Pendências
             </button>
         </div>
 
@@ -289,28 +305,7 @@ if (!empty($detalhes['link_pasta_pagamentos'])) {
             </section>
         </div>
 
-        <!-- VIEW 2: DADOS CADASTRAIS -->
-        <div id="view-dados" class="view-section">
-            <section class="card">
-                <h2 style="margin-top:0; border-bottom:1px solid var(--color-border); padding-bottom:15px;">Dados do Processo</h2>
-                
-                <div class="info-grid">
-                    <div class="section-header">👤 Requerente</div>
-                    <div class="info-item"><label>Nome / Razão Social</label><div><?= htmlspecialchars($_SESSION['cliente_nome']) ?></div></div>
-                    <div class="info-item"><label>CPF / CNPJ</label><div><?= htmlspecialchars($detalhes['cpf_cnpj']??'-') ?></div></div>
-                    <div class="info-item"><label>Email</label><div><?= htmlspecialchars($detalhes['contato_email']??'-') ?></div></div>
-                    <div class="info-item"><label>Telefone</label><div><?= htmlspecialchars($detalhes['contato_tel']??'-') ?></div></div>
 
-                    <div class="section-header">🏠 Imóvel</div>
-                    <div class="info-item"><label>Endereço</label><div><?= htmlspecialchars($detalhes['endereco_imovel']??'-') ?></div></div>
-                    <div class="info-item"><label>Inscrição Imob.</label><div><?= htmlspecialchars($detalhes['inscricao_imob']??'-') ?></div></div>
-                    
-                    <div class="section-header">👷 Responsável Técnico</div>
-                    <div class="info-item"><label>Profissional</label><div><?= htmlspecialchars($detalhes['resp_tecnico']??'-') ?></div></div>
-                    <div class="info-item"><label>Registro</label><div><?= htmlspecialchars($detalhes['registro_prof']??'-') ?></div></div>
-                </div>
-            </section>
-        </div>
 
         <!-- VIEW 3: PENDÊNCIAS -->
         <div id="view-pendencias" class="view-section">

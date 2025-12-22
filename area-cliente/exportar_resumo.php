@@ -36,6 +36,16 @@ foreach($f as $item) {
     if($item['status']=='pago') $total_pago += $item['valor'];
     elseif($item['status']=='pendente' || $item['status']=='atrasado') $total_pendente += $item['valor'];
 }
+
+// Montar Endereço Completo
+$end_parts = [];
+if(!empty($detalhes['imovel_rua'])) $end_parts[] = $detalhes['imovel_rua'];
+if(!empty($detalhes['imovel_numero'])) $end_parts[] = $detalhes['imovel_numero'];
+if(!empty($detalhes['imovel_bairro'])) $end_parts[] = "Bairro " . $detalhes['imovel_bairro'];
+if(!empty($detalhes['imovel_complemento'])) $end_parts[] = $detalhes['imovel_complemento'];
+if(!empty($detalhes['imovel_cidade'])) $end_parts[] = $detalhes['imovel_cidade'] . "/" . $detalhes['imovel_uf'];
+
+$endereco_final = !empty($end_parts) ? implode(', ', $end_parts) : ($detalhes['endereco_imovel'] ?? '--');
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -109,10 +119,10 @@ foreach($f as $item) {
     <div class="two-col" style="margin-top: 20px;">
         <div>
             <h2>3. Dados do Imóvel/Obra</h2>
-            <div class="data-row"><span class="data-label">Endereço Obra:</span> <span class="data-value"><?= $detalhes['endereco_imovel']??'--' ?></span></div>
+            <div class="data-row"><span class="data-label">Endereço Obra:</span> <span class="data-value"><?= htmlspecialchars($endereco_final) ?></span></div>
             <div class="data-row"><span class="data-label">Matrícula:</span> <span class="data-value"><?= $detalhes['num_matricula']??'--' ?></span></div>
             <div class="data-row"><span class="data-label">Insc. Imob.:</span> <span class="data-value"><?= $detalhes['inscricao_imob']??'--' ?></span></div>
-            <div class="data-row"><span class="data-label">Área Terreno:</span> <span class="data-value"><?= $detalhes['area_terreno']??'--' ?></span></div>
+            <div class="data-row"><span class="data-label">Área do Lote (m²):</span> <span class="data-value"><?= $detalhes['imovel_area_lote']??($detalhes['area_terreno']??'--') ?></span></div>
             <div class="data-row"><span class="data-label">Área Construída:</span> <span class="data-value"><?= $detalhes['area_construida']??'--' ?></span></div>
         </div>
         <div>

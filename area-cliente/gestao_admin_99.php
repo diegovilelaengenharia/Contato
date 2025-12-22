@@ -67,9 +67,15 @@ if (isset($_POST['btn_salvar_cadastro'])) {
     $cid = $_POST['cliente_id'];
     $campos = [
         'tipo_pessoa', 'cpf_cnpj', 'rg_ie', 'estado_civil', 'profissao', 'endereco_residencial', 'contato_email', 'contato_tel',
-        'inscricao_imob', 'num_matricula', 'endereco_imovel', 'area_terreno', 'area_construida', 
+        'tipo_pessoa', 'cpf_cnpj', 'rg_ie', 'estado_civil', 'profissao', 'endereco_residencial', 'contato_email', 'contato_tel',
+        'inscricao_imob', 'num_matricula', 'imovel_rua', 'imovel_numero', 'imovel_bairro', 'imovel_complemento', 'imovel_cidade', 'imovel_uf', 'endereco_imovel', 'imovel_area_lote', 'area_construida', 
         'tipo_responsavel', 'resp_tecnico', 'registro_prof', 'num_art_rrt'
     ];
+    
+    // Concatena endereço completo para manter a compatibilidade com campo antigo 'endereco_imovel' se necessário, 
+    // ou apenas para visualização rápida. Mas vamos salvar os campos separados.
+    // Vamos montar o endereco_imovel com base nos novos campos para manter retrocompatibilidade em locais que só leem esse campo
+    $_POST['endereco_imovel'] = ($_POST['imovel_rua'] ?? '') . ', ' . ($_POST['imovel_numero'] ?? '') . ' - ' . ($_POST['imovel_bairro'] ?? '') . ' - ' . ($_POST['imovel_cidade'] ?? '') . '/' . ($_POST['imovel_uf'] ?? '');
     
     // Verifica se existe registro
     $exists = $pdo->prepare("SELECT id FROM processo_detalhes WHERE cliente_id = ?");
@@ -638,7 +644,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             <!-- CARD REQUERENTE COLLAPSIBLE -->
                             <div class="form-card">
                                 <div class="collapsible-header" onclick="toggleSection('sec_requerente')">
-                                    <h3>👤 Detalhes do Requerente</h3>
+                                    <h3>👤 Dados do Cliente</h3>
                                     <span id="icon_sec_requerente">▼</span>
                                 </div>
                                 <div id="sec_requerente" class="collapsible-content" style="display:none;">
@@ -663,11 +669,26 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                     <span id="icon_sec_imovel">▼</span>
                                 </div>
                                 <div id="sec_imovel" class="collapsible-content" style="display:none;">
-                                    <div class="form-group"><label>Endereço da Obra</label><input type="text" name="endereco_imovel" value="<?= $detalhes['endereco_imovel']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                                    
+                                    <div class="form-grid" style="grid-template-columns: 3fr 1fr;">
+                                        <div class="form-group"><label>Rua / Logradouro</label><input type="text" name="imovel_rua" value="<?= $detalhes['imovel_rua']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                                        <div class="form-group"><label>Número</label><input type="text" name="imovel_numero" value="<?= $detalhes['imovel_numero']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                                    </div>
+                                    
+                                    <div class="form-grid">
+                                        <div class="form-group"><label>Bairro</label><input type="text" name="imovel_bairro" value="<?= $detalhes['imovel_bairro']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                                        <div class="form-group"><label>Complemento</label><input type="text" name="imovel_complemento" value="<?= $detalhes['imovel_complemento']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                                    </div>
+
+                                    <div class="form-grid">
+                                         <div class="form-group"><label>Cidade</label><input type="text" name="imovel_cidade" value="<?= $detalhes['imovel_cidade']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                                         <div class="form-group"><label>UF</label><input type="text" name="imovel_uf" value="<?= $detalhes['imovel_uf']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                                    </div>
+
                                     <div class="form-grid">
                                         <div class="form-group"><label>Inscrição</label><input type="text" name="inscricao_imob" value="<?= $detalhes['inscricao_imob']??'' ?>" readonly style="background:var(--color-bg);"></div>
                                         <div class="form-group"><label>Matrícula</label><input type="text" name="num_matricula" value="<?= $detalhes['num_matricula']??'' ?>" readonly style="background:var(--color-bg);"></div>
-                                        <div class="form-group"><label>Área Terreno</label><input type="text" name="area_terreno" value="<?= $detalhes['area_terreno']??'' ?>" readonly style="background:var(--color-bg);"></div>
+                                        <div class="form-group"><label>Área do Lote (m²)</label><input type="text" name="imovel_area_lote" value="<?= $detalhes['imovel_area_lote']??($detalhes['area_terreno']??'') ?>" readonly style="background:var(--color-bg);"></div>
                                         <div class="form-group"><label>Área Constr.</label><input type="text" name="area_construida" value="<?= $detalhes['area_construida']??'' ?>" readonly style="background:var(--color-bg);"></div>
                                     </div>
                                 </div>
@@ -676,7 +697,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             <!-- CARD TECNICO COLLAPSIBLE -->
                             <div class="form-card">
                                 <div class="collapsible-header" onclick="toggleSection('sec_tecnico')">
-                                    <h3>👷 Técnico</h3>
+                                    <h3>👷 Responsabilidade Técnica</h3>
                                     <span id="icon_sec_tecnico">▼</span>
                                 </div>
                                 <div id="sec_tecnico" class="collapsible-content" style="display:none;">
