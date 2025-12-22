@@ -355,7 +355,7 @@ if (!empty($detalhes['link_pasta_pagamentos'])) {
                     </div>
                 <?php endif;
 
-                $stmtPend = $pdo->prepare("SELECT * FROM processo_pendencias WHERE cliente_id=? AND status='pendente' ORDER BY id DESC");
+                $stmtPend = $pdo->prepare("SELECT * FROM processo_pendencias WHERE cliente_id=? ORDER BY id DESC");
                 $stmtPend->execute([$cliente_id]);
                 $pendencias = $stmtPend->fetchAll();
                 
@@ -368,11 +368,17 @@ if (!empty($detalhes['link_pasta_pagamentos'])) {
                             <tbody>
                                 <?php foreach($pendencias as $p): 
                                      $data = isset($p['data_criacao']) ? date('d/m/Y H:i', strtotime($p['data_criacao'])) : '-';
+                                     $is_resolved = ($p['status'] === 'resolvido');
+                                     $row_bg = $is_resolved ? 'var(--bg-success)' : 'var(--bg-warning)';
+                                     $text_color = $is_resolved ? 'var(--text-success)' : 'var(--text-warning)';
+                                     $badge_class = $is_resolved ? 'st-pago' : 'st-pend'; // st-pago is usually green
+                                     $status_text = $is_resolved ? 'RESOLVIDO' : 'PENDENTE';
+                                     $desc_style = $is_resolved ? "color:var(--text-success); opacity:0.8; cursor:pointer;" : "color:var(--text-warning); font-weight:500; cursor:pointer; text-decoration:underline;";
                                 ?>
-                                <tr style="background:var(--bg-warning);">
-                                    <td style="white-space:nowrap; color:var(--text-warning);"><?= $data ?></td>
-                                    <td><span class="status-badge st-pend">PENDENTE</span></td>
-                                    <td style="color:var(--text-warning); font-weight:500; cursor:pointer; text-decoration:underline;" 
+                                <tr style="background:<?= $row_bg ?>;">
+                                    <td style="white-space:nowrap; color:<?= $text_color ?>;"><?= $data ?></td>
+                                    <td><span class="status-badge <?= $badge_class ?>"><?= $status_text ?></span></td>
+                                    <td style="<?= $desc_style ?>" 
                                         onclick="openPendencyModal('<?= addslashes(htmlspecialchars_decode($p['descricao'])) ?>')">
                                         <?= htmlspecialchars($p['descricao']) ?>
                                     </td>

@@ -949,10 +949,10 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         <input type="hidden" name="pendencia_id" id="pendencia_id_input">
                         
                         <div class="form-group">
-                            <label>Nova Pendência / Edição</label>
+                            <label>Publique as pendências</label>
                             <div style="display:flex; gap:10px;">
-                                <input type="text" name="nova_pendencia" id="nova_pendencia_input" placeholder="Ex: Enviar comprovante de endereço..." style="flex:1;">
-                                <button type="submit" name="btn_save_pendencia" id="btn_save_pend_submit" class="btn-save btn-warning" style="width:auto; color:black; margin:0;">Adicionar</button>
+                                <input type="text" name="nova_pendencia" id="nova_pendencia_input" placeholder="Descreva a pendência aqui..." style="flex:1;">
+                                <button type="submit" name="btn_save_pendencia" id="btn_save_pend_submit" class="btn-save btn-warning" style="width:auto; color:black; margin:0;">Emitir Pendências</button>
                                 <button type="button" onclick="resetPendenciaForm()" id="btn_cancel_edit" style="display:none; padding:10px; border:none; background:#ccc; border-radius:8px; cursor:pointer;">Cancelar</button>
                             </div>
                         </div>
