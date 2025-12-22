@@ -121,6 +121,29 @@ if (isset($_POST['novo_cliente'])) {
     } catch (PDOException $e) { $erro = "Erro ao criar cliente."; }
 }
 
+// 5.5 Atualizar Acesso (Nome/Login/Senha)
+if (isset($_POST['btn_salvar_acesso'])) {
+    $cid = $_POST['cliente_id'];
+    $nome = $_POST['nome'];
+    $user = $_POST['usuario'];
+    $nova_senha = $_POST['nova_senha'];
+
+    try {
+        if (!empty($nova_senha)) {
+            $pass = password_hash($nova_senha, PASSWORD_DEFAULT);
+            $pdo->prepare("UPDATE clientes SET nome=?, usuario=?, senha=? WHERE id=?")->execute([$nome, $user, $pass, $cid]);
+            $sucesso = "Dados de acesso e Senha atualizados!";
+        } else {
+            $pdo->prepare("UPDATE clientes SET nome=?, usuario=? WHERE id=?")->execute([$nome, $user, $cid]);
+            $sucesso = "Dados de acesso atualizados (Senha mantida)!";
+        }
+        // Atualiza var local p/ refletir na hora
+        $refresh = $pdo->prepare("SELECT * FROM clientes WHERE id=?"); $refresh->execute([$cid]);
+        $cliente_ativo = $refresh->fetch();
+
+    } catch (PDOException $e) { $erro = "Erro ao atualizar acesso: " . $e->getMessage(); }
+}
+
 // 6. Financeiro - Adicionar
 if (isset($_POST['btn_salvar_financeiro'])) {
     $cid = $_POST['cliente_id'];
@@ -345,11 +368,33 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             </div>
 
             <?php if($active_tab == 'cadastro'): ?>
-                <form method="POST">
+                <!-- Form separado para dados detalhados para nao conflitar com o de acesso se quiser submit separado, ou tudo junto.
+                     Neste caso, o primeiro form ali em cima fecha. Vamos ajustar. -->
+                
+                <form method="POST" id="form_dados_acesso">
+                    <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
+                    <!-- Card Acesso Inserido no Grid Abaixo via ReplacementChunk 2 -->
+                </form>
+
+                <form method="POST" id="form_dados_detalhados">
+                    <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
                     <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px;">
-                        <div class="form-card">
-                            <h3>👤 Requerente</h3>
+                        <!-- Coluna 1: Acesso + Pessoais -->
+                        <div>
+                             <!-- Card Acesso -->
+                            <div class="form-card" style="border-left: 6px solid #efb524;">
+                                <h3>🔐 Dados de Acesso (Login)</h3>
+                                <div class="form-group"><label>Nome do Cliente (Sistema)</label><input type="text" name="nome" value="<?= htmlspecialchars($cliente_ativo['nome']) ?>" required></div>
+                                <div class="form-grid">
+                                    <div class="form-group"><label>Usuário/Login</label><input type="text" name="usuario" value="<?= htmlspecialchars($cliente_ativo['usuario']) ?>" required></div>
+                                    <div class="form-group"><label>Nova Senha (Opcional)</label><input type="text" name="nova_senha" placeholder="Deixe em branco p/ manter"></div>
+                                </div>
+                                <button type="submit" name="btn_salvar_acesso" class="btn-save" style="background:#efb524; color:black; margin-top:10px;">Salvar Acesso</button>
+                            </div>
+
+                            <div class="form-card">
+                                <h3>👤 Detalhes do Requerente</h3>
                             <div class="form-grid">
                                 <div class="form-group"><label>Tipo</label><select name="tipo_pessoa"><option value="Fisica">Física</option><option value="Juridica">Jurídica</option></select></div>
                                 <div class="form-group"><label>CPF/CNPJ</label><input type="text" name="cpf_cnpj" value="<?= $detalhes['cpf_cnpj']??'' ?>"></div>
@@ -357,8 +402,12 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             <div class="form-group"><label>Identidade (RG)</label><input type="text" name="rg_ie" value="<?= $detalhes['rg_ie']??'' ?>"></div>
                             <div class="form-group"><label>Email</label><input type="text" name="contato_email" value="<?= $detalhes['contato_email']??'' ?>"></div>
                             <div class="form-group"><label>Telefone</label><input type="text" name="contato_tel" value="<?= $detalhes['contato_tel']??'' ?>"></div>
+                            <div class="form-group"><label>Telefone</label><input type="text" name="contato_tel" value="<?= $detalhes['contato_tel']??'' ?>"></div>
                             <div class="form-group"><label>Endereço</label><input type="text" name="endereco_residencial" value="<?= $detalhes['endereco_residencial']??'' ?>"></div>
                         </div>
+                        </div> <!-- Fim Coluna 1 -->
+                        
+                        <!-- Coluna 2 -->
                         <div>
                             <div class="form-card">
                                 <h3>🏠 Imóvel</h3>
@@ -378,10 +427,15 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                     <div class="form-group"><label>ART/RRT</label><input type="text" name="num_art_rrt" value="<?= $detalhes['num_art_rrt']??'' ?>"></div>
                                 </div>
                             </div>
+                            </div>
                         </div>
                     </div>
-                    <button type="submit" name="btn_salvar_cadastro" class="btn-save">Salvar Dados Cadastrais</button>
                 </form>
+                
+                <!-- Botão Salvar Geral (Cadastrais) -->
+                <div style="margin-top: -20px; margin-bottom: 40px;">
+                     <button type="submit" form="form_dados_detalhados" name="btn_salvar_cadastro" class="btn-save">Salvar Detalhes Cadastrais (Abaixo)</button>
+                </div>
             
             <?php elseif($active_tab == 'andamento'): ?>
                 <div class="form-card">
