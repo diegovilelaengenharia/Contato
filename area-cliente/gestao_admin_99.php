@@ -623,9 +623,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 </header>
 
 <div class="admin-container">
-    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
-        ☰ Menu de Navegação
-    </button>
+    <!-- Mobile Toggle Removed (Fixed Desktop Layout) -->
     <aside class="sidebar" id="mobileSidebar">
         <nav class="sidebar-menu">
             <a href="gestao_admin_99.php" class="btn-menu <?= (!isset($_GET['cliente_id']) && !isset($_GET['novo']) && !isset($_GET['importar'])) ? 'active' : '' ?>">

@@ -463,222 +463,25 @@ body {
     font-size: 0.95rem;
 }
 
-/* Mobile Refinements */
-@media (max-width: 768px) {
-    .admin-container {
-        grid-template-columns: 1fr;
-        margin: 10px auto;
-        padding: 0 10px;
-        gap: 10px;
-        /* Reduzido de 20px */
-    }
-
-    /* Sidebar Hidden by Default */
-    .sidebar {
-        display: none;
-        border-bottom: 2px solid var(--color-border);
-        margin-bottom: 15px;
-        animation: slideDown 0.3s ease-out;
-    }
-
-    .sidebar.show {
-        display: block;
-    }
-
-    @keyframes slideDown {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .client-list {
-        max-height: 250px;
-    }
-
-    .admin-header {
-        padding: 0.8rem;
-        flex-direction: column;
-        gap: 10px;
-        align-items: stretch;
-        text-align: center;
-    }
-
-    .admin-header>div {
-        width: 100%;
-        justify-content: center;
-        flex-direction: column;
-        gap: 8px;
-    }
-
-    .admin-header img {
-        margin: 0 auto;
-        height: 40px !important;
-    }
-
-    .form-card {
-        padding: 12px;
-        overflow-x: hidden;
-        margin-bottom: 15px;
-    }
-
-    /* Compactado */
-
-    .form-grid {
-        grid-template-columns: 1fr;
-        gap: 10px;
-    }
-
-    .btn-save.full-mobile {
-        width: 100%;
-    }
-
-    h1 {
-        font-size: 1.1rem !important;
-    }
-
-    h2 {
-        font-size: 1rem !important;
-        font-weight: 700;
-    }
-
-    .form-group {
-        margin-bottom: 10px;
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-        padding: 10px;
-        font-size: 0.95rem;
-    }
-
-    /* Botão flutuante do Menu */
-    .mobile-menu-toggle {
-        display: flex !important;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        width: 100%;
-        padding: 10px;
-        background: var(--color-surface);
-        border: 2px solid var(--color-primary);
-        color: var(--color-primary);
-        font-weight: 700;
-        border-radius: 8px;
-        margin-bottom: 15px;
-        cursor: pointer;
-        font-family: inherit;
-        font-size: 0.95rem;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    }
-}
-
-/* Helper para tabelas rolarem no mobile */
-.table-responsive {
-    width: 100%;
+/* NO RESPONSIVENESS - FORCE DESKTOP */
+.admin-container {
+    min-width: 1200px !important;
+    /* Force wide layout */
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    margin-top: 10px;
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
 }
 
-.table-responsive table {
-    margin-top: 0 !important;
-    min-width: 600px;
+/* Sidebar Always Visible */
+.sidebar {
+    display: block !important;
 }
 
-.iframe-container.visible {
-    display: block;
+/* Mobile Toggle Always Hidden */
+.mobile-menu-toggle {
+    display: none !important;
 }
 
-.sidebar-menu {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid var(--color-border);
-    padding-bottom: 20px;
-}
-
-.btn-menu {
-    display: block;
-    padding: 12px 15px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.95rem;
-    color: var(--color-text);
-    transition: 0.2s;
-    border: 1px solid transparent;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.btn-menu:hover {
-    background: var(--color-surface);
-    border-color: var(--color-border);
-    transform: translateX(5px);
-}
-
-.btn-menu.active {
-    background: var(--color-primary-light);
-    color: var(--color-primary);
-}
-
-.btn-menu-primary {
-    background: var(--color-primary);
-    color: white !important;
-}
-
-.btn-menu-primary:hover {
-    filter: brightness(1.1);
-}
-
-/* Collapsible Sections */
-.collapsible-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    background: var(--color-surface);
-    padding: 10px;
-    border-radius: 8px;
-    transition: background-color 0.2s;
-    user-select: none;
-    border-bottom: 1px solid var(--color-border);
-}
-
-.collapsible-header:hover {
-    background-color: rgba(0, 0, 0, 0.02);
-}
-
-.collapsible-header h3 {
-    margin: 0;
-    border-bottom: none;
-    padding-bottom: 0;
-    margin-bottom: 0;
-    color: var(--color-primary);
-    font-size: 1.15rem;
-    font-weight: 700;
-}
-
-.collapsible-header span {
-    font-weight: bold;
-    color: var(--color-primary);
-    font-size: 1.2rem;
-}
-
-.collapsible-content {
-    margin-top: 15px;
-    animation: fadeIn 0.3s ease;
-    padding-left: 5px;
-    padding-right: 5px;
+/* Table Scroll Helper for very small screens if needed, 
+   but generalized layout is now fixed */
+.table-responsive {
+    overflow-x: visible;
 }
