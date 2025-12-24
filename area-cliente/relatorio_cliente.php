@@ -26,6 +26,21 @@ $stmtEx = $pdo->prepare("SELECT * FROM processo_campos_extras WHERE cliente_id =
 $stmtEx->execute([$cliente_id]);
 $extras = $stmtEx->fetchAll();
 
+// Buscar Financeiro (Para paridade com relatório antigo)
+$stmtFin = $pdo->prepare("SELECT * FROM processo_financeiro WHERE cliente_id = ? ORDER BY data_vencimento ASC");
+$stmtFin->execute([$cliente_id]);
+$financeiro = $stmtFin->fetchAll();
+
+// Totais Financeiros
+$total_hon = 0; $total_taxas = 0; $total_pago = 0; $total_pendente = 0;
+foreach($financeiro as $item) {
+    if($item['categoria']=='honorarios') $total_hon += $item['valor'];
+    else $total_taxas += $item['valor'];
+    
+    if($item['status']=='pago') $total_pago += $item['valor'];
+    elseif($item['status']=='pendente' || $item['status']=='atrasado') $total_pendente += $item['valor'];
+}
+
 // Configurações Visuais
 $primary_color = '#005f73'; // Vilela Oficial (aprox)
 $text_color = '#333';
@@ -229,8 +244,10 @@ $text_color = '#333';
         <!-- Header -->
         <div class="header">
             <div class="logo">
-                <h1>Vilela</h1>
-                <span>Engenharia</span>
+                <!-- Tenta carregar logo se existir, senão texto -->
+                <img src="../logo.png" alt="Vilela Engenharia" style="max-height: 80px; display: block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <h1 style="display:none;">Vilela</h1>
+                <span style="display:none;">Engenharia</span>
             </div>
             <div class="meta-header">
                 <strong>Relatório de Processo</strong><br>
@@ -297,8 +314,76 @@ $text_color = '#333';
             </div>
         </div>
 
+        <!-- Section: Resp Técnica (Paridade Old Report) -->
+        <div class="section-title">Responsabilidade Técnica & Status</div>
+        <div class="grid-info">
+             <div class="info-item">
+                <label>Responsável Técnico</label>
+                <span><?= htmlspecialchars($detalhes['resp_tecnico'] ?? '-') ?></span>
+            </div>
+            <div class="info-item">
+                <label>Registro (CREA/CAU)</label>
+                <span><?= htmlspecialchars($detalhes['registro_prof'] ?? '-') ?></span>
+            </div>
+             <div class="info-item">
+                <label>Fase Atual do Processo</label>
+                <span style="background:var(--primary); color:white; padding:2px 8px; border-radius:4px; font-size:10pt;"><?= htmlspecialchars($detalhes['etapa_atual'] ?? 'Não iniciado') ?></span>
+            </div>
+        </div>
+
+        <?php if(!empty($detalhes['texto_pendencias'])): ?>
+            <div style="margin-top:10px; border:1px solid #ffc107; background:#fffbf2; padding:10px; border-radius:4px; color:#856404; font-size:10pt;">
+                <strong>⚠️ Pendências Ativas:</strong><br>
+                <?= nl2br(htmlspecialchars($detalhes['texto_pendencias'])) ?>
+            </div>
+        <?php endif; ?>
+
+        <!-- Section: Financeiro -->
+        <div class="section-title">Relatório Financeiro</div>
+        <?php if(count($financeiro) > 0): ?>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width:15%">Vencimento</th>
+                        <th style="width:15%">Categoria</th>
+                        <th style="width:40%">Descrição</th>
+                        <th style="width:15%">Valor</th>
+                        <th style="width:15%">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($financeiro as $fin): 
+                        $stStyle = "background:#eee; color:#555;";
+                        if($fin['status']=='pago') $stStyle = "background:#d1e7dd; color:#0f5132;";
+                        elseif($fin['status']=='atrasado') $stStyle = "background:#f8d7da; color:#842029;";
+                        elseif($fin['status']=='pendente') $stStyle = "background:#fff3cd; color:#856404;";
+                    ?>
+                    <tr>
+                        <td><?= date('d/m/Y', strtotime($fin['data_vencimento'])) ?></td>
+                        <td><?= ucfirst($fin['categoria']) ?></td>
+                        <td><?= htmlspecialchars($fin['descricao']) ?></td>
+                        <td>R$ <?= number_format($fin['valor'], 2, ',', '.') ?></td>
+                        <td><span style="padding:2px 6px; border-radius:4px; font-weight:bold; font-size:9pt; text-transform:uppercase; <?= $stStyle ?>"><?= $fin['status'] ?></span></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            <div style="display:flex; gap:20px; background:#f9f9f9; padding:15px; margin-top:10px; border:1px solid #eee; justify-content:flex-end;">
+                 <div style="text-align:right;">
+                    <small>Total Pago</small><br>
+                    <strong style="color:#0f5132; font-size:12pt;">R$ <?= number_format($total_pago, 2, ',', '.') ?></strong>
+                </div>
+                 <div style="text-align:right;">
+                    <small>Total Pendente</small><br>
+                    <strong style="color:#b71c1c; font-size:12pt;">R$ <?= number_format($total_pendente, 2, ',', '.') ?></strong>
+                </div>
+            </div>
+        <?php else: ?>
+            <p style="color:#888; font-style:italic;">Nenhum registro financeiro encontrado.</p>
+        <?php endif; ?>
+
         <?php if(count($extras) > 0): ?>
-            <div class="section-title">Informações Adicionais</div>
+            <div class="section-title">Outras Informações</div>
             <table style="width:100%; font-size:10pt;">
                 <?php foreach($extras as $ex): ?>
                     <tr>
