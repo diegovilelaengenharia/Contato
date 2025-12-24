@@ -245,6 +245,24 @@ if (isset($_GET['delete_pendencia'])) {
         header("Location: ?cliente_id=$cid&tab=pendencias");
         exit;
     } catch(PDOException $e) { $erro = "Erro ao excluir: " . $e->getMessage(); }
+    } catch(PDOException $e) { $erro = "Erro ao excluir: " . $e->getMessage(); }
+}
+
+// Ação de Toggle Financeiro (Pendente <> Pago)
+if (isset($_GET['toggle_status'])) {
+    $fid = $_GET['toggle_status'];
+    $cid = $_GET['cliente_id'];
+    
+    try {
+        $curr = $pdo->query("SELECT status FROM processo_financeiro WHERE id=$fid")->fetchColumn();
+        // Ciclo: pendente -> pago -> pendente
+        $new = ($curr == 'pago') ? 'pendente' : 'pago';
+        
+        $pdo->prepare("UPDATE processo_financeiro SET status = ? WHERE id = ? AND cliente_id = ?")->execute([$new, $fid, $cid]);
+        
+        header("Location: ?cliente_id=$cid&tab=financeiro&msg=status_updated");
+        exit;
+    } catch(PDOException $e) { $erro = "Erro ao alterar status financeiro: " . $e->getMessage(); }
 }
 
 // Gerar Token de Visualização Pública (Opcional - Futuro)
