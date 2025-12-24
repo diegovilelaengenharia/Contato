@@ -92,7 +92,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
     <title>Área do Cliente | Vilela Engenharia</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=<?= time() ?>">
+    <style>
+        /* CRITICAL INLINE STYLES TO PREVENT FOUC OR LOADING ERROR */
+        body { font-family: 'Outfit', sans-serif; background-color: #f4f7f6; margin:0; }
+        .hidden { display: none !important; }
+    </style>
     <script>
         // Check Dark Mode Preference
         if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark-mode');
