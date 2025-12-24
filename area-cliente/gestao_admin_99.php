@@ -261,32 +261,59 @@ if (isset($_POST['btn_salvar_arquivos'])) {
 }
 
 // 5. Novo Cliente
-if (isset($_POST['novo_cliente'])) {
-    $nome_original = $_POST['nome'];
-    $user = $_POST['usuario'];
-    $pass = password_hash($_POST['senha'], PASSWORD_DEFAULT);
-    try {
-        $pdo->prepare("INSERT INTO clientes (nome, usuario, senha) VALUES (?, ?, ?)")->execute([$nome_original, $user, $pass]);
-        $nid = $pdo->lastInsertId();
+    if (isset($_POST['novo_cliente'])) {
+        $nome_original = $_POST['nome'];
+        $cpf = $_POST['cpf_cnpj'];
+        $tel = $_POST['telefone'];
+        $senha_plain = $_POST['senha'];
+        $tipo_login = $_POST['tipo_login']; // 'cpf' ou 'telefone'
+
+        // Lógica de Login Automático
+        $usuario_final = '';
+        if ($tipo_login == 'cpf') {
+            $usuario_final = preg_replace('/[^0-9]/', '', $cpf);
+            if(empty($usuario_final)) throw new Exception("Para usar CPF como login, o campo CPF não pode estar vazio.");
+        } else {
+            $usuario_final = preg_replace('/[^0-9]/', '', $tel);
+            if(empty($usuario_final)) throw new Exception("Para usar Telefone como login, o campo Telefone não pode estar vazio.");
+        }
+
+        // Validação Básica
+        if(empty($nome_original) || empty($senha_plain)) throw new Exception("Nome e Senha são obrigatórios.");
+
+        $pass = password_hash($senha_plain, PASSWORD_DEFAULT);
         
-        // ROTINA DE AUTO-RENOMEAÇÃO (Cliente 00X - Nome)
-        $nome_final = sprintf("Cliente %03d - %s", $nid, $nome_original);
-        $pdo->prepare("UPDATE clientes SET nome = ? WHERE id = ?")->execute([$nome_final, $nid]);
-        
-        $pdo->prepare("INSERT INTO processo_detalhes (
-            cliente_id, 
-            cpf_cnpj, 
-            contato_tel, 
-            rg_ie, 
-            endereco_residencial, 
-            endereco_imovel
-        ) VALUES (?, ?, ?, ?, ?, ?)")->execute([$nid, $_POST['cpf_cnpj'], $_POST['telefone'], $_POST['rg'], $_POST['endereco_residencial'], $_POST['endereco_imovel']]);
-        
-        // REDIRECIONAMENTO IMEDIATO PARA EDITOR COMPLETÃO
-        header("Location: editar_cliente.php?id=$nid&msg=welcome");
-        exit;
-    } catch (PDOException $e) { $erro = "Erro ao criar cliente: " . $e->getMessage(); }
-}
+        try {
+            // Verificar duplicidade de usuário
+            $check = $pdo->prepare("SELECT id FROM clientes WHERE usuario = ?");
+            $check->execute([$usuario_final]);
+            if($check->rowCount() > 0) throw new Exception("Este login ($usuario_final) já está em uso por outro cliente.");
+
+            $pdo->prepare("INSERT INTO clientes (nome, usuario, senha) VALUES (?, ?, ?)")->execute([$nome_original, $usuario_final, $pass]);
+            $nid = $pdo->lastInsertId();
+            
+            // ROTINA DE AUTO-RENOMEAÇÃO (Cliente 00X - Nome)
+            $nome_final = sprintf("Cliente %03d - %s", $nid, $nome_original);
+            $pdo->prepare("UPDATE clientes SET nome = ? WHERE id = ?")->execute([$nome_final, $nid]);
+            
+            // Inserção Detalhes (Campos não preenchidos vão vazios para serem completados na edição)
+            $pdo->prepare("INSERT INTO processo_detalhes (
+                cliente_id, 
+                cpf_cnpj, 
+                contato_tel, 
+                rg_ie, 
+                endereco_residencial, 
+                endereco_imovel
+            ) VALUES (?, ?, ?, ?, ?, ?)")->execute([$nid, $cpf, $tel, '', '', '']);
+            
+            // REDIRECIONAMENTO IMEDIATO PARA EDITOR COMPLETÃO
+            header("Location: editar_cliente.php?id=$nid&msg=welcome");
+            exit;
+
+        } catch (Exception $e) { 
+            $erro = "Erro ao criar cliente: " . $e->getMessage(); 
+        }
+    }
 
 // 5.5 Atualizar Acesso (Nome/Login/Senha)
 if (isset($_POST['btn_salvar_acesso'])) {
@@ -808,20 +835,40 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
         <?php elseif(isset($_GET['novo'])): ?>
             <div class="form-card">
                 <h2>Cadastrar Novo Cliente</h2>
+                <p style="color:#666; font-size:0.9rem; margin-bottom:20px;">Preencha os dados básicos. O restante será completado na tela de edição.</p>
+                
                 <form method="POST">
                     <div class="form-grid">
-                        <div class="form-group"><label>Nome Completo</label><input type="text" name="nome" required></div>
-                        <div class="form-group"><label>CPF / CNPJ</label><input type="text" name="cpf_cnpj"></div>
-                        <div class="form-group"><label>Telefone</label><input type="text" name="telefone"></div>
-                        
-                        <div class="form-group"><label>Login (Usuário)</label><input type="text" name="usuario" required></div>
-                        <div class="form-group"><label>Senha Acesso</label><input type="text" name="senha" required></div>
-                        
-                        <div class="form-group"><label>RG / IE</label><input type="text" name="rg"></div>
-                        <div class="form-group"><label>Endereço Residencial</label><input type="text" name="endereco_residencial"></div>
-                        <div class="form-group"><label>Endereço do Imóvel (Obra)</label><input type="text" name="endereco_imovel"></div>
+                        <div class="form-group"><label>Nome Completo</label><input type="text" name="nome" required placeholder="Ex: João da Silva"></div>
+                        <div class="form-group"><label>Senha de Acesso</label><input type="text" name="senha" required placeholder="Crie uma senha inicial"></div>
                     </div>
-                    <button type="submit" name="novo_cliente" class="btn-save">Cadastrar Cliente Completo</button>
+                    
+                    <div style="background:#f8f9fa; padding:15px; border-radius:8px; border:1px solid #e9ecef; margin:20px 0;">
+                        <label style="display:block; margin-bottom:10px; font-weight:bold; color:var(--color-primary);">Definir Login Automático por:</label>
+                        <div style="display:flex; gap:20px; margin-bottom:15px;">
+                            <label style="cursor:pointer; display:flex; align-items:center; gap:5px;">
+                                <input type="radio" name="tipo_login" value="cpf" checked onclick="document.getElementById('req_cpf').innerText='*'; document.getElementById('req_tel').innerText='';"> 
+                                CPF (Recomendado)
+                            </label>
+                            <label style="cursor:pointer; display:flex; align-items:center; gap:5px;">
+                                <input type="radio" name="tipo_login" value="telefone" onclick="document.getElementById('req_cpf').innerText=''; document.getElementById('req_tel').innerText='*';"> 
+                                Telefone (Celular)
+                            </label>
+                        </div>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>CPF / CNPJ <span id="req_cpf" style="color:red">*</span></label>
+                                <input type="text" name="cpf_cnpj" placeholder="Apenas números">
+                            </div>
+                            <div class="form-group">
+                                <label>Telefone <span id="req_tel" style="color:red"></span></label>
+                                <input type="text" name="telefone" placeholder="(XX) XXXXX-XXXX">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" name="novo_cliente" class="btn-save">Criar Cliente e Editar ➡️</button>
                 </form>
             </div>
 
