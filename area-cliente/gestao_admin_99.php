@@ -788,7 +788,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             ?>
                 <a href="?cliente_id=<?= $c['id'] ?>" style="display:flex; align-items:center; gap:12px; padding:10px; background:<?= $bg ?>; border-radius:8px; text-decoration:none; color:<?= $color ?>; border:<?= $border ?>; transition:0.2s;" onmouseover="this.style.background='#f0f8f5'" onmouseout="this.style.background='<?= $bg ?>'">
                     <div style="width:32px; height:32px; background:<?= $isActive?'var(--color-primary)':'#eee' ?>; color:<?= $isActive?'#fff':'#777' ?>; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:0.9rem;">
-                        <?= $initial ?>
+                        <span class="material-symbols-rounded" style="font-size:1.1rem;">person</span>
                     </div>
                     <div style="flex:1; min-width:0;">
                         <div style="font-weight:600; font-size:0.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><?= htmlspecialchars($c['nome']) ?></div>
