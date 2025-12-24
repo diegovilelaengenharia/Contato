@@ -121,20 +121,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <div class="resume-card fade-in">
         <div class="resume-header">
             <div class="client-info">
-                <div class="avatar-circle">
-                    <?= strtoupper(substr($primeiro_nome, 0, 1)) ?>
-                </div>
+                <?php if(!empty($data['foto_perfil']) && file_exists(__DIR__ . '/' . $data['foto_perfil'])): ?>
+                    <img src="<?= htmlspecialchars($data['foto_perfil']) ?>" alt="Foto Perfil" class="avatar-circle" style="object-fit:cover; border:2px solid white;">
+                <?php else: ?>
+                    <div class="avatar-circle">
+                        <?= strtoupper(substr($primeiro_nome, 0, 1)) ?>
+                    </div>
+                <?php endif; ?>
+                
                 <div class="resume-title">
-                    <p style="text-transform:uppercase; font-size:0.75rem; color:rgba(255,255,255,0.7); font-weight:700;">Área do Cliente</p>
-                    <h1>Olá, <?= htmlspecialchars($primeiro_nome) ?></h1>
-                    <p><?= htmlspecialchars($endereco) ?></p>
+                    <p>Área do Cliente</p>
+                    <h1><?= htmlspecialchars($data['nome']) ?></h1> <!-- Nome Completo -->
+                    
+                    <div style="font-size:0.9rem; opacity:0.9; line-height:1.4; margin-top:5px;">
+                        <?= htmlspecialchars($endereco) ?>
+                        <br>
+                        <strong>CPF/CNPJ:</strong> <?= htmlspecialchars($data['cpf_cnpj'] ?? '--') ?>
+                        <span style="margin:0 8px;">|</span>
+                        <strong>Tel:</strong> <?= htmlspecialchars($data['contato_tel'] ?? '--') ?>
+                    </div>
                 </div>
             </div>
         </div>
         
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:15px;">
             <span class="status-pill" style="background:var(--bg-success); color:var(--text-success); border-color:transparent;">Status: <?= $data['status_geral'] ?? 'Ativo' ?></span>
-            <span class="status-pill">Etapa: <?= $data['etapa_atual'] ?? 'Início' ?></span>
+            <span class="status-pill">Fase: <?= $data['etapa_atual'] ?? 'Início' ?></span>
         </div>
 
         <!-- Mini Dashboard Stats inside Card -->
@@ -160,17 +172,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
     <!-- 3. VIEWS -->
     
-    <!-- VIEW: TIMELINE -->
+    <!-- VIEW: TIMELINE (Admin Logic) -->
     <div id="view-timeline" class="view-section fade-in">
         <div class="section-card">
-            <h3 class="section-title">Histórico de Movimentações</h3>
+            <h3 class="section-title">Histórico Completo</h3>
             <div class="timeline-stream">
-                <?php if(count($timeline) > 0): foreach($timeline as $t): ?>
+                <?php if(count($timeline) > 0): foreach($timeline as $t): 
+                    // Admin Parsing Logic for Comments
+                    $descricao_formatada = nl2br(str_replace('||COMENTARIO_USER||', '<br><strong style="color:var(--color-primary)">Obs:</strong> ', htmlspecialchars($t['descricao'])));
+                ?>
                     <div class="t-event">
                         <div class="t-dot"></div>
                         <span class="t-date"><?= date('d/m/Y H:i', strtotime($t['data_movimento'])) ?></span>
                         <div class="t-title"><?= htmlspecialchars($t['titulo_fase']) ?></div>
-                        <div class="t-desc"><?= nl2br(strip_tags($t['descricao'])) ?></div>
+                        <div class="t-desc"><?= $descricao_formatada ?></div>
                     </div>
                 <?php endforeach; else: ?>
                     <p style="color:var(--text-muted); font-style:italic;">Nenhuma atividade registrada ainda.</p>
