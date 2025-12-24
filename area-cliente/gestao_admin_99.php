@@ -4,8 +4,8 @@ ob_start();
 session_start();
 try {
     require 'db.php';
-} catch (Exception $e) {
-    die("<h1>Erro Crítico de Banco de Dados</h1><p>" . $e->getMessage() . "</p><p>Verifique o arquivo db.php</p>");
+} catch (Throwable $e) {
+    die("<h1>Erro Crítico (Sintaxe ou Banco)</h1><p><strong>Arquivo:</strong> " . $e->getFile() . " <br><strong>Linha:</strong> " . $e->getLine() . "<br><strong>Erro:</strong> " . $e->getMessage() . "</p>");
 }
 
 // --- Configuração e Segurança ---
