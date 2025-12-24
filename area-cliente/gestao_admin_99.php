@@ -804,7 +804,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         <span class="material-symbols-rounded" style="font-size:1.1rem;">person</span>
                     </div>
                     <div style="flex:1; min-width:0;">
-                        <div style="font-weight:600; font-size:0.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><?= htmlspecialchars($c['nome']) ?></div>
+                        <div style="font-weight:600; font-size:0.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><?= htmlspecialchars(explode(' ', trim($c['nome']))[0]) ?></div>
                         <div style="font-size:0.75rem; opacity:0.7;">ID #<?= str_pad($c['id'], 3, '0', STR_PAD_LEFT) ?></div>
                     </div>
                 </a>
