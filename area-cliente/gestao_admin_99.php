@@ -1058,32 +1058,31 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             <h3 style="color:#b38600; margin-bottom:5px;">📋 Checklist de Pendências</h3>
                             <p style="color:var(--color-text-subtle); margin-bottom:20px;">Adicione itens que o cliente precisa resolver. O cliente verá esta lista.</p>
                         </div>
-                        <?php
-                            // Prepara mensagem de WhatsApp
-                            $pends_abertas = $pdo->prepare("SELECT descricao FROM processo_pendencias WHERE cliente_id=? AND status='pendente'");
-                            $pends_abertas->execute([$cliente_ativo['id']]);
-                            $lista_abertas = $pends_abertas->fetchAll(PDO::FETCH_COLUMN);
+                        <?php 
+                            // Lógica WhatsApp - Cobrança Dinâmica
+                            $pend_abertas = array_filter($pendencias, function($p) {
+                                return $p['status'] == 'pendente' || $p['status'] == 'anexado'; // Inclui as anexadas se quiser cobrar resolução final
+                            });
                             
                             $msg_wpp_pend = "";
-                            if(count($lista_abertas) > 0) {
+                            if ($detalhes['contato_tel']) {
                                 $primeiro_nome = explode(' ', trim($cliente_ativo['nome']))[0];
-                                $msg_wpp_pend = "Olá {$primeiro_nome}, tudo bem?\n\nPassando para lembrar das pendências do seu processo que precisamos resolver:\n\n";
-                                foreach($lista_abertas as $p) {
-                                    $msg_wpp_pend .= "unchecked_box_icon {$p}\n"; // Placeholder icon, será substituído por emoji na string final se quiser
-                                    $msg_wpp_pend = str_replace("unchecked_box_icon", "◻️", $msg_wpp_pend);
+                                $msg_wpp_pend = "Olá {$primeiro_nome}, tudo bem? 👋\n\nConstam as seguintes *pendências* no seu processo que precisamos resolver:\n\n";
+                                foreach($pend_abertas as $p) {
+                                    $msg_wpp_pend .= "🔸 " . strip_tags($p['descricao']) . "\n";
                                 }
-                                $msg_wpp_pend .= "\nQualquer dúvida estou à disposição!";
+                                $msg_wpp_pend .= "\nPor favor, acesse sua área do cliente para anexar ou resolver:\nhttps://vilela.eng.br/area-cliente/";
                             }
                             
                             $tel_clean = preg_replace('/[^0-9]/', '', $detalhes['contato_tel'] ?? '');
-                            $link_wpp_pend = ($tel_clean && strlen($tel_clean) >= 10 && $msg_wpp_pend) 
+                            $link_wpp_pend = (count($pend_abertas) > 0 && !empty($tel_clean)) 
                                 ? "https://wa.me/55{$tel_clean}?text=" . urlencode($msg_wpp_pend) 
                                 : "#";
                             
-                            $btn_wpp_style = ($link_wpp_pend == "#") ? "opacity:0.5; cursor:not-allowed;" : "";
+                            $btn_wpp_style = ($link_wpp_pend == "#") ? "opacity:0.6; cursor:not-allowed; background:#ccc;" : "background:#25D366;";
                         ?>
                         <div style="text-align:right;">
-                            <a href="<?= $link_wpp_pend ?>" target="_blank" class="btn-save btn-success" style="background:#25D366; border:none; display:inline-flex; align-items:center; gap:5px; <?= $btn_wpp_style ?>" onclick="<?= ($link_wpp_pend=='#')?'alert(\'Sem pendências abertas ou telefone inválido.\'); return false;':'' ?>">
+                            <a href="<?= $link_wpp_pend ?>" target="_blank" class="btn-save" style="border:none; display:inline-flex; align-items:center; gap:5px; <?= $btn_wpp_style ?>" onclick="<?= ($link_wpp_pend=='#')?'alert(\'Sem pendências abertas ou telefone não cadastrado.\'); return false;':'' ?>">
                                 📱 Cobrar no WhatsApp
                             </a>
                         </div>
