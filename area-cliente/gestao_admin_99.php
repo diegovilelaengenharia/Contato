@@ -4,7 +4,11 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 session_start();
-require 'db.php';
+try {
+    require 'db.php';
+} catch (Exception $e) {
+    die("Erro de Conexão (Capturado): " . $e->getMessage());
+}
 
 // --- Configuração e Segurança ---
 $minha_senha_mestra = "VilelaAdmin2025"; 
