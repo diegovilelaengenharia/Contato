@@ -107,7 +107,6 @@ if (isset($_POST['btn_upload_pendencia'])) {
         if ($processed_count > 0) {
             $msg_upload = "success|{$processed_count} arquivo(s) anexado(s) com sucesso!";
             
-            // --- NOTIFICAÇÃO DE UPLOAD ---
             try {
                 // Registrar na timeline/avisos para o admin ver
                 $desc_pend = $pdo->query("SELECT descricao FROM processo_pendencias WHERE id=$pend_id_upload")->fetchColumn();
@@ -116,6 +115,10 @@ if (isset($_POST['btn_upload_pendencia'])) {
                 
                 $pdo->prepare("INSERT INTO processo_movimentos (cliente_id, titulo_fase, data_movimento, descricao, status_tipo) VALUES (?, ?, NOW(), ?, 'upload')")->execute([$cliente_id, $titulo_aviso, $desc_aviso]);
             } catch(Exception $ex) {}
+            
+            // PRG - Redirecionar para limpar POST
+            header("Location: dashboard.php?msg=upload_success");
+            exit;
             
         } else {
             $msg_upload = "error|Falha ao enviar arquivos. Verifique formatos permitidos.";

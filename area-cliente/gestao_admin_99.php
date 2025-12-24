@@ -172,7 +172,10 @@ if (isset($_POST['btn_adicionar_pendencia'])) {
         try {
             $stmt = $pdo->prepare("INSERT INTO processo_pendencias (cliente_id, descricao, status, data_criacao) VALUES (?, ?, 'pendente', NOW())");
             $stmt->execute([$cid, $texto]);
-            $sucesso = "Pendência adicionada!";
+            
+            // PRG para evitar duplicidade
+            header("Location: ?cliente_id=$cid&tab=pendencias&msg=pend_added");
+            exit;
         } catch(PDOException $e) { $erro = "Erro: " . $e->getMessage(); }
     }
 }
@@ -185,7 +188,9 @@ if (isset($_POST['btn_editar_pendencia'])) {
     if (!empty($texto)) {
         try {
             $pdo->prepare("UPDATE processo_pendencias SET descricao = ? WHERE id = ? AND cliente_id = ?")->execute([$texto, $pid, $cid]);
-            $sucesso = "Pendência atualizada!";
+            // PRG
+            header("Location: ?cliente_id=$cid&tab=pendencias&msg=pend_updated");
+            exit;
         } catch(PDOException $e) { $erro = "Erro: " . $e->getMessage(); }
     }
 }
@@ -680,11 +685,18 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 Visão Geral
             </a>
             
-            <button onclick="document.getElementById('modalNotificacoes').showModal()" class="btn-menu" style="cursor:pointer; text-align:left; width:100%; font-family:inherit; font-size:inherit;">
+            <?php 
+                $alert_color_style = ($kpi_pre_pendentes > 0) ? 
+                    'background: linear-gradient(135deg, #fff3cd, #ffecb5); color: #856404; border: 1px solid #ffeeba;' : 
+                    'background: linear-gradient(135deg, #d4edda, #c3e6cb); color: #155724; border: 1px solid #c3e6cb;';
+            ?>
+            <button onclick="document.getElementById('modalNotificacoes').showModal()" class="btn-menu" style="cursor:pointer; text-align:left; width:100%; font-family:inherit; font-size:inherit; transition: 0.3s; <?= $alert_color_style ?>">
                 <span class="material-symbols-rounded">notifications</span>
                 Central de Avisos
                 <?php if($kpi_pre_pendentes > 0): ?>
-                    <span style="background:#dc3545; color:white; padding:1px 6px; border-radius:10px; font-size:0.7rem; margin-left:auto; line-height:1.2;"><?= $kpi_pre_pendentes ?></span>
+                    <span style="background:#dc3545; color:white; padding:1px 6px; border-radius:10px; font-size:0.7rem; margin-left:auto; line-height:1.2; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"><?= $kpi_pre_pendentes ?></span>
+                <?php else: ?>
+                    <span class="material-symbols-rounded" style="margin-left:auto; font-size:1.1rem;">check_circle</span>
                 <?php endif; ?>
             </button>
             
