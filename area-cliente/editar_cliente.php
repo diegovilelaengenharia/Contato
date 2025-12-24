@@ -400,10 +400,7 @@ if (isset($_POST['btn_salvar_tudo'])) {
             </div>
             <div class="section-body">
                 <div class="grid">
-                    <div class="form-group">
-                        <label>Nome de Exibição</label>
-                        <input type="text" name="nome" value="<?= htmlspecialchars($cliente['nome']) ?>" required>
-                    </div>
+                    <!-- Campo Nome movido para Dados do Titular -->
                     <div class="form-group">
                         <label>Usuário (Login)</label>
                         <input type="text" name="usuario" value="<?= htmlspecialchars($cliente['usuario']) ?>" required style="font-family:monospace; color:#2980b9;">
@@ -428,6 +425,10 @@ if (isset($_POST['btn_salvar_tudo'])) {
                             <option value="Fisica" <?= ($detalhes['tipo_pessoa']??'')=='Fisica'?'selected':'' ?>>Pessoa Física (CPF)</option>
                             <option value="Juridica" <?= ($detalhes['tipo_pessoa']??'')=='Juridica'?'selected':'' ?>>Pessoa Jurídica (CNPJ)</option>
                         </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Nome Completo</label>
+                        <input type="text" name="nome" value="<?= htmlspecialchars($cliente['nome']) ?>" required placeholder="Nome Civil ou Razão Social">
                     </div>
                     <div class="form-group">
                         <label>CPF / CNPJ</label>
