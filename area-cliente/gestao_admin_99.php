@@ -948,17 +948,21 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             </span>
                         </div>
                     </div>
-
-                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                        <a href="editar_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save" style="text-decoration:none; padding:8px 15px; font-size:0.9rem; display:inline-flex; align-items:center; gap:5px;">
-                            ✏️ Editar Cadastro
-                        </a>
-                        <a href="?exportar_cliente=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save btn-secondary" style="text-decoration:none; padding:8px 15px; font-size:0.9rem;">
-                           📄 Resumo do Processo
-                        </a>
-                        <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" class="btn-save btn-danger btn-delete-confirm" data-confirm-text="Você tem certeza absoluta que deseja EXCLUIR este cliente? Essa ação apagará todo o histórico e dados permanentemente." style="text-decoration:none; padding:8px 15px; font-size:0.9rem;">
-                           🗑️ Excluir Cliente
-                        </a>
+                    <div class="client-summary-card">
+                    <div style="display:flex; gap:15px; align-items:center;">
+                        <div style="width:60px; height:60px; background:var(--color-primary-light); color:var(--color-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:bold;">
+                            <?= strtoupper(substr($cliente_ativo['nome'], 0, 1)) ?>
+                        </div>
+                        <div>
+                            <h2 style="margin:0 0 5px 0; font-size:1.4rem;"><?= htmlspecialchars($cliente_ativo['nome']) ?></h2>
+                            <div style="display:flex; gap:10px; font-size:0.9rem; color:#666;">
+                                <span>🆔 #<?= str_pad($cliente_ativo['id'], 3, '0', STR_PAD_LEFT) ?></span>
+                                <span>•</span>
+                                <a href="editar_cliente.php?id=<?= $cliente_ativo['id'] ?>" class="link-edit" style="color:var(--color-primary); text-decoration:none; font-weight:600;">✏️ Editar Cadastro</a>
+                                <span>•</span>
+                                <a href="relatorio_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="link-edit" style="color:var(--color-secondary); text-decoration:none; font-weight:600;">⚠️ Resumo PDF</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

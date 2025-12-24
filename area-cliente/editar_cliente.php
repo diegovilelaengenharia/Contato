@@ -105,14 +105,19 @@ if (isset($_POST['btn_salvar_tudo'])) {
             $cliente_id
         ]);
 
-        // 3. Atualizar Campos Extras (Delete + Insert Strategy)
-        $pdo->prepare("DELETE FROM processo_campos_extras WHERE cliente_id = ?")->execute([$cliente_id]);
-        
-        }
-        
         // 3. Atualizar Campos Extras
         // Primeiro garante a tabela de novo por segurança
         $pdo->exec("CREATE TABLE IF NOT EXISTS processo_campos_extras (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            cliente_id INT NOT NULL,
+            titulo VARCHAR(255) NOT NULL,
+            valor TEXT,
+            FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
+        )");
+
+        $pdo->prepare("DELETE FROM processo_campos_extras WHERE cliente_id = ?")->execute([$cliente_id]);
+        
+        if (isset($_POST['extra_titulos']) && is_array($_POST['extra_titulos'])) {
             id INT AUTO_INCREMENT PRIMARY KEY,
             cliente_id INT NOT NULL,
             titulo VARCHAR(255) NOT NULL,
