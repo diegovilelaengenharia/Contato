@@ -1028,6 +1028,8 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     </div>
                 </div>
 
+            <?php elseif($active_tab == 'pendencias'): ?>
+
                 <div class="form-card" style="border-left: 6px solid #ffc107;">
                     <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                         <div>
