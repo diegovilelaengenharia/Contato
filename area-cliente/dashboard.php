@@ -117,52 +117,72 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 <div class="container">
 
-    <!-- 1. CARD RESUME -->
+    <!-- 1. CARD RESUME (CORPORATE STYLE) -->
     <div class="resume-card fade-in">
-        <div class="resume-header">
-            <div class="client-info">
+        <div class="resume-cover">
+             <!-- Actions (Top Right) -->
+             <div class="header-actions">
+                <button class="icon-btn" onclick="toggleTheme()" title="Tema">
+                    <span id="theme-icon">🌓</span>
+                </button>
+                <a href="logout.php" class="icon-btn" title="Sair">
+                    <span>🛑</span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="resume-body">
+            <div class="resume-header">
+                <!-- Avatar -->
                 <?php if(!empty($data['foto_perfil']) && file_exists(__DIR__ . '/' . $data['foto_perfil'])): ?>
-                    <img src="<?= htmlspecialchars($data['foto_perfil']) ?>" alt="Foto Perfil" class="avatar-circle" style="object-fit:cover; border:2px solid white;">
+                    <img src="<?= htmlspecialchars($data['foto_perfil']) ?>" alt="Foto" class="avatar-circle" style="object-fit:cover;">
                 <?php else: ?>
                     <div class="avatar-circle">
                         <?= strtoupper(substr($primeiro_nome, 0, 1)) ?>
                     </div>
                 <?php endif; ?>
                 
-                <div class="resume-title">
-                    <p>Área do Cliente</p>
-                    <h1><?= htmlspecialchars($data['nome']) ?></h1> <!-- Nome Completo -->
-                    
-                    <div style="font-size:0.9rem; opacity:0.9; line-height:1.4; margin-top:5px;">
-                        <?= htmlspecialchars($endereco) ?>
-                        <br>
-                        <strong>CPF/CNPJ:</strong> <?= htmlspecialchars($data['cpf_cnpj'] ?? '--') ?>
-                        <span style="margin:0 8px;">|</span>
-                        <strong>Tel:</strong> <?= htmlspecialchars($data['contato_tel'] ?? '--') ?>
-                    </div>
+                <!-- Nome -->
+                <div class="client-name" style="text-align:right;">
+                     <h1><?= htmlspecialchars($primeiro_nome) ?></h1>
+                     <p>Vilela Engenharia</p>
                 </div>
             </div>
-        </div>
-        
-        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:15px;">
-            <span class="status-pill" style="background:var(--bg-success); color:var(--text-success); border-color:transparent;">Status: <?= $data['status_geral'] ?? 'Ativo' ?></span>
-            <span class="status-pill">Fase: <?= $data['etapa_atual'] ?? 'Início' ?></span>
-        </div>
 
-        <!-- Mini Dashboard Stats inside Card -->
-        <div class="resume-stats">
-            <div class="stat-item" onclick="switchTab('financeiro')">
-                <span>Pendências Fin.</span>
-                <strong style="color:#ffda6a">R$ <?= number_format($fin_stats['pendente'], 2, ',', '.') ?></strong>
+            <div class="info-grid">
+                <div class="info-box">
+                    <label>Status</label>
+                    <span style="color:var(--brand-accent)"><?= $data['status_geral'] ?? 'Ativo' ?></span>
+                </div>
+                <div class="info-box">
+                    <label>Fase Atual</label>
+                    <span><?= $data['etapa_atual'] ?? 'Análise' ?></span>
+                </div>
+                <div class="info-box">
+                    <label>Telefone</label>
+                    <span><?= htmlspecialchars($data['contato_tel'] ?? '--') ?></span>
+                </div>
+                <!-- Endereço se cobrir 2 colunas -->
+                <div class="info-box" style="grid-column: span 2;">
+                    <label>Endereço do Projeto</label>
+                    <span><?= htmlspecialchars($endereco) ?></span>
+                </div>
             </div>
-            <div class="stat-item" onclick="switchTab('pendencias')">
-                <span>Avisos</span>
-                <strong><?= count(array_filter($pendencias, fn($p) => $p['status']!='resolvido')) ?> Ativos</strong>
+            
+            <div class="stats-container">
+                 <div class="stat-btn alert" onclick="switchTab('pendencias')">
+                     <small>Pendências</small>
+                     <strong><?= count(array_filter($pendencias, fn($p) => $p['status']!='resolvido')) ?></strong>
+                 </div>
+                 <div class="stat-btn" onclick="switchTab('financeiro')">
+                     <small>A Pagar</small>
+                     <strong>R$ <?= number_format($fin_stats['pendente'], 2, ',', '.') ?></strong>
+                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 2. NAVIGATION -->
+    <!-- 2. NAVIGATION PILLS -->
     <div class="nav-tabs">
         <button class="nav-item active" onclick="switchTab('timeline')">Linha do Tempo</button>
         <button class="nav-item" onclick="switchTab('pendencias')">Pendências</button>
@@ -172,14 +192,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
     <!-- 3. VIEWS -->
     
-    <!-- VIEW: TIMELINE (Admin Logic) -->
+    <!-- VIEW: TIMELINE -->
     <div id="view-timeline" class="view-section fade-in">
         <div class="section-card">
             <h3 class="section-title">Histórico Completo</h3>
             <div class="timeline-stream">
                 <?php if(count($timeline) > 0): foreach($timeline as $t): 
-                    // Admin Parsing Logic for Comments
-                    $descricao_formatada = nl2br(str_replace('||COMENTARIO_USER||', '<br><strong style="color:var(--color-primary)">Obs:</strong> ', htmlspecialchars($t['descricao'])));
+                    $descricao_formatada = nl2br(str_replace('||COMENTARIO_USER||', '<br><strong style="color:var(--brand-primary)">Obs:</strong> ', htmlspecialchars($t['descricao'])));
                 ?>
                     <div class="t-event">
                         <div class="t-dot"></div>
@@ -188,7 +207,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         <div class="t-desc"><?= $descricao_formatada ?></div>
                     </div>
                 <?php endforeach; else: ?>
-                    <p style="color:var(--text-muted); font-style:italic;">Nenhuma atividade registrada ainda.</p>
+                    <p style="color:var(--text-muted); text-align:center;">Não há histórico para exibir.</p>
                 <?php endif; ?>
             </div>
         </div>
