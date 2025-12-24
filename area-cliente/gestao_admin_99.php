@@ -1059,6 +1059,11 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             <p style="color:var(--color-text-subtle); margin-bottom:20px;">Adicione itens que o cliente precisa resolver. O cliente verá esta lista.</p>
                         </div>
                         <?php 
+                            // Movido para cá para usar no botão WhatsApp
+                            $stmt_pend = $pdo->prepare("SELECT * FROM processo_pendencias WHERE cliente_id=? ORDER BY status ASC, id DESC");
+                            $stmt_pend->execute([$cliente_ativo['id']]);
+                            $pendencias = $stmt_pend->fetchAll();
+
                             // Lógica WhatsApp - Cobrança Dinâmica
                             $pend_abertas = array_filter($pendencias, function($p) {
                                 return $p['status'] == 'pendente' || $p['status'] == 'anexado'; // Inclui as anexadas se quiser cobrar resolução final
@@ -1115,9 +1120,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             </thead>
                             <tbody>
                                 <?php 
-                                $stmt_pend = $pdo->prepare("SELECT * FROM processo_pendencias WHERE cliente_id=? ORDER BY status ASC, id DESC");
-                                $stmt_pend->execute([$cliente_ativo['id']]);
-                                $pendencias = $stmt_pend->fetchAll();
+                                // Query de pendências já feita acima para o botão WhatsApp
                                 
                                 // Buscar Arquivos (Novo Sistema)
                                 $stmtArq = $pdo->prepare("SELECT pendencia_id, id, arquivo_nome, arquivo_path, data_upload FROM processo_pendencias_arquivos WHERE pendencia_id IN (SELECT id FROM processo_pendencias WHERE cliente_id=?)");
