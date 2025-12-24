@@ -245,7 +245,6 @@ if (isset($_GET['delete_pendencia'])) {
         header("Location: ?cliente_id=$cid&tab=pendencias");
         exit;
     } catch(PDOException $e) { $erro = "Erro ao excluir: " . $e->getMessage(); }
-    } catch(PDOException $e) { $erro = "Erro ao excluir: " . $e->getMessage(); }
 }
 
 // Ação de Toggle Financeiro (Pendente <> Pago)
