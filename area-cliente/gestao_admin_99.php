@@ -247,21 +247,17 @@ if (isset($_GET['delete_pendencia'])) {
     } catch(PDOException $e) { $erro = "Erro ao excluir: " . $e->getMessage(); }
 }
 
-// Ação de Toggle Financeiro (Pendente <> Pago)
-if (isset($_GET['toggle_status'])) {
-    $fid = $_GET['toggle_status'];
-    $cid = $_GET['cliente_id'];
+// Ação de Atualizar Status Financeiro (Via Modal)
+if (isset($_POST['btn_update_status_fin'])) {
+    $fid = $_POST['fin_id'];
+    $cid = $_POST['cliente_id'];
+    $new_status = $_POST['novo_status'];
     
     try {
-        $curr = $pdo->query("SELECT status FROM processo_financeiro WHERE id=$fid")->fetchColumn();
-        // Ciclo: pendente -> pago -> pendente
-        $new = ($curr == 'pago') ? 'pendente' : 'pago';
-        
-        $pdo->prepare("UPDATE processo_financeiro SET status = ? WHERE id = ? AND cliente_id = ?")->execute([$new, $fid, $cid]);
-        
+        $pdo->prepare("UPDATE processo_financeiro SET status = ? WHERE id = ? AND cliente_id = ?")->execute([$new_status, $fid, $cid]);
         header("Location: ?cliente_id=$cid&tab=financeiro&msg=status_updated");
         exit;
-    } catch(PDOException $e) { $erro = "Erro ao alterar status financeiro: " . $e->getMessage(); }
+    } catch(PDOException $e) { $erro = "Erro ao atualizar status: " . $e->getMessage(); }
 }
 
 // Gerar Token de Visualização Pública (Opcional - Futuro)
@@ -1413,7 +1409,9 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                         <td style='padding:12px; font-weight:bold;'>R$ {$valor}</td>
                                         <td style='padding:12px;'>{$data}</td>
                                         <td style='padding:12px; text-align:center;'>
-                                            <a href='?cliente_id={$cid}&tab=financeiro&toggle_status={$r['id']}' style='text-decoration:none; color:{$st_color}; font-weight:bold; border:1px solid {$st_color}; padding:4px 8px; border-radius:12px; font-size:0.85rem;' title='Clique para alternar status'>{$st_icon} 🔄</a>
+                                            <button onclick="openStatusFinModal(<?= $r['id'] ?>, '<?= $r['status'] ?>')" style="background:none; border:1px solid <?= $st_color ?>; color:<?= $st_color ?>; border-radius:12px; padding:2px 8px; font-weight:bold; cursor:pointer; font-size:0.85rem;" title="Alterar Status">
+                                                <?= $st_icon ?> ✏️
+                                            </button>
                                         </td>
                                         <td style='padding:12px; text-align:center;'>{$link}</td>
                                         <td style='padding:12px; text-align:right;'>
@@ -1469,8 +1467,39 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         </div>
                     </div>
                 </dialog>
+                
+                <!-- Modal Status Financeiro -->
+                <dialog id="modalStatusFin" style="border:none; border-radius:8px; padding:20px; box-shadow:0 5px 20px rgba(0,0,0,0.2);">
+                    <form method="POST">
+                        <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
+                        <input type="hidden" name="fin_id" id="edit_fin_id">
+                        
+                        <h3 style="margin-top:0;">Alterar Status Financeiro</h3>
+                        
+                        <div class="form-group">
+                            <label>Novo Status</label>
+                            <select name="novo_status" id="edit_fin_status" style="width:100%; padding:8px;">
+                                <option value="pendente">⏳ Pendente</option>
+                                <option value="pago">✅ Pago</option>
+                                <option value="atrasado">❌ Atrasado</option>
+                                <option value="isento">⚪ Isento</option>
+                            </select>
+                        </div>
+                        
+                        <div style="margin-top:15px; text-align:right; display:flex; justify-content:flex-end; gap:10px;">
+                            <button type="button" onclick="document.getElementById('modalStatusFin').close()" style="padding:8px 15px; border:1px solid #ccc; background:white; border-radius:4px; cursor:pointer;">Cancelar</button>
+                            <button type="submit" name="btn_update_status_fin" class="btn-save btn-primary" style="width:auto; padding:8px 15px; margin:0;">Salvar</button>
+                        </div>
+                    </form>
+                </dialog>
 
                 <script>
+                function openStatusFinModal(id, currentStatus) {
+                    document.getElementById('edit_fin_id').value = id;
+                    document.getElementById('edit_fin_status').value = currentStatus;
+                    document.getElementById('modalStatusFin').showModal();
+                }
+                
                 function openChargeModal(text) {
                     const modal = document.getElementById('modalCharge');
                     const textarea = document.getElementById('chargeText');
