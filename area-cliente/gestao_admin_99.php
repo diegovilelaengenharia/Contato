@@ -1412,8 +1412,8 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                         <td style='padding:12px; font-weight:bold;'>R$ {$valor}</td>
                                         <td style='padding:12px;'>{$data}</td>
                                         <td style='padding:12px; text-align:center;'>
-                                            <button onclick="openStatusFinModal(<?= $r['id'] ?>, '<?= $r['status'] ?>')" style="background:none; border:1px solid <?= $st_color ?>; color:<?= $st_color ?>; border-radius:12px; padding:2px 8px; font-weight:bold; cursor:pointer; font-size:0.85rem;" title="Alterar Status">
-                                                <?= $st_icon ?> ✏️
+                                            <button onclick=\"openStatusFinModal({$r['id']}, '{$r['status']}')\" style=\"background:none; border:1px solid {$st_color}; color:{$st_color}; border-radius:12px; padding:2px 8px; font-weight:bold; cursor:pointer; font-size:0.85rem;\" title=\"Alterar Status\">
+                                                {$st_icon} ✏️
                                             </button>
                                         </td>
                                         <td style='padding:12px; text-align:center;'>{$link}</td>
