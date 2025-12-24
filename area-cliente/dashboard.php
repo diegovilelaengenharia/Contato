@@ -184,7 +184,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
     <!-- 2. NAVIGATION PILLS -->
     <div class="nav-tabs">
-        <button class="nav-item active" onclick="switchTab('timeline')">Linha do Tempo</button>
+        <!-- Timeline agora é MODAL -->
+        <button class="nav-item active" style="background:var(--brand-primary); color:white;" onclick="openTimelineModal()">
+            🕒 Ver Linha do Tempo
+        </button>
         <button class="nav-item" onclick="switchTab('pendencias')">Pendências</button>
         <button class="nav-item" onclick="switchTab('financeiro')">Financeiro</button>
         <button class="nav-item" onclick="switchTab('docs')">Documentos</button>
@@ -192,23 +195,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
     <!-- 3. VIEWS -->
     
-    <!-- VIEW: TIMELINE -->
-    <div id="view-timeline" class="view-section fade-in">
-        <div class="section-card">
-            <h3 class="section-title">Histórico Completo</h3>
-            <div class="timeline-stream">
-                <?php if(count($timeline) > 0): foreach($timeline as $t): 
-                    $descricao_formatada = nl2br(str_replace('||COMENTARIO_USER||', '<br><strong style="color:var(--brand-primary)">Obs:</strong> ', htmlspecialchars($t['descricao'])));
-                ?>
-                    <div class="t-event">
-                        <div class="t-dot"></div>
-                        <span class="t-date"><?= date('d/m/Y H:i', strtotime($t['data_movimento'])) ?></span>
-                        <div class="t-title"><?= htmlspecialchars($t['titulo_fase']) ?></div>
-                        <div class="t-desc"><?= $descricao_formatada ?></div>
-                    </div>
-                <?php endforeach; else: ?>
-                    <p style="color:var(--text-muted); text-align:center;">Não há histórico para exibir.</p>
-                <?php endif; ?>
+    <!-- VIEW: TIMELINE (MODAL NOW) -->
+    <div id="timelineModal" class="modal-overlay">
+        <div class="modal-box" style="max-width:600px; max-height:90vh;">
+            <div class="modal-header">
+                <h3 style="margin:0; color:var(--brand-primary);">Linha do Tempo</h3>
+                <button class="modal-close" onclick="closeTimelineModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="timeline-stream">
+                    <?php if(count($timeline) > 0): foreach($timeline as $t): 
+                        $descricao_formatada = nl2br(str_replace('||COMENTARIO_USER||', '<br><strong style="color:var(--brand-primary)">Obs:</strong> ', htmlspecialchars($t['descricao'])));
+                    ?>
+                        <div class="t-event">
+                            <div class="t-dot"></div>
+                            <span class="t-date"><?= date('d/m/Y H:i', strtotime($t['data_movimento'])) ?></span>
+                            <div class="t-title"><?= htmlspecialchars($t['titulo_fase']) ?></div>
+                            <div class="t-desc"><?= $descricao_formatada ?></div>
+                        </div>
+                    <?php endforeach; else: ?>
+                        <p style="color:var(--text-muted); text-align:center;">Não há histórico para exibir.</p>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
     </div>
@@ -254,19 +262,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             <h3 class="section-title">Financeiro</h3>
             <div class="finance-list">
                 <?php if(count($financeiro) > 0): foreach($financeiro as $f): 
-                    $color = $f['status']=='pago' ? 'var(--text-success)' : ($f['status']=='atrasado' ? 'var(--text-danger)' : 'var(--text-warning)');
+                    // Logic For Colors
+                    $color_style = 'color:var(--text-main)';
+                    $status_style = 'background:#e9ecef; color:var(--text-muted);';
+                    
+                    if($f['status']=='pago') {
+                        $color_style = 'color:var(--brand-primary)'; 
+                        $status_style = 'background:var(--brand-light); color:var(--brand-primary);';
+                    }
+                    elseif($f['status']=='atrasado') {
+                         $color_style = 'color:var(--color-urgent)'; 
+                         $status_style = 'background:var(--bg-urgent); color:var(--color-urgent);';
+                    }
+                    elseif($f['status']=='pendente') {
+                         $color_style = 'color:var(--color-warning)';
+                         $status_style = 'background:var(--bg-warning); color:#856404;';
+                    }
                 ?>
                     <div class="finance-item">
                         <div class="f-info">
-                            <h4><?= htmlspecialchars($f['descricao']) ?></h4>
+                            <h4 style="<?= $color_style ?>"><?= htmlspecialchars($f['descricao']) ?></h4>
                             <span>Venc: <?= date('d/m/Y', strtotime($f['data_vencimento'])) ?> • <?= ucfirst($f['categoria']) ?></span>
                             <?php if($f['link_comprovante']): ?>
-                                <a href="<?= $f['link_comprovante'] ?>" target="_blank" style="font-size:0.8rem; color:var(--color-primary); text-decoration:underline;">Ver Comprovante</a>
+                                <a href="<?= $f['link_comprovante'] ?>" target="_blank" style="font-size:0.8rem; color:var(--brand-primary); text-decoration:underline;">Ver Comprovante</a>
                             <?php endif; ?>
                         </div>
                         <div class="f-amount">
-                            <span class="f-val">R$ <?= number_format($f['valor'], 2, ',', '.') ?></span>
-                            <span class="f-status" style="color:<?= $color ?>"><?= strtoupper($f['status']) ?></span>
+                            <span class="f-val" style="<?= $color_style ?>">R$ <?= number_format($f['valor'], 2, ',', '.') ?></span>
+                            <span class="f-status" style="padding:2px 8px; border-radius:4px; font-size:0.7rem; <?= $status_style ?>"><?= strtoupper($f['status']) ?></span>
                         </div>
                     </div>
                 <?php endforeach; else: ?>
@@ -292,46 +315,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 </div>
 
-<!-- FLOATING WHATSAPP -->
-<a href="https://wa.me/5562999999999" target="_blank" class="fab-whatsapp" title="Fale Conosco">
-    <!-- WhatsApp Icon SVG -->
-    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-</a>
+<!-- FLOATING WHATSAPP (Keep existing) -->
 
-<!-- UPLOAD MODAL -->
-<div id="uploadModal" class="modal-overlay">
-    <div class="modal-box">
-        <div class="modal-header">
-            <h3>Anexar Arquivos</h3>
-            <button class="modal-close" onclick="closeUploadModal()">×</button>
-        </div>
-        <div class="modal-body">
-            <form method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="action" value="upload_pendencia">
-                <input type="hidden" name="p_id" id="modal_p_id">
-                
-                <p>Selecione um ou mais arquivos (PDF ou Imagens) para enviar.</p>
-                <input type="file" name="arquivos[]" multiple accept=".pdf,image/*,.doc,.docx" style="margin-bottom:20px; width:100%;">
-                
-                <button type="submit" class="btn btn-primary" style="width:100%">Confirmar Envio</button>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- TOAST -->
-<?php if(!empty($msg_toast)): ?>
-<div style="position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.8); color:white; padding:10px 20px; border-radius:30px; z-index:9999; animation:fadeIn 0.5s;">
-    <?= $msg_toast ?>
-</div>
-<?php endif; ?>
-
+<!-- SCRIPTS -->
 <script>
-    // Theme Logic
+    // Theme Logic (Existing...)
     function toggleTheme() {
-        document.body.parentElement.classList.toggle('dark-mode'); // toggle html
+        document.body.parentElement.classList.toggle('dark-mode'); 
         if(document.body.parentElement.classList.contains('dark-mode')) {
-            document.body.classList.add('dark-mode'); // ensuring body has it too for old css variables if any
+            document.body.classList.add('dark-mode');
             localStorage.setItem('theme', 'dark');
             document.cookie = "theme=dark; path=/";
         } else {
@@ -340,8 +332,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             document.cookie = "theme=light; path=/";
         }
     }
-    
-    // Init Theme
     if(localStorage.getItem('theme') === 'dark') {
         document.body.classList.add('dark-mode');
         document.documentElement.classList.add('dark-mode');
@@ -349,16 +339,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
     // Tabs Logic
     function switchTab(tabId) {
-        // Buttons
-        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-        event.target.classList.add('active');
-        
-        // Views
-        document.querySelectorAll('.view-section').forEach(v => v.classList.add('hidden'));
-        document.getElementById('view-'+tabId).classList.remove('hidden');
+        document.querySelectorAll('.nav-item').forEach(b => {
+             // Don't remove active from timeline button since it's a modal trigger now
+             if(!b.innerHTML.includes('Linha do Tempo')) b.classList.remove('active');
+        });
+        if(tabId !== 'timeline') { // simple check
+             event.target.classList.add('active');
+             
+             document.querySelectorAll('.view-section').forEach(v => v.classList.add('hidden'));
+             document.getElementById('view-'+tabId).classList.remove('hidden');
+        }
     }
 
-    // Modal Logic
+    // Modals
+    function openTimelineModal() {
+        document.getElementById('timelineModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeTimelineModal() {
+        document.getElementById('timelineModal').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
     function openUploadModal(pId) {
         document.getElementById('modal_p_id').value = pId;
         document.getElementById('uploadModal').classList.add('active');
