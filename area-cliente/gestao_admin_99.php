@@ -297,12 +297,15 @@ if (isset($_POST['btn_salvar_arquivos'])) {
         $pass = password_hash($senha_plain, PASSWORD_DEFAULT);
         
         try {
-            // Verificar duplicidade de usuário
-            $check = $pdo->prepare("SELECT id FROM clientes WHERE usuario = ?");
-            $check->execute([$usuario_final]);
             if($check->rowCount() > 0) throw new Exception("Este login ($usuario_final) já está em uso por outro cliente.");
 
-            $pdo->prepare("INSERT INTO clientes (nome, usuario, senha) VALUES (?, ?, ?)")->execute([$nome_original, $usuario_final, $pass]);
+            // Separar Nome e Sobrenome na criação
+            $partes_nome = explode(' ', trim($nome_original), 2);
+            $primeiro_nome = $partes_nome[0];
+            $sobrenome = $partes_nome[1] ?? '';
+
+            // Agora salva com sobrenome
+            $pdo->prepare("INSERT INTO clientes (nome, sobrenome, usuario, senha) VALUES (?, ?, ?, ?)")->execute([$primeiro_nome, $sobrenome, $usuario_final, $pass]);
             $nid = $pdo->lastInsertId();
             
             // REMOVIDO: ROTINA DE AUTO-RENOMEAÇÃO (Cliente 00X - Nome)
@@ -793,13 +796,10 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             <?php foreach($clientes as $c): 
                 $isActive = ($cliente_ativo && $cliente_ativo['id'] == $c['id']);
                 
-                // Lógica Inteligente para Nome:
-                // 1. Remove prefixo "Cliente 000 - " se existir
-                $nome_clean = preg_replace('/^Cliente\s\d+\s-\s/', '', $c['nome']);
-                // 2. Pega apenas o primeiro nome
-                $primeiro_nome = explode(' ', trim($nome_clean))[0];
+                // Dados do DB já são o Primeiro Nome (devido à migração)
+                $first_name = htmlspecialchars($c['nome']);
                 
-                $initial = strtoupper(substr($primeiro_nome, 0, 1));
+                $initial = strtoupper(substr($first_name, 0, 1));
                 
                 // Estilo
                 $bg = $isActive ? 'var(--color-primary-light)' : '#fff';
@@ -811,7 +811,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         <span class="material-symbols-rounded" style="font-size:1.1rem;">person</span>
                     </div>
                     <div style="flex:1; min-width:0;">
-                        <div style="font-weight:600; font-size:0.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><?= htmlspecialchars($primeiro_nome) ?></div>
+                        <div style="font-weight:600; font-size:0.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><?= $first_name ?></div>
                         <div style="font-size:0.75rem; opacity:0.7;">ID #<?= str_pad($c['id'], 3, '0', STR_PAD_LEFT) ?></div>
                     </div>
                 </a>

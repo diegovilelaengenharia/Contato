@@ -67,13 +67,14 @@ if (isset($_POST['btn_salvar_tudo'])) {
         $pdo->beginTransaction();
 
         // 1. Atualizar Clientes (Login)
+        // 1. Atualizar Clientes (Login + Nome + Sobrenome)
         if (!empty($_POST['nova_senha'])) {
             $nova_senha_hash = password_hash($_POST['nova_senha'], PASSWORD_DEFAULT);
-            $stmtUp = $pdo->prepare("UPDATE clientes SET nome=?, usuario=?, senha=? WHERE id=?");
-            $stmtUp->execute([$_POST['nome'], $_POST['usuario'], $nova_senha_hash, $cliente_id]);
+            $stmtUp = $pdo->prepare("UPDATE clientes SET nome=?, sobrenome=?, usuario=?, senha=? WHERE id=?");
+            $stmtUp->execute([$_POST['nome'], $_POST['sobrenome'], $_POST['usuario'], $nova_senha_hash, $cliente_id]);
         } else {
-            $stmtUp = $pdo->prepare("UPDATE clientes SET nome=?, usuario=? WHERE id=?");
-            $stmtUp->execute([$_POST['nome'], $_POST['usuario'], $cliente_id]);
+            $stmtUp = $pdo->prepare("UPDATE clientes SET nome=?, sobrenome=?, usuario=? WHERE id=?");
+            $stmtUp->execute([$_POST['nome'], $_POST['sobrenome'], $_POST['usuario'], $cliente_id]);
         }
 
         // 2. Atualizar Detalhes
@@ -419,6 +420,10 @@ if (isset($_POST['btn_salvar_tudo'])) {
             </div>
             <div class="section-body">
                 <div class="grid">
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label>ID do Cliente</label>
+                        <input type="text" value="<?= str_pad($cliente['id'], 3, '0', STR_PAD_LEFT) ?>" readonly style="background:#e9ecef; color:#555; font-weight:bold; width:80px; text-align:center;">
+                    </div>
                     <div class="form-group">
                         <label>Natureza Jurídica</label>
                         <select name="tipo_pessoa">
@@ -426,9 +431,16 @@ if (isset($_POST['btn_salvar_tudo'])) {
                             <option value="Juridica" <?= ($detalhes['tipo_pessoa']??'')=='Juridica'?'selected':'' ?>>Pessoa Jurídica (CNPJ)</option>
                         </select>
                     </div>
+                </div>
+                
+                <div class="grid" style="margin-top:20px;">
                     <div class="form-group">
-                        <label>Nome Completo</label>
-                        <input type="text" name="nome" value="<?= htmlspecialchars($cliente['nome']) ?>" required placeholder="Nome Civil ou Razão Social">
+                        <label>Primeiro Nome</label>
+                        <input type="text" name="nome" value="<?= htmlspecialchars($cliente['nome']) ?>" required placeholder="Primeiro Nome">
+                    </div>
+                    <div class="form-group">
+                        <label>Sobrenome</label>
+                        <input type="text" name="sobrenome" value="<?= htmlspecialchars($cliente['sobrenome']??'') ?>" required placeholder="Restante do Nome">
                     </div>
                     <div class="form-group">
                         <label>CPF / CNPJ</label>
