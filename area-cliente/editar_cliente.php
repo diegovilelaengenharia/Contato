@@ -571,5 +571,60 @@ if (isset($_POST['btn_salvar_tudo'])) {
         </div>
     </form>
 
+    <script>
+        // --- MÁSCARAS E VALIDAÇÃO ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const phoneInput = document.querySelector('input[name="contato_tel"]');
+            const cpfCnpjInput = document.querySelector('input[name="cpf_cnpj"]');
+            
+            // Mask Phone: (XX) XXXXX-XXXX
+            if(phoneInput) {
+                phoneInput.addEventListener('input', function (e) {
+                    let x = e.target.value.replace(/\D/g, '').match(/(\d{0,2})(\d{0,5})(\d{0,4})/);
+                    e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+                });
+                
+                phoneInput.addEventListener('blur', function(e) {
+                    const val = e.target.value.replace(/\D/g, '');
+                    if(val.length > 0 && val.length < 10) {
+                        alert('⚠️ Número de telefone parece incompleto. Verifique se incluiu o DDD.');
+                        e.target.style.borderColor = '#dc3545';
+                    } else {
+                        e.target.style.borderColor = 'var(--border-color)';
+                    }
+                });
+            }
+
+            // Mask CPF/CNPJ
+            if(cpfCnpjInput) {
+                cpfCnpjInput.addEventListener('input', function(e) {
+                    let v = e.target.value.replace(/\D/g, '');
+                    if (v.length > 14) v = v.slice(0, 14); // Limit to CNPJ size
+
+                    if (v.length <= 11) { // CPF Mask
+                        v = v.replace(/(\d{3})(\d)/, '$1.$2');
+                        v = v.replace(/(\d{3})(\d)/, '$1.$2');
+                        v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+                    } else { // CNPJ Mask
+                        v = v.replace(/^(\d{2})(\d)/, '$1.$2');
+                        v = v.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+                        v = v.replace(/\.(\d{3})(\d)/, '.$1/$2');
+                        v = v.replace(/(\d{4})(\d)/, '$1-$2');
+                    }
+                    e.target.value = v;
+                });
+
+                cpfCnpjInput.addEventListener('blur', function(e) {
+                    const val = e.target.value.replace(/\D/g, '');
+                    if(val.length > 0 && val.length !== 11 && val.length !== 14) {
+                        alert('⚠️ CPF deve ter 11 dígitos ou CNPJ deve ter 14 dígitos.');
+                        e.target.style.borderColor = '#dc3545';
+                    } else {
+                        e.target.style.borderColor = 'var(--border-color)';
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
