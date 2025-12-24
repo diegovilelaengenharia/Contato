@@ -1096,18 +1096,14 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             }
                             
                             $msg_wpp_pend .= "\n📂 *Acesse sua Área do Cliente* para anexar documentos ou ver detalhes:\nhttps://vilela.eng.br/area-cliente/\n\nQualquer dúvida, estou à disposição por aqui!";
-                            
-                            // 4. Melhor Abordagem: Variável Global JS (Sem problemas de aspas em atributos)
-                            $js_safe_msg = json_encode($msg_wpp_pend);
                         ?>
-                        <script>
-                            // Variável global definindo a mensagem atual
-                            var currentChargeMsg = <?= $js_safe_msg ?>;
-                        </script>
                         
+                        <!-- Transporte Seguro de Dados PHP -> JS -->
+                        <textarea id="hidden_wpp_msg" style="display:none;"><?= htmlspecialchars($msg_wpp_pend) ?></textarea>
+
                         <div style="text-align:right;">
                             <button type="button" class="btn-save" style="border:none; display:inline-flex; align-items:center; gap:5px; <?= $btn_wpp_style ?>" 
-                                    onclick="openChargeModal(currentChargeMsg)">
+                                    onclick="openChargeModalNew()">
                                 📱 Cobrar Cliente
                             </button>
                         </div>
@@ -1451,24 +1447,25 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 <!-- Modal Notificações Movido para rodapé para ser global -->
                 
                 <!-- Modal Cobrar Cliente -->
-                <dialog id="modalCharge" style="border:none; border-radius:12px; padding:0; width:90%; max-width:500px; box-shadow:0 10px 40px rgba(0,0,0,0.3);">
+                <!-- Modal Cobrar Cliente (Refeito) -->
+                <dialog id="modalChargeNew" style="border:none; border-radius:12px; padding:0; width:90%; max-width:500px; box-shadow:0 10px 40px rgba(0,0,0,0.3);">
                     <div style="background:var(--color-primary); color:white; padding:20px; display:flex; justify-content:space-between; align-items:center;">
                         <h3 style="margin:0; font-size:1.2rem;">📱 Cobrar Pendências</h3>
-                        <button onclick="document.getElementById('modalCharge').close()" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
+                        <button onclick="document.getElementById('modalChargeNew').close()" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
                     </div>
                     
                     <div style="padding:25px;">
                         <div style="background:#f0f8ff; border-left:4px solid #0056b3; padding:15px; margin-bottom:20px; border-radius:4px;">
-                            <strong style="color:#0056b3; display:block; margin-bottom:5px;">💡 Dica de Credibilidade</strong>
-                            <span style="font-size:0.9rem; color:#444;">Utilize este modelo formal para transmitir profissionalismo e urgência educada. A mensagem já inclui a lista exata de pendências.</span>
+                            <strong style="color:#0056b3; display:block; margin-bottom:5px;">💡 Profissionalismo</strong>
+                            <span style="font-size:0.9rem; color:#444;">Modelo de mensagem pronto com a lista de pendências.</span>
                         </div>
 
-                        <label style="display:block; margin-bottom:10px; font-weight:bold; color:#333;">Mensagem Pronta:</label>
-                        <textarea id="chargeText" rows="12" style="width:100%; border:1px solid #ccc; border-radius:8px; padding:15px; font-family:monospace; background:#fafafa; font-size:0.9rem; resize:vertical;" readonly></textarea>
+                        <label style="display:block; margin-bottom:10px; font-weight:bold; color:#333;">Mensagem:</label>
+                        <textarea id="chargeTextNew" rows="12" style="width:100%; border:1px solid #ccc; border-radius:8px; padding:15px; font-family:monospace; background:#fafafa; font-size:0.9rem; resize:vertical;" readonly></textarea>
                         
                         <div style="margin-top:20px; display:flex; gap:10px;">
-                            <button type="button" onclick="copyChargeText()" class="btn-save" style="flex:1; justify-content:center; background:var(--color-primary);">📋 Copiar Texto</button>
-                            <a id="btnOpenWhats" href="#" target="_blank" class="btn-save" style="flex:1; justify-content:center; background:#25D366; text-align:center; text-decoration:none;">Abrir WhatsApp</a>
+                            <button type="button" onclick="copyChargeTextNew()" class="btn-save" style="flex:1; justify-content:center; background:var(--color-primary);">📋 Copiar</button>
+                            <a id="btnOpenWhatsNew" href="#" target="_blank" class="btn-save" style="flex:1; justify-content:center; background:#25D366; text-align:center; text-decoration:none;">Abrir WhatsApp</a>
                         </div>
                     </div>
                 </dialog>
@@ -1505,26 +1502,29 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     document.getElementById('modalStatusFin').showModal();
                 }
                 
-                function openChargeModal(text) {
-                    const modal = document.getElementById('modalCharge');
-                    const textarea = document.getElementById('chargeText');
-                    const btnWhats = document.getElementById('btnOpenWhats');
+                // Nova Lógica Limpa e Refeita
+                function openChargeModalNew() {
+                    // 1. Pegar texto do elemento oculto (Raw Text)
+                    const rawText = document.getElementById('hidden_wpp_msg').value;
                     
-                    // Decode special chars if needed or just use raw
-                    textarea.value = text;
+                    // 2. Popular o Modal
+                    const txtArea = document.getElementById('chargeTextNew');
+                    txtArea.value = rawText;
                     
-                    // Update WhatsApp Link dynamically
-                    btnWhats.href = "https://wa.me/?text=" + encodeURIComponent(text);
+                    // 3. Atualizar botão WhatsApp
+                    const btn = document.getElementById('btnOpenWhatsNew');
+                    btn.href = "https://wa.me/?text=" + encodeURIComponent(rawText);
                     
-                    modal.showModal();
+                    // 4. Abrir
+                    document.getElementById('modalChargeNew').showModal();
                 }
 
-                function copyChargeText() {
-                    const copyText = document.getElementById("chargeText");
+                function copyChargeTextNew() {
+                    const copyText = document.getElementById("chargeTextNew");
                     copyText.select();
-                    copyText.setSelectionRange(0, 99999); /* For mobile devices */
+                    copyText.setSelectionRange(0, 99999);
                     navigator.clipboard.writeText(copyText.value).then(() => {
-                        alert("Texto copiado para a área de transferência!");
+                        alert("Texto copiado!");
                     });
                 }
                 </script>
