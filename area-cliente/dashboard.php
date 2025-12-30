@@ -24,9 +24,14 @@ $stmt->execute([$cliente_id]);
 $data = $stmt->fetch();
 if(!$data) { header("Location: logout.php"); exit; }
 
-$nome_parts = explode(' ', $data['nome']);
+$nome_parts = explode(' ', trim($data['nome']));
 $primeiro_nome = $nome_parts[0];
 $endereco = $data['imovel_rua'] ?? ($data['endereco_imovel'] ?? 'Endereço não cadastrado');
+
+// AVATAR LOGIC (Matches Admin Panel behavior: File System Check, not DB)
+$avatar_file = glob(__DIR__ . "/uploads/avatars/avatar_{$cliente_id}.*");
+$foto_perfil = !empty($avatar_file) ? 'uploads/avatars/' . basename($avatar_file[0]) . '?v=' . time() : null; // Cache busting
+
 
 // Calculate Progress (Now safely after data fetch)
 $etapa_atual = $data['etapa_atual'] ?? '';

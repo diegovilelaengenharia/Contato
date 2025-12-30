@@ -20,8 +20,8 @@ $data_inicio = isset($data['data_cadastro']) ? date('d/m/Y', strtotime($data['da
     
     <div class="hp-top">
         <div class="hp-avatar">
-            <?php if(!empty($data['foto_perfil']) && file_exists(__DIR__ . '/../../' . $data['foto_perfil'])): ?>
-                <img src="<?= htmlspecialchars($data['foto_perfil']) ?>" alt="Foto" id="userPhoto">
+            <?php if(!empty($foto_perfil)): ?>
+                <img src="<?= htmlspecialchars($foto_perfil) ?>" alt="Foto" id="userPhoto">
             <?php else: ?>
                 <span><?= $iniciais ?></span>
             <?php endif; ?>
