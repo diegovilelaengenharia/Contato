@@ -225,13 +225,8 @@ if (isset($_POST['novo_cliente'])) {
 
         if($check->rowCount() > 0) throw new Exception("Este login ($usuario_final) já está em uso por outro cliente.");
 
-        // Separar Nome e Sobrenome na criação
-        $partes_nome = explode(' ', trim($nome_original), 2);
-        $primeiro_nome = $partes_nome[0];
-        $sobrenome = $partes_nome[1] ?? '';
-
-        // Agora salva com sobrenome
-        $pdo->prepare("INSERT INTO clientes (nome, sobrenome, usuario, senha) VALUES (?, ?, ?, ?)")->execute([$primeiro_nome, $sobrenome, $usuario_final, $pass]);
+        // Inserir nome completo (Schema simplificado, sem sobrenome separado)
+        $pdo->prepare("INSERT INTO clientes (nome, usuario, senha) VALUES (?, ?, ?)")->execute([trim($nome_original), $usuario_final, $pass]);
         $nid = $pdo->lastInsertId();
         
         // Inserção Detalhes (Campos não preenchidos vão vazios para serem completados na edição)
