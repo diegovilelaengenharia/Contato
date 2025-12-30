@@ -10,6 +10,20 @@ if (!isset($_SESSION['cliente_id'])) {
 
 $cliente_id = $_SESSION['cliente_id'];
 
+// --- FASES PADRÃO (Mesma do Admin) ---
+$fases_padrao = [
+    "Abertura de Processo (Guichê)", "Fiscalização (Parecer Fiscal)", "Triagem (Documentos Necessários)",
+    "Comunicado de Pendências (Triagem)", "Análise Técnica (Engenharia)", "Comunicado (Pendências e Taxas)",
+    "Confecção de Documentos", "Avaliação (ITBI/Averbação)", "Processo Finalizado (Documentos Prontos)"
+];
+
+// Calculate Progress
+$etapa_atual = $data['etapa_atual'] ?? '';
+$fase_index = array_search($etapa_atual, $fases_padrao);
+if($fase_index === false) $fase_index = 0; // Se não achar ou vazio, 0
+// Cálculo percentual: (index + 1) / total * 100
+$progresso_porc = min(100, round((($fase_index + 1) / count($fases_padrao)) * 100));
+
 // --- DATA FETCHING (COMMON) ---
 // 1. Client & Details
 $stmt = $pdo->prepare("SELECT c.*, d.* FROM clientes c LEFT JOIN processo_detalhes d ON c.id = d.cliente_id WHERE c.id = ?");

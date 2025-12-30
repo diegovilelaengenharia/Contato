@@ -1,51 +1,34 @@
 <div class="view-header-simple">
-    <h2>Documentos</h2>
-    <p>Seus projetos e arquivos na nuvem.</p>
+    <h2>Arquivos</h2>
+    <p>Documentos oficiais e projetos.</p>
 </div>
 
 <div class="files-container fade-in-up">
     <!-- DRIVE EMBED -->
     <div class="drive-card">
         <div class="drive-header">
-            <span class="material-symbols-rounded">folder_shared</span>
-            <h3>Pasta do Projeto (Google Drive)</h3>
+            <span class="material-symbols-rounded" style="font-size:40px; color:#34a853;">folder_data</span>
         </div>
+        <h3 style="margin:10px 0 5px 0;">Nuvem do Projeto</h3>
+        <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:20px;">
+            Acesse todas as pastas (Projetos, Documentos, Taxas) diretamente.
+        </p>
         
         <?php if($drive_id): ?>
-            <div class="iframe-wrapper">
-                <iframe src="https://drive.google.com/embeddedfolderview?id=<?= $drive_id ?>#list" width="100%" height="500" frameborder="0"></iframe>
+            <div class="action-buttons-row">
+                 <a href="<?= $detalhes['link_drive_pasta'] ?>" target="_blank" class="btn-primary-action">
+                    <span class="material-symbols-rounded">open_in_new</span> Abrir Google Drive
+                 </a>
             </div>
-            <a href="<?= $detalhes['link_drive_pasta'] ?>" target="_blank" class="btn-block btn-outline">
-                Abrir no Google Drive ↗
-            </a>
+
+            <!-- Iframe otimizado -->
+            <div class="iframe-wrapper" style="margin-top:20px; border:1px solid var(--border-color); border-radius:10px; overflow:hidden;">
+                <iframe src="https://drive.google.com/embeddedfolderview?id=<?= $drive_id ?>#list" width="100%" height="400" frameborder="0"></iframe>
+            </div>
         <?php else: ?>
             <div class="empty-state">
-                <p>Sua pasta ainda não foi vinculada.</p>
-                <small>Aguarde a liberação pela engenharia.</small>
+                <p>Pasta não vinculada.</p>
             </div>
-        <?php endif; ?>
-    </div>
-
-    <!-- UPLOADS RECENTES -->
-    <h3 class="section-title" style="margin-top:20px;">Uploads Recentes</h3>
-    <div class="recent-uploads">
-        <?php 
-        // Busca arquivos de pendências como "uploads recentes"
-        $stmt_arq = $pdo->prepare("SELECT * FROM processo_pendencias_arquivos WHERE pendencia_id IN (SELECT id FROM processo_pendencias WHERE cliente_id=?) ORDER BY data_upload DESC LIMIT 5");
-        $stmt_arq->execute([$cliente_id]);
-        $recentes = $stmt_arq->fetchAll();
-
-        if(count($recentes) > 0): foreach($recentes as $arq): ?>
-            <a href="<?= $arq['arquivo_path'] ?>" target="_blank" class="file-item">
-                <div class="file-icon">📄</div>
-                <div class="file-info">
-                    <strong><?= htmlspecialchars($arq['arquivo_nome']) ?></strong>
-                    <small>Enviado em <?= date('d/m/Y', strtotime($arq['data_upload'])) ?></small>
-                </div>
-                <div class="file-arrow">↓</div>
-            </a>
-        <?php endforeach; else: ?>
-            <p style="color:var(--text-muted); padding:10px;">Nenhum arquivo enviado recentemente.</p>
         <?php endif; ?>
     </div>
 </div>
