@@ -49,10 +49,13 @@ $stmt = $pdo->prepare("SELECT * FROM processo_financeiro WHERE cliente_id = ? OR
 $stmt->execute([$cliente_id]);
 $financeiro = $stmt->fetchAll();
 
-// 5. Total Docs (For Summary)
-$stmt = $pdo->prepare("SELECT COUNT(*) FROM processo_arquivos WHERE cliente_id = ?");
-$stmt->execute([$cliente_id]);
-$total_docs = $stmt->fetchColumn(); 
+// 5. Total Docs (Calculated from Pendencies to avoid missing table error)
+$total_docs = 0;
+foreach($pendencias as $p) {
+    if($p['status'] == 'anexado' || $p['status'] == 'resolvido') {
+        $total_docs++;
+    }
+} 
 
 // Financial Stats
 $fin_stats = ['total'=>0, 'pago'=>0, 'pendente'=>0];
