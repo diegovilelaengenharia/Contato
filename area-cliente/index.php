@@ -66,17 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="../assets/logo.png" type="image/png">
-    <style>
-        .alert-error {
-            color: #d32f2f;
-            background-color: #fdecea;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 16px;
-            font-size: 0.9rem;
-            text-align: center;
-        }
-    </style>
+
 </head>
 
 <body>
