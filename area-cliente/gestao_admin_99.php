@@ -445,41 +445,62 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     @media(max-width:768px) { .mobile-only { display: flex; } }
                 </style>
 
-                <div class="form-card">
-                    <h3>🔄 Atualizar Fase ou Adicionar Histórico</h3>
-                    <form method="POST" enctype="multipart/form-data">
-                        <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
-                        
-                            <!-- SELEÇÃO DE FASE PREDETERMINADA -->
-                            <div class="form-group">
-                                <label>Fase Atual (Sistema)</label>
-                                <select name="nova_etapa" style="font-size:1rem; padding:10px; border:1px solid #ccc; width:100%;">
-                                    <option value="">Manter atual (<?= htmlspecialchars($detalhes['etapa_atual']??'-') ?>)</option>
-                                    <?php foreach($fases_padrao as $f): ?>
-                                        <option value="<?= $f ?>"><?= $f ?></option>
-                                    <?php endforeach; ?>
-                                </select>
+                <div class="form-card" style="border:none; box-shadow:0 4px 20px rgba(0,0,0,0.05); overflow:hidden;">
+                    <div style="background: linear-gradient(135deg, var(--color-primary) 0%, #2980b9 100%); padding:15px 20px; border-radius:12px 12px 0 0; display:flex; align-items:center; gap:10px; color:white;">
+                        <span style="font-size:1.5rem;">✨</span>
+                        <h3 style="margin:0; font-size:1.1rem; font-weight:600; color:white;">Novo Andamento / Atualização</h3>
+                    </div>
+                    
+                    <div style="padding:25px; border:1px solid #eee; border-top:none; border-radius:0 0 12px 12px; background:#fff;">
+                        <form method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
+                            
+                            <div style="display:grid; grid-template-columns: 1fr 1.5fr; gap:20px; margin-bottom:20px;">
+                                <!-- SELEÇÃO DE FASE -->
+                                <div>
+                                    <label style="display:block; font-size:0.85rem; font-weight:bold; color:#555; margin-bottom:8px;">📌 Fase do Processo</label>
+                                    <div style="position:relative;">
+                                        <select name="nova_etapa" style="width:100%; padding:12px; border:1px solid #e0e0e0; border-radius:8px; font-size:0.95rem; background:#f9f9f9; appearance:none; color:#333; cursor:pointer;">
+                                            <option value="">Manter: <?= htmlspecialchars($detalhes['etapa_atual']??'-') ?></option>
+                                            <?php foreach($fases_padrao as $f): ?>
+                                                <option value="<?= $f ?>"><?= $f ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <div style="position:absolute; right:15px; top:50%; transform:translateY(-50%); pointer-events:none; color:#888;">▼</div>
+                                    </div>
+                                </div>
+
+                                <!-- TÍTULO -->
+                                <div>
+                                    <label style="display:block; font-size:0.85rem; font-weight:bold; color:#555; margin-bottom:8px;">📝 Título do Evento</label>
+                                    <input type="text" name="titulo_evento" required placeholder="Ex: Protocolo Realizado, Taxa Paga..." style="width:100%; padding:12px; border:1px solid #e0e0e0; border-radius:8px; font-size:0.95rem; box-shadow:inset 0 2px 4px rgba(0,0,0,0.02);">
+                                </div>
                             </div>
-                        </div>
+                            
+                            <div style="display:grid; grid-template-columns: 2fr 1fr; gap:20px; margin-bottom:20px; align-items:start;">
+                                <!-- DESCRIÇÃO -->
+                                <div>
+                                    <label style="display:block; font-size:0.85rem; font-weight:bold; color:#555; margin-bottom:8px;">💬 Detalhes / Observação</label>
+                                    <textarea name="observacao_etapa" id="editor_etapa" rows="4" placeholder="Descreva os detalhes importantes aqui..." style="width:100%; padding:15px; border:1px solid #e0e0e0; border-radius:8px; font-size:0.95rem; resize:vertical; font-family:inherit; min-height:100px;"></textarea>
+                                </div>
 
-                         <div class="form-group">
-                            <label>Título do Evento / Documento</label>
-                            <input type="text" name="titulo_evento" required placeholder="Ex: Protocolo na Prefeitura, Alvará Emitido..." style="font-size:1.1rem; font-weight:600;">
-                        </div>
+                                <!-- UPLOAD (Estilo Dropzone) -->
+                                <div>
+                                     <label style="display:block; font-size:0.85rem; font-weight:bold; color:#555; margin-bottom:8px;">📎 Documento (Opcional)</label>
+                                     <div style="position:relative; width:100%; height:100px; border:2px dashed #cbd5e0; border-radius:8px; background:#f8f9fa; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; transition:0.2s; cursor:pointer;" onclick="document.getElementById('file_input_hidden').click();" onmouseover="this.style.borderColor='var(--color-primary)'; this.style.background='#eff6ff';" onmouseout="this.style.borderColor='#cbd5e0'; this.style.background='#f8f9fa';">
+                                         <span style="font-size:1.5rem; color:#888;">📂</span>
+                                         <span style="font-size:0.8rem; color:#666; font-weight:600; margin-top:5px;">Clique para Anexar</span>
+                                         <input type="file" id="file_input_hidden" name="arquivo_documento" style="display:none;" onchange="if(this.files.length > 0) { this.parentElement.style.borderColor='#198754'; this.parentElement.style.background='#e8f5e9'; this.parentElement.querySelector('span:last-child').innerText = 'Arquivo Selecionado!'; this.parentElement.querySelector('span:first-child').innerText = '✅'; }">
+                                     </div>
+                                </div>
+                            </div>
 
-                        <!-- UPLOAD FIELD (Always Visible but Optional) -->
-                        <div style="background:#f8f9fa; padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid #eee;">
-                             <label style="display:block; font-weight:bold; color:#666; margin-bottom:5px; font-size:0.9rem;">📎 Anexar Documento (Opcional)</label>
-                             <input type="file" name="arquivo_documento" style="width:100%;">
-                             <small style="display:block; color:#999; margin-top:5px;">Se anexado, o registro será salvo como "Documento".</small>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Descrição Detalhada / Observação</label>
-                            <textarea name="observacao_etapa" id="editor_etapa" rows="3" placeholder="Detalhes técnicos, números de protocolo, etc..."></textarea>
-                        </div>
-                        <button type="submit" name="atualizar_etapa" class="btn-save">Registrar Movimentação</button>
-                    </form>
+                            <button type="submit" name="atualizar_etapa" class="btn-save" style="width:100%; padding:15px; background:linear-gradient(to right, #11998e, #38ef7d); border:none; border-radius:8px; font-size:1rem; font-weight:bold; letter-spacing:0.5px; text-transform:uppercase; box-shadow:0 4px 15px rgba(25, 135, 84, 0.3); transition:transform 0.2s;">
+                                ✅ Registrar Movimentação
+                            </button>
+                        </form>
+                    </div>
+                </div>
                     
                     <!-- Script removed as logic is now backend-driven -->
 
