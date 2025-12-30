@@ -242,6 +242,68 @@ if (isset($_POST['btn_salvar_arquivos'])) {
 
 // 5. Novo Cliente
 if (isset($_POST['novo_cliente'])) {
+// ... existing code ...
+
+// 6. EDITAR CLIENTE (Aba Configurações)
+if (isset($_POST['btn_editar_cliente'])) {
+    $cid = $_POST['cliente_id'];
+    $nome = $_POST['nome'];
+    $cpf = $_POST['cpf_cnpj'];
+    $tel = $_POST['telefone'];
+    $email = $_POST['email'] ?? '';
+    
+    // 1. Atualiza Tabela Base (Login/Acesso)
+    $sql_base = "UPDATE clientes SET nome=?, cpf_cnpj=?, telefone=?, email=?";
+    $params_base = [$nome, $cpf, $tel, $email];
+    
+    // Se digitou senha nova
+    if(!empty($_POST['nova_senha'])) {
+        $sql_base .= ", senha=?";
+        $params_base[] = password_hash($_POST['nova_senha'], PASSWORD_DEFAULT);
+    }
+    
+    $sql_base .= " WHERE id=?";
+    $params_base[] = $cid;
+    
+    // 2. Atualiza Detalhes (Técnicos/Endereço)
+    // Campos da tabela processo_detalhes
+    $end = $_POST['endereco_imovel'] ?? '';
+    $link = $_POST['link_drive'] ?? '';
+    $a_exist = $_POST['area_existente'] ?? null;
+    $a_acresc = $_POST['area_acrescimo'] ?? null;
+    $a_perm = $_POST['area_permeavel'] ?? null;
+    $tx_ocup = $_POST['taxa_ocupacao'] ?? null;
+    $ft_aprov = $_POST['fator_aproveitamento'] ?? null;
+    $geo = $_POST['geo_coords'] ?? null;
+
+    try {
+        $pdo->beginTransaction();
+        
+        // Execute Update Base
+        $pdo->prepare($sql_base)->execute($params_base);
+        
+        // Execute Update Details (Check if exists first)
+        $check = $pdo->prepare("SELECT id FROM processo_detalhes WHERE cliente_id=?");
+        $check->execute([$cid]);
+        
+        if($check->rowCount() > 0) {
+            $sql_det = "UPDATE processo_detalhes SET endereco_imovel=?, link_drive_pasta=?, area_existente=?, area_acrescimo=?, area_permeavel=?, taxa_ocupacao=?, fator_aproveitamento=?, geo_coords=? WHERE cliente_id=?";
+            $pdo->prepare($sql_det)->execute([$end, $link, $a_exist, $a_acresc, $a_perm, $tx_ocup, $ft_aprov, $geo, $cid]);
+        } else {
+             $sql_det = "INSERT INTO processo_detalhes (cliente_id, endereco_imovel, link_drive_pasta, area_existente, area_acrescimo, area_permeavel, taxa_ocupacao, fator_aproveitamento, geo_coords) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+             $pdo->prepare($sql_det)->execute([$cid, $end, $link, $a_exist, $a_acresc, $a_perm, $tx_ocup, $ft_aprov, $geo]);
+        }
+        
+        $pdo->commit();
+        header("Location: ?cliente_id=$cid&tab=configuracoes&msg=client_updated");
+        exit;
+        
+    } catch(PDOException $e) {
+        $pdo->rollBack();
+        $erro = "Erro ao atualizar: " . $e->getMessage();
+    }
+}
+
     $nome_original = $_POST['nome'];
     $cpf = $_POST['cpf_cnpj'];
     $tel = $_POST['telefone'];
