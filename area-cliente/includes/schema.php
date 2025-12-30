@@ -9,8 +9,16 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS processo_pendencias (
     FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
 )");
 
-// Update Schema: Add Separate Residential Address Columns
-$cols_needed = ['res_rua', 'res_numero', 'res_bairro', 'res_complemento', 'res_cidade', 'res_uf'];
+// Update Schema: Add ALL Missing Columns for processo_detalhes
+$cols_needed = [
+    'res_rua', 'res_numero', 'res_bairro', 'res_complemento', 'res_cidade', 'res_uf',
+    'imovel_rua', 'imovel_numero', 'imovel_bairro', 'imovel_complemento', 'imovel_cidade', 'imovel_uf',
+    'imovel_area_lote', 'area_construida',
+    'num_matricula', 'inscricao_imob',
+    'tipo_responsavel', 'resp_tecnico', 'registro_prof', 'num_art_rrt',
+    'tipo_pessoa', 'cpf_cnpj', 'rg_ie', 'estado_civil', 'profissao', 'endereco_residencial', 'contato_email', 'contato_tel'
+];
+
 foreach($cols_needed as $col) {
     try {
         $pdo->query("SELECT $col FROM processo_detalhes LIMIT 1");

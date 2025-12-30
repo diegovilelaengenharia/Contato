@@ -63,7 +63,6 @@ if (isset($_POST['btn_salvar_cadastro'])) {
     $cid = $_POST['cliente_id'];
     $campos = [
         'tipo_pessoa', 'cpf_cnpj', 'rg_ie', 'estado_civil', 'profissao', 'endereco_residencial', 'contato_email', 'contato_tel',
-        'tipo_pessoa', 'cpf_cnpj', 'rg_ie', 'estado_civil', 'profissao', 'endereco_residencial', 'contato_email', 'contato_tel',
         'inscricao_imob', 'num_matricula', 'imovel_rua', 'imovel_numero', 'imovel_bairro', 'imovel_complemento', 'imovel_cidade', 'imovel_uf', 'endereco_imovel', 'imovel_area_lote', 'area_construida', 
         'tipo_responsavel', 'resp_tecnico', 'registro_prof', 'num_art_rrt'
     ];
