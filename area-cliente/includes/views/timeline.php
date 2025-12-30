@@ -1,26 +1,44 @@
 <?php
 // Variáveis do Dashboard
 $total_fases = count($fases_padrao);
-// Fase index já calculado no dashboard ($fase_index)
+// Fase index vem do dashboard
+$fase_atual_idx = $fase_index;
 ?>
-<div class="view-header-timeline">
-    <h2 style="margin:0;">Jornada do Projeto</h2>
-    
-    <!-- Visual Summary -->
-    <div class="tl-summary-box">
-        <div class="tl-sum-text">
-            <span style="font-size:2rem; font-weight:700; color:var(--color-primary);"><?= $fase_index + 1 ?></span>
-            <span style="color:var(--text-muted); font-size:0.9rem;">de <?= $total_fases ?> etapas concluídas</span>
+<div class="view-header-timeline" style="margin-bottom:10px;">
+    <h2>Jornada do Projeto</h2>
+</div>
+
+<!-- STEPPER (COPIED FROM HOME FOR CONSISTENCY) -->
+<div class="stepper-scroll-container fade-in-up" style="margin-bottom:20px;">
+    <div class="stepper-track">
+        <?php foreach($fases_padrao as $idx => $nome_fase): 
+            $status_class = ''; 
+            $icon_content = $idx + 1;
+            
+            if($idx < $fase_atual_idx) {
+                $status_class = 'completed';
+                $icon_content = '✓';
+            } elseif($idx == $fase_atual_idx) {
+                $status_class = 'active';
+            }
+        ?>
+        <div class="step-item <?= $status_class ?>">
+            <div class="step-line"></div>
+            <div class="step-circle"><?= $icon_content ?></div>
+            <div class="step-label"><?= $nome_fase ?></div>
         </div>
-        <div class="tl-mini-dots">
-            <?php for($i=0; $i<$total_fases; $i++): 
-                $active = ($i <= $fase_index) ? 'active' : '';
-            ?>
-                <div class="mini-dot <?= $active ?>"></div>
-            <?php endfor; ?>
-        </div>
+        <?php endforeach; ?>
     </div>
 </div>
+
+<!-- PERCENT BADGE HIGH IMPACT -->
+<div class="fade-in-up" style="text-align:center; margin-bottom:30px;">
+     <div style="display:inline-flex; align-items:center; gap:10px; background:var(--color-primary-light); padding:10px 25px; border-radius:30px; box-shadow:var(--shadow-soft);">
+        <span style="font-weight:800; font-size:1.5rem; color:var(--color-primary-dark);"><?= $progresso_porc ?>%</span>
+        <span style="font-size:0.9rem; color:var(--color-primary-dark); font-weight:600; text-transform:uppercase;">Concluído</span>
+     </div>
+</div>
+
 
 <div class="timeline-container fade-in-up">
     <?php if(count($timeline) > 0): foreach($timeline as $t): 
@@ -55,3 +73,11 @@ $total_fases = count($fases_padrao);
         <div class="empty-state"><p>Nenhuma movimentação.</p></div>
     <?php endif; ?>
 </div>
+
+<script>
+// Auto-scroll stepper
+document.addEventListener('DOMContentLoaded', () => {
+    const active = document.querySelector('.stepper-scroll-container .step-item.active');
+    if(active) active.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'center' });
+});
+</script>

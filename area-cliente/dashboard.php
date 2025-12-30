@@ -17,13 +17,6 @@ $fases_padrao = [
     "Confecção de Documentos", "Avaliação (ITBI/Averbação)", "Processo Finalizado (Documentos Prontos)"
 ];
 
-// Calculate Progress
-$etapa_atual = $data['etapa_atual'] ?? '';
-$fase_index = array_search($etapa_atual, $fases_padrao);
-if($fase_index === false) $fase_index = 0; // Se não achar ou vazio, 0
-// Cálculo percentual: (index + 1) / total * 100
-$progresso_porc = min(100, round((($fase_index + 1) / count($fases_padrao)) * 100));
-
 // --- DATA FETCHING (COMMON) ---
 // 1. Client & Details
 $stmt = $pdo->prepare("SELECT c.*, d.* FROM clientes c LEFT JOIN processo_detalhes d ON c.id = d.cliente_id WHERE c.id = ?");
@@ -34,6 +27,12 @@ if(!$data) { header("Location: logout.php"); exit; }
 $nome_parts = explode(' ', $data['nome']);
 $primeiro_nome = $nome_parts[0];
 $endereco = $data['imovel_rua'] ?? ($data['endereco_imovel'] ?? 'Endereço não cadastrado');
+
+// Calculate Progress (Now safely after data fetch)
+$etapa_atual = $data['etapa_atual'] ?? '';
+$fase_index = array_search($etapa_atual, $fases_padrao);
+if($fase_index === false) $fase_index = 0; 
+$progresso_porc = min(100, round((($fase_index + 1) / count($fases_padrao)) * 100));
 
 // 2. Timeline
 $stmt = $pdo->prepare("SELECT * FROM processo_movimentos WHERE cliente_id = ? ORDER BY data_movimento DESC");
@@ -49,6 +48,11 @@ $pendencias = $stmt->fetchAll();
 $stmt = $pdo->prepare("SELECT * FROM processo_financeiro WHERE cliente_id = ? ORDER BY data_vencimento ASC");
 $stmt->execute([$cliente_id]);
 $financeiro = $stmt->fetchAll();
+
+// 5. Total Docs (For Summary)
+$stmt = $pdo->prepare("SELECT COUNT(*) FROM processo_arquivos WHERE cliente_id = ?");
+$stmt->execute([$cliente_id]);
+$total_docs = $stmt->fetchColumn(); 
 
 // Financial Stats
 $fin_stats = ['total'=>0, 'pago'=>0, 'pendente'=>0];
