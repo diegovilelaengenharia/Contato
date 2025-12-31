@@ -185,6 +185,11 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 <?php endif; ?>
             </button>
             
+            <a href="avisos_gerais.php" class="btn-menu">
+                <span class="material-symbols-rounded">campaign</span>
+                Aviso Global
+            </a>
+            
             <h4 style="font-size:0.75rem; text-transform:uppercase; color:#adb5bd; font-weight:700; margin:15px 0 5px 10px;">Cadastro</h4>
             <!-- Botão Novo Cliente (Neutro) -->
             <a href="?novo=true" class="btn-menu <?= (isset($_GET['novo'])) ? 'active' : '' ?>">
@@ -443,13 +448,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 </div>
             </div>
 
-            <!-- 4. Global Broadcast (Compact) -->
-            <form method="POST" class="broadcast-compact" style="margin-left:auto;">
-                <span class="material-symbols-rounded" style="color:#6610f2; margin-left:8px;">campaign</span>
-                <input type="text" name="mensagem_aviso" class="broadcast-input" placeholder="Escrever aviso global..." value="<?= htmlspecialchars($aviso_atual['mensagem']??'') ?>">
-                <button type="submit" name="btn_salvar_aviso_geral" class="broadcast-btn">Publicar</button>
-            </form>
-
+            <!-- 4. Global Broadcast (REMOVED - Moved to Dedicated Page) -->
         </div>
 
         <!-- Mensagens PHP serão capturadas pelo JS abaixo -->
