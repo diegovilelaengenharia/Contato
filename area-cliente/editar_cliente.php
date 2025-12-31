@@ -440,7 +440,11 @@ if (isset($_POST['btn_salvar_tudo'])) {
                     <!-- Campo Nome movido para Dados do Titular -->
                     <div class="form-group">
                         <label>Usuário (Login)</label>
-                        <input type="text" name="usuario" value="<?= htmlspecialchars($cliente['usuario']) ?>" required style="font-family:monospace; color:#2980b9;">
+                        <input type="text" name="usuario" id="campo_login" value="<?= htmlspecialchars($cliente['usuario']) ?>" required style="font-family:monospace; color:#2980b9;">
+                        <div style="display:flex; gap:10px; margin-top:5px;">
+                            <button type="button" onclick="copiarParaLogin('cpf')" style="font-size:0.75rem; padding:4px 8px; border:1px solid #ccc; background:#fff; border-radius:4px; cursor:pointer;">Usar CPF</button>
+                            <button type="button" onclick="copiarParaLogin('tel')" style="font-size:0.75rem; padding:4px 8px; border:1px solid #ccc; background:#fff; border-radius:4px; cursor:pointer;">Usar Telefone</button>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Senha de Acesso</label>
