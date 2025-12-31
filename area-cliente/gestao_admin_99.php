@@ -70,8 +70,14 @@ try {
     $kpi_pre_pendentes = $stmt_pre ? $stmt_pre->fetchColumn() : 0;
 
     // 3. Financeiro Pendente (Soma Global)
-    $stmt_fin = $pdo->query("SELECT SUM(valor) FROM processo_financeiro WHERE status IN ('pendente', 'atrasado')");
-    $kpi_fin_pendente = $stmt_fin ? $stmt_fin->fetchColumn() : 0;
+    // 3. Financeiro
+    // Atrasados
+    $stmt_fin_atrasados = $pdo->query("SELECT SUM(valor) FROM processo_financeiro WHERE status = 'atrasado'");
+    $kpi_fin_atrasado = $stmt_fin_atrasados ? $stmt_fin_atrasados->fetchColumn() : 0;
+    
+    // Futuros/Pendentes
+    $stmt_fin_pendentes = $pdo->query("SELECT SUM(valor) FROM processo_financeiro WHERE status = 'pendente'");
+    $kpi_fin_pendente = $stmt_fin_pendentes ? $stmt_fin_pendentes->fetchColumn() : 0;
     
     // 4. Processos Ativos (Não finalizados)
     $stmt_proc = $pdo->query("SELECT COUNT(*) FROM processo_detalhes WHERE etapa_atual != 'Processo Finalizado (Documentos Prontos)' AND etapa_atual IS NOT NULL AND etapa_atual != ''");
@@ -1068,35 +1074,84 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 </script>
 
 
-            <!-- KPI Cards -->
-            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:20px; margin-bottom:40px;">
+            <!-- KPI Cards Compactos -->
+            <style>
+                .kpi-grid-compact {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                    gap: 15px;
+                    margin-bottom: 30px;
+                }
+                .kpi-card-compact {
+                    background: var(--color-surface); 
+                    border: 1px solid var(--color-border);
+                    border-radius: 12px;
+                    padding: 15px;
+                    display: flex;
+                    align-items: center;
+                    gap: 15px;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+                    transition: transform 0.2s;
+                }
+                .kpi-card-compact:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+                .kpi-icon-box {
+                    width: 48px; height: 48px;
+                    border-radius: 10px;
+                    display: flex; align-items: center; justify-content: center;
+                    font-size: 1.5rem;
+                    flex-shrink: 0;
+                }
+                .kpi-content div:first-child { font-size: 1.4rem; font-weight: 800; line-height: 1; margin-bottom: 2px; }
+                .kpi-content div:last-child { font-size: 0.85rem; color: var(--color-text-subtle); font-weight: 600; line-height: 1.2; }
+            </style>
+
+            <div class="kpi-grid-compact">
+                <!-- 1. Clientes -->
+                <div class="kpi-card-compact">
+                    <div class="kpi-icon-box" style="background:#e3f2fd; color:#2196f3;">👥</div>
+                    <div class="kpi-content">
+                        <div style="color:#2196f3;"><?= $kpi_total_clientes ?></div>
+                        <div>Clientes Ativos</div>
+                    </div>
+                </div>
+
+                <!-- 2. Obras -->
+                <div class="kpi-card-compact">
+                    <div class="kpi-icon-box" style="background:#fff3cd; color:#ffc107;">🏗️</div>
+                    <div class="kpi-content">
+                        <div style="color:#ffc107;"><?= $kpi_proc_ativos ?></div>
+                        <div>Obras/Processos</div>
+                    </div>
+                </div>
+
+                <!-- 3. Solicitações -->
+                <div class="kpi-card-compact" style="cursor: pointer;" onclick="if(<?= $kpi_pre_pendentes ?> > 0) window.location.href='?importar=true'">
+                    <div class="kpi-icon-box" style="background:#f8d7da; color:#dc3545;">📥</div>
+                    <div class="kpi-content">
+                        <div style="color:#dc3545;"><?= $kpi_pre_pendentes ?></div>
+                        <div>Novos Pedidos</div>
+                    </div>
+                </div>
+
+                <!-- 4. Recebíveis (Futuro) -->
+                <div class="kpi-card-compact">
+                    <div class="kpi-icon-box" style="background:#d1e7dd; color:#198754;">💰</div>
+                    <div class="kpi-content">
+                        <div style="color:#198754; font-size:1.1rem;"><?= number_format($kpi_fin_pendente, 2, ',', '.') ?></div>
+                        <div>A Receber (Futuro)</div>
+                    </div>
+                </div>
                 
-                <div class="form-card" style="padding:20px; text-align:center; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; border-left:5px solid #2196f3;">
-                    <div style="font-size:2.5rem; margin-bottom:10px;">👥</div>
-                    <div style="font-size:2rem; font-weight:800; color:#2196f3;"><?= $kpi_total_clientes ?></div>
-                    <div style="color:#666; font-weight:600;">Clientes Cadastrados</div>
+                <!-- 5. Atrasados (Alerta) - Só aparece se tiver -->
+                <?php if($kpi_fin_atrasado > 0): ?>
+                <div class="kpi-card-compact" style="border-color:#dc3545;">
+                    <div class="kpi-icon-box" style="background:#dc3545; color:white;">⚠️</div>
+                    <div class="kpi-content">
+                        <div style="color:#dc3545; font-size:1.1rem;"><?= number_format($kpi_fin_atrasado, 2, ',', '.') ?></div>
+                        <div>EM ATRASO</div>
+                    </div>
                 </div>
-
-                <div class="form-card" style="padding:20px; text-align:center; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; border-left:5px solid #efb524;">
-                    <div style="font-size:2.5rem; margin-bottom:10px;">🏗️</div>
-                    <div style="font-size:2rem; font-weight:800; color:#efb524;"><?= $kpi_proc_ativos ?></div>
-                    <div style="color:#666; font-weight:600;">Obras em Andamento</div>
-                </div>
-
-                <div class="form-card" style="padding:20px; text-align:center; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; border-left:5px solid #dc3545;">
-                    <div style="font-size:2.5rem; margin-bottom:10px;">📥</div>
-                    <div style="font-size:2rem; font-weight:800; color:#dc3545;"><?= $kpi_pre_pendentes ?></div>
-                    <div style="color:#666; font-weight:600;">Solicitações Web</div>
-                    <?php if($kpi_pre_pendentes > 0): ?>
-                        <a href="?importar=true" class="btn-save btn-danger" style="margin-top:10px; padding:5px 15px; font-size:0.8rem; width:auto;">Ver Pendentes</a>
-                    <?php endif; ?>
-                </div>
-
-                <div class="form-card" style="padding:20px; text-align:center; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; border-left:5px solid #198754;">
-                    <div style="font-size:2.5rem; margin-bottom:10px;">💰</div>
-                    <div style="font-size:2rem; font-weight:800; color:#198754;">R$ <?= number_format($kpi_fin_pendente, 2, ',', '.') ?></div>
-                    <div style="color:#666; font-weight:600;">Recebíveis Pendentes</div>
-                </div>
+                <?php endif; ?>
 
             </div>
 
