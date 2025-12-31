@@ -905,6 +905,9 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 ?>
 
 
+
+            <?php endif; ?>
+
         <?php else: ?>
             
             <!-- DASHBOARD GERAL (Visão do Gestor) -->
