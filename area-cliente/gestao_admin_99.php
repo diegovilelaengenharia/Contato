@@ -49,14 +49,7 @@ $taxas_padrao = require 'config/taxas.php';
 // --- Processamento (POST/GET) ---
 require 'includes/processamento.php';
 
-// New processing block for 'update_processo_header' including new fields
-// This is already in 'processamento.php' but we need to update it there too.
-// I will update processamento.php separately.
-// Wait, looking at current File 2 (processamento.php), I need to update it to include the new fields in the UPDATE statement.
-
-
-// 9. Exportar Relatório (Exaustivo e Profissional)
-// 9. Exportar Relatório (Exaustivo e Profissional)
+// Exportar Relatório (Exaustivo e Profissional)
 require 'includes/exportacao.php';
 
 // --- Consultas Iniciais e Dashboard Data ---
@@ -305,9 +298,6 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             </div>
 
         <?php elseif($cliente_ativo): ?>
-            <!-- Header Redundante Removido -->
-            <div style="margin-bottom: 20px;"></div>
-            
             <?php
             // Lógica de Upload de Avatar
             if(isset($_FILES['avatar_upload']) && $_FILES['avatar_upload']['error'] == 0) {
@@ -353,12 +343,6 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 </div>
                 
                 <!-- Form invisível para upload -->
-                <form method="POST" enctype="multipart/form-data" id="form_avatar" style="display:none;">
-                    <input type="file" name="avatar_upload" id="avatar_input" accept="image/*" onchange="document.getElementById('form_avatar').submit();">
-                    <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
-                </form>
-
-                    <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
                 </form>
 
                 <div class="client-summary-card">

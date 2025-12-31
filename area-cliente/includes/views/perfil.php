@@ -1,64 +1,8 @@
-<div class="view-header-simple">
-    <h2>Meu Perfil</h2>
-    <p>Seus dados cadastrais.</p>
-</div>
-
-<!-- ASSISTANT TIP -->
-<div class="assistant-tip fade-in-up">
-    <div class="at-icon">👤</div>
-    <div class="at-content">
-        <strong>Seus Dados</strong>
-        <p>Estes são os dados que temos no sistema. Se precisar alterar algo, entre em contato com nossa equipe pelo WhatsApp.</p>
-    </div>
-</div>
-
-<div class="profile-container fade-in-up">
-    <!-- AVATAR CARD -->
-    <div class="profile-card center-text">
-        <div class="big-avatar">
-            <?php if(!empty($data['foto_perfil']) && file_exists(__DIR__ . '/../../' . $data['foto_perfil'])): ?>
-                <img src="<?= htmlspecialchars($data['foto_perfil']) ?>" alt="Foto">
-            <?php else: ?>
-                <span><?= strtoupper(substr($primeiro_nome, 0, 1)) ?></span>
-            <?php endif; ?>
-        </div>
-        <h2><?= htmlspecialchars($data['nome']) ?></h2>
-        <p class="role-badge">Cliente VIP</p>
-    </div>
-
-    <!-- DETAILS -->
-    <div class="data-group">
-        <label>CPF / CNPJ</label>
-        <div class="data-val"><?= htmlspecialchars($data['cpf_cnpj'] ?? '--') ?></div>
-    </div>
-    
-    <div class="data-group">
-        <label>Contato</label>
-        <div class="data-val"><?= htmlspecialchars($data['telefone'] ?? '--') ?></div>
-        <div class="data-val"><?= htmlspecialchars($data['email'] ?? '--') ?></div>
-    </div>
-
-    <div class="data-group">
-        <label>Endereço da Obra</label>
-        <div class="data-val"><?= htmlspecialchars($endereco) ?></div>
-    </div>
-
-    <!-- ACTIONS -->
-    <div class="profile-actions">
-        <button class="btn-block" onclick="toggleTheme()">
-            <span class="material-symbols-rounded">dark_mode</span>
-            Alternar Tema (Claro/Escuro)
-        </button>
-        
-        <a href="logout.php" class="btn-block btn-danger">
-            <span class="material-symbols-rounded">logout</span>
-            Sair da Conta
-        </a>
-    </div>
-    
-    <!-- FOOTER INFO -->
-    <div class="app-footer-info">
-        <p>Vilela Engenharia App v2.0</p>
-        <p>Desenvolvido para você.</p>
-    </div>
+<?php
+// MAINTENANCE MODE
+?>
+<div style="height: 70vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #666;">
+    <span class="material-symbols-rounded" style="font-size: 4rem; color: #f39c12; margin-bottom: 20px;">engineering</span>
+    <h2 style="margin: 0; font-size: 1.5rem; color: #333;">Página em Manutenção</h2>
+    <p style="margin-top: 10px;">Estamos redesenhando esta experiência para você.</p>
 </div>
