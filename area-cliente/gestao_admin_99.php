@@ -1,5 +1,8 @@
 <?php
 ob_start();
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 // Force Redeploy
 session_start();
 try {
@@ -1493,6 +1496,7 @@ function showSuccessModal(title, text) {
     document.getElementById('successModal').style.display = 'flex';
 }
 
+function closeSuccessModal() {
     document.getElementById('successModal').style.display = 'none';
 }
 
