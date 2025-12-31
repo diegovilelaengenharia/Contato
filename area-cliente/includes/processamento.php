@@ -242,7 +242,7 @@ if (isset($_POST['btn_salvar_arquivos'])) {
 
 // 5. Novo Cliente
 // 5. Novo Cliente
-if (isset($_POST['novo_cliente'])) {
+if (false && isset($_POST['novo_cliente'])) { // Disabled (Legacy/Duplicate)
     $nome = $_POST['nome'];
     $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT);
     $cpf = $_POST['cpf_cnpj'] ?? '';
@@ -349,6 +349,8 @@ if (isset($_POST['btn_editar_cliente'])) {
     }
 }
 
+// 5. Novo Cliente (Logica Nova)
+if (isset($_POST['novo_cliente'])) {
     $nome_original = $_POST['nome'];
     $cpf = $_POST['cpf_cnpj'];
     $tel = $_POST['telefone'];
