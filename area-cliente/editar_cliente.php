@@ -64,6 +64,38 @@ if (isset($_POST['btn_salvar_tudo'])) {
         // DEBUG: Gravar POST em arquivo para análise
         // file_put_contents('debug_post.log', print_r($_POST, true)); 
         
+        // --- UPLOAD LOGIC ---
+        // 1. Avatar (Profile)
+        if(isset($_FILES['avatar_upload']) && $_FILES['avatar_upload']['error'] == 0) {
+            $ext = strtolower(pathinfo($_FILES['avatar_upload']['name'], PATHINFO_EXTENSION));
+            if(in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+                $new_name = 'avatar_' . $cliente_id . '.' . $ext;
+                $target = 'uploads/avatars/' . $new_name;
+                if(!is_dir('uploads/avatars/')) mkdir('uploads/avatars/', 0755, true);
+                if(move_uploaded_file($_FILES['avatar_upload']['tmp_name'], $target)) {
+                    // Update DB column 'foto_perfil' if it exists, or rely on naming convention
+                    // Ideally we should update a column, but for now we follow existing convention or add if able.
+                    // Assuming column might not exist, we just save file. 
+                    // If you want to save to DB:
+                    // $pdo->prepare("UPDATE clientes SET foto_perfil=? WHERE id=?")->execute([$target, $cliente_id]);
+                }
+            }
+        }
+
+        // 2. Work Cover (Foto Capa Obra)
+        if(isset($_FILES['foto_capa_obra']) && $_FILES['foto_capa_obra']['error'] == 0) {
+            $ext = strtolower(pathinfo($_FILES['foto_capa_obra']['name'], PATHINFO_EXTENSION));
+            if(in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+                $new_name = 'capa_obra_' . $cliente_id . '_' . time() . '.' . $ext;
+                $target = 'uploads/obras/' . $new_name;
+                if(!is_dir('uploads/obras/')) mkdir('uploads/obras/', 0755, true);
+                if(move_uploaded_file($_FILES['foto_capa_obra']['tmp_name'], $target)) {
+                    $pdo->prepare("UPDATE processo_detalhes SET foto_capa_obra=? WHERE cliente_id=?")->execute([$target, $cliente_id]);
+                }
+            }
+        }
+
+        
         // DDL causes implicit commit in MySQL, so run it before transaction
         $pdo->exec("CREATE TABLE IF NOT EXISTS processo_campos_extras (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -89,7 +121,7 @@ if (isset($_POST['btn_salvar_tudo'])) {
         // 2. Atualizar Detalhes
         if ($detalhes) {
             $sqlDet = "UPDATE processo_detalhes SET 
-                tipo_pessoa=?, cpf_cnpj=?, rg_ie=?, contato_email=?, contato_tel=?, 
+                tipo_pessoa=?, cpf_cnpj=?, rg_ie=?, nacionalidade=?, contato_email=?, contato_tel=?, 
                 res_rua=?, res_numero=?, res_bairro=?, res_complemento=?, res_cidade=?, res_uf=?,
                 profissao=?, estado_civil=?, imovel_rua=?, imovel_numero=?,
                 imovel_bairro=?, imovel_complemento=?, imovel_cidade=?, imovel_uf=?, inscricao_imob=?,
@@ -98,7 +130,7 @@ if (isset($_POST['btn_salvar_tudo'])) {
                 WHERE cliente_id=?";
         } else {
             $sqlDet = "INSERT INTO processo_detalhes (
-                tipo_pessoa, cpf_cnpj, rg_ie, contato_email, contato_tel, 
+                tipo_pessoa, cpf_cnpj, rg_ie, nacionalidade, contato_email, contato_tel, 
                 res_rua, res_numero, res_bairro, res_complemento, res_cidade, res_uf,
                 profissao, estado_civil, imovel_rua, imovel_numero,
                 imovel_bairro, imovel_complemento, imovel_cidade, imovel_uf, inscricao_imob,
@@ -108,7 +140,7 @@ if (isset($_POST['btn_salvar_tudo'])) {
         
         $stmtDetUp = $pdo->prepare($sqlDet);
         $stmtDetUp->execute([
-            $_POST['tipo_pessoa'], $_POST['cpf_cnpj'], $_POST['rg_ie'], $_POST['contato_email'], $_POST['contato_tel'],
+            $_POST['tipo_pessoa'], $_POST['cpf_cnpj'], $_POST['rg_ie'], $_POST['nacionalidade']??'', $_POST['contato_email'], $_POST['contato_tel'],
             $_POST['res_rua'], $_POST['res_numero'], $_POST['res_bairro'], $_POST['res_complemento'], $_POST['res_cidade'], $_POST['res_uf'],
             $_POST['profissao'], $_POST['estado_civil'], $_POST['imovel_rua'], $_POST['imovel_numero'],
             $_POST['imovel_bairro'], $_POST['imovel_complemento'], $_POST['imovel_cidade'], $_POST['imovel_uf'], $_POST['inscricao_imob'],
@@ -428,6 +460,17 @@ if (isset($_POST['btn_salvar_tudo'])) {
                         <label>ID do Cliente</label>
                         <input type="text" value="<?= str_pad($cliente['id'], 3, '0', STR_PAD_LEFT) ?>" readonly style="background:#e9ecef; color:#555; font-weight:bold; width:80px; text-align:center;">
                     </div>
+                    
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label>📸 Foto de Perfil</label>
+                         <div style="display:flex; gap:10px; align-items:center;">
+                            <input type="file" name="avatar_upload" accept="image/*" style="padding:10px; border:1px solid #ddd; border-radius:8px; width:100%;">
+                            <?php 
+                                $avatar = glob("uploads/avatars/avatar_{$cliente['id']}.*");
+                                if(!empty($avatar)) echo "<img src='{$avatar[0]}?".time()."' style='width:40px; height:40px; border-radius:50%; object-fit:cover; border:1px solid #ddd;'>";
+                            ?>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label>Natureza Jurídica</label>
                         <select name="tipo_pessoa">
@@ -464,6 +507,10 @@ if (isset($_POST['btn_salvar_tudo'])) {
                 </div>
 
                 <div class="grid" style="margin-top:25px;">
+                    <div class="form-group">
+                        <label>Nacionalidade</label>
+                        <input type="text" name="nacionalidade" value="<?= htmlspecialchars($detalhes['nacionalidade']??'') ?>" placeholder="Ex: Brasileira">
+                    </div>
                     <div class="form-group">
                         <label>Profissão</label>
                         <input type="text" name="profissao" value="<?= htmlspecialchars($detalhes['profissao']??'') ?>">
@@ -516,6 +563,19 @@ if (isset($_POST['btn_salvar_tudo'])) {
                 <h2>Dados do Imóvel (Obra)</h2>
             </div>
             <div class="section-body">
+                <!-- Foto Obra -->
+                <div class="form-group" style="margin-bottom:20px;">
+                    <label>🖼️ Foto da Capa (Obra/Fachada)</label>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <input type="file" name="foto_capa_obra" accept="image/*" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; background:#f9f9f9;">
+                        <?php if(!empty($detalhes['foto_capa_obra'])): ?>
+                            <a href="<?= $detalhes['foto_capa_obra'] ?>" target="_blank">
+                                <img src="<?= $detalhes['foto_capa_obra'] ?>" style="height:50px; border-radius:4px; border:1px solid #ddd;">
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
                 <div class="grid" style="grid-template-columns: 3fr 1fr;">
                     <div class="form-group">
                         <label>Logradouro (Rua/Av)</label>
@@ -644,55 +704,58 @@ if (isset($_POST['btn_salvar_tudo'])) {
 
     <script>
         // --- MÁSCARAS E VALIDAÇÃO ---
+        // --- MÁSCARAS E VALIDAÇÃO ---
         document.addEventListener('DOMContentLoaded', function() {
-            const phoneInput = document.querySelector('input[name="contato_tel"]');
-            const cpfCnpjInput = document.querySelector('input[name="cpf_cnpj"]');
             
-            // Mask Phone: (XX) XXXXX-XXXX
-            if(phoneInput) {
-                phoneInput.addEventListener('input', function (e) {
-                    let x = e.target.value.replace(/\D/g, '').match(/(\d{0,2})(\d{0,5})(\d{0,4})/);
-                    e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
-                });
-                
-                phoneInput.addEventListener('blur', function(e) {
-                    const val = e.target.value.replace(/\D/g, '');
-                    if(val.length > 0 && val.length < 10) {
-                        alert('⚠️ Número de telefone parece incompleto. Verifique se incluiu o DDD.');
-                        e.target.style.borderColor = '#dc3545';
-                    } else {
-                        e.target.style.borderColor = 'var(--border-color)';
-                    }
-                });
+            // Helpers
+            const maskPhone = (v) => {
+                v = v.replace(/\D/g, "");
+                v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
+                v = v.replace(/(\d)(\d{4})$/, "$1-$2");
+                return v;
             }
 
-            // Mask CPF/CNPJ
-            if(cpfCnpjInput) {
-                cpfCnpjInput.addEventListener('input', function(e) {
-                    let v = e.target.value.replace(/\D/g, '');
-                    if (v.length > 14) v = v.slice(0, 14); // Limit to CNPJ size
+            const maskCpfCnpj = (v) => {
+                v = v.replace(/\D/g, "");
+                if (v.length <= 11) {
+                    v = v.replace(/(\d{3})(\d)/, "$1.$2");
+                    v = v.replace(/(\d{3})(\d)/, "$1.$2");
+                    v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+                } else {
+                    v = v.replace(/^(\d{2})(\d)/, "$1.$2");
+                    v = v.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
+                    v = v.replace(/\.(\d{3})(\d)/, ".$1/$2");
+                    v = v.replace(/(\d{4})(\d)/, "$1-$2");
+                }
+                return v;
+            }
 
-                    if (v.length <= 11) { // CPF Mask
-                        v = v.replace(/(\d{3})(\d)/, '$1.$2');
-                        v = v.replace(/(\d{3})(\d)/, '$1.$2');
-                        v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-                    } else { // CNPJ Mask
-                        v = v.replace(/^(\d{2})(\d)/, '$1.$2');
-                        v = v.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
-                        v = v.replace(/\.(\d{3})(\d)/, '.$1/$2');
-                        v = v.replace(/(\d{4})(\d)/, '$1-$2');
-                    }
-                    e.target.value = v;
-                });
+            const maskCep = (v) => {
+                v = v.replace(/\D/g, "");
+                v = v.replace(/^(\d{5})(\d)/, "$1-$2");
+                return v;
+            }
 
-                cpfCnpjInput.addEventListener('blur', function(e) {
-                    const val = e.target.value.replace(/\D/g, '');
-                    if(val.length > 0 && val.length !== 11 && val.length !== 14) {
-                        alert('⚠️ CPF deve ter 11 dígitos ou CNPJ deve ter 14 dígitos.');
-                        e.target.style.borderColor = '#dc3545';
-                    } else {
-                        e.target.style.borderColor = 'var(--border-color)';
-                    }
+            const maskArea = (v) => {
+                // Allows 1234.56 or 1234,56
+                return v.replace(/[^0-9.,]/g, ''); 
+            }
+
+            // Apply Masks
+            const inputs = {
+                'contato_tel': { mask: maskPhone, limit: 15 },
+                'telefone': { mask: maskPhone, limit: 15 },
+                'cpf_cnpj': { mask: maskCpfCnpj, limit: 18 },
+                // 'cep': { mask: maskCep, limit: 9 }, // Se houver campo CEP
+                'imovel_area_lote': { mask: maskArea, limit: 10 },
+                'area_construida': { mask: maskArea, limit: 10 }
+            };
+
+            for (const [name, config] of Object.entries(inputs)) {
+                document.querySelectorAll(`input[name="${name}"]`).forEach(input => {
+                    input.addEventListener('input', (e) => {
+                        e.target.value = config.mask(e.target.value);
+                    });
                 });
             }
         });

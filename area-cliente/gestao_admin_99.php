@@ -299,7 +299,35 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                 <label>Telefone <span id="req_tel" style="color:red"></span></label>
                                 <input type="text" name="telefone" placeholder="(XX) XXXXX-XXXX">
                             </div>
+                            <div class="form-group" style="grid-column: span 2;">
+                                <label>Email (Opcional)</label>
+                                <input type="email" name="email" placeholder="cliente@email.com">
+                            </div>
                         </div>
+                        
+                        <script>
+                        // Masks for Pre-Cadastro
+                        document.querySelector('input[name="cpf_cnpj"]').addEventListener('input', e => {
+                            let v = e.target.value.replace(/\D/g, "");
+                            if (v.length <= 11) {
+                                v = v.replace(/(\d{3})(\d)/, "$1.$2");
+                                v = v.replace(/(\d{3})(\d)/, "$1.$2");
+                                v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+                            } else {
+                                v = v.replace(/^(\d{2})(\d)/, "$1.$2");
+                                v = v.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
+                                v = v.replace(/\.(\d{3})(\d)/, ".$1/$2");
+                                v = v.replace(/(\d{4})(\d)/, "$1-$2");
+                            }
+                            e.target.value = v;
+                        });
+                        document.querySelector('input[name="telefone"]').addEventListener('input', e => {
+                            let v = e.target.value.replace(/\D/g, "");
+                            v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
+                            v = v.replace(/(\d)(\d{4})$/, "$1-$2");
+                            e.target.value = v;
+                        });
+                        </script>
                     </div>
 
                     <button type="submit" name="novo_cliente" class="btn-save">Criar Cliente e Editar ➡️</button>
