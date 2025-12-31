@@ -1,6 +1,125 @@
 <?php
-// Fallbacks
+// Dados Iniciais e Fallbacks
 $primeiro_nome = $primeiro_nome ?? 'Cliente';
+$etapa_atual = $detalhes['etapa_atual'] ?? 'Início';
+$fase_index_atual = array_search($etapa_atual, $fases_padrao);
+if($fase_index_atual === false) $fase_index_atual = 0;
+$progresso_pct = round((($fase_index_atual + 1) / count($fases_padrao)) * 100);
+
+// Cores e Icones por Status (Dinâmico)
+$status_color = 'var(--color-primary)';
+$status_icon = 'engineering';
+if($progresso_pct >= 100) { $status_color = '#198754'; $status_icon = 'check_circle'; }
+?>
+
+<div class="fade-in-up" style="padding-bottom: 80px;">
+    
+    <!-- HEADER SIMPLES -->
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <div>
+            <span style="font-size:0.9rem; color:#666;">Bem-vindo(a),</span>
+            <h1 style="margin:0; font-size:1.5rem; color:#333;"><?= htmlspecialchars($primeiro_nome) ?></h1>
+        </div>
+        <div style="text-align:right;">
+             <span style="display:block; font-size:0.75rem; color:#999;">Processo ID</span>
+             <strong style="color:var(--color-primary);">#<?= str_pad($cliente_id, 3, '0', STR_PAD_LEFT) ?></strong>
+        </div>
+    </div>
+
+    <!-- MAIN STATUS CARD (HERO) -->
+    <div style="background: linear-gradient(135deg, <?= $status_color ?> 0%, #2980b9 100%); padding:25px; border-radius:16px; color:white; margin-bottom:25px; box-shadow:0 10px 25px rgba(0,0,0,0.15); position:relative; overflow:hidden;">
+        <!-- Decorator Circle -->
+        <div style="position:absolute; top:-20px; right:-20px; width:100px; height:100px; background:rgba(255,255,255,0.1); border-radius:50%;"></div>
+        
+        <div style="display:flex; align-items:center; gap:15px; margin-bottom:15px;">
+            <div style="background:rgba(255,255,255,0.2); padding:10px; border-radius:50%; display:flex;">
+                <span class="material-symbols-rounded" style="font-size:1.8rem;"><?= $status_icon ?></span>
+            </div>
+            <div>
+                <span style="display:block; font-size:0.85rem; opacity:0.9;">Fase Atual</span>
+                <strong style="font-size:1.2rem;"><?= $etapa_atual ?></strong>
+            </div>
+        </div>
+
+        <div style="margin-top:10px;">
+            <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:5px;">
+                <span>Progresso Geral</span>
+                <strong><?= $progresso_pct ?>%</strong>
+            </div>
+            <div style="background:rgba(0,0,0,0.2); height:6px; border-radius:3px; overflow:hidden;">
+                <div style="width:<?= $progresso_pct ?>%; height:100%; background:white; border-radius:3px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD GRID (QUICK ACCESS) -->
+    <h3 style="margin-bottom:15px; font-size:1.1rem; color:#444;">Acesso Rápido</h3>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:25px;">
+        
+        <!-- Timeline -->
+        <div onclick="window.location.href='?view=timeline'" style="background:white; padding:15px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.05); cursor:pointer; text-align:center;">
+            <span class="material-symbols-rounded" style="font-size:2rem; color:var(--color-primary); margin-bottom:5px;">history_edu</span>
+            <strong style="display:block; color:#333; font-size:0.95rem;">Linha do Tempo</strong>
+            <span style="font-size:0.75rem; color:#777;">Ver Histórico</span>
+        </div>
+
+        <!-- Documentos -->
+        <div onclick="window.location.href='?view=documents'" style="background:white; padding:15px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.05); cursor:pointer; text-align:center;">
+             <span class="material-symbols-rounded" style="font-size:2rem; color:#e67e22; margin-bottom:5px;">folder_open</span>
+             <strong style="display:block; color:#333; font-size:0.95rem;">Documentos</strong>
+             <span style="font-size:0.75rem; color:#777;">Acessar Arquivos</span>
+        </div>
+
+        <!-- Conhecimento -->
+        <div onclick="window.location.href='?view=conhecimento'" style="background:white; padding:15px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.05); cursor:pointer; text-align:center;">
+             <span class="material-symbols-rounded" style="font-size:2rem; color:#2c3e50; margin-bottom:5px;">school</span>
+             <strong style="display:block; color:#333; font-size:0.95rem;">Conhecimento</strong>
+             <span style="font-size:0.75rem; color:#777;">Glossário & Leis</span>
+        </div>
+
+        <!-- Contato/Suporte -->
+        <div onclick="window.open('https://wa.me/5537998399321', '_blank')" style="background:white; padding:15px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.05); cursor:pointer; text-align:center;">
+             <span class="material-symbols-rounded" style="font-size:2rem; color:#25D366; margin-bottom:5px;">support_agent</span>
+             <strong style="display:block; color:#333; font-size:0.95rem;">WhatsApp</strong>
+             <span style="font-size:0.75rem; color:#777;">Falar com Eng.</span>
+        </div>
+    </div>
+
+    <!-- FICHA TÉCNICA RESUMIDA -->
+    <div style="background:white; border-radius:16px; padding:20px; box-shadow:0 4px 15px rgba(0,0,0,0.03);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <h3 style="margin:0; font-size:1.1rem; color:#333;">Ficha do Imóvel</h3>
+            <span class="material-symbols-rounded" style="color:#999; font-size:1.2rem;">info</span>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+            <div style="background:#f8f9fa; padding:10px; border-radius:8px;">
+                <span style="display:block; font-size:0.7rem; color:#888; text-transform:uppercase; letter-spacing:0.5px;">Área Total</span>
+                <strong style="color:#2c3e50;"><?= htmlspecialchars($data['area_total_final'] ?? '--') ?> m²</strong>
+            </div>
+            <div style="background:#f8f9fa; padding:10px; border-radius:8px;">
+                 <span style="display:block; font-size:0.7rem; color:#888; text-transform:uppercase; letter-spacing:0.5px;">Área Const.</span>
+                 <strong style="color:#2c3e50;"><?= htmlspecialchars($data['area_existente'] ?? '--') ?> m²</strong>
+            </div>
+            <div style="background:#f8f9fa; padding:10px; border-radius:8px;">
+                 <span style="display:block; font-size:0.7rem; color:#888; text-transform:uppercase; letter-spacing:0.5px;">Taxa Ocup.</span>
+                 <strong style="color:#2c3e50;"><?= htmlspecialchars($data['taxa_ocupacao'] ?? '--') ?>%</strong>
+            </div>
+            <div style="background:#f8f9fa; padding:10px; border-radius:8px;">
+                 <span style="display:block; font-size:0.7rem; color:#888; text-transform:uppercase; letter-spacing:0.5px;">Zoneamento</span>
+                 <strong style="color:#2c3e50;">Z-resid</strong>
+            </div>
+        </div>
+        
+        <div style="margin-top:20px; border-top:1px dashed #eee; padding-top:15px; text-align:center;">
+             <p style="margin:0; font-size:0.85rem; color:#666;">
+                <?= htmlspecialchars($data['processo_objeto'] ?? 'Regularização de Imóvel') ?>
+             </p>
+             <small style="color:#aaa; font-size:0.7rem; display:block; margin-top:5px;"><?= htmlspecialchars($endereco) ?></small>
+        </div>
+    </div>
+
+</div>
 $etapa_atual = $etapa_atual ?? 'Início';
 $fases_total = count($fases_padrao);
 $fase_atual_idx = $fase_index; // Vem do dashboard.php
