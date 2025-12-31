@@ -141,8 +141,8 @@ if (isset($_POST['btn_salvar_tudo'])) {
         $pdo->commit();
         echo "<script>
             alert('✅ Alterações salvas com sucesso!');
-            window.close(); // Tenta fechar
-            // Fallback se não fechar
+            // window.close(); // Desabilitado por solicitação
+            // Recarrega a página para mostrar dados atualizados
             window.location.href = 'editar_cliente.php?id=" . $cliente_id . "&success=1';
         </script>";
         
