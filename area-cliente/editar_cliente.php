@@ -140,7 +140,7 @@ if (isset($_POST['btn_salvar_tudo'])) {
         
         $stmtDetUp = $pdo->prepare($sqlDet);
         $stmtDetUp->execute([
-            $_POST['tipo_pessoa'], $_POST['cpf_cnpj'], $_POST['rg_ie'], $_POST['nacionalidade']??'', $_POST['contato_email'], $_POST['contato_tel'],
+            $_POST['tipo_pessoa'], $_POST['cpf_cnpj'], $_POST['rg_ie'], $_POST['nacionalidade']??'', $_POST['data_nascimento'] ?: null, $_POST['contato_email'], $_POST['contato_tel'],
             $_POST['res_rua'], $_POST['res_numero'], $_POST['res_bairro'], $_POST['res_complemento'], $_POST['res_cidade'], $_POST['res_uf'],
             $_POST['profissao'], $_POST['estado_civil'], $_POST['imovel_rua'], $_POST['imovel_numero'],
             $_POST['imovel_bairro'], $_POST['imovel_complemento'], $_POST['imovel_cidade'], $_POST['imovel_uf'], $_POST['inscricao_imob'],
@@ -492,6 +492,10 @@ if (isset($_POST['btn_salvar_tudo'])) {
                     <div class="form-group">
                         <label>CPF / CNPJ</label>
                         <input type="text" name="cpf_cnpj" value="<?= htmlspecialchars($detalhes['cpf_cnpj']??'') ?>">
+                    </div>
+                    <div class="form-group">
+                        <label>Data de Nascimento</label>
+                        <input type="date" name="data_nascimento" value="<?= htmlspecialchars($detalhes['data_nascimento']??'') ?>">
                     </div>
                     <div class="form-group">
                         <label>RG / Inscrição Estadual</label>
