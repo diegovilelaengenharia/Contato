@@ -924,15 +924,15 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         <div class="form-grid">
                             <div class="form-group">
                                 <label>CPF / CNPJ</label>
-                                <input type="text" name="cpf_cnpj" value="<?= htmlspecialchars($cliente_ativo['cpf_cnpj']) ?>">
+                                <input type="text" name="cpf_cnpj" value="<?= htmlspecialchars($detalhes['cpf_cnpj'] ?? '') ?>">
                             </div>
                             <div class="form-group">
                                 <label>Telefone</label>
-                                <input type="text" name="telefone" value="<?= htmlspecialchars($cliente_ativo['telefone']) ?>">
+                                <input type="text" name="telefone" value="<?= htmlspecialchars($detalhes['contato_tel'] ?? '') ?>">
                             </div>
                             <div class="form-group">
                                 <label>Email</label>
-                                <input type="text" name="email" value="<?= htmlspecialchars($cliente_ativo['email']) ?>">
+                                <input type="text" name="email" value="<?= htmlspecialchars($detalhes['contato_email'] ?? '') ?>">
                             </div>
                         </div>
                         
