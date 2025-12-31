@@ -512,33 +512,51 @@ if (isset($_GET['delete_cliente'])) {
 }
 
 // 8. Importar Pré-Cadastro (Aprovar)
-if (isset($_GET['aprovar_cadastro'])) {
-    $pid = $_GET['aprovar_cadastro'];
-    try {
-        $pre = $pdo->query("SELECT * FROM pre_cadastros WHERE id=$pid")->fetch();
-        if ($pre) {
-            // Cria Cliente
-            $nome = $pre['nome'];
-            $user_sugerido = strtolower(explode(' ', trim($nome))[0]) . rand(100,999);
-            $pass_padrao = password_hash("Mudar123", PASSWORD_DEFAULT); // Senha temporaria
-            
-            $pdo->prepare("INSERT INTO clientes (nome, usuario, senha) VALUES (?, ?, ?)")->execute([$nome, $user_sugerido, $pass_padrao]);
-            $nid = $pdo->lastInsertId();
-            
-            // Renomeia
-            $nome_final = sprintf("Cliente %03d - %s", $nid, $nome);
-            $pdo->prepare("UPDATE clientes SET nome = ? WHERE id = ?")->execute([$nome_final, $nid]);
-            
-            // Cria Detalhes e popula com o que veio
-            $sql_det = "INSERT INTO processo_detalhes (cliente_id, cpf_cnpj, contato_email, contato_tel, endereco_imovel, profissao) VALUES (?, ?, ?, ?, ?, ?)";
-            // Usamos 'profissao' para guardar tipo servico temp, ou observacao
-            $pdo->prepare($sql_det)->execute([$nid, $pre['cpf_cnpj'], $pre['email'], $pre['telefone'], $pre['endereco_obra'], $pre['tipo_servico']]);
+// 9. Aprovar Cadastro (Via Modal)
+if (isset($_POST['btn_confirmar_aprovacao'])) {
+    $pid = $_POST['id_pre'];
+    $nome_final = trim($_POST['nome_final']);
+    $usuario_final = trim($_POST['usuario_final']);
+    $senha_final = trim($_POST['senha_final']);
+    $senha_hash = password_hash($senha_final, PASSWORD_DEFAULT);
 
-            // Atualiza status do pré
-            $pdo->query("UPDATE pre_cadastros SET status='aprovado' WHERE id=$pid");
+    try {
+        // 1. Pegar dados do pré-cadastro
+        $pre = $pdo->prepare("SELECT * FROM pre_cadastros WHERE id = ?");
+        $pre->execute([$pid]);
+        $solicitacao = $pre->fetch();
+
+        if ($solicitacao) {
+            $pdo->beginTransaction();
+
+            // 2. Criar Cliente na tabela oficial
+            $sqlCliente = "INSERT INTO clientes (nome, usuario, senha) VALUES (?, ?, ?)";
+            $pdo->prepare($sqlCliente)->execute([$nome_final, $usuario_final, $senha_hash]);
+            $novo_id = $pdo->lastInsertId();
+
+            // 3. Criar Detalhes
+            $sqlDet = "INSERT INTO processo_detalhes (cliente_id, cpf_cnpj, contato_tel, contato_email, tipo_servico) VALUES (?, ?, ?, ?, ?)";
+            $pdo->prepare($sqlDet)->execute([
+                $novo_id, 
+                $solicitacao['cpf_cnpj'], 
+                $solicitacao['telefone'], 
+                $solicitacao['email'],
+                $solicitacao['tipo_servico']
+            ]);
+
+            // 4. Deletar Pré-Cadastro
+            $pdo->prepare("DELETE FROM pre_cadastros WHERE id = ?")->execute([$pid]);
             
-            $sucesso = "Cadastro importado com sucesso! Cliente criado: $nome_final (Login: $user_sugerido / Senha: Mudar123)";
+            $pdo->commit();
+            
+            // Redireciona para edição do novo cliente
+            header("Location: editar_cliente.php?id=$novo_id&new=1");
+            exit;
         }
-    } catch (Exception $e) { $erro = "Erro ao importar: " . $e->getMessage(); }
+
+    } catch (PDOException $e) {
+        if ($pdo->inTransaction()) $pdo->rollBack();
+        $erro = "Erro ao aprovar: " . $e->getMessage();
+    }
 }
 ?>
