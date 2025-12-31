@@ -280,98 +280,176 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
         $solicitacoes = $pdo->query("SELECT * FROM pre_cadastros WHERE status='pendente' ORDER BY data_solicitacao DESC")->fetchAll();
         ?>
 
-        <!-- Grid de Avisos -->
+        <!-- Smart Indicators Bar -->
         <style>
-            .avisos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px; }
-            .aviso-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #f1f1f1; display:flex; flex-direction:column; transition: transform 0.2s ease, box-shadow 0.2s ease; }
-            .aviso-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
-            .aviso-card h3 { margin:0 0 15px 0; font-size: 1rem; color: #333; font-weight:700; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid #f5f5f5; padding-bottom: 10px; }
-            .aviso-list { list-style: none; padding: 0; margin: 0; max-height: 180px; overflow-y: auto; flex:1; }
-            .aviso-list li { display: flex; justify-content: space-between; align-items:center; padding: 10px 0; border-bottom: 1px solid #f9f9f9; font-size: 0.9rem; color: #555; }
-            .aviso-list li:last-child { border-bottom: none; }
+            .indicators-bar { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; align-items: flex-start; }
             
-            /* Tags */
-            .tag { padding: 3px 8px; border-radius: 6px; font-weight: 600; font-size: 0.75rem; letter-spacing: 0.3px; }
-            .tag-date { background: #e3f2fd; color: #0d6efd; }
-            .tag-alert { background: #ffebee; color: #d32f2f; }
-            .tag-new { background: #dcfce7; color: #166534; }
+            .smart-btn { 
+                position: relative; 
+                background: white; 
+                border: 1px solid #e0e0e0; 
+                border-radius: 30px; 
+                padding: 8px 16px; 
+                display: flex; 
+                align-items: center; 
+                gap: 10px; 
+                cursor: default; 
+                transition: all 0.2s ease;
+                font-size: 0.9rem;
+                color: #555;
+                font-weight: 600;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+            }
             
-            /* Scrollbar */
-            .aviso-list::-webkit-scrollbar { width: 6px; }
-            .aviso-list::-webkit-scrollbar-track { background: #f1f1f1; }
-            .aviso-list::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
-            .aviso-list::-webkit-scrollbar-thumb:hover { background: #ccc; }
+            .smart-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 10; }
+            .smart-btn.active { border-color: currentColor; background: white; }
+            
+            /* Badge Styles */
+            .s-badge { padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 800; color: white; }
+            
+            /* Theme Colors */
+            .theme-green { color: #198754; }
+            .theme-green .s-badge { background: #198754; }
+            .theme-orange { color: #fd7e14; }
+            .theme-orange .s-badge { background: #fd7e14; }
+            .theme-red { color: #dc3545; }
+            .theme-red .s-badge { background: #dc3545; }
+            .theme-gray { color: #adb5bd; border-color: #f0f0f0; }
+            .theme-gray .s-badge { background: #adb5bd; }
+
+            /* Dropdown Logic */
+            .smart-dropdown {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                margin-top: 10px;
+                background: white;
+                border: 1px solid #eee;
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+                width: 320px;
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(10px);
+                transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+                z-index: 100;
+                overflow: hidden;
+            }
+            .smart-btn:hover .smart-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+            
+            /* Dropdown Content */
+            .sd-header { padding: 12px 15px; border-bottom: 1px solid #f0f0f0; background: #fafafa; font-size: 0.85rem; font-weight: 700; color: #444; }
+            .sd-list { list-style: none; padding: 0; margin: 0; max-height: 300px; overflow-y: auto; }
+            .sd-item { padding: 12px 15px; border-bottom: 1px solid #f9f9f9; display: flex; align-items: center; justify-content: space-between; gap: 10px; transition: background 0.1s; }
+            .sd-item:last-child { border-bottom: none; }
+            .sd-item:hover { background: #f8f9fa; }
+            .sd-empty { padding: 20px; text-align: center; color: #999; font-size: 0.85rem; font-style: italic; }
+            
+            /* Global Broadcast Compact */
+            .broadcast-compact { flex: 1; display: flex; gap: 10px; background: white; padding: 8px; border-radius: 30px; border: 1px solid #e0e0e0; align-items: center; min-width: 300px; }
+            .broadcast-input { border: none; outline: none; flex: 1; padding: 0 15px; font-size: 0.9rem; color: #444; background: transparent; }
+            .broadcast-btn { background: #6610f2; color: white; border: none; padding: 6px 15px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; cursor: pointer; white-space: nowrap; transition: background 0.2s; }
+            .broadcast-btn:hover { background: #520dc2; }
         </style>
 
-        <div class="avisos-grid">
-            <!-- 1. Global Broadcast -->
-            <div class="aviso-card" style="border-top: 4px solid #6610f2;">
-                <h3>📢 Aviso Global</h3>
-                <form method="POST" style="flex:1; display:flex; flex-direction:column;">
-                    <textarea name="mensagem_aviso" placeholder="Mensagem para todos os clientes..." style="width:100%; flex:1; padding:12px; border:1px solid #e0e0e0; border-radius:8px; font-family:inherit; resize:none; min-height:80px; font-size:0.9rem; background:#fafafa;"><?= htmlspecialchars($aviso_atual['mensagem']??'') ?></textarea>
-                    <button type="submit" name="btn_salvar_aviso_geral" style="margin-top:12px; background:#6610f2; color:white; border:none; padding:10px; border-radius:8px; cursor:pointer; font-weight:600; font-size:0.9rem; width:100%; transition: background 0.2s;">
-                        Publicar Aviso
-                    </button>
-                </form>
-            </div>
-
-            <!-- 2. Solicitações Web (MOVED HERE) -->
-            <div class="aviso-card" style="border-top: 4px solid #198754;">
-                <h3>📥 Solicitações Web <span class="tag tag-new" style="margin-left:auto;"><?= count($solicitacoes) ?></span></h3>
-                <ul class="aviso-list">
-                    <?php if(empty($solicitacoes)): ?>
-                        <li style="justify-content:center; color:#999; margin-top:20px;">Nenhuma solicitação pendente.</li>
+        <div class="indicators-bar">
+            
+            <!-- 1. Solicitações Web -->
+            <?php 
+                $count_sol = count($solicitacoes);
+                $theme_sol = $count_sol > 0 ? 'theme-green active' : 'theme-gray';
+            ?>
+            <div class="smart-btn <?= $theme_sol ?>">
+                <span class="material-symbols-rounded">inbox</span>
+                Solicitações Web
+                <span class="s-badge"><?= $count_sol ?></span>
+                
+                <!-- Dropdown -->
+                <div class="smart-dropdown">
+                    <div class="sd-header">Pedidos de Cadastro Pendentes</div>
+                    <?php if($count_sol == 0): ?>
+                        <div class="sd-empty">Nenhuma solicitação pendente.</div>
                     <?php else: ?>
-                        <?php foreach($solicitacoes as $sol): ?>
-                            <li>
-                                <div style="display:flex; flex-direction:column; gap:2px;">
-                                    <span style="font-weight:600; color:#333;"><?= htmlspecialchars($sol['nome']) ?></span>
-                                    <small style="color:#777; font-size:0.8rem;"><?= htmlspecialchars($sol['tipo_servico']) ?> • <?= date('d/m', strtotime($sol['data_solicitacao'])) ?></small>
+                        <div class="sd-list">
+                            <?php foreach($solicitacoes as $sol): ?>
+                                <div class="sd-item">
+                                    <div style="line-height:1.2;">
+                                        <div style="font-weight:600; color:#333; font-size:0.9rem;"><?= htmlspecialchars($sol['nome']) ?></div>
+                                        <div style="font-size:0.75rem; color:#777;"><?= htmlspecialchars($sol['tipo_servico']) ?></div>
+                                    </div>
+                                    <button onclick="openAprovarModal(<?= $sol['id'] ?>, '<?= addslashes($sol['nome']) ?>', '<?= addslashes($sol['cpf_cnpj']) ?>')" style="background:#198754; color:white; border:none; padding:4px 10px; border-radius:6px; cursor:pointer; font-size:0.75rem; font-weight:600;">
+                                        Aprovar
+                                    </button>
                                 </div>
-                                <button onclick="openAprovarModal(<?= $sol['id'] ?>, '<?= addslashes($sol['nome']) ?>', '<?= addslashes($sol['cpf_cnpj']) ?>')" style="background:#198754; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:0.8rem; font-weight:600;">
-                                    Aprovar
-                                </button>
-                            </li>
-                        <?php endforeach; ?>
+                            <?php endforeach; ?>
+                        </div>
                     <?php endif; ?>
-                </ul>
+                </div>
             </div>
 
-            <!-- 3. Aniversariantes -->
-            <div class="aviso-card" style="border-top: 4px solid #fd7e14;">
-                <h3>🎂 Aniversariantes</h3>
-                <ul class="aviso-list">
-                    <?php if(empty($aniversariantes)): ?>
-                        <li style="justify-content:center; color:#999; margin-top:20px;">Ninguém neste mês.</li>
+            <!-- 2. Aniversariantes -->
+            <?php 
+                $count_ani = count($aniversariantes);
+                $theme_ani = $count_ani > 0 ? 'theme-orange active' : 'theme-gray';
+            ?>
+            <div class="smart-btn <?= $theme_ani ?>">
+                <span class="material-symbols-rounded">cake</span>
+                Aniversariantes
+                <span class="s-badge"><?= $count_ani ?></span>
+                 <!-- Dropdown -->
+                 <div class="smart-dropdown">
+                    <div class="sd-header">Aniversariantes de <?= date('M') ?></div>
+                    <?php if($count_ani == 0): ?>
+                        <div class="sd-empty">Ninguém por enquanto.</div>
                     <?php else: ?>
-                        <?php foreach($aniversariantes as $ani): ?>
-                            <li>
-                                <span style="font-weight:500;"><?= htmlspecialchars($ani['nome']) ?></span>
-                                <span class="tag tag-alert" style="background:#fff3cd; color:#856404;">Dia <?= $ani['dia'] ?></span>
-                            </li>
-                        <?php endforeach; ?>
+                        <div class="sd-list">
+                            <?php foreach($aniversariantes as $ani): ?>
+                                <div class="sd-item">
+                                    <span style="font-weight:600; color:#333;"><?= htmlspecialchars($ani['nome']) ?></span>
+                                    <span style="background:#fff3cd; color:#856404; padding:2px 8px; border-radius:10px; font-weight:bold; font-size:0.75rem;">Dia <?= $ani['dia'] ?></span>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
                     <?php endif; ?>
-                </ul>
+                </div>
             </div>
 
-            <!-- 4. Processos Parados -->
-            <div class="aviso-card" style="border-top: 4px solid #dc3545;">
-                <h3>🚨 Processos Parados (+15d)</h3>
-                <ul class="aviso-list">
-                    <?php if(empty($parados)): ?>
-                        <li style="justify-content:center; color:#198754; margin-top:20px;">Tudo movimentando! 🚀</li>
+            <!-- 3. Processos Parados -->
+            <?php 
+                $count_par = count($parados);
+                $theme_par = $count_par > 0 ? 'theme-red active' : 'theme-gray';
+            ?>
+            <div class="smart-btn <?= $theme_par ?>">
+                <span class="material-symbols-rounded">timer_off</span>
+                Parados (+15d)
+                <span class="s-badge"><?= $count_par ?></span>
+                 <!-- Dropdown -->
+                 <div class="smart-dropdown">
+                    <div class="sd-header">Sem movimentação há > 15 dias</div>
+                    <?php if($count_par == 0): ?>
+                        <div class="sd-empty">Tudo movimentando! 🚀</div>
                     <?php else: ?>
-                        <?php foreach($parados as $p): ?>
-                            <li>
-                                <a href="?cliente_id=<?= $p['id'] ?>&tab=andamento" style="text-decoration:none; color:inherit; display:flex; width:100%; justify-content:space-between; align-items:center;">
-                                    <span style="font-weight:500; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; max-width:60%;"><?= htmlspecialchars($p['nome']) ?></span>
-                                    <span class="tag tag-alert"><?= date('d/m', strtotime($p['ultima_mov'])) ?></span>
-                                </a>
-                            </li>
-                        <?php endforeach; ?>
+                        <div class="sd-list">
+                            <?php foreach($parados as $p): ?>
+                                <div class="sd-item">
+                                    <div style="overflow:hidden; white-space:nowrap; text-overflow:ellipsis; max-width:180px; font-weight:600; color:#333; font-size:0.85rem;"><?= htmlspecialchars($p['nome']) ?></div>
+                                    <a href="?cliente_id=<?= $p['id'] ?>&tab=andamento" style="text-decoration:none; background:#ffebee; color:#d32f2f; padding:2px 8px; border-radius:10px; font-weight:bold; font-size:0.75rem; white-space:nowrap;">
+                                        <?= date('d/m', strtotime($p['ultima_mov'])) ?>
+                                    </a>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
                     <?php endif; ?>
-                </ul>
+                </div>
             </div>
+
+            <!-- 4. Global Broadcast (Compact) -->
+            <form method="POST" class="broadcast-compact" style="margin-left:auto;">
+                <span class="material-symbols-rounded" style="color:#6610f2; margin-left:8px;">campaign</span>
+                <input type="text" name="mensagem_aviso" class="broadcast-input" placeholder="Escrever aviso global..." value="<?= htmlspecialchars($aviso_atual['mensagem']??'') ?>">
+                <button type="submit" name="btn_salvar_aviso_geral" class="broadcast-btn">Publicar</button>
+            </form>
+
         </div>
 
         <!-- Mensagens PHP serão capturadas pelo JS abaixo -->
