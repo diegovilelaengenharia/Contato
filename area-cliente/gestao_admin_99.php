@@ -229,6 +229,106 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
     </aside>
 
     <main>
+        <!-- 🔔 CENTRAL DE AVISOS -->
+        <?php
+        // 1. Tabela de Avisos (Broadcast)
+        $pdo->exec("CREATE TABLE IF NOT EXISTS sistema_avisos (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            mensagem TEXT,
+            ativo TINYINT(1) DEFAULT 1,
+            data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP
+        )");
+
+        // 2. Salvar Aviso Global
+        if(isset($_POST['btn_salvar_aviso_geral'])) {
+            $msg = trim($_POST['mensagem_aviso']);
+            $pdo->query("UPDATE sistema_avisos SET ativo=0"); // Reset
+            if(!empty($msg)) {
+                $stmta = $pdo->prepare("INSERT INTO sistema_avisos (mensagem, ativo) VALUES (?, 1)");
+                $stmta->execute([$msg]);
+            }
+            // Feedback visual via Toastify (injetado via JS no final ou aqui mesmo)
+            echo "<script>document.addEventListener('DOMContentLoaded', () => Toastify({text: '📢 Aviso Global Atualizado!', duration: 3000, style:{background:'#198754'}}).showToast());</script>";
+        }
+
+        // 3. Dados
+        $aviso_atual = $pdo->query("SELECT * FROM sistema_avisos WHERE ativo=1 ORDER BY id DESC LIMIT 1")->fetch();
+
+        // Aniversariantes
+        $aniversariantes = $pdo->query("SELECT c.id, c.nome, pd.data_nascimento, DAY(pd.data_nascimento) as dia 
+            FROM clientes c 
+            JOIN processo_detalhes pd ON c.id = pd.cliente_id 
+            WHERE MONTH(pd.data_nascimento) = MONTH(CURRENT_DATE()) 
+            ORDER BY dia ASC")->fetchAll();
+
+        // Processos Parados (> 15 dias)
+        $parados = $pdo->query("SELECT c.id, c.nome, MAX(pm.data_movimento) as ultima_mov 
+            FROM clientes c 
+            JOIN processo_movimentos pm ON c.id = pm.cliente_id 
+            GROUP BY c.id 
+            HAVING DATEDIFF(NOW(), ultima_mov) > 15 
+            ORDER BY ultima_mov ASC")->fetchAll();
+        ?>
+
+        <!-- Grid de Avisos -->
+        <style>
+            .avisos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-bottom: 25px; }
+            .aviso-card { background: white; border-radius: 10px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #eee; display:flex; flex-direction:column; }
+            .aviso-card h3 { margin:0 0 10px 0; font-size: 0.95rem; color: #444; font-weight:700; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; }
+            .aviso-list { list-style: none; padding: 0; margin: 0; max-height: 120px; overflow-y: auto; flex:1; }
+            .aviso-list li { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f9f9f9; font-size: 0.85rem; color: #555; }
+            .tag-alert { background: #ffebee; color: #d32f2f; padding: 1px 6px; border-radius: 4px; font-weight: 600; font-size: 0.75rem; }
+        </style>
+
+        <div class="avisos-grid">
+            <!-- Global Broadcast -->
+            <div class="aviso-card" style="border-left: 4px solid #6610f2;">
+                <h3>📢 Aviso Global (Todos os Clientes)</h3>
+                <form method="POST" style="flex:1; display:flex; flex-direction:column;">
+                    <textarea name="mensagem_aviso" placeholder="Mensagem para o painel do cliente..." style="width:100%; flex:1; padding:8px; border:1px solid #ddd; border-radius:6px; font-family:inherit; resize:none; min-height:60px; font-size:0.9rem;"><?= htmlspecialchars($aviso_atual['mensagem']??'') ?></textarea>
+                    <button type="submit" name="btn_salvar_aviso_geral" style="margin-top:8px; background:#6610f2; color:white; border:none; padding:8px; border-radius:6px; cursor:pointer; font-weight:600; font-size:0.85rem; width:100%;">
+                        Publicar / Atualizar Aviso
+                    </button>
+                </form>
+            </div>
+
+            <!-- Aniversariantes -->
+            <div class="aviso-card" style="border-left: 4px solid #fd7e14;">
+                <h3>🎂 Aniversariantes (<?= date('M') ?>)</h3>
+                <ul class="aviso-list">
+                    <?php if(empty($aniversariantes)): ?>
+                        <li style="justify-content:center; color:#999; margin-top:10px;">Ninguém por enquanto.</li>
+                    <?php else: ?>
+                        <?php foreach($aniversariantes as $ani): ?>
+                            <li>
+                                <span><?= htmlspecialchars($ani['nome']) ?></span>
+                                <span style="background:#fff3cd; color:#856404; padding:1px 6px; border-radius:4px; font-weight:bold;">Dia <?= $ani['dia'] ?></span>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </ul>
+            </div>
+
+            <!-- Processos Parados -->
+            <div class="aviso-card" style="border-left: 4px solid #dc3545;">
+                <h3>🚨 Parados (+15 Dias)</h3>
+                <ul class="aviso-list">
+                    <?php if(empty($parados)): ?>
+                        <li style="justify-content:center; color:#198754; margin-top:10px;">Tudo em dia! ✨</li>
+                    <?php else: ?>
+                        <?php foreach($parados as $p): ?>
+                            <li>
+                                <a href="?cliente_id=<?= $p['id'] ?>&tab=andamento" style="text-decoration:none; color:inherit; display:flex; width:100%; justify-content:space-between; align-items:center;">
+                                    <span style="font-weight:600; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; max-width:60%;"><?= htmlspecialchars($p['nome']) ?></span>
+                                    <span class="tag-alert"><?= date('d/m', strtotime($p['ultima_mov'])) ?></span>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </ul>
+            </div>
+        </div>
+
         <!-- Mensagens PHP serão capturadas pelo JS abaixo -->
 
         <?php if(isset($_GET['importar'])): ?>
