@@ -275,59 +275,97 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             GROUP BY c.id 
             HAVING DATEDIFF(NOW(), ultima_mov) > 15 
             ORDER BY ultima_mov ASC")->fetchAll();
+
+        // Solicitações Web (Pendentes)
+        $solicitacoes = $pdo->query("SELECT * FROM pre_cadastros WHERE status='pendente' ORDER BY data_solicitacao DESC")->fetchAll();
         ?>
 
         <!-- Grid de Avisos -->
         <style>
-            .avisos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-bottom: 25px; }
-            .aviso-card { background: white; border-radius: 10px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #eee; display:flex; flex-direction:column; }
-            .aviso-card h3 { margin:0 0 10px 0; font-size: 0.95rem; color: #444; font-weight:700; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; }
-            .aviso-list { list-style: none; padding: 0; margin: 0; max-height: 120px; overflow-y: auto; flex:1; }
-            .aviso-list li { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f9f9f9; font-size: 0.85rem; color: #555; }
-            .tag-alert { background: #ffebee; color: #d32f2f; padding: 1px 6px; border-radius: 4px; font-weight: 600; font-size: 0.75rem; }
+            .avisos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px; }
+            .aviso-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #f1f1f1; display:flex; flex-direction:column; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+            .aviso-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
+            .aviso-card h3 { margin:0 0 15px 0; font-size: 1rem; color: #333; font-weight:700; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid #f5f5f5; padding-bottom: 10px; }
+            .aviso-list { list-style: none; padding: 0; margin: 0; max-height: 180px; overflow-y: auto; flex:1; }
+            .aviso-list li { display: flex; justify-content: space-between; align-items:center; padding: 10px 0; border-bottom: 1px solid #f9f9f9; font-size: 0.9rem; color: #555; }
+            .aviso-list li:last-child { border-bottom: none; }
+            
+            /* Tags */
+            .tag { padding: 3px 8px; border-radius: 6px; font-weight: 600; font-size: 0.75rem; letter-spacing: 0.3px; }
+            .tag-date { background: #e3f2fd; color: #0d6efd; }
+            .tag-alert { background: #ffebee; color: #d32f2f; }
+            .tag-new { background: #dcfce7; color: #166534; }
+            
+            /* Scrollbar */
+            .aviso-list::-webkit-scrollbar { width: 6px; }
+            .aviso-list::-webkit-scrollbar-track { background: #f1f1f1; }
+            .aviso-list::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
+            .aviso-list::-webkit-scrollbar-thumb:hover { background: #ccc; }
         </style>
 
         <div class="avisos-grid">
-            <!-- Global Broadcast -->
-            <div class="aviso-card" style="border-left: 4px solid #6610f2;">
-                <h3>📢 Aviso Global (Todos os Clientes)</h3>
+            <!-- 1. Global Broadcast -->
+            <div class="aviso-card" style="border-top: 4px solid #6610f2;">
+                <h3>📢 Aviso Global</h3>
                 <form method="POST" style="flex:1; display:flex; flex-direction:column;">
-                    <textarea name="mensagem_aviso" placeholder="Mensagem para o painel do cliente..." style="width:100%; flex:1; padding:8px; border:1px solid #ddd; border-radius:6px; font-family:inherit; resize:none; min-height:60px; font-size:0.9rem;"><?= htmlspecialchars($aviso_atual['mensagem']??'') ?></textarea>
-                    <button type="submit" name="btn_salvar_aviso_geral" style="margin-top:8px; background:#6610f2; color:white; border:none; padding:8px; border-radius:6px; cursor:pointer; font-weight:600; font-size:0.85rem; width:100%;">
-                        Publicar / Atualizar Aviso
+                    <textarea name="mensagem_aviso" placeholder="Mensagem para todos os clientes..." style="width:100%; flex:1; padding:12px; border:1px solid #e0e0e0; border-radius:8px; font-family:inherit; resize:none; min-height:80px; font-size:0.9rem; background:#fafafa;"><?= htmlspecialchars($aviso_atual['mensagem']??'') ?></textarea>
+                    <button type="submit" name="btn_salvar_aviso_geral" style="margin-top:12px; background:#6610f2; color:white; border:none; padding:10px; border-radius:8px; cursor:pointer; font-weight:600; font-size:0.9rem; width:100%; transition: background 0.2s;">
+                        Publicar Aviso
                     </button>
                 </form>
             </div>
 
-            <!-- Aniversariantes -->
-            <div class="aviso-card" style="border-left: 4px solid #fd7e14;">
-                <h3>🎂 Aniversariantes (<?= date('M') ?>)</h3>
+            <!-- 2. Solicitações Web (MOVED HERE) -->
+            <div class="aviso-card" style="border-top: 4px solid #198754;">
+                <h3>📥 Solicitações Web <span class="tag tag-new" style="margin-left:auto;"><?= count($solicitacoes) ?></span></h3>
                 <ul class="aviso-list">
-                    <?php if(empty($aniversariantes)): ?>
-                        <li style="justify-content:center; color:#999; margin-top:10px;">Ninguém por enquanto.</li>
+                    <?php if(empty($solicitacoes)): ?>
+                        <li style="justify-content:center; color:#999; margin-top:20px;">Nenhuma solicitação pendente.</li>
                     <?php else: ?>
-                        <?php foreach($aniversariantes as $ani): ?>
+                        <?php foreach($solicitacoes as $sol): ?>
                             <li>
-                                <span><?= htmlspecialchars($ani['nome']) ?></span>
-                                <span style="background:#fff3cd; color:#856404; padding:1px 6px; border-radius:4px; font-weight:bold;">Dia <?= $ani['dia'] ?></span>
+                                <div style="display:flex; flex-direction:column; gap:2px;">
+                                    <span style="font-weight:600; color:#333;"><?= htmlspecialchars($sol['nome']) ?></span>
+                                    <small style="color:#777; font-size:0.8rem;"><?= htmlspecialchars($sol['tipo_servico']) ?> • <?= date('d/m', strtotime($sol['data_solicitacao'])) ?></small>
+                                </div>
+                                <button onclick="openAprovarModal(<?= $sol['id'] ?>, '<?= addslashes($sol['nome']) ?>', '<?= addslashes($sol['cpf_cnpj']) ?>')" style="background:#198754; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:0.8rem; font-weight:600;">
+                                    Aprovar
+                                </button>
                             </li>
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </ul>
             </div>
 
-            <!-- Processos Parados -->
-            <div class="aviso-card" style="border-left: 4px solid #dc3545;">
-                <h3>🚨 Parados (+15 Dias)</h3>
+            <!-- 3. Aniversariantes -->
+            <div class="aviso-card" style="border-top: 4px solid #fd7e14;">
+                <h3>🎂 Aniversariantes</h3>
+                <ul class="aviso-list">
+                    <?php if(empty($aniversariantes)): ?>
+                        <li style="justify-content:center; color:#999; margin-top:20px;">Ninguém neste mês.</li>
+                    <?php else: ?>
+                        <?php foreach($aniversariantes as $ani): ?>
+                            <li>
+                                <span style="font-weight:500;"><?= htmlspecialchars($ani['nome']) ?></span>
+                                <span class="tag tag-alert" style="background:#fff3cd; color:#856404;">Dia <?= $ani['dia'] ?></span>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </ul>
+            </div>
+
+            <!-- 4. Processos Parados -->
+            <div class="aviso-card" style="border-top: 4px solid #dc3545;">
+                <h3>🚨 Processos Parados (+15d)</h3>
                 <ul class="aviso-list">
                     <?php if(empty($parados)): ?>
-                        <li style="justify-content:center; color:#198754; margin-top:10px;">Tudo em dia! ✨</li>
+                        <li style="justify-content:center; color:#198754; margin-top:20px;">Tudo movimentando! 🚀</li>
                     <?php else: ?>
                         <?php foreach($parados as $p): ?>
                             <li>
                                 <a href="?cliente_id=<?= $p['id'] ?>&tab=andamento" style="text-decoration:none; color:inherit; display:flex; width:100%; justify-content:space-between; align-items:center;">
-                                    <span style="font-weight:600; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; max-width:60%;"><?= htmlspecialchars($p['nome']) ?></span>
-                                    <span class="tag-alert"><?= date('d/m', strtotime($p['ultima_mov'])) ?></span>
+                                    <span style="font-weight:500; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; max-width:60%;"><?= htmlspecialchars($p['nome']) ?></span>
+                                    <span class="tag tag-alert"><?= date('d/m', strtotime($p['ultima_mov'])) ?></span>
                                 </a>
                             </li>
                         <?php endforeach; ?>
@@ -1632,6 +1670,16 @@ function closeSuccessModal() {
     document.getElementById('successModal').style.display = 'none';
 }
 
+// FUNÇÃO PARA ABRIR MODAL DE APROVAÇÃO (CRÍTICO)
+function openAprovarModal(id, nome, cpf) {
+    document.getElementById('apr_id_pre').value = id;
+    document.getElementById('apr_nome').value = nome;
+    // Remove tudo que não é número do CPF para sugerir login
+    const loginSugestao = cpf ? cpf.replace(/\D/g, '') : '';
+    document.getElementById('apr_usuario').value = loginSugestao;
+    document.getElementById('modalAprovarCadastro').showModal();
+}
+
 // --- MÁSCARAS E VALIDAÇÃO ---
 document.addEventListener('DOMContentLoaded', function() {
     const phoneInputs = document.querySelectorAll('input[name="telefone"], input[name="contato_tel"]');
@@ -1687,4 +1735,39 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
+<!-- Modal Aprovar Cadastro (Movido para Footer para estar sempre disponível) -->
+<dialog id="modalAprovarCadastro" style="border:none; border-radius:12px; padding:0; width:90%; max-width:500px; box-shadow:0 10px 40px rgba(0,0,0,0.3);">
+    <div style="background:var(--color-primary); color:white; padding:20px; display:flex; justify-content:space-between; align-items:center;">
+        <h3 style="margin:0; font-size:1.2rem;">✅ Aprovar e Finalizar</h3>
+        <button onclick="document.getElementById('modalAprovarCadastro').close()" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
+    </div>
+    
+    <form method="POST" style="padding:25px;">
+        <input type="hidden" name="id_pre" id="apr_id_pre">
+        
+        <div class="form-group" style="margin-bottom:15px;">
+            <label style="display:block; margin-bottom:5px; font-weight:600;">Nome do Cliente</label>
+            <input type="text" name="nome_final" id="apr_nome" required style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;">
+        </div>
+        
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:20px;">
+            <div>
+                <label style="display:block; margin-bottom:5px; font-weight:600;">Usuário (Login)</label>
+                <input type="text" name="usuario_final" id="apr_usuario" required style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; background:#f9f9f9;">
+            </div>
+            <div>
+                <label style="display:block; margin-bottom:5px; font-weight:600;">Senha Inicial</label>
+                <input type="text" name="senha_final" value="mudar123" required style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;">
+            </div>
+        </div>
+        
+        <hr style="margin:20px 0; border-top:1px solid #eee;">
+        
+        <div style="display:flex; justify-content:flex-end;">
+            <button type="submit" name="btn_confirmar_aprovacao" class="btn-save" style="width:100%; padding:12px; background:#198754; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">🚀 Confirmar e Criar Cliente</button>
+        </div>
+    </form>
+</dialog>
+</body>
 </html>
