@@ -11,6 +11,13 @@ try {
     die("<h1>Erro Crítico (Sintaxe ou Banco)</h1><p><strong>Arquivo:</strong> " . $e->getFile() . " <br><strong>Linha:</strong> " . $e->getLine() . "<br><strong>Erro:</strong> " . $e->getMessage() . "</p>");
 }
 
+// --- SELF-HEALING DATABASE (Correção de Colunas Faltantes) ---
+try {
+    $pdo->exec("ALTER TABLE processo_detalhes ADD COLUMN data_nascimento DATE DEFAULT NULL");
+} catch (Exception $e) { 
+    // Ignora erro se coluna já existe
+}
+
 // --- Configuração e Segurança ---
 $minha_senha_mestra = defined('ADMIN_PASSWORD') ? ADMIN_PASSWORD : 'VilelaAdmin2025'; 
 
