@@ -532,10 +532,10 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                 </div>
 
                                 <div style="flex:1; min-width:150px;">
-                                     <div style="position:relative; width:100%; height:100%; border:1px dashed #ccc; border-radius:6px; background:#f8f9fa; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; transition:0.2s; cursor:pointer; padding:5px;" onclick="document.getElementById('file_input_hidden').click();" onmouseover="this.style.borderColor='var(--color-primary)'; this.style.background='#eff6ff';" onmouseout="this.style.borderColor='#ccc'; this.style.background='#f8f9fa';">
-                                         <span style="font-size:1.2rem; color:#888;">�</span>
-                                         <span style="font-size:0.7rem; color:#666; font-weight:600;">Anexar</span>
-                                         <input type="file" id="file_input_hidden" name="arquivo_documento" style="display:none;" onchange="if(this.files.length > 0) { this.parentElement.style.borderColor='#198754'; this.parentElement.style.background='#e8f5e9'; this.parentElement.querySelector('span:last-child').innerText = 'OK!'; this.parentElement.querySelector('span:first-child').innerText = '✅'; }">
+                                     <div style="position:relative; width:100%; height:100%; border:2px dashed #a0aec0; border-radius:8px; background:linear-gradient(to bottom, #f8f9fa, #eef2f7); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; transition:all 0.3s ease; cursor:pointer; padding:5px; box-shadow:0 2px 5px rgba(0,0,0,0.05);" onclick="document.getElementById('file_input_hidden').click();" onmouseover="this.style.borderColor='var(--color-primary)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='#a0aec0'; this.style.transform='translateY(0)';">
+                                         <span style="font-size:1.4rem; color:var(--color-primary); margin-bottom:2px;">📂</span>
+                                         <span style="font-size:0.75rem; color:#4a5568; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Anexar Arquivo</span>
+                                         <input type="file" id="file_input_hidden" name="arquivo_documento" style="display:none;" onchange="if(this.files.length > 0) { this.parentElement.style.borderColor='#38ef7d'; this.parentElement.style.background='#e3fcef'; this.parentElement.querySelector('span:last-child').innerText = 'Arquivo OK!'; this.parentElement.querySelector('span:last-child').style.color='#198754'; this.parentElement.querySelector('span:first-child').innerText = '✅'; }">
                                      </div>
                                 </div>
                             </div>
