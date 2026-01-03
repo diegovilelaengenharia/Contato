@@ -69,24 +69,38 @@ if (isset($_POST['btn_salvar_tudo'])) {
         
         // --- UPLOAD LOGIC ---
         // 1. Avatar (Profile)
+        $upload_debug = "";
         if(isset($_FILES['avatar_upload']) && $_FILES['avatar_upload']['error'] == 0) {
             $ext = strtolower(pathinfo($_FILES['avatar_upload']['name'], PATHINFO_EXTENSION));
             if(in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
                 $new_name = 'avatar_' . $cliente_id . '.' . $ext;
                 $target = 'uploads/avatars/' . $new_name;
-                if(!is_dir('uploads/avatars/')) mkdir('uploads/avatars/', 0755, true);
                 
-                // Remove existing avatars to avoid conflict (e.g. .jpg vs .png)
-                array_map('unlink', glob("uploads/avatars/avatar_{$cliente_id}.*"));
+                // Permission Check
+                if(!is_dir('uploads/avatars/')) {
+                    mkdir('uploads/avatars/', 0755, true);
+                    $upload_debug .= "Criou pasta. ";
+                }
+                
+                if(!is_writable('uploads/avatars/')) {
+                    $upload_debug .= "SEM PERMISSÃO DE ESCRITA! ";
+                }
+
+                // Remove existing
+                $existing = glob("uploads/avatars/avatar_{$cliente_id}.*");
+                $upload_debug .= "Encontrados antigos: " . count($existing) . ". ";
+                foreach($existing as $f) unlink($f);
                 
                 if(move_uploaded_file($_FILES['avatar_upload']['tmp_name'], $target)) {
-                    // Update DB column 'foto_perfil' if it exists, or rely on naming convention
-                    // Ideally we should update a column, but for now we follow existing convention or add if able.
-                    // Assuming column might not exist, we just save file. 
-                    // If you want to save to DB:
-                    // $pdo->prepare("UPDATE clientes SET foto_perfil=? WHERE id=?")->execute([$target, $cliente_id]);
+                    $upload_debug .= "Upload OK ($new_name). ";
+                } else {
+                    $upload_debug .= "move_uploaded_file falhou. Error: " . $_FILES['avatar_upload']['error'];
                 }
+            } else {
+                 $upload_debug .= "Extensão inválida: $ext. ";
             }
+        } elseif(isset($_FILES['avatar_upload'])) {
+             // $upload_debug .= "Upload Error Code: " . $_FILES['avatar_upload']['error'];
         }
 
         // 2. Work Cover (Foto Capa Obra)
@@ -179,7 +193,7 @@ if (isset($_POST['btn_salvar_tudo'])) {
 
         $pdo->commit();
         echo "<script>
-            alert('✅ Alterações salvas com sucesso!');
+            alert('✅ Alterações salvas! " . addslashes($upload_debug) . "');
             // window.close(); // Desabilitado por solicitação
             // Recarrega a página para mostrar dados atualizados
             window.location.href = 'editar_cliente.php?id=" . $cliente_id . "&success=1';
