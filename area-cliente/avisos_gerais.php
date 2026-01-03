@@ -2,6 +2,8 @@
 ob_start();
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
+session_set_cookie_params(0, '/');
+session_name('CLIENTE_SESSID');
 session_start();
 require 'db.php';
 

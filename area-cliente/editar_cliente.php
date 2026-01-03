@@ -1,6 +1,9 @@
 <?php
 // editar_cliente.php
 
+// Iniciando sessão com o nome correto
+session_set_cookie_params(0, '/');
+session_name('CLIENTE_SESSID');
 session_start();
 // Debug para erro 500
 ini_set('display_errors', 1);
