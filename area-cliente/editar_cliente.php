@@ -124,7 +124,7 @@ if (isset($_POST['btn_salvar_tudo'])) {
         // 2. Atualizar Detalhes
         if ($detalhes) {
             $sqlDet = "UPDATE processo_detalhes SET 
-                tipo_pessoa=?, cpf_cnpj=?, rg_ie=?, nacionalidade=?, contato_email=?, contato_tel=?, 
+                tipo_pessoa=?, cpf_cnpj=?, rg_ie=?, nacionalidade=?, data_nascimento=?, contato_email=?, contato_tel=?, 
                 res_rua=?, res_numero=?, res_bairro=?, res_complemento=?, res_cidade=?, res_uf=?,
                 profissao=?, estado_civil=?, imovel_rua=?, imovel_numero=?,
                 imovel_bairro=?, imovel_complemento=?, imovel_cidade=?, imovel_uf=?, inscricao_imob=?,
@@ -133,12 +133,12 @@ if (isset($_POST['btn_salvar_tudo'])) {
                 WHERE cliente_id=?";
         } else {
             $sqlDet = "INSERT INTO processo_detalhes (
-                tipo_pessoa, cpf_cnpj, rg_ie, nacionalidade, contato_email, contato_tel, 
+                tipo_pessoa, cpf_cnpj, rg_ie, nacionalidade, data_nascimento, contato_email, contato_tel, 
                 res_rua, res_numero, res_bairro, res_complemento, res_cidade, res_uf,
                 profissao, estado_civil, imovel_rua, imovel_numero,
                 imovel_bairro, imovel_complemento, imovel_cidade, imovel_uf, inscricao_imob,
                 num_matricula, imovel_area_lote, area_construida, cliente_id
-            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         }
         
         $stmtDetUp = $pdo->prepare($sqlDet);
