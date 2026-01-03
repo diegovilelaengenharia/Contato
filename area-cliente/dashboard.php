@@ -4,7 +4,13 @@ session_name('CLIENTE_SESSID');
 session_start();
 // Auth Check
 if (!isset($_SESSION['cliente_id'])) {
-    header("Location: index.php?error=sessao_expirada");
+    // DEBUG MODE: Stop redirect to see what's happening
+    $debug_info = "Session Name: " . session_name() . "<br>";
+    $debug_info .= "Session ID: " . session_id() . "<br>";
+    $debug_info .= "Cookie: " . print_r($_COOKIE, true) . "<br>";
+    $debug_info .= "Session Vars: " . print_r($_SESSION, true) . "<br>";
+    die("<h1>DEBUG: Acesso Negado pelo PHP (dashboard.php)</h1><hr>" . $debug_info);
+    // header("Location: index.php?error=sessao_expirada");
     exit;
 }
 ?>
