@@ -440,7 +440,7 @@ if (isset($_POST['btn_salvar_tudo'])) {
 </head>
 <body>
 
-    <form method="POST" class="main-wrapper">
+    <form method="POST" enctype="multipart/form-data" class="main-wrapper">
         
         <!-- Top Bar -->
         <div class="top-bar">
@@ -596,8 +596,34 @@ if (isset($_POST['btn_salvar_tudo'])) {
             <!-- SECTION 3: PROPERTY -->
             <div class="section-header">
                 <div class="section-icon">🏠</div>
-                <h2>Dados do Imóvel (Obra)</h2>
+                <h2>Dados do Imóvel e Processo</h2>
             </div>
+            <div class="section-body">
+                <!-- NEW FIELDS REQUESTED BY USER -->
+                <div class="grid" style="margin-bottom:20px; background:#f8f9fa; padding:15px; border-radius:8px;">
+                    <div class="form-group">
+                        <h4 style="margin:0 0 10px 0; color:var(--primary);">📁 Dados do Processo</h4>
+                    </div>
+                    <div class="form-group" style="grid-column: span 3;">
+                        <label>Objeto do Processo</label>
+                        <input type="text" name="processo_objeto" value="<?= htmlspecialchars($detalhes['processo_objeto']??'') ?>" placeholder="Ex: Regularização de Edificação Residencial Unifamiliar">
+                    </div>
+                    <div class="form-group">
+                        <label>Processo Administrativo Nº</label>
+                        <input type="text" name="processo_numero" value="<?= htmlspecialchars($detalhes['processo_numero']??'') ?>" placeholder="Ex: 6100/2025">
+                    </div>
+                    <div class="form-group">
+                        <label>Área Total Final (m²)</label>
+                        <input type="text" name="area_total_final" value="<?= htmlspecialchars($detalhes['area_total_final']??'') ?>" placeholder="Ex: 156.45">
+                    </div>
+                </div>
+
+                <div class="grid">
+                    <div class="form-group" style="grid-column: span 3;">
+                         <label>Endereço da Obra (Completo)</label>
+                         <input type="text" name="endereco_imovel" value="<?= htmlspecialchars($detalhes['endereco_imovel']??'') ?>" placeholder="Rua, Número, Bairro, Cidade - UF">
+                    </div>
+                </div>
             <div class="section-body">
                 <!-- Foto Obra -->
                 <div class="form-group" style="margin-bottom:20px;">
