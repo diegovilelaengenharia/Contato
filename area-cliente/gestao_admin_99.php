@@ -672,23 +672,19 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 </style>
 
                 <!-- Botão para Abrir Modal de Novo Andamento -->
-                <div style="margin-bottom:20px;">
-                    <button type="button" onclick="document.getElementById('modalAndamento').showModal()" class="btn-save" style="width:100%; padding:10px 15px; background:white; border:1px solid #ddd; border-bottom:2px solid #ddd; border-radius:8px; font-size:0.95rem; font-weight:600; color:#555; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:all 0.2s;">
-                        <span style="font-size:1.1rem;">✨</span> Novo Andamento / Atualização
+                <div style="margin-bottom:20px; display:flex; gap:10px; justify-content:center;">
+                    <button type="button" onclick="document.getElementById('modalAndamento').showModal()" class="btn-save" style="padding:8px 20px; background:white; border:2px solid #ffc107; border-radius:30px; font-size:0.9rem; font-weight:700; color:#b38600; cursor:pointer; display:flex; align-items:center; gap:8px; transition:all 0.2s; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
+                        <span style="font-size:1.2rem;">✨</span> Novo Andamento
+                    </button>
+                    <!-- Botão de Apoio (Ex: Apenas Documento) -->
+                    <button type="button" onclick="document.getElementById('modalAndamento').showModal();" style="padding:8px 15px; background:white; border:1px solid #ddd; border-radius:30px; font-size:0.85rem; font-weight:600; color:#666; cursor:pointer; display:flex; align-items:center; gap:5px; transition:all 0.2s;" title="Atalho para documento">
+                        📂 Anexar Arquivo
                     </button>
                     <script>
-                        // Hover effect for the new button
-                        document.querySelector('button[onclick*="modalAndamento"]').addEventListener('mouseenter', function() {
-                            this.style.borderColor = 'var(--color-primary)';
-                            this.style.color = 'var(--color-primary)';
-                            this.style.background = '#f8f9fa';
-                        });
-                        document.querySelector('button[onclick*="modalAndamento"]').addEventListener('mouseleave', function() {
-                            this.style.borderColor = '#ddd';
-                            this.style.borderBottom = '2px solid #ddd';
-                            this.style.color = '#555';
-                            this.style.background = 'white';
-                        });
+                        // Hover interactions
+                        const btnNovo = document.querySelector('button[onclick*="modalAndamento"]');
+                        btnNovo.addEventListener('mouseenter', () => { btnNovo.style.background = '#fff9db'; btnNovo.style.transform = 'translateY(-2px)'; });
+                        btnNovo.addEventListener('mouseleave', () => { btnNovo.style.background = 'white'; btnNovo.style.transform = 'translateY(0)'; });
                     </script>
                 </div>
 
