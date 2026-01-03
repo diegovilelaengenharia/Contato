@@ -377,10 +377,9 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         </div>
 
                         <div style="margin-top:10px; text-align:center;">
-                            <h4 style="margin:0; font-size:0.95rem; color:#333; font-weight:700;">Status do Processo</h4>
-                            <p style="margin:5px 0 0 0; font-size:0.85rem; color:#666; max-width:200px; line-height:1.3;">
+                            <h4 style="margin:0 0 8px 0; font-size:1rem; color:var(--color-primary); font-weight:700; max-width:220px; line-height:1.3;">
                                 <?= ($found_idx >= 0) ? htmlspecialchars($fases_padrao[$found_idx]) : 'Não iniciado' ?>
-                            </p>
+                            </h4>
                             
                             <button onclick="document.getElementById('modalTimelineFull').showModal()" style="margin-top:10px; background:none; border:1px solid #ddd; color:#666; padding:5px 12px; border-radius:20px; font-size:0.75rem; cursor:pointer;">
                                 Ver Etapas 📋
