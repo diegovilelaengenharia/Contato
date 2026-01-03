@@ -15,8 +15,9 @@ if (!isset($_SESSION['cliente_id'])) {
     <link rel="icon" type="image/png" href="../assets/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vilela Engenharia | Área do Cliente</title>
-    <script type="module" crossorigin src="./assets/index-C-rqKCqH.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-DJqWrLjx.css">
+    <!-- Updated Assets from 'client-app' build -->
+    <script type="module" crossorigin src="./app/assets/index-mfwtjDRc.js"></script>
+    <link rel="stylesheet" crossorigin href="./app/assets/index-CJZm_P0c.css">
   </head>
   <body>
     <div id="root"></div>
