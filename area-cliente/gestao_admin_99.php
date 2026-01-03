@@ -1348,17 +1348,17 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 <div class="kpi-card-compact">
                     <div class="kpi-icon-box" style="background:#d1e7dd; color:#198754;">💰</div>
                     <div class="kpi-content">
-                        <div style="color:#198754; font-size:1.1rem;"><?= number_format($kpi_fin_pendente, 2, ',', '.') ?></div>
+                        <div style="color:#198754; font-size:1.1rem;"><?= number_format($kpi_fin_pendente ?? 0, 2, ',', '.') ?></div>
                         <div>A Receber (Futuro)</div>
                     </div>
                 </div>
                 
                 <!-- 5. Atrasados (Alerta) - Só aparece se tiver -->
-                <?php if($kpi_fin_atrasado > 0): ?>
+                <?php if(($kpi_fin_atrasado ?? 0) > 0): ?>
                 <div class="kpi-card-compact" style="border-color:#dc3545;">
                     <div class="kpi-icon-box" style="background:#dc3545; color:white;">⚠️</div>
                     <div class="kpi-content">
-                        <div style="color:#dc3545; font-size:1.1rem;"><?= number_format($kpi_fin_atrasado, 2, ',', '.') ?></div>
+                        <div style="color:#dc3545; font-size:1.1rem;"><?= number_format($kpi_fin_atrasado ?? 0, 2, ',', '.') ?></div>
                         <div>EM ATRASO</div>
                     </div>
                 </div>
