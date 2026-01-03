@@ -21,8 +21,8 @@ if (!isset($_SESSION['cliente_id'])) {
     <link rel="icon" type="image/png" href="../assets/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vilela Engenharia | Área do Cliente</title>
-    <script type="module" crossorigin src="./assets/index-jGMwF09j.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-l4boxe_g.css">
+    <script type="module" crossorigin src="./assets/index-B8RJqacd.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DJqWrLjx.css">
   </head>
   <body>
     <div id="root"></div>

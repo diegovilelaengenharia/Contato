@@ -9,8 +9,10 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // Added timestamp to prevent caching
-        const response = await fetch('/area-cliente/api/check_auth.php?t=' + Date.now());
+        // Added timestamp to prevent caching and credentials include
+        const response = await fetch('/area-cliente/api/check_auth.php?t=' + Date.now(), {
+          credentials: 'include' // FORCE sending cookies
+        });
         if (response.ok) {
           const data = await response.json();
           if (data.authenticated) {

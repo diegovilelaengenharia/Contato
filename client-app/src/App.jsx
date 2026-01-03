@@ -48,7 +48,7 @@ function App() {
   // Fetch Client Data when User is Authenticated
   useEffect(() => {
     if (user) {
-      fetch('/area-cliente/api/get_client_data.php')
+      fetch('/area-cliente/api/get_client_data.php', { credentials: 'include' })
         .then(res => {
           if (!res.ok) throw new Error('Falha ao carregar dados');
           return res.json();
