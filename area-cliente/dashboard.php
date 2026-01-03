@@ -4,7 +4,7 @@ session_name('CLIENTE_SESSID');
 session_start();
 // Auth Check
 if (!isset($_SESSION['cliente_id'])) {
-    header("Location: index.php");
+    header("Location: index.php?error=sessao_expirada");
     exit;
 }
 ?>

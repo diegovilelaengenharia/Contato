@@ -54,6 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         session_regenerate_id(true);
         $_SESSION['cliente_id'] = $user['id'];
         $_SESSION['cliente_nome'] = $user['nome'];
+        session_write_close();
         header("Location: dashboard.php");
         exit;
     } else {
