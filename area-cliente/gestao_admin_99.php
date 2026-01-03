@@ -48,9 +48,15 @@ require 'includes/schema.php';
 
 // --- Fases Padrão ---
 $fases_padrao = [
-    "Abertura de Processo (Guichê)", "Fiscalização (Parecer Fiscal)", "Triagem (Documentos Necessários)",
-    "Comunicado de Pendências (Triagem)", "Análise Técnica (Engenharia)", "Comunicado (Pendências e Taxas)",
-    "Confecção de Documentos", "Avaliação (ITBI/Averbação)", "Processo Finalizado (Documentos Prontos)"
+    "Abertura de Processo (Guichê)", 
+    "Fiscalização (Parecer Fiscal)", 
+    "Triagem (Documentos Necessários)",
+    "Comunicado de Pendências (Triagem)", 
+    "Análise Técnica (Engenharia)", 
+    "Comunicado (Pendências e Taxas)",
+    "Confecção de Documentos", 
+    "Avaliação (ITBI/Averbação)", 
+    "Processo Finalizado (Documentos Prontos)"
 ];
 
 // --- Taxas e Multas Padrão ---
@@ -595,62 +601,79 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             $avatar_url = !empty($avatar_file) ? $avatar_file[0] . '?v=' . time() : null;
             ?>
 
-            <!-- Card Resumo do Cliente (Compacto & Integrado) -->
-            <div class="form-card" style="display:flex; align-items:center; gap:20px; padding:20px; flex-wrap:wrap; margin-bottom:20px; border-left:5px solid var(--color-primary); background:#fff; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.05);">
+            <!-- Card Resumo do Cliente (Grid Layout: Info + Timelime) -->
+            <div class="form-card" style="margin-bottom:20px; border-left:5px solid var(--color-primary); background:#fff; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.05); padding:0;">
                 
-                <!-- Avatar / Iniciais (Com Upload) -->
-                <div style="position:relative; width:80px; height:80px; min-width:80px; cursor:pointer;" onclick="document.getElementById('avatar_input').click();" title="Clique para alterar a foto">
-                    <?php if($avatar_url): ?>
-                        <img src="<?= $avatar_url ?>" style="width:100%; height:100%; object-fit:cover; border-radius:50%; border:3px solid var(--color-primary-light);">
-                    <?php else: ?>
-                        <div style="width:100%; height:100%; background:var(--color-primary-light); color:var(--color-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2rem; font-weight:800; border:2px solid white; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
-                            <?= strtoupper(substr($cliente_ativo['nome'], 0, 1)) ?>
-                        </div>
-                    <?php endif; ?>
+                <div style="display:grid; grid-template-columns: 1fr 300px; gap:0;">
                     
-                    <div style="position:absolute; bottom:0; right:0; background:var(--color-primary); color:white; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; border:2px solid white;">📷</div>
-                </div>
-                
-                <!-- Form invisível para upload -->
-                </form>
+                    <!-- ESQUERDA: Info do Cliente -->
+                    <div style="padding:25px; display:flex; align-items:flex-start; gap:20px;">
+                        
+                        <!-- Avatar / Iniciais (Com Upload) -->
+                        <div style="position:relative; width:80px; height:80px; min-width:80px; cursor:pointer;" onclick="document.getElementById('avatar_input').click();" title="Clique para alterar a foto">
+                            <?php if($avatar_url): ?>
+                                <img src="<?= $avatar_url ?>" style="width:100%; height:100%; object-fit:cover; border-radius:50%; border:3px solid var(--color-primary-light);">
+                            <?php else: ?>
+                                <div style="width:100%; height:100%; background:var(--color-primary-light); color:var(--color-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2rem; font-weight:800; border:2px solid white; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
+                                    <?= strtoupper(substr($cliente_ativo['nome'], 0, 1)) ?>
+                                </div>
+                            <?php endif; ?>
+                            
+                            <div style="position:absolute; bottom:0; right:0; background:var(--color-primary); color:white; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; border:2px solid white;">📷</div>
+                        </div>
+                        
+                        <!-- Form invisível para upload -->
+                        </form> <!-- Fechamento do form global (ajuste se necessário, mas mantendo estrutura original) -->
 
-                <div class="client-summary-card">
-                    <div style="display:flex; gap:15px; align-items:center;">
-                        <!-- Ícone Removido conforme solicitação -->
-                        <div>
-                            <h2 style="margin:0 0 5px 0; font-size:1.4rem;"><?= htmlspecialchars($cliente_ativo['nome']) ?></h2>
-                            <div style="display:flex; gap:10px; font-size:0.9rem; color:#666; align-items:center; flex-wrap:wrap;">
-                                <span>🆔 #<?= str_pad($cliente_ativo['id'], 3, '0', STR_PAD_LEFT) ?></span>
-                                <span>•</span>
-                                <a href="editar_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="link-edit" style="color:var(--color-primary); text-decoration:none; font-weight:600;">✏️ Editar Cadastro</a>
-                                <span>•</span>
-                                <a href="relatorio_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="link-edit" style="color:var(--color-secondary); text-decoration:none; font-weight:600;">⚠️ Resumo PDF</a>
-                                <span>•</span>
-                                <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" class="link-edit btn-delete-confirm" data-confirm-text="Tem certeza que deseja EXCLUIR este cliente permanentemente?" style="color:#dc3545; text-decoration:none; font-weight:600;">🗑️ Excluir</a>
+                        <div class="client-summary-card" style="flex:1;">
+                            <h2 style="margin:0 0 5px 0; font-size:1.6rem; color:var(--color-text);"><?= htmlspecialchars($cliente_ativo['nome']) ?></h2>
+                            
+                            <div style="display:flex; flex-wrap:wrap; gap:15px; font-size:0.9rem; color:#666; margin-bottom:15px;">
+                                <span style="background:#f8f9fa; padding:2px 8px; border-radius:6px; border:1px solid #e9ecef;">🆔 #<?= str_pad($cliente_ativo['id'], 3, '0', STR_PAD_LEFT) ?></span>
+                                <span style="background:#f8f9fa; padding:2px 8px; border-radius:6px; border:1px solid #e9ecef;">📱 <?= $cliente_ativo['telefone'] ?></span>
+                                <span style="background:#f8f9fa; padding:2px 8px; border-radius:6px; border:1px solid #e9ecef;">📄 <?= $cliente_ativo['cpf_cnpj'] ?></span>
+                            </div>
+
+                            <div style="display:flex; gap:10px; font-size:0.9rem; align-items:center;">
+                                <a href="editar_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save" style="background:var(--color-primary-light); color:var(--color-primary); border:none; padding:5px 12px; font-size:0.8rem; box-shadow:none;">✏️ Editar Cadastro</a>
+                                <a href="relatorio_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save" style="background:#e2e6ea; color:#444; border:none; padding:5px 12px; font-size:0.8rem; box-shadow:none;">⚠️ Resumo PDF</a>
+                                <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" class="btn-delete-confirm" data-confirm-text="Excluir cliente?" style="color:#dc3545; text-decoration:none; font-weight:700; font-size:0.8rem; margin-left:10px;">🗑️ Excluir</a>
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- DADOS DO PROCESSO (Removido por solicitação - Editar no Cadastro Completo) -->
-                    <div style="margin-top:15px; padding-top:15px; border-top:1px solid #eee; font-size:0.85rem; color:#888; font-style:italic;">
-                        Para editar dados do processo, use o botão "Editar Cadastro".
+
+                    <!-- DIREITA: Timeline Vertical -->
+                    <div style="background:#f8f9fa; border-left:1px solid #e9ecef; padding:20px; height:100%; display:flex; flex-direction:column; justify-content:center;">
+                        <h4 style="margin:0 0 15px 0; font-size:0.85rem; text-transform:uppercase; color:#888; letter-spacing:1px; text-align:center;">Status do Processo</h4>
+                        
+                        <div class="vertical-timeline" style="display:flex; flex-direction:column; gap:0;">
+                            <?php 
+                            $found_idx = array_search(($detalhes['etapa_atual']??''), $fases_padrao);
+                            if($found_idx === false) $found_idx = -1; // Nada iniciado
+                            
+                            // Mostrar apenas um resumo compacto ou lista completa? 
+                            // O usuário pediu timeline com 9 itens. Vamos fazer uma lista compacta.
+                            foreach($fases_padrao as $i => $f): 
+                                $is_past = $i < $found_idx;
+                                $is_active = $i == $found_idx;
+                                $color = $is_active ? 'var(--color-primary)' : ($is_past ? '#198754' : '#ddd');
+                                $bg = $is_active ? '#e8f5e9' : 'transparent';
+                                $weight = $is_active ? '700' : '400';
+                                $icon = $is_past ? '✓' : ($is_active ? '➤' : '•');
+                            ?>
+                                <div style="display:flex; align-items:center; gap:8px; padding:4px 8px; border-radius:4px; background:<?= $bg ?>; color:<?= ($is_active || $is_past) ? '#333' : '#aaa' ?>; font-size:0.8rem;">
+                                    <div style="font-weight:bold; color:<?= $color ?>; width:15px; text-align:center;"><?= $icon ?></div>
+                                    <div style="flex:1; font-weight:<?= $weight ?>; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><?= $f ?></div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                        
+                        <?php if($found_idx == -1): ?>
+                            <div style="text-align:center; margin-top:10px; font-size:0.75rem; color:#999;">Processo não iniciado</div>
+                        <?php endif; ?>
                     </div>
+
                 </div>
-
-            </div>
-
-            <div class="simple-timeline">
-                <?php 
-                $found_idx = array_search(($detalhes['etapa_atual']??''), $fases_padrao);
-                if($found_idx === false) $found_idx = -1;
-                foreach($fases_padrao as $i => $f): 
-                    $cl = ($i < $found_idx) ? 'past' : ($i == $found_idx ? 'active' : '');
-                ?>
-                    <div class="st-item <?= $cl ?>">
-                        <div class="st-dot"></div>
-                        <span><?= $f ?></span>
-                    </div>
-                <?php endforeach; ?>
             </div>
 
             <div class="tabs-header">

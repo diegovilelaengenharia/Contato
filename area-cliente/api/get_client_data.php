@@ -33,12 +33,15 @@ try {
 
     // Phase Logic
     $fases_padrao = [
-        "Protocolo e Autuação", 
-        "Análise Documental", 
-        "Vistoria Técnica In Loco",
-        "Emissão de Laudos/Peças", 
-        "Tramitação e Aprovação", 
-        "Entrega Final/Habite-se"
+        "Abertura de Processo (Guichê)", 
+        "Fiscalização (Parecer Fiscal)", 
+        "Triagem (Documentos Necessários)",
+        "Comunicado de Pendências (Triagem)", 
+        "Análise Técnica (Engenharia)", 
+        "Comunicado (Pendências e Taxas)",
+        "Confecção de Documentos", 
+        "Avaliação (ITBI/Averbação)", 
+        "Processo Finalizado (Documentos Prontos)"
     ];
 
     // 2. Timeline
