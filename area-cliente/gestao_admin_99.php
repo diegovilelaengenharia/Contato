@@ -1021,5 +1021,28 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <!-- Modal Aprovar Removed (Included in cadastro.php) -->
+<!-- Floating Button: Oliveira Atende -->
+<a href="https://oliveira.atende.net/atendenet?source=pwa" target="_blank" style="
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #009688; /* Teal color for government/service vibe */
+    color: white;
+    padding: 12px 20px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 9999;
+    transition: transform 0.2s;
+    font-family: inherit;
+" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+    <span class="material-symbols-rounded" style="font-size:1.5rem;">account_balance</span>
+    Oliveira Atende
+</a>
+
 </body>
 </html>
