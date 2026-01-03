@@ -842,50 +842,120 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 </div>
             </div>
 
-                <!-- Modal Notificações Movido para rodapé para ser global -->
+            <!-- KPI Cards Compactos -->
+            <style>
+                .kpi-grid-compact {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                    gap: 15px;
+                    margin-bottom: 30px;
+                }
+                .kpi-card-compact {
+                    background: var(--color-surface); 
+                    border: 1px solid var(--color-border);
+                    border-radius: 12px;
+                    padding: 15px;
+                    display: flex;
+                    align-items: center;
+                    gap: 15px;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+                    transition: transform 0.2s;
+                }
+                .kpi-card-compact:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+                .kpi-icon-box {
+                    width: 48px; height: 48px;
+                    border-radius: 10px;
+                    display: flex; align-items: center; justify-content: center;
+                    font-size: 1.5rem;
+                    flex-shrink: 0;
+                }
+                .kpi-content div:first-child { font-size: 1.4rem; font-weight: 800; line-height: 1; margin-bottom: 2px; }
+                .kpi-content div:last-child { font-size: 0.85rem; color: var(--color-text-subtle); font-weight: 600; line-height: 1.2; }
+            </style>
+
+            <div class="kpi-grid-compact">
+                <!-- 1. Clientes -->
+                <div class="kpi-card-compact">
+                    <div class="kpi-icon-box" style="background:#e3f2fd; color:#2196f3;">👥</div>
+                    <div class="kpi-content">
+                        <div style="color:#2196f3;"><?= $kpi_total_clientes ?></div>
+                        <div>Clientes Ativos</div>
+                    </div>
+                </div>
+
+                <!-- 2. Obras -->
+                <div class="kpi-card-compact">
+                    <div class="kpi-icon-box" style="background:#fff3cd; color:#ffc107;">🏗️</div>
+                    <div class="kpi-content">
+                        <div style="color:#ffc107;"><?= $kpi_proc_ativos ?></div>
+                        <div>Obras/Processos</div>
+                    </div>
+                </div>
+
+                <!-- 3. Solicitações -->
+                <div class="kpi-card-compact" style="cursor: pointer;" onclick="if(<?= $kpi_pre_pendentes ?> > 0) window.location.href='?importar=true'">
+                    <div class="kpi-icon-box" style="background:#f8d7da; color:#dc3545;">📥</div>
+                    <div class="kpi-content">
+                        <div style="color:#dc3545;"><?= $kpi_pre_pendentes ?></div>
+                        <div>Novos Pedidos</div>
+                    </div>
+                </div>
+
+                <!-- 4. Recebíveis (Futuro) -->
+                <div class="kpi-card-compact">
+                    <div class="kpi-icon-box" style="background:#d1e7dd; color:#198754;">💰</div>
+                    <div class="kpi-content">
+                        <div style="color:#198754; font-size:1.1rem;"><?= number_format($kpi_fin_pendente ?? 0, 2, ',', '.') ?></div>
+                        <div>A Receber (Futuro)</div>
+                    </div>
+                </div>
                 
-                <!-- Modal Cobrar Cliente -->
-                <!-- Modal Cobrar Cliente (Refeito) -->
-<script>function openPendenciaModal() {
-    // Reset form for new entry
-    document.getElementById('pendencia_id_input').value = '';
-    
-    if (typeof ClassicEditor !== 'undefined' && document.querySelector('#editor_pendencias').nextSibling) {
-        const editorInstance = document.querySelector('#editor_pendencias').nextSibling.ckeditorInstance;
-        if(editorInstance) editorInstance.setData('');
-    } else {
-        document.getElementById('editor_pendencias').value = '';
-    }
-    
-    document.getElementById('btn_submit_pendencia').innerText = "Emitir Comunicado";
-    document.getElementById('modalPendencia').showModal();
-}
+                <!-- 5. Atrasados (Alerta) - Só aparece se tiver -->
+                <?php if(($kpi_fin_atrasado ?? 0) > 0): ?>
+                <div class="kpi-card-compact" style="border-color:#dc3545;">
+                    <div class="kpi-icon-box" style="background:#dc3545; color:white;">⚠️</div>
+                    <div class="kpi-content">
+                        <div style="color:#dc3545; font-size:1.1rem;"><?= number_format($kpi_fin_atrasado ?? 0, 2, ',', '.') ?></div>
+                        <div>EM ATRASO</div>
+                    </div>
+                </div>
+                <?php endif; ?>
 
-function closePendenciaModal() {
-    document.getElementById('modalPendencia').close();
-}
+            </div>
 
-function editPendencia(id, texto) {
-    // Populate the form ID
-    document.getElementById('pendencia_id_input').value = id;
-    
-    // Populate the Text Editor
-    if (typeof ClassicEditor !== 'undefined' && document.querySelector('#editor_pendencias').nextSibling) {
-        // If CKEditor is active
-        const editorInstance = document.querySelector('#editor_pendencias').nextSibling.ckeditorInstance;
-        if(editorInstance) editorInstance.setData(texto);
-    } else {
-        // Fallback for textarea
-        document.getElementById('editor_pendencias').value = texto;
-    }
-    
-    // Change Button Text (Visual Feedback)
-    document.getElementById('btn_submit_pendencia').innerText = "Salvar Alteração (Editar)";
-    
-    // Open Modal
-    document.getElementById('modalPendencia').showModal();
-}
-</script>
+            <!-- Tabela Geral de Clientes -->
+            <div class="form-card">
+                <h3>📋 Situação da Carteira de Clientes</h3>
+                <div class="table-responsive">
+                    <table style="width:100%; border-collapse:collapse; margin-top:15px;">
+                        <thead>
+                            <tr style="background:#f8f9fa; border-bottom:2px solid #ddd;">
+                                <th style="padding:12px; text-align:left;">Cliente</th>
+                                <th style="padding:12px; text-align:left;">Fase Atual</th>
+                                <th style="padding:12px; text-align:left;">Contato</th>
+                                <th style="padding:12px; text-align:center;">Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($clientes as $c): 
+                                // Busca detalhes rápidos (poderia ser otimizado com JOIN, mas mantendo simples)
+                                $dt = $pdo->query("SELECT etapa_atual, contato_tel FROM processo_detalhes WHERE cliente_id={$c['id']}")->fetch();
+                                $etapa = $dt['etapa_atual'] ?? '<span style="color:#ccc; font-style:italic;">Não iniciado</span>';
+                                $tel = $dt['contato_tel'] ?? '--';
+                            ?>
+                            <tr style="border-bottom:1px solid #eee;">
+                                <td style="padding:12px; font-weight:bold; color:var(--color-primary);"><?= htmlspecialchars($c['nome']) ?></td>
+                                <td style="padding:12px;"><?= $etapa ?></td>
+                                <td style="padding:12px;"><?= $tel ?></td>
+                                <td style="padding:12px; text-align:center;">
+                                    <a href="?cliente_id=<?= $c['id'] ?>" class="btn-save btn-info" style="padding:5px 10px; font-size:0.85rem; text-decoration:none;">Gerenciar ➡️</a>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
 <?php endif; ?>
     </main>
