@@ -145,18 +145,58 @@ function App() {
                 </div>
               </div>
             </div>
+            {/* Navigation Items */}
+            <nav className="flex-1 px-4 space-y-2 overflow-y-auto custom-scrollbar relative z-30">
+              <div className="pt-2"> {/* Spacer */}
+                <NavItem
+                  icon={<Home size={20} />}
+                  label="Página Inicial"
+                  active={activeTab === 'inicial'}
+                  onClick={() => setActiveTab('inicial')}
+                  expanded={isSidebarOpen}
+                />
+
+                <NavItem
+                  icon={<LayoutList size={20} />}
+                  label="Timeline"
+                  active={activeTab === 'timeline'}
+                  onClick={() => setActiveTab('timeline')}
+                  expanded={isSidebarOpen}
+                />
+
+                <NavItem
+                  icon={<AlertTriangle size={20} />}
+                  label="Pendências"
+                  active={activeTab === 'pendencias'}
+                  onClick={() => setActiveTab('pendencias')}
+                  expanded={isSidebarOpen}
+                  badge={pendencias.filter(p => p.status !== 'resolvido' && p.status !== 'anexado').length}
+                />
+
+                {/* Separator / Group Label */}
+                {isSidebarOpen && <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 mt-6 mb-2">Gestão</div>}
+
+                <NavItem
+                  icon={<DollarSign size={20} />}
+                  label="Financeiro"
+                  active={activeTab === 'financeiro'}
+                  onClick={() => setActiveTab('financeiro')}
+                  expanded={isSidebarOpen}
+                />
+
+                <NavItem
+                  icon={<FileText size={20} />}
+                  label="Documentos"
+                  active={activeTab === 'documentos'}
+                  onClick={() => setActiveTab('documentos')}
+                  expanded={isSidebarOpen}
+                />
+              </div>
+            </nav>
           </div>
         )}
 
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-          <NavItem icon={<Home size={20} />} label="Visão Geral" active={activeTab === 'inicial'} onClick={() => setActiveTab('inicial')} expanded={isSidebarOpen} />
-          <NavItem icon={<AlertTriangle size={20} />} label="Pendências" badge={pendencias.filter(p => p.status === 'pendente').length} active={activeTab === 'pendencias'} onClick={() => setActiveTab('pendencias')} expanded={isSidebarOpen} />
-          <NavItem icon={<DollarSign size={20} />} label="Financeiro" active={activeTab === 'financeiro'} onClick={() => setActiveTab('financeiro')} expanded={isSidebarOpen} />
-          <NavItem icon={<HardDrive size={20} />} label="Arquivos" active={activeTab === 'arquivos'} onClick={() => setActiveTab('arquivos')} expanded={isSidebarOpen} />
-
-          <div className="my-6 border-t border-gray-100 dark:border-gray-700 mx-4"></div>
-
-          <NavItem icon={<FileText size={20} />} label="Protocolar" active={activeTab === 'protocolo'} onClick={() => setActiveTab('protocolo')} expanded={isSidebarOpen} />
           <div className={`px-4 mb-3 text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider ${!isSidebarOpen && 'hidden'}`}>Central de Ajuda</div>
 
           <NavItem icon={<HelpCircle size={20} />} label="Suporte Técnico" active={activeTab === 'suporte'} onClick={() => setActiveTab('suporte')} expanded={isSidebarOpen} />
@@ -243,28 +283,124 @@ function App() {
 
           {/* === VIEW: INICIAL === */}
           {activeTab === 'inicial' && (
-            <div className="flex flex-col items-center justify-center h-[50vh] text-center opacity-50">
-              <div className="mb-4 p-4 rounded-full bg-gray-50 border border-gray-100 text-gray-300">
-                <LayoutDashboard size={48} strokeWidth={1} />
+            <div className="animate-fade-in-up">
+              {/* HERO CARD v2 (Clean & Detailed) */}
+              <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col md:flex-row items-center gap-6 md:gap-8 mb-8 relative overflow-hidden group">
+                {/* Decorative Background Blur */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-vilela-primary/5 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+
+                {/* Avatar */}
+                <div className="relative shrink-0">
+                  <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-white dark:border-gray-700 shadow-lg overflow-hidden relative z-10 group-hover:scale-105 transition-transform duration-500">
+                    {DATA.user_photo ? (
+                      <img src={DATA.user_photo} alt="Avatar" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full bg-gray-100 dark:bg-gray-600 flex items-center justify-center text-gray-400 text-3xl font-bold">
+                        {user?.name?.charAt(0)}
+                      </div>
+                    )}
+                  </div>
+                  {/* Status Indicator */}
+                  <div className="absolute bottom-2 right-2 w-6 h-6 bg-vilela-primary border-4 border-white dark:border-gray-800 rounded-full z-20"></div>
+                </div>
+
+                {/* Client Info */}
+                <div className="flex-1 text-center md:text-left z-10">
+                  <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+                    {user?.name}
+                  </h1>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    {/* CPF */}
+                    <div className="flex items-center justify-center md:justify-start gap-2 text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-700/50 px-4 py-2 rounded-xl">
+                      <div className="bg-white dark:bg-gray-600 p-1.5 rounded-lg text-vilela-primary dark:text-emerald-400 shadow-sm">
+                        <User size={16} strokeWidth={2.5} />
+                      </div>
+                      <span className="font-medium text-sm">{DATA.client_info?.cpf || 'CPF não informado'}</span>
+                    </div>
+
+                    {/* Address */}
+                    <div className="flex items-center justify-center md:justify-start gap-2 text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-700/50 px-4 py-2 rounded-xl">
+                      <div className="bg-white dark:bg-gray-600 p-1.5 rounded-lg text-vilela-primary dark:text-emerald-400 shadow-sm">
+                        <MapPin size={16} strokeWidth={2.5} />
+                      </div>
+                      <span className="font-medium text-sm truncate max-w-[200px]" title={processDetails.address}>
+                        {processDetails.address || 'Endereço não cadastrado'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <h2 className="text-xl font-medium text-gray-400">Área de Trabalho Limpa</h2>
-              <p className="text-sm text-gray-300">Pronto para início da construção.</p>
+
+              {/* Optional: Simple Process Status Overview Component to fill space? */}
+              {/* Keeping it simple for now as requested "Button by Button" - just the Hero Card first */}
+            </div>
+          )}
+
+          {/* === VIEW: TIMELINE === */}
+          {activeTab === 'timeline' && (
+            <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-6">
+              <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-50 dark:border-gray-700">
+                <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2">
+                  <LayoutList className="text-vilela-primary" /> Linha do Tempo
+                </h2>
+              </div>
+              <Timeline movements={timeline} />
             </div>
           )}
 
           {/* === VIEW: PENDENCIAS === */}
           {activeTab === 'pendencias' && (
-            <div className="flex items-center justify-center h-[50vh] text-gray-300">Módulo Pendências (Vazio)</div>
+            <div className="space-y-6">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 border border-gray-100 dark:border-gray-700 shadow-sm transition-colors">
+                <div className="flex items-center gap-3 mb-6 pb-6 border-b border-gray-50 dark:border-gray-700">
+                  <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2">
+                    <AlertTriangle className="text-orange-500" /> Pendências
+                  </h2>
+                </div>
+                <PendencyWidget pendencias={pendencias} />
+              </div>
+            </div>
           )}
 
           {/* === VIEW: FINANCEIRO === */}
           {activeTab === 'financeiro' && (
-            <div className="flex items-center justify-center h-[50vh] text-gray-300">Módulo Financeiro (Vazio)</div>
+            <div className="space-y-6">
+              <KPICards kpis={financeiroKPIs} />
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 border border-gray-100 dark:border-gray-700 shadow-sm transition-colors">
+                <div className="flex items-center gap-3 mb-6 pb-6 border-b border-gray-50 dark:border-gray-700">
+                  <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2">
+                    <DollarSign className="text-vilela-primary" /> Histórico Financeiro
+                  </h2>
+                </div>
+                <FinanceWidget financeiro={financeiro} />
+              </div>
+            </div>
           )}
 
-          {/* === VIEW: ARQUIVOS (DRIVE) === */}
-          {activeTab === 'arquivos' && (
-            <div className="flex items-center justify-center h-[50vh] text-gray-300">Módulo Arquivos (Vazio)</div>
+          {/* === VIEW: DOCUMENTOS (DRIVE) === */}
+          {activeTab === 'documentos' && (
+            <div className="h-full flex flex-col">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm flex-1 flex flex-col overflow-hidden min-h-[500px] transition-colors">
+                <div className="p-4 border-b border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 flex justify-between items-center">
+                  <h3 className="font-bold text-gray-700 dark:text-gray-200 flex items-center gap-2"><FileText size={18} /> Acervo Digital</h3>
+                  <button onClick={() => window.open(DATA.driveLink, '_blank')} className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-3 py-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 font-bold flex items-center gap-1 border border-gray-200 dark:border-gray-600 transition-colors">
+                    Abrir Externamente <ChevronRight size={12} />
+                  </button>
+                </div>
+                <div className="flex-1 bg-gray-50 dark:bg-gray-900 relative">
+                  {DATA.driveLink ?
+                    <iframe
+                      src={DATA.driveLink}
+                      className="w-full h-full border-0 absolute inset-0"
+                      title="Google Drive"
+                    ></iframe>
+                    :
+                    <div className="flex items-center justify-center h-full text-gray-400 dark:text-gray-600">Pasta do Drive não vinculada.</div>
+                  }
+                </div>
+              </div>
+            </div>
           )}
 
           {/* === VIEW: PROTOCOLO DIGITAL === */}
@@ -277,10 +413,10 @@ function App() {
         {/* --- BOTTOM NAVIGATION (MOBILE ONLY - DOCK STYLE) --- */}
         <nav className="md:hidden fixed bottom-4 left-4 right-4 bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg border border-gray-200 dark:border-gray-700 rounded-2xl flex justify-around items-center h-16 shadow-[0_8px_30px_rgba(0,0,0,0.12)] z-50">
           <BottomNavItem icon={<Home size={20} />} label="Home" active={activeTab === 'inicial'} onClick={() => setActiveTab('inicial')} />
+          <BottomNavItem icon={<LayoutList size={20} />} label="Tempo." active={activeTab === 'timeline'} onClick={() => setActiveTab('timeline')} />
           <BottomNavItem icon={<AlertTriangle size={20} />} label="Pend." active={activeTab === 'pendencias'} onClick={() => setActiveTab('pendencias')} badge={pendencias.filter(p => p.status === 'pendente').length} />
           <BottomNavItem icon={<DollarSign size={20} />} label="Fin." active={activeTab === 'financeiro'} onClick={() => setActiveTab('financeiro')} />
-          <BottomNavItem icon={<FileText size={20} />} label="Prot." active={activeTab === 'protocolo'} onClick={() => setActiveTab('protocolo')} />
-          <BottomNavItem icon={<HardDrive size={20} />} label="Arq." active={activeTab === 'arquivos'} onClick={() => setActiveTab('arquivos')} />
+          <BottomNavItem icon={<HardDrive size={20} />} label="Doc." active={activeTab === 'documentos'} onClick={() => setActiveTab('documentos')} />
         </nav>
 
       </div>
