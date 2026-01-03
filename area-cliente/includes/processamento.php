@@ -476,6 +476,16 @@ if (isset($_GET['del_hist'])) {
     exit;
 }
 
+// 6.8 Excluir Histórico COMPLETO (Perigo Extremo)
+if (isset($_GET['del_all_hist'])) {
+    $cid = $_GET['cliente_id'];
+    try {
+        $pdo->prepare("DELETE FROM processo_movimentos WHERE cliente_id=?")->execute([$cid]);
+        header("Location: ?cliente_id=$cid&tab=andamento&msg=all_hist_deleted");
+        exit;
+    } catch(PDOException $e) { $erro = "Erro ao apagar histórico: " . $e->getMessage(); }
+}
+
 // 6.5 Salvar Dados Gerais Financeiro (Link da Pasta)
 if (isset($_POST['btn_salvar_dados_financeiros'])) {
     $cid = $_POST['cliente_id'];
