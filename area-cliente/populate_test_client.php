@@ -31,8 +31,8 @@ try {
         $pdo->prepare("DELETE FROM processo_pendencias WHERE cliente_id=?")->execute([$cid]);
         $pdo->prepare("DELETE FROM processo_detalhes WHERE cliente_id=?")->execute([$cid]);
     } else {
-        $stmt = $pdo->prepare("INSERT INTO clientes (nome, usuario, senha, cpf_cnpj, telefone) VALUES (?, ?, ?, ?, ?)");
-        $stmt->execute([$nome, $login, $senha_hash, '333.333.333-33', '(35) 99999-9999']);
+        $stmt = $pdo->prepare("INSERT INTO clientes (nome, usuario, senha) VALUES (?, ?, ?)");
+        $stmt->execute([$nome, $login, $senha_hash]);
         $cid = $pdo->lastInsertId();
         echo "Cliente Criado (ID: $cid)<br>";
     }
