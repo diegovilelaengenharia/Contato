@@ -158,7 +158,8 @@ if (isset($_POST['btn_salvar_tudo'])) {
                 num_matricula=?, imovel_area_lote=?, area_construida=?,
                 
                 processo_objeto=?, processo_numero=?, area_total_final=?,
-                valor_venal=?, area_existente=?, area_acrescimo=?, area_permeavel=?, taxa_ocupacao=?, fator_aproveitamento=?, geo_coords=?
+                valor_venal=?, area_existente=?, area_acrescimo=?, area_permeavel=?, taxa_ocupacao=?, fator_aproveitamento=?, geo_coords=?,
+                observacoes_gerais=?
                 WHERE cliente_id=?";
         } else {
             $sqlDet = "INSERT INTO processo_detalhes (
@@ -169,8 +170,9 @@ if (isset($_POST['btn_salvar_tudo'])) {
                 num_matricula, imovel_area_lote, area_construida, 
                 processo_objeto, processo_numero, area_total_final,
                 valor_venal, area_existente, area_acrescimo, area_permeavel, taxa_ocupacao, fator_aproveitamento, geo_coords,
+                observacoes_gerais,
                 cliente_id
-            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         }
         
         $stmtDetUp = $pdo->prepare($sqlDet);
@@ -184,6 +186,7 @@ if (isset($_POST['btn_salvar_tudo'])) {
             $_POST['processo_objeto'] ?? null, $_POST['processo_numero'] ?? null, $_POST['area_total_final'] ?? null,
             $_POST['valor_venal'] ?? null, $_POST['area_existente'] ?? null, $_POST['area_acrescimo'] ?? null, $_POST['area_permeavel'] ?? null,
             $_POST['taxa_ocupacao'] ?? null, $_POST['fator_aproveitamento'] ?? null, $_POST['geo_coords'] ?? null,
+            $_POST['observacoes_gerais'] ?? null,
 
             $cliente_id
         ]);
@@ -606,7 +609,26 @@ if (isset($_POST['btn_salvar_tudo'])) {
             </div>
 
             <!-- SECTION 3: PROPERTY -->
-            <div class="section-header">
+            <?php
+                // Self-Healing: Ensure column 'observacoes_gerais' exists
+                try {
+                    $pdo->exec("ALTER TABLE processo_detalhes ADD COLUMN observacoes_gerais TEXT NULL");
+                } catch (Exception $e) { /* Ignore if exists */ }
+            ?>
+
+            <!-- OBSERVATION WARNING BOX -->
+            <div class="section-header" style="background:#fff5f5; border-color:#fed7d7;">
+                <div class="section-icon" style="background:#fed7d7; color:#c53030;">📢</div>
+                <h2 style="color:#c53030;">Avisos em Destaque (Texto Vermelho)</h2>
+            </div>
+            <div class="section-body" style="background:#fff5f5;">
+                <div class="form-group">
+                    <label style="color:#c53030;">Mensagem para o Cliente (Aparecerá em destaque no topo)</label>
+                    <textarea name="observacoes_gerais" rows="3" style="width:100%; padding:15px; border:1px solid #fc8181; border-radius:8px; font-size:1.1rem; color:#c53030;" placeholder="Digite aqui um aviso importante, ex: 'Processo parado aguardando taxa'"><?= htmlspecialchars($detalhes['observacoes_gerais']??'') ?></textarea>
+                </div>
+            </div>
+
+            <div class="section-header" style="margin-top:20px;">
                 <div class="section-icon">🏠</div>
                 <h2>Dados do Imóvel e Processo</h2>
             </div>

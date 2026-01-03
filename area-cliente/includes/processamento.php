@@ -308,6 +308,7 @@ if (isset($_POST['btn_editar_cliente'])) {
     // New fields missing in original logic
     $a_total_final = $_POST['area_total_final'] ?? null; 
     $valor_venal = $_POST['valor_venal'] ?? null;
+    $obs_gerais = $_POST['observacoes_gerais'] ?? null;
 
     // Lógica Upload Foto Obra
     $foto_path = null;
@@ -340,11 +341,11 @@ if (isset($_POST['btn_editar_cliente'])) {
             // Mantém foto antiga se não enviou nova, ou substitui
             $final_foto = $foto_path ? $foto_path : ($curr['foto_capa_obra'] ?? null);
             
-            $sql_det = "UPDATE processo_detalhes SET endereco_imovel=?, link_drive_pasta=?, area_existente=?, area_acrescimo=?, area_permeavel=?, taxa_ocupacao=?, fator_aproveitamento=?, geo_coords=?, foto_capa_obra=?, cpf_cnpj=?, contato_tel=?, contato_email=?, area_total_final=?, valor_venal=? WHERE cliente_id=?";
-            $pdo->prepare($sql_det)->execute([$end, $link, $a_exist, $a_acresc, $a_perm, $tx_ocup, $ft_aprov, $geo, $final_foto, $cpf, $tel, $email, $a_total_final, $valor_venal, $cid]);
+            $sql_det = "UPDATE processo_detalhes SET endereco_imovel=?, link_drive_pasta=?, area_existente=?, area_acrescimo=?, area_permeavel=?, taxa_ocupacao=?, fator_aproveitamento=?, geo_coords=?, foto_capa_obra=?, cpf_cnpj=?, contato_tel=?, contato_email=?, area_total_final=?, valor_venal=?, observacoes_gerais=? WHERE cliente_id=?";
+            $pdo->prepare($sql_det)->execute([$end, $link, $a_exist, $a_acresc, $a_perm, $tx_ocup, $ft_aprov, $geo, $final_foto, $cpf, $tel, $email, $a_total_final, $valor_venal, $obs_gerais, $cid]);
         } else {
-             $sql_det = "INSERT INTO processo_detalhes (cliente_id, endereco_imovel, link_drive_pasta, area_existente, area_acrescimo, area_permeavel, taxa_ocupacao, fator_aproveitamento, geo_coords, foto_capa_obra, cpf_cnpj, contato_tel, contato_email, area_total_final, valor_venal) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-             $pdo->prepare($sql_det)->execute([$cid, $end, $link, $a_exist, $a_acresc, $a_perm, $tx_ocup, $ft_aprov, $geo, $foto_path, $cpf, $tel, $email, $a_total_final, $valor_venal]);
+             $sql_det = "INSERT INTO processo_detalhes (cliente_id, endereco_imovel, link_drive_pasta, area_existente, area_acrescimo, area_permeavel, taxa_ocupacao, fator_aproveitamento, geo_coords, foto_capa_obra, cpf_cnpj, contato_tel, contato_email, area_total_final, valor_venal, observacoes_gerais) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+             $pdo->prepare($sql_det)->execute([$cid, $end, $link, $a_exist, $a_acresc, $a_perm, $tx_ocup, $ft_aprov, $geo, $foto_path, $cpf, $tel, $email, $a_total_final, $valor_venal, $obs_gerais]);
         }
         
         $pdo->commit();

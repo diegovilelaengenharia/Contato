@@ -193,10 +193,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 <?php endif; ?>
             </button>
             
-            <a href="avisos_gerais.php" class="btn-menu">
-                <span class="material-symbols-rounded">campaign</span>
-                Aviso Global
-            </a>
+            <!-- Aviso Global Removed -->
             
             <h4 style="font-size:0.75rem; text-transform:uppercase; color:#adb5bd; font-weight:700; margin:15px 0 5px 10px;">Cadastro</h4>
             <!-- Botão Novo Cliente (Neutro) -->
@@ -251,28 +248,8 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
     <main>
         <!-- 🔔 CENTRAL DE AVISOS -->
         <?php
-        // 1. Tabela de Avisos (Broadcast)
-        $pdo->exec("CREATE TABLE IF NOT EXISTS sistema_avisos (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            mensagem TEXT,
-            ativo TINYINT(1) DEFAULT 1,
-            data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP
-        )");
-
-        // 2. Salvar Aviso Global
-        if(isset($_POST['btn_salvar_aviso_geral'])) {
-            $msg = trim($_POST['mensagem_aviso']);
-            $pdo->query("UPDATE sistema_avisos SET ativo=0"); // Reset
-            if(!empty($msg)) {
-                $stmta = $pdo->prepare("INSERT INTO sistema_avisos (mensagem, ativo) VALUES (?, 1)");
-                $stmta->execute([$msg]);
-            }
-            // Feedback visual via Toastify (injetado via JS no final ou aqui mesmo)
-            echo "<script>document.addEventListener('DOMContentLoaded', () => Toastify({text: '📢 Aviso Global Atualizado!', duration: 3000, style:{background:'#198754'}}).showToast());</script>";
-        }
-
-        // 3. Dados
-        $aviso_atual = $pdo->query("SELECT * FROM sistema_avisos WHERE ativo=1 ORDER BY id DESC LIMIT 1")->fetch();
+        // 1. Tabela de Avisos (Logic Removed per request)
+        // $pdo->exec("CREATE TABLE IF NOT EXISTS sistema_avisos...");
 
         // Aniversariantes
         $aniversariantes = $pdo->query("SELECT c.id, c.nome, pd.data_nascimento, DAY(pd.data_nascimento) as dia 

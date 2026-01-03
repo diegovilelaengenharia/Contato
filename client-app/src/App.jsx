@@ -225,9 +225,18 @@ function App() {
           {/* === VIEW: INICIAL === */}
           {activeTab === 'inicial' && (
             <>
-              {/* Process Stats (New Light Widget) */}
-              {/* Process Stats (Removed per request) */}
-              {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4"> ... </div> */}
+              {/* === RED OBSERVATION ALERT (New) === */}
+              {processDetails.observation && (
+                <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r shadow-sm flex items-start gap-3 animate-fade-in-down">
+                  <div className="text-red-600 mt-0.5"><AlertTriangle size={24} /></div>
+                  <div>
+                    <h3 className="text-red-800 font-bold uppercase text-xs tracking-wider mb-1">Avisos Importantes</h3>
+                    <p className="text-red-700 font-medium text-base whitespace-pre-wrap leading-relaxed">
+                      {processDetails.observation}
+                    </p>
+                  </div>
+                </div>
+              )}
 
               {/* Progress Bar (Light) */}
               <div className="bg-white rounded-2xl p-6 md:p-8 border border-gray-100 shadow-sm relative overflow-hidden">

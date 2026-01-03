@@ -64,6 +64,7 @@ try {
         'currentPhase' => $clientData['etapa_atual'] ?? 'Protocolo e Autuação',
         'processDetails' => [
             'number' => $clientData['numero_processo'] ?? 'N/A',
+            'observation' => $clientData['observacoes_gerais'] ?? null,
             'area' => $clientData['area_total'] ?? '0 m²', // Legacy support
             'area_total' => $clientData['area_total_final'] ?? $clientData['area_total'] ?? '0',
             'object' => $clientData['objeto_processo'] ?? 'Consultoria',
