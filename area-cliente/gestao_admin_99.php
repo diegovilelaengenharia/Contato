@@ -1074,36 +1074,59 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
 
                 <!-- Form de Adição -->
-                <div class="form-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                        <h3 style="margin:0;">➕ Novo Lançamento Financeiro</h3>
-                        <button type="button" onclick="openTaxasModal()" class="btn-save btn-info" style="width:auto; padding:8px 15px; font-size:0.9rem;">📋 Selecionar Padrão</button>
+                <!-- Header e Botão Novo Lançamento -->
+                <div class="form-card" style="margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; padding:20px;">
+                    <div>
+                        <h3 style="margin:0; color:#2c3e50;">Fluxo Financeiro</h3>
+                        <p style="margin:5px 0 0 0; font-size:0.9rem; color:#666;">Gerencie honorários, taxas e despesas do processo.</p>
                     </div>
-                    <form method="POST">
+                    <button type="button" onclick="document.getElementById('modalFinanceiro').showModal()" style="background:linear-gradient(135deg, #2196f3, #4dabf5); color:white; border:none; padding:12px 25px; border-radius:30px; font-weight:700; font-size:1rem; cursor:pointer; display:flex; align-items:center; gap:8px; box-shadow:0 4px 15px rgba(33, 150, 243, 0.3); transition:all 0.2s;">
+                        <span style="font-size:1.2rem;">➕</span> Novo Lançamento
+                    </button>
+                </div>
+
+                <!-- Modal Novo Lançamento Financeiro -->
+                <dialog id="modalFinanceiro" style="border:none; border-radius:12px; padding:0; width:90%; max-width:550px; box-shadow:0 10px 40px rgba(0,0,0,0.3);">
+                    <div style="background:#2196f3; color:white; padding:20px; display:flex; justify-content:space-between; align-items:center;">
+                        <h3 style="margin:0; font-size:1.2rem;">💰 Novo Lançamento</h3>
+                        <button onclick="document.getElementById('modalFinanceiro').close()" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
+                    </div>
+                    
+                    <form method="POST" style="padding:25px;">
                         <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
-                        <div class="form-grid">
+                        
+                        <div style="background:#f0f8ff; border:1px solid #cfe2ff; padding:15px; border-radius:8px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
+                             <span style="color:#084298; font-size:0.9rem; font-weight:600;">Precisa de ajuda?</span>
+                             <button type="button" onclick="openTaxasModal()" class="btn-save btn-info" style="width:auto; padding:6px 15px; font-size:0.85rem; margin:0;">📋 Selecionar Padrão</button>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:15px;">
+                            <label style="display:block; margin-bottom:5px; font-weight:600;">Descrição</label>
+                            <input type="text" name="descricao" id="fin_descricao" required placeholder="Ex: Taxa de Habite-se" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px;">
+                        </div>
+
+                        <div class="form-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:15px;">
                             <div class="form-group">
-                                <label>Descrição</label>
-                                <input type="text" name="descricao" required placeholder="Ex: Taxa de Habite-se">
-                            </div>
-                            <div class="form-group">
-                                <label>Categoria</label>
-                                <select name="categoria" required>
+                                <label style="display:block; margin-bottom:5px; font-weight:600;">Categoria</label>
+                                <select name="categoria" id="fin_categoria" required style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px;">
                                     <option value="honorarios">Honorários (Vilela Engenharia)</option>
-                                    <option value="taxas">Taxas e Multas (Governo/Prefeitura)</option>
+                                    <option value="taxas">Taxas e Multas (Governo)</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label>Valor (R$)</label>
-                                <input type="number" step="0.01" name="valor" required placeholder="0.00">
+                                <label style="display:block; margin-bottom:5px; font-weight:600;">Valor (R$)</label>
+                                <input type="number" step="0.01" name="valor" id="fin_valor" required placeholder="0.00" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px;">
+                            </div>
+                        </div>
+
+                        <div class="form-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:20px;">
+                            <div class="form-group">
+                                <label style="display:block; margin-bottom:5px; font-weight:600;">Vencimento</label>
+                                <input type="date" name="data_vencimento" required style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px;">
                             </div>
                             <div class="form-group">
-                                <label>Vencimento</label>
-                                <input type="date" name="data_vencimento" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Status</label>
-                                <select name="status">
+                                <label style="display:block; margin-bottom:5px; font-weight:600;">Status</label>
+                                <select name="status" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px;">
                                     <option value="pendente">⏳ Pendente</option>
                                     <option value="pago">✅ Pago</option>
                                     <option value="atrasado">❌ Atrasado</option>
@@ -1112,9 +1135,9 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             </div>
                         </div>
 
-                        <button type="submit" name="btn_salvar_financeiro" class="btn-save btn-success">Adicionar Lançamento</button>
+                        <button type="submit" name="btn_salvar_financeiro" class="btn-save btn-success" style="width:100%; padding:12px; font-size:1rem;">Adicionar Lançamento</button>
                     </form>
-                </div>
+                </dialog>
 
                 <!-- Tabelas -->
                 <?php 
@@ -1474,13 +1497,10 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
         document.getElementById('modalTaxas').close();
     }
     function selectTaxa(titulo, lei, tipo, valor) {
-        // Preenche campos
-        const form = document.querySelector('form[action=""] div.form-grid') ? document.querySelector('form[action=""] div.form-grid').parentElement : document.forms[2]; // Busca o form de financeiro (hack simples baseada na ordem, melhor usar ID)
-        
-        // Melhor abordagem: usar IDs nos inputs do Financeiro
-        const inpDesc = document.querySelector('input[name="descricao"]');
-        const semCateg = document.querySelector('select[name="categoria"]');
-        const inpValor = document.querySelector('input[name="valor"]');
+        // Tenta buscar pelos IDs novos primeiro (do modal)
+        const inpDesc = document.getElementById('fin_descricao') || document.querySelector('input[name="descricao"]');
+        const inpValor = document.getElementById('fin_valor') || document.querySelector('input[name="valor"]');
+        const semCateg = document.getElementById('fin_categoria') || document.querySelector('select[name="categoria"]');
         
         if(inpDesc) {
             let texto = titulo;
@@ -1493,8 +1513,15 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
         }
         
         if(semCateg) {
-            semCateg.value = 'taxas'; // Força categoria taxas para ambos, ou muda se for honorarios
+            semCateg.value = 'taxas'; // Força categoria taxas
         }
+        
+        closeTaxasModal();
+        
+        // Reabrir o modal financeiro em cima? E se fechou? O fluxo é: ModalFin -> ModalTaxas -> Select -> Fecha ModalTaxas (ModalFin deve estar lá ainda)
+        // Ensure Modal Financeiro is visible if it was the origin
+        const modalFin = document.getElementById('modalFinanceiro');
+        if(modalFin && !modalFin.open) modalFin.showModal();
         
         closeTaxasModal();
         
