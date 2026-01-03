@@ -352,11 +352,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             .sd-item:hover { background: #f8f9fa; }
             .sd-empty { padding: 20px; text-align: center; color: #999; font-size: 0.85rem; font-style: italic; }
             
-            /* Global Broadcast Compact */
-            .broadcast-compact { flex: 1; display: flex; gap: 10px; background: white; padding: 8px; border-radius: 30px; border: 1px solid #e0e0e0; align-items: center; min-width: 300px; }
-            .broadcast-input { border: none; outline: none; flex: 1; padding: 0 15px; font-size: 0.9rem; color: #444; background: transparent; }
-            .broadcast-btn { background: #6610f2; color: white; border: none; padding: 6px 15px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; cursor: pointer; white-space: nowrap; transition: background 0.2s; }
-            .broadcast-btn:hover { background: #520dc2; }
+
         </style>
 
         <div class="indicators-bar">
@@ -419,7 +415,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 </div>
             </div>
 
-            <!-- 4. Global Broadcast (REMOVED - Moved to Dedicated Page) -->
+
         </div>
 
         <!-- Mensagens PHP serão capturadas pelo JS abaixo -->
