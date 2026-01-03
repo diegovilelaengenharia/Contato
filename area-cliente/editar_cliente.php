@@ -19,6 +19,8 @@ if (!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true) {
 ob_start();
 
 require 'db.php';
+// Ensure schema is up to date (Self-Healing)
+require_once 'includes/schema.php';
 
 $cliente_id = $_GET['id'] ?? null;
 if (!$cliente_id) {

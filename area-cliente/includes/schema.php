@@ -59,4 +59,10 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS processo_campos_extras (
     valor TEXT,
     FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
 )");
+// Update Schema: Add foto_perfil to clientes
+try {
+    $pdo->query("SELECT foto_perfil FROM clientes LIMIT 1");
+} catch (Exception $e) {
+    $pdo->exec("ALTER TABLE clientes ADD COLUMN foto_perfil VARCHAR(255) DEFAULT NULL");
+}
 ?>
