@@ -349,7 +349,19 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                 <span style="background:#f8f9fa; padding:2px 8px; border-radius:6px; border:1px solid #e9ecef;">📄 <?= $detalhes['cpf_cnpj'] ?? '--' ?></span>
                             </div>
 
-                            <div style="display:flex; gap:10px; font-size:0.9rem; align-items:center;">
+                            <!-- NEW: Process Info & Address -->
+                            <div style="margin-top:12px; font-size:0.9rem; color:#444; display:flex; flex-direction:column; gap:6px;">
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <span class="material-symbols-rounded" style="font-size:1.1rem; color:#6f42c1;">folder_open</span>
+                                    <span style="font-weight:600;"><?= !empty($detalhes['tipo_servico']) ? htmlspecialchars($detalhes['tipo_servico']) : 'Tipo de Processo não informado' ?></span>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:6px; color:#666;">
+                                    <span class="material-symbols-rounded" style="font-size:1.1rem; color:#dc3545;">location_on</span>
+                                    <span><?= !empty($detalhes['endereco_imovel']) ? htmlspecialchars($detalhes['endereco_imovel']) : 'Endereço da obra não informado' ?></span>
+                                </div>
+                            </div>
+                            
+                            <div style="display:flex; gap:10px; font-size:0.9rem; align-items:center; margin-top:10px;">
                                 <a href="editar_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save" style="background:var(--color-primary-light); color:var(--color-primary); border:none; padding:5px 12px; font-size:0.8rem; box-shadow:none;">✏️ Editar Cadastro</a>
                                 <a href="relatorio_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save" style="background:#e2e6ea; color:#444; border:none; padding:5px 12px; font-size:0.8rem; box-shadow:none;">⚠️ Resumo PDF</a>
                                 <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" class="btn-delete-confirm" data-confirm-text="Excluir cliente?" style="color:#dc3545; text-decoration:none; font-weight:700; font-size:0.8rem; margin-left:10px;">🗑️ Excluir</a>
