@@ -24,5 +24,9 @@ export default defineConfig({
       }
     }
   },
-  base: './' // Use relative paths for assets
+  base: './', // Use relative paths for assets
+  build: {
+    outDir: '../area-cliente/app',
+    emptyOutDir: true
+  }
 })

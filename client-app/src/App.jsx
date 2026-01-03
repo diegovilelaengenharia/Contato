@@ -258,11 +258,23 @@ function App() {
               )}
 
               {/* HERO SECTION (Process Highlight) */}
-              <div className="bg-gradient-to-br from-[#146c43] to-[#0d3b25] rounded-3xl p-6 md:p-8 mb-8 text-white shadow-xl relative overflow-hidden group">
+              <div className={`
+                rounded-3xl p-6 md:p-8 mb-8 shadow-xl relative overflow-hidden group transition-all duration-300
+                ${isDarkMode
+                  ? 'bg-gradient-to-br from-[#146c43] to-[#0d3b25] text-white'
+                  : 'bg-white border border-gray-100 text-vilela-primary shadow-lg shadow-gray-100/50'
+                }
+              `}>
 
                 {/* Background Decor */}
-                <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
-                <div className="absolute bottom-0 left-0 w-48 h-48 bg-black opacity-10 rounded-full blur-2xl -ml-10 -mb-10 pointer-events-none"></div>
+                <div className={`
+                  absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none transition-opacity duration-300
+                  ${isDarkMode ? 'bg-white opacity-5' : 'bg-vilela-primary opacity-[0.03]'}
+                `}></div>
+                <div className={`
+                  absolute bottom-0 left-0 w-48 h-48 rounded-full blur-2xl -ml-10 -mb-10 pointer-events-none transition-opacity duration-300
+                  ${isDarkMode ? 'bg-black opacity-10' : 'bg-vilela-primary opacity-[0.02]'}
+                `}></div>
 
                 <div className="relative z-10">
                   {/* Greeting & Process Info */}
@@ -271,8 +283,8 @@ function App() {
                       <h1 className="text-2xl md:text-4xl font-bold mb-2 flex items-center gap-3">
                         Olá, {user?.name?.split(' ')[0]}! <span className="animate-pulse">👋</span>
                       </h1>
-                      <div className="flex items-center gap-3 text-white/80 text-sm font-medium">
-                        <span className="bg-white/10 px-3 py-1 rounded-full border border-white/10 backdrop-blur-sm">
+                      <div className={`flex items-center gap-3 text-sm font-medium ${isDarkMode ? 'text-white/80' : 'text-gray-500'}`}>
+                        <span className={`px-3 py-1 rounded-full border backdrop-blur-sm ${isDarkMode ? 'bg-white/10 border-white/10' : 'bg-gray-50 border-gray-200'}`}>
                           Processo #{processDetails.number || '0000'}
                         </span>
                         <span>{processDetails.object || 'Projeto Vilela'}</span>
@@ -281,7 +293,7 @@ function App() {
                   </div>
 
                   {/* Integrated Progress Bar (Hero Mode) */}
-                  <ProgressBar currentPhase={DATA.currentPhase} mode="hero" />
+                  <ProgressBar currentPhase={DATA.currentPhase} mode={isDarkMode ? "hero" : "light"} />
                 </div>
               </div>
 
