@@ -666,28 +666,10 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         </div>
                     </div>
                     
-                    <!-- DADOS DO PROCESSO RAPIDO -->
-                    <form method="POST" style="margin-top:15px; padding-top:15px; border-top:1px solid #eee; display:flex; gap:15px; flex-wrap:wrap; align-items:flex-end;">
-                        <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
-                        <div style="display:flex; gap:10px; margin-bottom:10px;">
-                            <div style="flex:1;">
-                                <label style="font-size:0.75rem; font-weight:bold; color:#666;">Processo Nº</label>
-                                <input type="text" name="processo_numero" value="<?= htmlspecialchars($detalhes['processo_numero'] ?? '') ?>" placeholder="Ex: 6100/2025" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:6px;">
-                            </div>
-                            <div style="flex:1;">
-                                <label style="font-size:0.75rem; font-weight:bold; color:#666;">Área Total Final (m²)</label>
-                                <input type="text" name="area_total_final" value="<?= htmlspecialchars($detalhes['area_total_final'] ?? '') ?>" placeholder="Ex: 156.45" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:6px;">
-                            </div>
-                        </div>
-
-                        <div style="margin-bottom:10px;">
-                             <label style="font-size:0.75rem; font-weight:bold; color:#666;">Objeto do Processo</label>
-                             <input type="text" name="processo_objeto" value="<?= htmlspecialchars($detalhes['processo_objeto'] ?? '') ?>" placeholder="Ex: Regularização de Edificação Residencial Unifamiliar" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:6px;">
-                        </div>
-
-
-
-                    </form>
+                    <!-- DADOS DO PROCESSO (Removido por solicitação - Editar no Cadastro Completo) -->
+                    <div style="margin-top:15px; padding-top:15px; border-top:1px solid #eee; font-size:0.85rem; color:#888; font-style:italic;">
+                        Para editar dados do processo, use o botão "Editar Cadastro".
+                    </div>
                 </div>
 
             </div>
