@@ -155,8 +155,10 @@ if (isset($_POST['btn_salvar_tudo'])) {
                 res_rua=?, res_numero=?, res_bairro=?, res_complemento=?, res_cidade=?, res_uf=?,
                 profissao=?, estado_civil=?, imovel_rua=?, imovel_numero=?,
                 imovel_bairro=?, imovel_complemento=?, imovel_cidade=?, imovel_uf=?, inscricao_imob=?,
-
-                num_matricula=?, imovel_area_lote=?, area_construida=?
+                num_matricula=?, imovel_area_lote=?, area_construida=?,
+                
+                processo_objeto=?, processo_numero=?, area_total_final=?,
+                valor_venal=?, area_existente=?, area_acrescimo=?, area_permeavel=?, taxa_ocupacao=?, fator_aproveitamento=?, geo_coords=?
                 WHERE cliente_id=?";
         } else {
             $sqlDet = "INSERT INTO processo_detalhes (
@@ -164,8 +166,11 @@ if (isset($_POST['btn_salvar_tudo'])) {
                 res_rua, res_numero, res_bairro, res_complemento, res_cidade, res_uf,
                 profissao, estado_civil, imovel_rua, imovel_numero,
                 imovel_bairro, imovel_complemento, imovel_cidade, imovel_uf, inscricao_imob,
-                num_matricula, imovel_area_lote, area_construida, cliente_id
-            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                num_matricula, imovel_area_lote, area_construida, 
+                processo_objeto, processo_numero, area_total_final,
+                valor_venal, area_existente, area_acrescimo, area_permeavel, taxa_ocupacao, fator_aproveitamento, geo_coords,
+                cliente_id
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         }
         
         $stmtDetUp = $pdo->prepare($sqlDet);
@@ -175,6 +180,11 @@ if (isset($_POST['btn_salvar_tudo'])) {
             $_POST['profissao'], $_POST['estado_civil'], $_POST['imovel_rua'], $_POST['imovel_numero'],
             $_POST['imovel_bairro'], $_POST['imovel_complemento'], $_POST['imovel_cidade'], $_POST['imovel_uf'], $_POST['inscricao_imob'],
             $_POST['num_matricula'], $_POST['imovel_area_lote'], $_POST['area_construida'],
+            
+            $_POST['processo_objeto'] ?? null, $_POST['processo_numero'] ?? null, $_POST['area_total_final'] ?? null,
+            $_POST['valor_venal'] ?? null, $_POST['area_existente'] ?? null, $_POST['area_acrescimo'] ?? null, $_POST['area_permeavel'] ?? null,
+            $_POST['taxa_ocupacao'] ?? null, $_POST['fator_aproveitamento'] ?? null, $_POST['geo_coords'] ?? null,
+
             $cliente_id
         ]);
 
@@ -618,6 +628,41 @@ if (isset($_POST['btn_salvar_tudo'])) {
                         <label>Área Total Final (m²)</label>
                         <input type="text" name="area_total_final" value="<?= htmlspecialchars($detalhes['area_total_final']??'') ?>" placeholder="Ex: 156.45">
                     </div>
+                </div>
+
+                <!-- DADOS TÉCNICOS ADICIONAIS (Novos Campos) -->
+                <div class="grid" style="margin-bottom:20px; background:#f0f8ff; padding:15px; border-radius:8px;">
+                     <div class="form-group" style="grid-column: span 3;">
+                         <h4 style="margin:0 0 10px 0; color:#2980b9;">📐 Dados Técnicos e Índices</h4>
+                     </div>
+                     <div class="form-group">
+                        <label>Valor Venal (R$)</label>
+                        <input type="text" name="valor_venal" value="<?= htmlspecialchars($detalhes['valor_venal']??'') ?>" placeholder="Ex: 150000.00">
+                     </div>
+                     <div class="form-group">
+                        <label>Área Existente (m²)</label>
+                        <input type="text" name="area_existente" value="<?= htmlspecialchars($detalhes['area_existente']??'') ?>">
+                     </div>
+                     <div class="form-group">
+                        <label>Área Acréscimo (m²)</label>
+                        <input type="text" name="area_acrescimo" value="<?= htmlspecialchars($detalhes['area_acrescimo']??'') ?>">
+                     </div>
+                     <div class="form-group">
+                        <label>Área Permeável (m²)</label>
+                        <input type="text" name="area_permeavel" value="<?= htmlspecialchars($detalhes['area_permeavel']??'') ?>">
+                     </div>
+                     <div class="form-group">
+                        <label>Taxa Ocupação (%)</label>
+                        <input type="text" name="taxa_ocupacao" value="<?= htmlspecialchars($detalhes['taxa_ocupacao']??'') ?>">
+                     </div>
+                     <div class="form-group">
+                        <label>Fator Aprov. (x)</label>
+                        <input type="text" name="fator_aproveitamento" value="<?= htmlspecialchars($detalhes['fator_aproveitamento']??'') ?>">
+                     </div>
+                     <div class="form-group" style="grid-column: span 3;">
+                        <label>Coordenadas Geográficas (Google Maps)</label>
+                        <input type="text" name="geo_coords" value="<?= htmlspecialchars($detalhes['geo_coords']??'') ?>" placeholder="Ex: -21.123456, -44.123456" style="font-family:monospace;">
+                     </div>
                 </div>
 
                 <div class="grid">

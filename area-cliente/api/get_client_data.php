@@ -64,9 +64,18 @@ try {
         'currentPhase' => $clientData['etapa_atual'] ?? 'Protocolo e Autuação',
         'processDetails' => [
             'number' => $clientData['numero_processo'] ?? 'N/A',
-            'area' => $clientData['area_total'] ?? '0 m²',
+            'area' => $clientData['area_total'] ?? '0 m²', // Legacy support
+            'area_total' => $clientData['area_total_final'] ?? $clientData['area_total'] ?? '0',
             'object' => $clientData['objeto_processo'] ?? 'Consultoria',
-            'address' => $clientData['endereco_imovel'] ?? 'Endereço não cadastrado'
+            'address' => $clientData['endereco_imovel'] ?? 'Endereço não cadastrado',
+            // New Technical Fields
+            'valor_venal' => $clientData['valor_venal'],
+            'area_existente' => $clientData['area_existente'],
+            'area_acrescimo' => $clientData['area_acrescimo'],
+            'area_permeavel' => $clientData['area_permeavel'],
+            'taxa_ocupacao' => $clientData['taxa_ocupacao'],
+            'fator_aproveitamento' => $clientData['fator_aproveitamento'],
+            'geo_coords' => $clientData['geo_coords']
         ],
         'timeline' => $timeline,
         'financeiro' => $financeiro,

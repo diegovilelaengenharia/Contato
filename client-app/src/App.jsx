@@ -29,6 +29,7 @@ import ProgressBar from './components/ProgressBar';
 import Timeline from './components/Timeline';
 import FinanceWidget from './components/FinanceWidget';
 import PendencyWidget from './components/PendencyWidget';
+import UploadArea from './components/UploadArea';
 
 // --- REAL DATA FETCHING ---
 function App() {
@@ -150,6 +151,8 @@ function App() {
           <NavItem icon={<HardDrive size={20} />} label="Arquivos" active={activeTab === 'arquivos'} onClick={() => setActiveTab('arquivos')} expanded={isSidebarOpen} />
 
           <div className="my-6 border-t border-gray-100 mx-4"></div>
+
+          <NavItem icon={<FileText size={20} />} label="Protocolar" active={activeTab === 'protocolo'} onClick={() => setActiveTab('protocolo')} expanded={isSidebarOpen} />
           <div className={`px-4 mb-3 text-[11px] font-bold text-gray-400 uppercase tracking-wider ${!isSidebarOpen && 'hidden'}`}>Central de Ajuda</div>
 
           <NavItem icon={<HelpCircle size={20} />} label="Suporte Técnico" active={activeTab === 'suporte'} onClick={() => setActiveTab('suporte')} expanded={isSidebarOpen} />
@@ -345,6 +348,11 @@ function App() {
             </div>
           )}
 
+          {/* === VIEW: PROTOCOLO DIGITAL === */}
+          {activeTab === 'protocolo' && (
+            <UploadArea clientId={user?.id} />
+          )}
+
         </main>
 
         {/* --- BOTTOM NAVIGATION (MOBILE ONLY - LIGHT THEME) --- */}
@@ -352,6 +360,7 @@ function App() {
           <BottomNavItem icon={<Home size={22} />} label="Inicial" active={activeTab === 'inicial'} onClick={() => setActiveTab('inicial')} />
           <BottomNavItem icon={<AlertTriangle size={22} />} label="Pendências" active={activeTab === 'pendencias'} onClick={() => setActiveTab('pendencias')} badge={pendencias.filter(p => p.status === 'pendente').length} />
           <BottomNavItem icon={<DollarSign size={22} />} label="Financeiro" active={activeTab === 'financeiro'} onClick={() => setActiveTab('financeiro')} />
+          <BottomNavItem icon={<FileText size={22} />} label="Protocolar" active={activeTab === 'protocolo'} onClick={() => setActiveTab('protocolo')} />
           <BottomNavItem icon={<HardDrive size={22} />} label="Arquivos" active={activeTab === 'arquivos'} onClick={() => setActiveTab('arquivos')} />
         </nav>
 
