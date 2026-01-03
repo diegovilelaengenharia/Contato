@@ -27,35 +27,31 @@ $kpi_pre_pendentes = $kpi_pre_pendentes ?? 0;
             <?php endif; ?>
         </button>
 
-        <!-- Widget: Aniversariantes -->
+        <!-- Widget: Aniversariantes (Simplificado) -->
         <?php 
             $count_ani = count($aniversariantes ?? []);
-            // Mapeamento de Meses Simples
-            $meses_pt = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-            $mes_nome = $meses_pt[date('n')-1];
+            // Tooltip text generation
+            $ani_tooltip = "Aniversariantes de " . $meses_pt[date('n')-1] . ":\n";
+            if($count_ani == 0) { $ani_tooltip .= "Ninguém por enquanto."; } 
+            else { foreach($aniversariantes as $ani) { $ani_tooltip .= "- " . explode(' ',$ani['nome'])[0] . " (Dia " . $ani['dia'] . ")\n"; } }
         ?>
-        <div class="btn-menu" style="cursor:default; align-items: flex-start; flex-direction: column; gap: 5px; height: auto; padding: 12px 15px;">
-            <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
-                <span style="display:flex; align-items:center; gap:10px; font-weight:600;">
-                    <span class="material-symbols-rounded" style="color:#fd7e14;">cake</span>
-                    Aniversariantes de <?= $mes_nome ?>
-                </span>
-                <span style="background:#fff3cd; color:#856404; padding:2px 8px; border-radius:10px; font-weight:bold; font-size:0.75rem;"><?= $count_ani ?></span>
-            </div>
-            <div style="font-size:0.75rem; color:#888; padding-left: 34px; width:100%;">
-                <?php if($count_ani == 0): ?>
-                    Ninguém por enquanto.
-                <?php else: ?>
-                    <?php foreach($aniversariantes as $ani): ?>
-                        <div style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">🎉 <?= htmlspecialchars(explode(' ',$ani['nome'])[0]) ?> (Dia <?= $ani['dia'] ?>)</div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </div>
+        <div class="btn-menu" title="<?= htmlspecialchars($ani_tooltip) ?>" style="cursor:default; align-items: center; justify-content: space-between; height: auto; padding: 12px 15px;">
+            <span style="display:flex; align-items:center; gap:10px; font-weight:600;">
+                <span class="material-symbols-rounded" style="color:#fd7e14;">cake</span>
+                Aniversariantes
+            </span>
+            <span style="background:#fff3cd; color:#856404; padding:2px 8px; border-radius:10px; font-weight:bold; font-size:0.75rem;"><?= $count_ani ?></span>
         </div>
 
-        <!-- Widget: Parados -->
-        <?php $count_par = count($parados ?? []); ?>
-        <div class="btn-menu" style="cursor:default; align-items:center; justify-content: space-between; height: auto; padding: 12px 15px;">
+        <!-- Widget: Parados (Simplificado) -->
+        <?php 
+            $count_par = count($parados ?? []); 
+            // Tooltip text generation
+            $par_tooltip = "Processos Parados (+15 dias):\n";
+            if($count_par == 0) { $par_tooltip .= "Tudo em dia!"; }
+            else { foreach($parados as $p) { $par_tooltip .= "- " . explode(' ',$p['nome'])[0] . " (" . date('d/m', strtotime($p['ultima_mov'])) . ")\n"; } }
+        ?>
+        <div class="btn-menu" title="<?= htmlspecialchars($par_tooltip) ?>" style="cursor:default; align-items:center; justify-content: space-between; height: auto; padding: 12px 15px;">
             <span style="display:flex; align-items:center; gap:10px; font-weight:600;">
                 <span class="material-symbols-rounded" style="color:#dc3545;">timer_off</span>
                  Parados (+15d)
