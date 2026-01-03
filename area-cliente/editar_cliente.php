@@ -93,6 +93,13 @@ if (isset($_POST['btn_salvar_tudo'])) {
                 
                 if(move_uploaded_file($_FILES['avatar_upload']['tmp_name'], $target)) {
                     $upload_debug .= "Upload OK ($new_name). ";
+                    // Update DB to ensure consistency across all APIs
+                    try {
+                        $pdo->prepare("UPDATE clientes SET foto_perfil=? WHERE id=?")->execute([$target, $cliente_id]);
+                        $upload_debug .= "DB Updated. ";
+                    } catch(Exception $e) {
+                        $upload_debug .= "DB Update Fail: " . $e->getMessage();
+                    }
                 } else {
                     $upload_debug .= "move_uploaded_file falhou. Error: " . $_FILES['avatar_upload']['error'];
                 }
