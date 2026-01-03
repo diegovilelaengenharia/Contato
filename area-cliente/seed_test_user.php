@@ -23,7 +23,14 @@ $columns_to_ensure = [
     'rg_ie' => "VARCHAR(50) DEFAULT NULL",
     'data_nascimento' => "DATE DEFAULT NULL",
     'estado_civil' => "VARCHAR(50) DEFAULT NULL",
-    'profissao' => "VARCHAR(100) DEFAULT NULL"
+    'profissao' => "VARCHAR(100) DEFAULT NULL",
+    'situacao' => "VARCHAR(50) DEFAULT 'ativo'",
+    'etapa_atual' => "VARCHAR(255) DEFAULT NULL",
+    'numero_processo' => "VARCHAR(50) DEFAULT NULL",
+    'objeto_processo' => "VARCHAR(255) DEFAULT NULL",
+    'data_inicio' => "DATE DEFAULT NULL",
+    'area_total' => "VARCHAR(50) DEFAULT NULL",
+    'endereco_imovel' => "TEXT DEFAULT NULL"
 ];
 
 foreach ($columns_to_ensure as $col => $def) {
