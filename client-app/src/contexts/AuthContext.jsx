@@ -9,20 +9,22 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // Adjust path if needed depending on where this build runs relative to API
-        const response = await fetch('/area-cliente/api/check_auth.php');
+        // Added timestamp to prevent caching
+        const response = await fetch('/area-cliente/api/check_auth.php?t=' + Date.now());
         if (response.ok) {
           const data = await response.json();
           if (data.authenticated) {
             setUser(data.user);
           } else {
-            console.warn("User not authenticated by API");
-            // Optional: Redirect to login if rigorous protection is needed here
-            // window.location.href = '/area-cliente/index.php';
+            console.warn("User not authenticated by API", data);
+            // Save debug info to window for UI to display
+            window.auth_debug = data;
+            // Force update to show debug UI if needed (via state in App.jsx presumably, or just log here)
+            // But since setUser(null) is default, App will show "Acesso Restrito".
           }
         } else {
-          console.error("Auth check response verify failed");
-          // window.location.href = '/area-cliente/index.php';
+          console.error("Auth check response verify failed", response.status);
+          window.auth_debug = { error: "HTTP " + response.status };
         }
       } catch (error) {
         console.error('Auth check failed', error);

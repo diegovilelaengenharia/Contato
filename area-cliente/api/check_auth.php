@@ -29,10 +29,23 @@ if (isset($_SESSION['cliente_id'])) {
         // Session exists but user not found in DB
         session_destroy();
         http_response_code(401);
-        echo json_encode(['authenticated' => false]);
+        echo json_encode([
+            'authenticated' => false,
+            'debug_reason' => 'User not found in DB for session: ' . $_SESSION['cliente_id']
+        ]);
     }
 } else {
+    // Return explicit reason for debugging (Session ID is null?)
+    $debug = [
+        'sess_name' => session_name(),
+        'sess_id' => session_id(),
+        'cookie_sent' => $_COOKIE[session_name()] ?? 'none',
+        'has_session_var' => isset($_SESSION['cliente_id']) ? 'yes' : 'no'
+    ];
     http_response_code(401);
-    echo json_encode(['authenticated' => false]);
+    echo json_encode([
+        'authenticated' => false,
+        'debug' => $debug
+    ]);
 }
 ?>

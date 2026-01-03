@@ -16,7 +16,7 @@ if (!isset($_SESSION['cliente_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vilela Engenharia | Área do Cliente</title>
     <script type="module" crossorigin src="./assets/index-jGMwF09j.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-CslgngmT.css">
+    <link rel="stylesheet" crossorigin href="./assets/index-l4boxe_g.css">
   </head>
   <body>
     <div id="root"></div>
