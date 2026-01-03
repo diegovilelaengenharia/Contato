@@ -28,8 +28,8 @@ try {
         echo "Usuário '$usuario' já existe (ID: $cliente_id). Atualizando dados...<br>";
         
         // Update credentials
-        $stmt = $pdo->prepare("UPDATE clientes SET senha = ?, nome = ?, email = ? WHERE id = ?");
-        $stmt->execute([$senha_hash, $nome, $email, $cliente_id]);
+        $stmt = $pdo->prepare("UPDATE clientes SET senha = ?, nome = ? WHERE id = ?");
+        $stmt->execute([$senha_hash, $nome, $cliente_id]);
         
         // Clear related data to rebuild
         $pdo->prepare("DELETE FROM processo_detalhes WHERE cliente_id = ?")->execute([$cliente_id]);
@@ -39,8 +39,8 @@ try {
         $pdo->prepare("DELETE FROM processo_campos_extras WHERE cliente_id = ?")->execute([$cliente_id]);
     } else {
         echo "Criando novo usuário '$usuario'...<br>";
-        $stmt = $pdo->prepare("INSERT INTO clientes (nome, email, usuario, senha) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$nome, $email, $usuario, $senha_hash]);
+        $stmt = $pdo->prepare("INSERT INTO clientes (nome, usuario, senha) VALUES (?, ?, ?)");
+        $stmt->execute([$nome, $usuario, $senha_hash]);
         $cliente_id = $pdo->lastInsertId();
     }
 
