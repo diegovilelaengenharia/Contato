@@ -15,6 +15,26 @@ $senha_hash = password_hash($senha_plain, PASSWORD_DEFAULT);
 $nome = "Usuário Teste Completo";
 $email = "test@vilela.eng.br";
 
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+// --- 0. SELF-HEALING SCHEMA (Fix Missing Columns) ---
+$columns_to_ensure = [
+    'nacionalidade' => "VARCHAR(100) DEFAULT 'Brasileira'",
+    'rg_ie' => "VARCHAR(50) DEFAULT NULL",
+    'data_nascimento' => "DATE DEFAULT NULL",
+    'estado_civil' => "VARCHAR(50) DEFAULT NULL",
+    'profissao' => "VARCHAR(100) DEFAULT NULL"
+];
+
+foreach ($columns_to_ensure as $col => $def) {
+    try {
+        $pdo->exec("ALTER TABLE processo_detalhes ADD COLUMN $col $def");
+        echo "Coluna '$col' adicionada.<br>";
+    } catch (Exception $e) { 
+        // Likely already exists
+    }
+}
+
 try {
     $pdo->beginTransaction();
 
