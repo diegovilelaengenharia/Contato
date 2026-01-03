@@ -1,70 +1,95 @@
 :root {
-  /* --- Vilela Brand Colors --- */
-  --color-primary: #146c43;        /* Logo Green */
-  --color-primary-rgb: 20, 108, 67;
-  --color-dark: #383838;           /* Logo Text Grey */
-  --color-accent: #eab308;         /* Logo Window Orange */
+    /* --- Vilela Brand Colors (From Login) --- */
+    --color-primary: #146c43;
+    /* Green Button / Logo Check */
+    --color-primary-hover: #105736;
+    --color-text: #2c3e50;
+    /* Dark Slate Text */
+    --color-text-secondary: #6c757d;
+    /* Muted Text */
+    --color-bg: #F8F9FA;
+    /* Page Background (Light Gray) */
+    --color-card: #FFFFFF;
+    /* Card White */
+    --color-border: #DEE2E6;
+    /* Subtle Border */
+    --color-input-bg: #F8F9FA;
+    /* Input Background */
 
-  /* --- iOS System Colors (Light) --- */
-  --ios-bg: #F2F2F7;               /* System Grouped Background */
-  --ios-card: #FFFFFF;             /* Secondary Grouped Background (Cards) */
-  --ios-text: #000000;             /* Label Color */
-  --ios-text-secondary: #8E8E93;   /* Secondary Label Color */
-  --ios-separator: #C6C6C8;        /* Separator Color */
-  --ios-blue: #007AFF;             /* System Blue */
-  --ios-red: #FF3B30;              /* System Red */
-  
-  /* --- Dimensions & Spacing --- */
-  --sidebar-width: 280px;
-  --dock-height: 83px;             /* Mobile Bottom Nav */
-  --header-height: 60px;
-  --radius-l: 28px;                /* Large Card Radius */
-  --radius-m: 16px;                /* Standard Radius */
-  --radius-s: 10px;                /* Small/Inner Radius */
-  
-  /* --- Typography --- */
-  --font-stack: -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", sans-serif;
-  
-  /* --- Effects --- */
-  --shadow-card: 0px 2px 8px rgba(0, 0, 0, 0.04);
-  --shadow-float: 0px 8px 16px rgba(0, 0, 0, 0.08);
+    /* --- Dimensions & Spacing --- */
+    --sidebar-width: 260px;
+    --header-height: 70px;
+
+    --radius-card: 20px;
+    /* Login Card Radius */
+    --radius-btn: 8px;
+    /* Button Radius (Squarer) */
+    --radius-input: 8px;
+
+    /* --- Typography --- */
+    --font-stack: 'Outfit', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+
+    /* --- Effects --- */
+    --shadow-login: 0 10px 30px rgba(0, 0, 0, 0.08);
+    /* Soft, deep shadow */
+    --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.03);
+    /* Lighter card shadow */
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --ios-bg: #000000;
-    --ios-card: #1C1C1E;
-    --ios-text: #FFFFFF;
-    --ios-text-secondary: #8E8E93;
-    --ios-separator: #38383A;
-  }
+    :root {
+        --color-bg: #121212;
+        --color-card: #1E1E1E;
+        --color-text: #E0E0E0;
+        --color-text-secondary: #A0A0A0;
+        --color-border: #333;
+        --color-input-bg: #2C2C2C;
+    }
 }
 
 * {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  font-family: var(--font-stack);
-  background-color: var(--ios-bg);
-  color: var(--ios-text);
-  -webkit-font-smoothing: antialiased;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-stack);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    -webkit-font-smoothing: antialiased;
 }
 
 /* --- Utilities --- */
-.flex-center { display: flex; align-items: center; justify-content: center; }
-.flex-col { display: flex; flex-direction: column; }
-.flex-row { display: flex; flex-direction: row; }
-.hidden { display: none !important; }
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.hidden {
+    display: none !important;
+}
 
 /* Animation */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
+
 .animate-in {
-  animation: fadeIn 0.4s ease-out forwards;
+    animation: fadeInUp 0.5s ease-out forwards;
 }
