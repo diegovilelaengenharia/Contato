@@ -9,21 +9,22 @@ export default {
       colors: {
         // Brand Palette from admin_style.css
         vilela: {
-          primary: '#146c43',       // Dark Green
-          light: '#d1e7dd',         // Light Green BG
-          bg: '#f0f8f5',            // App Background (Mint/Gray)
-          surface: '#ffffff',       // Card Background
-          text: '#2f3e36',          // Dark Greenish Text
-          subtle: '#5f7a6c',        // Muted Text
-          border: '#dbece5',        // Border Color
+          primary: '#146c43',       // Logo Green (Checkmark/Engenharia)
+          dark: '#383838',          // Logo Dark Grey (VILELA)
+          accent: '#eab308',        // Logo Window Yellow/Orange
+          light: '#f3f4f6',         // Very Light Gray BG (Apple style)
+          surface: '#ffffff',       // Pure White
+          text: '#1f2937',          // Main Text (Gray-800)
+          subtle: '#6b7280',        // Secondary Text (Gray-500)
+          border: '#e5e7eb',        // Light Border
         },
         status: {
-          success: '#198754',
-          successBg: '#d4edda',
-          warning: '#856404',
-          warningBg: '#fff3cd',
-          danger: '#dc3545',
-          dangerBg: '#f8d7da',
+          success: '#146c43',
+          successBg: '#d1e7dd',
+          warning: '#f59e0b',
+          warningBg: '#fef3c7',
+          danger: '#dc2626',
+          dangerBg: '#fee2e2',
         }
       },
       fontFamily: {

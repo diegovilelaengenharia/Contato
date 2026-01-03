@@ -122,17 +122,17 @@ function App() {
   const engineer = DATA.engineer || {};
 
   return (
-    <div className={`flex h-screen bg-[#f8f9fa] dark:bg-gray-900 font-sans text-vilela-text dark:text-gray-100 text-sm transition-colors duration-300`}>
+    <div className={`flex h-screen bg-gray-50/50 dark:bg-black font-sans text-vilela-text dark:text-gray-100 text-sm transition-colors duration-300`}>
 
       {/* --- SIDEBAR (DESKTOP) --- */}
       <aside
-        className={`bg-white dark:bg-gray-800 border-r border-[#e9ecef] dark:border-gray-700 transition-all duration-300 flex flex-col z-20
+        className={`bg-white dark:bg-gray-900 border-r border-vilela-border dark:border-gray-800 transition-all duration-300 flex flex-col z-20
           ${isSidebarOpen ? 'w-72' : 'w-24'} 
-          hidden md:flex shadow-[4px_0_24px_rgba(0,0,0,0.02)]
+          hidden md:flex shadow-[4px_0_24px_rgba(0,0,0,0.01)]
         `}
       >
-        <div className="h-24 flex items-center justify-center border-b border-[#f1f3f5] dark:border-gray-700 bg-white dark:bg-gray-800">
-          <div className={`flex items-center gap-3 font-bold text-lg text-vilela-primary transition-all duration-300 ${!isSidebarOpen && 'justify-center'}`}>
+        <div className="h-24 flex items-center justify-center border-b border-vilela-border dark:border-gray-800 bg-white dark:bg-gray-900">
+          <div className={`flex items-center gap-3 font-bold text-lg text-vilela-dark transition-all duration-300 ${!isSidebarOpen && 'justify-center'}`}>
             <img src="/logo.png" alt="Vilela" className="h-10 w-auto object-contain" />
           </div>
         </div>
@@ -140,17 +140,17 @@ function App() {
         {isSidebarOpen && (
           <div className="p-6 border-b border-[#f1f3f5] bg-white">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full border-2 border-vilela-primary/10 p-0.5 shadow-sm">
+              <div className="w-12 h-12 rounded-full border-2 border-vilela-primary/20 p-0.5 shadow-sm bg-white">
                 <div className="w-full h-full rounded-full bg-gray-50 flex items-center justify-center overflow-hidden">
                   {user?.foto ? <img src={DATA.user_photo || user.foto} className="w-full h-full object-cover" /> :
                     <span className="text-vilela-primary font-bold text-lg">{user?.name?.[0]}</span>}
                 </div>
               </div>
               <div className="overflow-hidden">
-                <p className="font-bold text-gray-800 truncate text-base">{user?.name}</p>
-                <div className="flex items-center gap-1.5 mt-1">
-                  <span className="w-2 h-2 rounded-full bg-vilela-primary animate-pulse"></span>
-                  <span className="text-xs text-gray-500 font-medium">Cliente Ativo</span>
+                <p className="font-bold text-vilela-dark truncate text-base">{user?.name}</p>
+                <div className="flex items-center gap-1.5 mt-0.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-vilela-primary/80 animate-pulse"></span>
+                  <span className="text-xs text-vilela-subtle font-medium">Online</span>
                 </div>
               </div>
             </div>
