@@ -8,6 +8,14 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const checkAuth = async () => {
+      // DEV MODE: Bypass Auth if Mock Data exists
+      if (window.user) {
+        console.log("DEV MODE: Mock Auth Active");
+        setUser(window.user);
+        setLoading(false);
+        return;
+      }
+
       try {
         // Added timestamp to prevent caching and credentials include
         const response = await fetch('/area-cliente/api/check_auth.php?t=' + Date.now(), {

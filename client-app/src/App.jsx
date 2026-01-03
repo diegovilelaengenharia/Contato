@@ -3,6 +3,7 @@ import { useAuth } from './contexts/AuthContext'
 import { useTheme } from './contexts/ThemeContext'
 import {
   LayoutDashboard,
+  LayoutList,
   FolderOpen,
   User,
   Bell,
@@ -54,6 +55,14 @@ function App() {
   // Fetch Client Data when User is Authenticated
   useEffect(() => {
     if (user) {
+      // DEV MODE: Use Mock Data if available
+      if (window.DATA) {
+        console.log("DEV MODE: Mock Data Loaded");
+        setClientData(window.DATA);
+        setDataLoading(false);
+        return;
+      }
+
       fetch('/area-cliente/api/get_client_data.php', { credentials: 'include' })
         .then(res => {
           if (!res.ok) throw new Error('Falha ao carregar dados');
@@ -428,30 +437,27 @@ function NavItem({ icon, label, active, onClick, expanded, badge }) {
   return (
     <button
       onClick={onClick}
-      className={`relative flex items-center gap-3 p-3 rounded-xl transition-all w-full group outline-none
+      className={`relative flex items-center gap-3 px-4 py-3 my-1 rounded-2xl transition-all w-full group outline-none select-none
        ${active
-          ? 'bg-vilela-primary/10 text-vilela-primary font-bold shadow-sm ring-1 ring-vilela-primary/20'
-          : 'text-gray-500 hover:bg-gray-50 hover:text-vilela-primary/80'}
+          ? 'bg-vilela-primary text-white shadow-md shadow-vilela-primary/20 scale-[1.02]'
+          : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900 active:scale-95'}
     `}>
-      <span className={`${active ? 'text-vilela-primary' : 'text-gray-400 group-hover:text-vilela-primary/70'} transition-colors`}>
-        {icon}
+      <span className={`transition-colors duration-300 ${active ? 'text-white' : 'text-gray-400 group-hover:text-vilela-primary'}`}>
+        {React.cloneElement(icon, { strokeWidth: active ? 2.5 : 2 })}
       </span>
 
       {expanded && (
-        <span className="text-sm whitespace-nowrap">
+        <span className={`text-[15px] font-medium tracking-tight ${active ? 'font-semibold' : ''}`}>
           {label}
         </span>
       )}
 
       {expanded && badge > 0 && (
-        <span className={`ml-auto text-[10px] font-bold px-1.5 py-0.5 rounded-md ${active ? 'bg-vilela-primary text-white' : 'bg-status-danger text-white'
+        <span className={`ml-auto text-[11px] font-bold px-2 py-0.5 rounded-full ${active ? 'bg-white/20 text-white' : 'bg-red-500 text-white'
           }`}>
           {badge}
         </span>
       )}
-
-      {/* Active Indicator (Clean Dot instead of bar) */}
-      {active && <div className="absolute right-2 w-1.5 h-1.5 bg-vilela-primary rounded-full"></div>}
     </button>
   )
 }
