@@ -59,6 +59,25 @@ try {
     $stmt->execute([$cliente_id]);
     $pendencias = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    // 5. Calculate Financial KPIs (New)
+    $kpi_total_pago = 0;
+    $kpi_total_pendente = 0;
+    $kpi_total_atrasado = 0;
+
+    foreach ($financeiro as $lanc) {
+        $val = floatval($lanc['valor']);
+        if ($lanc['status'] == 'pago') $kpi_total_pago += $val;
+        elseif ($lanc['status'] == 'pendente') $kpi_total_pendente += $val;
+        elseif ($lanc['status'] == 'atrasado') $kpi_total_atrasado += $val;
+    }
+    
+    $financeiro_kpis = [
+        'total_pago' => $kpi_total_pago,
+        'total_pendente' => $kpi_total_pendente,
+        'total_atrasado' => $kpi_total_atrasado,
+        'total_geral' => ($kpi_total_pago + $kpi_total_pendente + $kpi_total_atrasado)
+    ];
+
     // Construct Response Object to match React App expectations
     $response = [
         'currentPhase' => $clientData['etapa_atual'] ?? 'Protocolo e Autuação',
@@ -80,6 +99,7 @@ try {
         ],
         'timeline' => $timeline,
         'financeiro' => $financeiro,
+        'financeiro_kpis' => $financeiro_kpis, // New KPI Object
         'pendencias' => $pendencias,
         'driveLink' => $clientData['link_drive_pasta'] ?? '',
         'engineer' => [
