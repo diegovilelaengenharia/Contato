@@ -129,19 +129,19 @@ function App() {
         </div>
 
         {isSidebarOpen && (
-          <div className="p-6 border-b border-[#f1f3f5] dark:border-gray-700 bg-[#ffffff] dark:bg-gray-800">
+          <div className="p-6 border-b border-[#f1f3f5] bg-white">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 p-0.5 shadow-sm">
-                <div className="w-full h-full rounded-full bg-gray-50 dark:bg-gray-600 flex items-center justify-center overflow-hidden">
+              <div className="w-12 h-12 rounded-full border-2 border-vilela-primary/10 p-0.5 shadow-sm">
+                <div className="w-full h-full rounded-full bg-gray-50 flex items-center justify-center overflow-hidden">
                   {user?.foto ? <img src={DATA.user_photo || user.foto} className="w-full h-full object-cover" /> :
-                    <span className="text-vilela-primary dark:text-emerald-400 font-bold text-lg">{user?.name?.[0]}</span>}
+                    <span className="text-vilela-primary font-bold text-lg">{user?.name?.[0]}</span>}
                 </div>
               </div>
               <div className="overflow-hidden">
-                <p className="font-bold text-gray-800 dark:text-gray-100 truncate text-base">{user?.name}</p>
+                <p className="font-bold text-gray-800 truncate text-base">{user?.name}</p>
                 <div className="flex items-center gap-1.5 mt-1">
-                  <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                  <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Cliente Ativo</span>
+                  <span className="w-2 h-2 rounded-full bg-vilela-primary animate-pulse"></span>
+                  <span className="text-xs text-gray-500 font-medium">Cliente Ativo</span>
                 </div>
               </div>
             </div>
@@ -444,10 +444,10 @@ function NavItem({ icon, label, active, onClick, expanded, badge }) {
       onClick={onClick}
       className={`relative flex items-center gap-3 p-3 rounded-xl transition-all w-full group outline-none
        ${active
-          ? 'bg-vilela-light/30 dark:bg-emerald-900/30 text-vilela-primary dark:text-emerald-400 font-semibold'
-          : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-200'}
+          ? 'bg-vilela-primary/10 text-vilela-primary font-bold shadow-sm ring-1 ring-vilela-primary/20'
+          : 'text-gray-500 hover:bg-gray-50 hover:text-vilela-primary/80'}
     `}>
-      <span className={`${active ? 'text-vilela-primary dark:text-emerald-400' : 'text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300'} transition-colors`}>
+      <span className={`${active ? 'text-vilela-primary' : 'text-gray-400 group-hover:text-vilela-primary/70'} transition-colors`}>
         {icon}
       </span>
 
@@ -464,7 +464,8 @@ function NavItem({ icon, label, active, onClick, expanded, badge }) {
         </span>
       )}
 
-      {active && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-vilela-primary dark:bg-emerald-500 rounded-r-full"></div>}
+      {/* Active Indicator (Clean Dot instead of bar) */}
+      {active && <div className="absolute right-2 w-1.5 h-1.5 bg-vilela-primary rounded-full"></div>}
     </button>
   )
 }

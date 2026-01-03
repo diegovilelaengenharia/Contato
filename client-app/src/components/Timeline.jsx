@@ -63,7 +63,12 @@ export default function Timeline({ movements }) {
                             <div className="flex items-start gap-4 md:gap-6 group">
                                 {/* Date Bubble (Mobile/Compact) */}
                                 <div className="flex flex-col items-center shrink-0 w-[50px] md:w-[60px] pt-1">
-                                    <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center border-4 border-white shadow-sm transition-transform group-hover:scale-110 ${iconBg} ${iconColor}`}>
+                                    <div className={`
+                                        w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center 
+                                        border-4 shadow-sm transition-all duration-300 group-hover:scale-110
+                                        bg-white z-20 
+                                        ${mov.status_tipo === 'fase' ? 'border-vilela-primary text-vilela-primary' : 'border-gray-100 text-gray-400 group-hover:border-vilela-primary/30 group-hover:text-vilela-primary'}
+                                    `}>
                                         <Icon size={18} strokeWidth={2.5} />
                                     </div>
                                     <div className="mt-2 text-center">
@@ -73,12 +78,21 @@ export default function Timeline({ movements }) {
                                 </div>
 
                                 {/* Content Card */}
-                                <div className={`flex-1 bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow ${cardBorder}`}>
+                                <div className={`
+                                    flex-1 bg-white p-5 rounded-2xl border border-gray-100 shadow-sm 
+                                    hover:shadow-md transition-all duration-300 transform group-hover:-translate-y-0.5
+                                    ${mov.status_tipo === 'fase' ? 'border-l-4 border-l-vilela-primary' : 'border-l-4 border-l-transparent hover:border-l-vilela-primary/30'}
+                                `}>
                                     <div className="flex justify-between items-start mb-2">
-                                        <h5 className="font-bold text-gray-800 text-sm md:text-base">{mov.titulo_fase}</h5>
+                                        <h5 className="font-bold text-gray-900 text-sm md:text-base group-hover:text-vilela-primary transition-colors">
+                                            {mov.titulo_fase}
+                                        </h5>
                                         {/* Badge for Type */}
-                                        <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${iconBg.replace('border-', '')} ${iconColor}`}>
-                                            {mov.status_tipo === 'fase' ? 'Andamento' : mov.status_tipo}
+                                        <span className={`
+                                            text-[10px] font-bold uppercase px-2 py-0.5 rounded-full 
+                                            ${mov.status_tipo === 'fase' ? 'bg-vilela-primary/10 text-vilela-primary' : 'bg-gray-100 text-gray-500'}
+                                        `}>
+                                            {mov.status_tipo === 'fase' ? 'Etapa' : mov.status_tipo}
                                         </span>
                                     </div>
                                     <p className="text-sm text-gray-600 leading-relaxed font-medium">

@@ -20,24 +20,24 @@ export default function FinanceWidget({ financeiro }) {
 
     return (
         <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 bg-green-50 rounded-xl border border-green-100">
-                <div className="flex items-center gap-2 mb-2">
-                    <div className="p-1.5 bg-green-200 rounded-md text-green-700">
-                        <TrendingUp size={16} />
+            <div className="p-5 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all group">
+                <div className="flex items-center gap-3 mb-3">
+                    <div className="p-2 bg-vilela-primary/10 rounded-lg text-vilela-primary group-hover:scale-110 transition-transform">
+                        <TrendingUp size={18} />
                     </div>
-                    <span className="text-sm font-medium text-green-800">Pago</span>
+                    <span className="text-xs font-bold uppercase tracking-wider text-gray-400">Pago</span>
                 </div>
-                <p className="text-xl font-bold text-green-900">{formatMoney(stats.pago)}</p>
+                <p className="text-2xl font-bold text-gray-900">{formatMoney(stats.pago)}</p>
             </div>
 
-            <div className="p-4 bg-orange-50 rounded-xl border border-orange-100">
-                <div className="flex items-center gap-2 mb-2">
-                    <div className="p-1.5 bg-orange-200 rounded-md text-orange-700">
-                        <DollarSign size={16} />
+            <div className="p-5 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all group">
+                <div className="flex items-center gap-3 mb-3">
+                    <div className="p-2 bg-orange-50 rounded-lg text-orange-500 group-hover:scale-110 transition-transform">
+                        <DollarSign size={18} />
                     </div>
-                    <span className="text-sm font-medium text-orange-800">A Pagar</span>
+                    <span className="text-xs font-bold uppercase tracking-wider text-gray-400">A Pagar</span>
                 </div>
-                <p className="text-xl font-bold text-orange-900">{formatMoney(stats.pendente)}</p>
+                <p className="text-2xl font-bold text-gray-900">{formatMoney(stats.pendente)}</p>
             </div>
 
             {/* Optional: List next pending item */}
