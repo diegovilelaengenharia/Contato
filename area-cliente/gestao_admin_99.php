@@ -361,38 +361,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
         <div class="indicators-bar">
             
-            <!-- 1. Solicitações Web -->
-            <?php 
-                $count_sol = count($solicitacoes);
-                $theme_sol = $count_sol > 0 ? 'theme-green active' : 'theme-gray';
-            ?>
-            <div class="smart-btn <?= $theme_sol ?>">
-                <span class="material-symbols-rounded">inbox</span>
-                Solicitações Web
-                <span class="s-badge"><?= $count_sol ?></span>
-                
-                <!-- Dropdown -->
-                <div class="smart-dropdown">
-                    <div class="sd-header">Pedidos de Cadastro Pendentes</div>
-                    <?php if($count_sol == 0): ?>
-                        <div class="sd-empty">Nenhuma solicitação pendente.</div>
-                    <?php else: ?>
-                        <div class="sd-list">
-                            <?php foreach($solicitacoes as $sol): ?>
-                                <div class="sd-item">
-                                    <div style="line-height:1.2;">
-                                        <div style="font-weight:600; color:#333; font-size:0.9rem;"><?= htmlspecialchars($sol['nome']) ?></div>
-                                        <div style="font-size:0.75rem; color:#777;"><?= htmlspecialchars($sol['tipo_servico']) ?></div>
-                                    </div>
-                                    <button onclick="openAprovarModal(<?= $sol['id'] ?>, '<?= addslashes($sol['nome']) ?>', '<?= addslashes($sol['cpf_cnpj']) ?>')" style="background:#198754; color:white; border:none; padding:4px 10px; border-radius:6px; cursor:pointer; font-size:0.75rem; font-weight:600;">
-                                        Aprovar
-                                    </button>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                    <?php endif; ?>
-                </div>
-            </div>
+            <!-- 1. Solicitações Web (Removido por solicitação) -->
 
             <!-- 2. Aniversariantes -->
             <?php 
