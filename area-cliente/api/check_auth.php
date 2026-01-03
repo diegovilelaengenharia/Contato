@@ -17,7 +17,9 @@ try {
         }
         require $db_path;
         
-        $stmt = $pdo->prepare("SELECT id, nome, email, foto FROM clientes WHERE id = ?");
+        // Removed email/foto from explicit select to avoid 'Column not found' errors if they don't exist
+        // login uses 'usuario', so we know that exists. 'nome' and 'id' also confirmed.
+        $stmt = $pdo->prepare("SELECT id, nome, usuario FROM clientes WHERE id = ?");
         $stmt->execute([$_SESSION['cliente_id']]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         
@@ -27,8 +29,7 @@ try {
                 'user' => [
                     'id' => $user['id'],
                     'name' => $user['nome'],
-                    'email' => $user['email'],
-                    'foto' => $user['foto'] ?? null
+                    'usuario' => $user['usuario']
                 ]
             ]);
         } else {
