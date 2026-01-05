@@ -332,13 +332,13 @@ if (isset($_POST['btn_editar_cliente'])) {
     }
 }
 
-// 5. Novo Cliente (Logica Nova)
-if (isset($_POST['novo_cliente'])) {
+// 5. Novo Cliente (Logica Nova Standarizada)
+if (isset($_POST['novo_cliente']) || (isset($_POST['acao']) && $_POST['acao'] == 'novo_cliente')) {
     $nome_original = $_POST['nome'];
     $cpf = $_POST['cpf_cnpj'];
-    $tel = $_POST['telefone'];
-    $senha_plain = $_POST['senha'];
-    $tipo_login = $_POST['tipo_login']; // 'cpf' ou 'telefone'
+    $tel = $_POST['contato_tel']; // Standardized name
+    $senha_plain = $_POST['senha'] ?? $_POST['nova_senha']; // Support both if needed
+    $tipo_login = $_POST['tipo_login'] ?? 'cpf'; // Default to cpf if not sent
 
     // Lógica de Login Automático
     $usuario_final = '';
@@ -362,12 +362,11 @@ if (isset($_POST['novo_cliente'])) {
 
         if($check->rowCount() > 0) throw new Exception("Este login ($usuario_final) já está em uso por outro cliente.");
 
-        // Inserir nome completo (Schema simplificado, sem sobrenome separado)
+        // Inserir nome completo
         $pdo->prepare("INSERT INTO clientes (nome, usuario, senha) VALUES (?, ?, ?)")->execute([trim($nome_original), $usuario_final, $pass]);
         $nid = $pdo->lastInsertId();
         
-        // Inserção Detalhes (Campos não preenchidos vão vazios para serem completados na edição)
-        // Inserção Detalhes (Campos Expandidos)
+        // Inserção Detalhes (Campos Expandidos Standardizados)
         $pdo->prepare("INSERT INTO processo_detalhes (
             cliente_id, 
             cpf_cnpj, 
@@ -386,12 +385,13 @@ if (isset($_POST['novo_cliente'])) {
             inscricao_imob, num_matricula, imovel_area_lote, area_construida,
             
             endereco_imovel,
-            endereco_residencial
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")->execute([
+            endereco_residencial,
+            contato_email
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")->execute([
             $nid, 
             $cpf, 
             $tel, 
-            $_POST['rg'] ?? null,
+            $_POST['rg_ie'] ?? null,
             $_POST['data_nascimento'] ?? null,
             $_POST['nacionalidade'] ?? null,
             $_POST['profissao'] ?? null,
@@ -417,9 +417,10 @@ if (isset($_POST['novo_cliente'])) {
             $_POST['imovel_area_lote'] ?? null,
             $_POST['area_construida'] ?? null,
 
-            // Compõe endereços visuais (Concatenação)
+            // Compõe endereços visuais
             ($_POST['imovel_rua'] ?? '') . ', ' . ($_POST['imovel_numero'] ?? '') . ' - ' . ($_POST['imovel_bairro'] ?? '') . ' - ' . ($_POST['imovel_cidade'] ?? '') . '/' . ($_POST['imovel_uf'] ?? ''),
-             ($_POST['res_rua'] ?? '') . ', ' . ($_POST['res_numero'] ?? '') . ' - ' . ($_POST['res_bairro'] ?? '') . ' - ' . ($_POST['res_cidade'] ?? '') . '/' . ($_POST['res_uf'] ?? '')
+             ($_POST['res_rua'] ?? '') . ', ' . ($_POST['res_numero'] ?? '') . ' - ' . ($_POST['res_bairro'] ?? '') . ' - ' . ($_POST['res_cidade'] ?? '') . '/' . ($_POST['res_uf'] ?? ''),
+             $_POST['contato_email'] ?? null
         ]);
 
         // AVATAR UPLOAD (NOVO)
