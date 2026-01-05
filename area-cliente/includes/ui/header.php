@@ -64,13 +64,43 @@
     </div>
 
     <!-- 4. Avisos -->
-    <button onclick="document.getElementById('modalNotificacoes').showModal()" class="top-nav-btn" style="cursor:pointer;">
+    <button onclick="document.getElementById('modalNotificacoes').showModal()" class="top-nav-btn" style="cursor:pointer; margin-right:15px;">
         <span class="material-symbols-rounded" style="color:#fd7e14;">notifications</span>
         Avisos
         <?php if(isset($kpi_pre_pendentes) && $kpi_pre_pendentes > 0): ?>
             <span class="fab-badge-top"><?= $kpi_pre_pendentes ?></span>
         <?php endif; ?>
     </button>
+
+    <!-- SPACER to push Avatar to right -->
+    <div style="flex-grow:1;"></div>
+
+    <!-- 5. Perfil (Avatar) -->
+    <div class="top-nav-dropdown" style="position:relative;">
+        <button class="nav-avatar-btn" onclick="toggleTopNavDropdown(this)" style="cursor:pointer;" title="Meu Perfil">
+            DV
+        </button>
+        <!-- Dropdown Menu (Right Aligned) -->
+        <div class="top-nav-dropdown-menu" style="right:0; left:auto; width:200px;">
+            <div style="padding:10px 15px; border-bottom:1px solid #eee; margin-bottom:5px;">
+                <div style="font-weight:700; color:#333;">Diego Vilela</div>
+                <div style="font-size:0.75rem; color:#888;">Administrador</div>
+            </div>
+            <a href="#" class="dropdown-item">
+                <span class="material-symbols-rounded" style="font-size:1.1rem; vertical-align:middle; margin-right:8px; color:#555;">person</span>
+                Minha Conta
+            </a>
+            <a href="#" class="dropdown-item">
+                <span class="material-symbols-rounded" style="font-size:1.1rem; vertical-align:middle; margin-right:8px; color:#555;">settings</span>
+                Configurações
+            </a>
+            <div style="border-top:1px solid #eee; margin:5px 0;"></div>
+            <a href="logout.php" class="dropdown-item" style="color:#dc3545;">
+                <span class="material-symbols-rounded" style="font-size:1.1rem; vertical-align:middle; margin-right:8px;">logout</span>
+                Sair
+            </a>
+        </div>
+    </div>
 
 </div>
 <div style="height:60px;"></div> <!-- Spacer to push content down -->
