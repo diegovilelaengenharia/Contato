@@ -44,17 +44,24 @@
         </div>
     </div>
 
-    <!-- 2. Atende Oliveira -->
-    <a href="https://oliveira.atende.net/atendenet?source=pwa" target="_blank" class="top-nav-btn">
-        <span class="material-symbols-rounded">support_agent</span>
-        Atende Oliveira
-    </a>
-
-    <!-- 3. Matrícula do Imóvel -->
-    <a href="https://ridigital.org.br/VisualizarMatricula/DefaultVM.aspx?from=menu" target="_blank" class="top-nav-btn">
-        <span class="material-symbols-rounded">assignment_ind</span>
-        Matrículas
-    </a>
+    <!-- 3. Acesso Rápido (Dropdown) -->
+    <div class="top-nav-dropdown" style="position:relative;">
+        <button class="top-nav-btn" onclick="toggleTopNavDropdown(this)" style="cursor:pointer;">
+            <span class="material-symbols-rounded">link</span>
+            Acesso Rápido
+            <span class="material-symbols-rounded" style="font-size:1rem; margin-left:5px;">expand_more</span>
+        </button>
+        <div class="top-nav-dropdown-menu" style="width:220px;">
+            <a href="https://oliveira.atende.net/atendenet?source=pwa" target="_blank" class="dropdown-item">
+                <span class="material-symbols-rounded" style="font-size:1.1rem; vertical-align:middle; margin-right:5px; color:#009688;">support_agent</span>
+                Atende Oliveira
+            </a>
+            <a href="https://ridigital.org.br/VisualizarMatricula/DefaultVM.aspx?from=menu" target="_blank" class="dropdown-item">
+                <span class="material-symbols-rounded" style="font-size:1.1rem; vertical-align:middle; margin-right:5px; color:#6f42c1;">assignment_ind</span>
+                Matrículas
+            </a>
+        </div>
+    </div>
 
     <!-- 4. Avisos -->
     <button onclick="document.getElementById('modalNotificacoes').showModal()" class="top-nav-btn" style="cursor:pointer;">
