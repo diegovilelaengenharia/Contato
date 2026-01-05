@@ -473,284 +473,94 @@ if (isset($_POST['btn_salvar_tudo'])) {
 
         <div class="form-container">
             
-            <!-- SECTION 1: LOGIN -->
-            <div class="section-header">
-                <div class="section-icon">🔐</div>
-                <h2>Acesso & Segurança</h2>
-            </div>
-            <div class="section-body">
-                <div class="grid">
-                    <!-- Campo Nome movido para Dados do Titular -->
-                    <div class="form-group">
-                        <label>Usuário (Login)</label>
-                        <input type="text" name="usuario" id="campo_login" value="<?= htmlspecialchars($cliente['usuario']) ?>" required style="font-family:monospace; color:#2980b9;">
-                        <div style="display:flex; gap:10px; margin-top:5px;">
-                            <button type="button" onclick="copiarParaLogin('cpf')" style="font-size:0.75rem; padding:4px 8px; border:1px solid #ccc; background:#fff; border-radius:4px; cursor:pointer;">Usar CPF</button>
-                            <button type="button" onclick="copiarParaLogin('tel')" style="font-size:0.75rem; padding:4px 8px; border:1px solid #ccc; background:#fff; border-radius:4px; cursor:pointer;">Usar Telefone</button>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Senha de Acesso</label>
-                        <input type="text" name="nova_senha" placeholder="Preencha apenas se for trocar a senha" style="border-style:dashed;">
-                    </div>
-                </div>
-            </div>
-
-            <!-- SECTION 2: PERSONAL -->
-            <div class="section-header">
-                <div class="section-icon">👤</div>
-                <h2>Dados do Titular</h2>
-            </div>
-            <div class="section-body">
-                <div class="grid">
-                    <div class="form-group" style="grid-column: span 2;">
-                        <label>ID do Cliente</label>
-                        <input type="text" value="<?= str_pad($cliente['id'], 3, '0', STR_PAD_LEFT) ?>" readonly style="background:#e9ecef; color:#555; font-weight:bold; width:80px; text-align:center;">
-                    </div>
-                    
-                    <div class="form-group" style="grid-column: span 2;">
-                        <label>📸 Foto de Perfil</label>
-                         <div style="display:flex; gap:10px; align-items:center;">
-                            <input type="file" name="avatar_upload" accept="image/*" style="padding:10px; border:1px solid #ddd; border-radius:8px; width:100%;">
-                            <?php 
-                                $avatar = glob("uploads/avatars/avatar_{$cliente['id']}.*");
-                                if(!empty($avatar)) echo "<img src='{$avatar[0]}?".time()."' style='width:40px; height:40px; border-radius:50%; object-fit:cover; border:1px solid #ddd;'>";
-                            ?>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Natureza Jurídica</label>
-                        <select name="tipo_pessoa">
-                            <option value="Fisica" <?= ($detalhes['tipo_pessoa']??'')=='Fisica'?'selected':'' ?>>Pessoa Física (CPF)</option>
-                            <option value="Juridica" <?= ($detalhes['tipo_pessoa']??'')=='Juridica'?'selected':'' ?>>Pessoa Jurídica (CNPJ)</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="grid" style="margin-top:20px;">
-                    <div class="form-group" style="grid-column: span 2;">
-                        <label>Nome Completo</label>
-                        <input type="text" name="nome" value="<?= htmlspecialchars($cliente['nome']) ?>" required placeholder="Nome Completo">
-                    </div>
-                    <div class="form-group">
-                        <label>CPF / CNPJ</label>
-                        <input type="text" name="cpf_cnpj" value="<?= htmlspecialchars($detalhes['cpf_cnpj']??'') ?>">
-                    </div>
-                    <div class="form-group">
-                        <label>Data de Nascimento</label>
-                        <input type="date" name="data_nascimento" value="<?= htmlspecialchars($detalhes['data_nascimento']??'') ?>">
-                    </div>
-                    <div class="form-group">
-                        <label>RG / Inscrição Estadual</label>
-                        <input type="text" name="rg_ie" value="<?= htmlspecialchars($detalhes['rg_ie']??'') ?>">
-                    </div>
-                </div>
-                
-                <div class="grid" style="margin-top:25px;">
-                    <div class="form-group">
-                        <label>Email Principal</label>
-                        <input type="email" name="contato_email" value="<?= htmlspecialchars($detalhes['contato_email']??'') ?>">
-                    </div>
-                    <div class="form-group">
-                        <label>WhatsApp / Telefone</label>
-                        <input type="text" name="contato_tel" value="<?= htmlspecialchars($detalhes['contato_tel']??'') ?>">
-                    </div>
-                </div>
-
-                <div class="grid" style="margin-top:25px;">
-                    <div class="form-group">
-                        <label>Nacionalidade</label>
-                        <input type="text" name="nacionalidade" value="<?= htmlspecialchars($detalhes['nacionalidade']??'') ?>" placeholder="Ex: Brasileira">
-                    </div>
-                    <div class="form-group">
-                        <label>Profissão</label>
-                        <input type="text" name="profissao" value="<?= htmlspecialchars($detalhes['profissao']??'') ?>">
-                    </div>
-                    <div class="form-group">
-                        <label>Estado Civil</label>
-                        <input type="text" name="estado_civil" value="<?= htmlspecialchars($detalhes['estado_civil']??'') ?>">
-                    </div>
-                </div>
-                
-                <div class="grid" style="margin-top:25px;">
-                     <!-- Endereço Residencial Dividido -->
-                    <div class="form-group" style="grid-column: span 3;">
-                        <h4 style="margin:10px 0 5px 0; color:var(--text-main); font-size:0.9rem;">Endereço Residencial</h4>
-                    </div>
-                </div>
-                <div class="grid" style="grid-template-columns: 3fr 1fr;">
-                    <div class="form-group">
-                        <label>Logradouro (Rua/Av)</label>
-                        <input type="text" name="res_rua" value="<?= htmlspecialchars($detalhes['res_rua']??'') ?>">
-                    </div>
-                    <div class="form-group">
-                        <label>Número</label>
-                        <input type="text" name="res_numero" value="<?= htmlspecialchars($detalhes['res_numero']??'') ?>">
-                    </div>
-                </div>
-                <div class="grid" style="margin-top:15px;">
-                    <div class="form-group">
-                        <label>Bairro</label>
-                        <input type="text" name="res_bairro" value="<?= htmlspecialchars($detalhes['res_bairro']??'') ?>">
-                    </div>
-                    <div class="form-group">
-                        <label>Complemento</label>
-                        <input type="text" name="res_complemento" value="<?= htmlspecialchars($detalhes['res_complemento']??'') ?>">
-                    </div>
-                    <div class="form-group">
-                        <label>Cidade</label>
-                        <input type="text" name="res_cidade" value="<?= htmlspecialchars($detalhes['res_cidade']??'') ?>">
-                    </div>
-                    <div class="form-group">
-                        <label>UF</label>
-                        <input type="text" name="res_uf" value="<?= htmlspecialchars($detalhes['res_uf']??'') ?>" maxlength="2">
-                    </div>
-                </div>
-            </div>
-
-            <!-- SECTION 3: PROPERTY -->
-            <?php
-                // Self-Healing: Ensure column 'observacoes_gerais' exists
-                try {
-                    $pdo->exec("ALTER TABLE processo_detalhes ADD COLUMN observacoes_gerais TEXT NULL");
-                } catch (Exception $e) { /* Ignore if exists */ }
-            ?>
-
-
-
-            <div class="section-header" style="margin-top:20px;">
-                <div class="section-icon">🏠</div>
-                <h2>Dados do Imóvel e Processo</h2>
-            </div>
-            <div class="section-body">
-                <!-- NEW FIELDS REQUESTED BY USER -->
-                <div class="grid" style="margin-bottom:20px; background:#f8f9fa; padding:15px; border-radius:8px;">
-                    <div class="form-group">
-                        <h4 style="margin:0 0 10px 0; color:var(--primary);">📁 Dados do Processo</h4>
-                    </div>
-                    <div class="form-group" style="grid-column: span 3;">
-                        <label>Objeto do Processo</label>
-                        <input type="text" name="processo_objeto" value="<?= htmlspecialchars($detalhes['processo_objeto']??'') ?>" placeholder="Ex: Regularização de Edificação Residencial Unifamiliar">
-                    </div>
-                    <div class="form-group">
-                        <label>Processo Administrativo Nº</label>
-                        <input type="text" name="processo_numero" value="<?= htmlspecialchars($detalhes['processo_numero']??'') ?>" placeholder="Ex: 6100/2025">
-                    </div>
-                    <div class="form-group">
-                        <label>Área Total Final (m²)</label>
-                        <input type="text" name="area_total_final" value="<?= htmlspecialchars($detalhes['area_total_final']??'') ?>" placeholder="Ex: 156.45">
-                    </div>
-                </div>
-
-                <!-- DADOS TÉCNICOS ADICIONAIS (Novos Campos) -->
-                <div class="grid" style="margin-bottom:20px; background:#f0f8ff; padding:15px; border-radius:8px;">
-                     <div class="form-group" style="grid-column: span 3;">
-                         <h4 style="margin:0 0 10px 0; color:#2980b9;">📐 Dados Técnicos e Índices</h4>
-                     </div>
-                     <div class="form-group">
-                        <label>Valor Venal (R$)</label>
-                        <input type="text" name="valor_venal" value="<?= htmlspecialchars($detalhes['valor_venal']??'') ?>" placeholder="Ex: 150000.00">
-                     </div>
-                     <div class="form-group">
-                        <label>Área Existente (m²)</label>
-                        <input type="text" name="area_existente" value="<?= htmlspecialchars($detalhes['area_existente']??'') ?>">
-                     </div>
-                     <div class="form-group">
-                        <label>Área Acréscimo (m²)</label>
-                        <input type="text" name="area_acrescimo" value="<?= htmlspecialchars($detalhes['area_acrescimo']??'') ?>">
-                     </div>
-                     <div class="form-group">
-                        <label>Área Permeável (m²)</label>
-                        <input type="text" name="area_permeavel" value="<?= htmlspecialchars($detalhes['area_permeavel']??'') ?>">
-                     </div>
-                     <div class="form-group">
-                        <label>Taxa Ocupação (%)</label>
-                        <input type="text" name="taxa_ocupacao" value="<?= htmlspecialchars($detalhes['taxa_ocupacao']??'') ?>">
-                     </div>
-                     <div class="form-group">
-                        <label>Fator Aprov. (x)</label>
-                        <input type="text" name="fator_aproveitamento" value="<?= htmlspecialchars($detalhes['fator_aproveitamento']??'') ?>">
-                     </div>
-                     <div class="form-group" style="grid-column: span 3;">
-                        <label>Coordenadas Geográficas (Google Maps)</label>
-                        <input type="text" name="geo_coords" value="<?= htmlspecialchars($detalhes['geo_coords']??'') ?>" placeholder="Ex: -21.123456, -44.123456" style="font-family:monospace;">
-                     </div>
-                </div>
-
-                <div class="grid">
-                    <div class="form-group" style="grid-column: span 3;">
-                         <label>Endereço da Obra (Completo)</label>
-                         <input type="text" name="endereco_imovel" value="<?= htmlspecialchars($detalhes['endereco_imovel']??'') ?>" placeholder="Rua, Número, Bairro, Cidade - UF">
-                    </div>
-                </div>
-            <div class="section-body">
-                <!-- Foto Obra -->
-                <div class="form-group" style="margin-bottom:20px;">
-                    <label>🖼️ Foto da Capa (Obra/Fachada)</label>
+            <!-- 1. ACESSO -->
+            <h3 style="margin:0 0 15px 0; color:var(--color-primary); border-bottom:1px solid #eee; padding-bottom:5px;">1. Acesso & Fotos</h3>
+            <div style="display:flex; gap:20px; margin-bottom:20px;">
+                <div style="flex:1;">
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">📸 Foto de Perfil</label>
                     <div style="display:flex; gap:10px; align-items:center;">
-                        <input type="file" name="foto_capa_obra" accept="image/*" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; background:#f9f9f9;">
-                        <?php if(!empty($detalhes['foto_capa_obra'])): ?>
-                            <a href="<?= $detalhes['foto_capa_obra'] ?>" target="_blank">
-                                <img src="<?= $detalhes['foto_capa_obra'] ?>" style="height:50px; border-radius:4px; border:1px solid #ddd;">
-                            </a>
-                        <?php endif; ?>
+                        <input type="file" name="avatar_upload" accept="image/*" style="padding:10px; border:1px solid #ddd; border-radius:8px; width:100%;">
+                        <?php 
+                            $avatar = glob("uploads/avatars/avatar_{$cliente['id']}.*");
+                            if(!empty($avatar)) echo "<img src='{$avatar[0]}?".time()."' style='width:40px; height:40px; border-radius:50%; object-fit:cover; border:1px solid #ddd;'>";
+                        ?>
                     </div>
                 </div>
+            </div>
+            
+            <div class="form-grid">
+                <div class="form-group"><label>Nome Completo (Titular)</label><input type="text" name="nome" value="<?= htmlspecialchars($cliente['nome']) ?>" required placeholder="Ex: João da Silva"></div>
+                <div class="form-group">
+                    <label>Login de Acesso (Usuário)</label>
+                    <input type="text" name="usuario" value="<?= htmlspecialchars($cliente['usuario']) ?>" required style="font-family:monospace; color:#2980b9;">
+                </div>
+                <div class="form-group"><label>Nova Senha (Opcional)</label><input type="text" name="nova_senha" placeholder="Preencha apenas se for trocar"></div>
+            </div>
 
-                <div class="grid" style="grid-template-columns: 3fr 1fr;">
-                    <div class="form-group">
-                        <label>Logradouro (Rua/Av)</label>
-                        <input type="text" name="imovel_rua" value="<?= htmlspecialchars($detalhes['imovel_rua']??'') ?>">
-                    </div>
-                    <div class="form-group">
-                        <label>Número</label>
-                        <input type="text" name="imovel_numero" value="<?= htmlspecialchars($detalhes['imovel_numero']??'') ?>">
-                    </div>
+            <!-- 2. DADOS PESSOAIS -->
+            <h3 style="margin:20px 0 15px 0; color:var(--color-primary); border-bottom:1px solid #eee; padding-bottom:5px;">2. Dados Pessoais</h3>
+            <div class="form-grid">
+                <div class="form-group"><label>CPF / CNPJ <span style="color:red">*</span></label><input type="text" name="cpf_cnpj" value="<?= htmlspecialchars($detalhes['cpf_cnpj']??'') ?>" required></div>
+                <div class="form-group"><label>RG / Inscrição Estadual</label><input type="text" name="rg_ie" value="<?= htmlspecialchars($detalhes['rg_ie']??'') ?>"></div>
+                <div class="form-group"><label>Nacionalidade</label><input type="text" name="nacionalidade" value="<?= htmlspecialchars($detalhes['nacionalidade']??'') ?>"></div>
+                <div class="form-group"><label>Data Nascimento</label><input type="date" name="data_nascimento" value="<?= htmlspecialchars($detalhes['data_nascimento']??'') ?>"></div>
+                <div class="form-group"><label>Profissão</label><input type="text" name="profissao" value="<?= htmlspecialchars($detalhes['profissao']??'') ?>"></div>
+                <div class="form-group">
+                    <label>Estado Civil</label>
+                    <select name="estado_civil" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
+                        <?php 
+                        $opts = ['Solteiro(a)', 'Casado(a)', 'Divorciado(a)', 'Viúvo(a)', 'União Estável'];
+                        foreach($opts as $o) {
+                            $sel = ($detalhes['estado_civil']??'') == $o ? 'selected' : '';
+                            echo "<option value='$o' $sel>$o</option>";
+                        }
+                        ?>
+                    </select>
                 </div>
-                
-                <div class="grid" style="margin-top:25px;">
-                    <div class="form-group">
-                        <label>Bairro</label>
-                        <input type="text" name="imovel_bairro" value="<?= htmlspecialchars($detalhes['imovel_bairro']??'') ?>">
-                    </div>
-                    <div class="form-group">
-                        <label>Complemento</label>
-                        <input type="text" name="imovel_complemento" value="<?= htmlspecialchars($detalhes['imovel_complemento']??'') ?>">
-                    </div>
-                </div>
+                <div class="form-group"><label>Nome Cônjuge</label><input type="text" name="nome_conjuge" value="<?= htmlspecialchars($detalhes['nome_conjuge']??'') ?>"></div>
+                <div class="form-group"><label>Telefone / WhatsApp</label><input type="text" name="contato_tel" value="<?= htmlspecialchars($detalhes['contato_tel']??'') ?>"></div>
+                <div class="form-group"><label>Email</label><input type="email" name="contato_email" value="<?= htmlspecialchars($detalhes['contato_email']??'') ?>"></div>
+            </div>
 
-                <div class="grid" style="margin-top:25px;">
-                    <div class="form-group">
-                        <label>Cidade</label>
-                        <input type="text" name="imovel_cidade" value="<?= htmlspecialchars($detalhes['imovel_cidade']??'') ?>">
-                    </div>
-                    <div class="form-group">
-                        <label>Estado (UF)</label>
-                        <input type="text" name="imovel_uf" value="<?= htmlspecialchars($detalhes['imovel_uf']??'') ?>" maxlength="2" style="text-transform:uppercase;">
-                    </div>
-                </div>
+            <!-- 3. ENDEREÇO RESIDENCIAL -->
+            <h3 style="margin:20px 0 15px 0; color:var(--color-primary); border-bottom:1px solid #eee; padding-bottom:5px;">3. Endereço Residencial</h3>
+            <div class="form-grid">
+                <div class="form-group" style="grid-column: span 2;"><label>Rua / Logradouro</label><input type="text" name="res_rua" value="<?= htmlspecialchars($detalhes['res_rua']??'') ?>"></div>
+                <div class="form-group"><label>Número</label><input type="text" name="res_numero" value="<?= htmlspecialchars($detalhes['res_numero']??'') ?>"></div>
+                <div class="form-group"><label>Bairro</label><input type="text" name="res_bairro" value="<?= htmlspecialchars($detalhes['res_bairro']??'') ?>"></div>
+                <div class="form-group"><label>Complemento</label><input type="text" name="res_complemento" value="<?= htmlspecialchars($detalhes['res_complemento']??'') ?>"></div>
+                <div class="form-group"><label>Cidade</label><input type="text" name="res_cidade" value="<?= htmlspecialchars($detalhes['res_cidade']??'') ?>"></div>
+                <div class="form-group"><label>UF</label><input type="text" name="res_uf" value="<?= htmlspecialchars($detalhes['res_uf']??'') ?>" maxlength="2" style="text-transform:uppercase;"></div>
+            </div>
 
-                <div class="grid" style="margin-top:25px;">
-                    <div class="form-group">
-                        <label>Inscrição Imobiliária (IPTU)</label>
-                        <input type="text" name="inscricao_imob" value="<?= htmlspecialchars($detalhes['inscricao_imob']??'') ?>">
-                    </div>
-                    <div class="form-group">
-                        <label>Matrícula do Cartório</label>
-                        <input type="text" name="num_matricula" value="<?= htmlspecialchars($detalhes['num_matricula']??'') ?>">
-                    </div>
+            <!-- 4. DADOS DO IMÓVEL -->
+            <h3 style="margin:20px 0 15px 0; color:var(--color-primary); border-bottom:1px solid #eee; padding-bottom:5px;">4. Dados do Imóvel / Obra</h3>
+            <div class="form-grid">
+                <div class="form-group" style="grid-column: span 3;">
+                    <label>Tipo de Serviço</label>
+                    <select name="tipo_servico" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
+                        <?php 
+                        $servicos = ['Regularização de Imóvel', 'Projeto Arquitetônico', 'Projeto Estrutural', 'Desmembramento', 'Laudo Técnico', 'Outros'];
+                        foreach($servicos as $s) {
+                            $sel = ($detalhes['tipo_servico']??'') == $s ? 'selected' : '';
+                            echo "<option value='$s' $sel>$s</option>";
+                        }
+                        ?>
+                    </select>
                 </div>
-
-                <div class="grid" style="margin-top:25px;">
-                    <div class="form-group">
-                        <label>Área do Lote (m²)</label>
-                        <input type="text" name="imovel_area_lote" value="<?= htmlspecialchars($detalhes['imovel_area_lote']??($detalhes['area_terreno']??'')) ?>">
-                    </div>
-                    <div class="form-group">
-                        <label>Área Construída Presumida (m²)</label>
-                        <input type="text" name="area_construida" value="<?= htmlspecialchars($detalhes['area_construida']??'') ?>">
-                    </div>
-                </div>
+                <div class="form-group" style="grid-column: span 2;"><label>Rua / Logradouro (Obra)</label><input type="text" name="imovel_rua" value="<?= htmlspecialchars($detalhes['imovel_rua']??'') ?>"></div>
+                <div class="form-group"><label>Número</label><input type="text" name="imovel_numero" value="<?= htmlspecialchars($detalhes['imovel_numero']??'') ?>"></div>
+                <div class="form-group"><label>Bairro</label><input type="text" name="imovel_bairro" value="<?= htmlspecialchars($detalhes['imovel_bairro']??'') ?>"></div>
+                <div class="form-group"><label>Complemento</label><input type="text" name="imovel_complemento" value="<?= htmlspecialchars($detalhes['imovel_complemento']??'') ?>"></div>
+                <div class="form-group"><label>Cidade</label><input type="text" name="imovel_cidade" value="<?= htmlspecialchars($detalhes['imovel_cidade']??'') ?>"></div>
+                <div class="form-group"><label>UF</label><input type="text" name="imovel_uf" value="<?= htmlspecialchars($detalhes['imovel_uf']??'') ?>" maxlength="2" style="text-transform:uppercase;"></div>
+            </div>
+            
+            <div class="form-grid" style="margin-top:15px; background:#f8f9fa; padding:15px; border-radius:8px;">
+                <div class="form-group"><label>Inscrição Imobiliária (IPTU)</label><input type="text" name="inscricao_imob" value="<?= htmlspecialchars($detalhes['inscricao_imob']??'') ?>"></div>
+                <div class="form-group"><label>Matrícula Cartório</label><input type="text" name="num_matricula" value="<?= htmlspecialchars($detalhes['num_matricula']??'') ?>"></div>
+                <div class="form-group"><label>Área do Lote (m²)</label><input type="text" name="imovel_area_lote" value="<?= htmlspecialchars($detalhes['imovel_area_lote']??($detalhes['area_terreno']??'')) ?>"></div>
+                <div class="form-group"><label>Área Construída (m²)</label><input type="text" name="area_construida" value="<?= htmlspecialchars($detalhes['area_construida']??'') ?>"></div>
             </div>
 
             <!-- Seção Técnica Removida conforme solicitação -->
