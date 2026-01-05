@@ -43,7 +43,10 @@ try {
     // 3. FETCH NEXT PAYMENT
     $stmt_fin = $pdo->prepare("SELECT valor, data_vencimento FROM processo_financeiro WHERE cliente_id = ? AND status != 'pago' ORDER BY data_vencimento ASC LIMIT 1");
     $stmt_fin->execute([$cliente_id]);
-    $next_bill = $stmt_fin->fetch(PDO::FETCH_ASSOC);
+    // 4. FETCH EXTRA DETAILS (Address, CPF, Phone)
+    $stmt_det = $pdo->prepare("SELECT * FROM processo_detalhes WHERE cliente_id = ?");
+    $stmt_det->execute([$cliente_id]);
+    $detalhes = $stmt_det->fetch();
 
 } catch (Exception $e) {
     die("Erro ao carregar dados: " . $e->getMessage());
@@ -62,15 +65,54 @@ try {
 
     <div class="app-container">
         
-        <!-- HEADER -->
-        <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-            <div>
-                <div style="font-size:0.9rem; color:#666;">Olá,</div>
-                <h1 style="color:#146c43; font-size:1.8rem;"><?= htmlspecialchars(explode(' ', $cliente['nome'])[0]) ?></h1>
+        <!-- HEADER PROFILE -->
+        <header style="display:flex; align-items:center; gap:15px; margin-bottom:30px; background:white; padding:15px; border-radius:16px; box-shadow:0 2px 10px rgba(0,0,0,0.03);">
+            <!-- Avatar -->
+            <div style="flex-shrink:0;">
+                <?php 
+                    $avatarPath = $cliente['foto_perfil'] ?? '';
+                    if($avatarPath && file_exists($avatarPath)): 
+                ?>
+                    <img src="<?= htmlspecialchars($avatarPath) ?>?v=<?= time() ?>" alt="Perfil" style="width:60px; height:60px; border-radius:50%; object-fit:cover; border:2px solid var(--color-primary);">
+                <?php else: ?>
+                    <div style="width:60px; height:60px; border-radius:50%; background:#e9ecef; color:#aaa; display:flex; align-items:center; justify-content:center; font-size:1.5rem;">👤</div>
+                <?php endif; ?>
             </div>
-            <a href="logout.php" style="background:#f8d7da; color:#dc3545; padding:8px 15px; border-radius:30px; font-weight:700; font-size:0.85rem;">
-                Sair
-            </a>
+
+            <!-- Info -->
+            <div style="flex:1; min-width:0;"> <!-- min-width 0 for text truncate -->
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                    <div>
+                        <div style="font-size:0.85rem; color:#666;">Olá,</div>
+                        <h1 style="color:#146c43; font-size:1.4rem; margin:0; line-height:1.2;"><?= htmlspecialchars(explode(' ', $cliente['nome'])[0]) ?></h1>
+                    </div>
+                     <a href="logout.php" style="background:#fffcfc; border:1px solid #f8d7da; color:#dc3545; padding:5px 10px; border-radius:8px; font-weight:600; font-size:0.75rem; text-decoration:none;">
+                        Sair
+                    </a>
+                </div>
+                
+                <div style="margin-top:8px; font-size:0.8rem; color:#555; display:flex; flex-direction:column; gap:2px;">
+                    <?php if(!empty($detalhes['endereco_imovel'])): ?>
+                        <div style="display:flex; align-items:center; gap:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                            <span>📍</span> <span style="font-weight:600;">Obra:</span> <?= htmlspecialchars($detalhes['endereco_imovel']) ?>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <div style="display:flex; flex-wrap:wrap; gap:10px;">
+                        <?php if(!empty($detalhes['cpf_cnpj'])): ?>
+                            <div style="display:flex; align-items:center; gap:4px;">
+                                <span>🆔</span> <?= htmlspecialchars($detalhes['cpf_cnpj']) ?>
+                            </div>
+                        <?php endif; ?>
+                        
+                        <?php if(!empty($detalhes['contato_tel'])): ?>
+                            <div style="display:flex; align-items:center; gap:4px;">
+                                <span>📞</span> <?= htmlspecialchars($detalhes['contato_tel']) ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
         </header>
 
         <!-- MAIN MENU GRID (Vertical "App" Style) -->
