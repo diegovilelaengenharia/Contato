@@ -49,7 +49,7 @@ $count_par = count($parados ?? []);
 
     <!-- Main Settings Toggle -->
     <button class="br-fab-main" onclick="document.getElementById('brFab').classList.toggle('active')">
-        <span class="material-symbols-rounded">settings</span>
+        <span class="material-symbols-rounded" style="font-size: 1.8rem;">settings</span> <!-- Icon Settings -->
     </button>
 
 </div>
