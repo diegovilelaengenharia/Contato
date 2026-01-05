@@ -108,8 +108,13 @@
             Nos chame no WhatsApp: (35) 98452-9577
         </div>
 
-        <div style="margin-top: 20px; font-size: 0.8rem; color: #aaa;">
-            Equipe Vilela Engenharia • <a href="?bypass=1" style="color:#aaa; text-decoration:none;">Acesso Administrativo</a>
+            Equipe Vilela Engenharia
+            <div style="margin-top: 15px;">
+                <a href="?bypass=1" style="display:inline-block; padding:8px 20px; border:1px solid #ccc; border-radius:30px; color:#555; text-decoration:none; font-size:0.85rem; transition:0.3s; background:#f8f9fa;">
+                    <span class="material-symbols-rounded" style="font-size:1rem; vertical-align:middle; margin-right:5px;">lock_open</span>
+                    Acesso Administrativo
+                </a>
+            </div>
         </div>
     </div>
 </body>
