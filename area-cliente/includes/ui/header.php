@@ -101,7 +101,7 @@
                 <span class="material-symbols-rounded" style="font-size:1.1rem; vertical-align:middle; margin-right:8px; color:#555;">person</span>
                 Minha Conta
             </a>
-            <a href="#" class="dropdown-item">
+            <a href="admin_config.php" class="dropdown-item">
                 <span class="material-symbols-rounded" style="font-size:1.1rem; vertical-align:middle; margin-right:8px; color:#555;">settings</span>
                 Configurações
             </a>

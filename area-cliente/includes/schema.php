@@ -67,4 +67,11 @@ try {
 } catch (Exception $e) {
     $pdo->exec("ALTER TABLE clientes ADD COLUMN foto_perfil VARCHAR(255) DEFAULT NULL");
 }
+
+// Create Admin Settings Table
+$pdo->exec("CREATE TABLE IF NOT EXISTS admin_settings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    setting_key VARCHAR(50) NOT NULL UNIQUE,
+    setting_value TEXT
+)");
 ?>
