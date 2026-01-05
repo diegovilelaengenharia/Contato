@@ -106,7 +106,7 @@
         </div>
 
         <div style="margin-top: 20px; font-size: 0.8rem; color: #aaa;">
-            Equipe Vilela Engenharia
+            Equipe Vilela Engenharia • <a href="index.php?admin=1" style="color:#aaa; text-decoration:none;">Acesso Administrativo</a>
         </div>
     </div>
 </body>

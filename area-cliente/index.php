@@ -31,25 +31,17 @@ try {
 $erro = '';
 
 // CHECK MAINTENANCE MODE (Global Scope)
+// CHECK MAINTENANCE MODE (Global Scope)
 try {
     $stmtMaint = $pdo->query("SELECT setting_value FROM admin_settings WHERE setting_key = 'maintenance_mode'");
     if ($stmtMaint) {
         $is_maint = $stmtMaint->fetchColumn();
         if($is_maint == 1) {
-            // Check if it's an admin trying to login?
-            // Actually, if maintenance is ON, we usually redirect everything.
-            // But we need to allow ADMIN to login.
-            // If it's a POST request with admin credentials, we might want to bypass?
-            // OR we rely on the fact that admin accesses 'gestao_admin_99.php' directly if session exists?
-            
-            // Let's implement a "Bypass for Login" logic if needed, but for now, 
-            // the user said "Block clients". 
-            // If I block here, NO ONE can login, including Admin.
-            // Except if I check if it's a POST request... 
-            
-            // Allow POST requests to proceed (so admin can login).
-            // Maintenance page only for GET?
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            // MAINTENANCE LOGIC
+            // 1. If bypass param exists (?admin=1), show login form (do not exit).
+            // 2. If it's a POST request (Login Attempt), verify later.
+            // 3. Otherwise, show maintenance page.
+            if (!isset($_GET['admin']) && $_SERVER['REQUEST_METHOD'] !== 'POST') {
                 require 'maintenance.php';
                 exit;
             }
@@ -75,22 +67,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
-    // 2. Se não for Admin, busca Cliente no banco
-    $stmt = $pdo->prepare("SELECT * FROM clientes WHERE usuario = ?");
-    $stmt->execute([$usuario]);
-    $user = $stmt->fetch();
-    
-        // Verifica a senha (usando hash seguro)
-        if ($user && password_verify($senha, $user['senha'])) {
-            session_regenerate_id(true);
-            $_SESSION['cliente_id'] = $user['id'];
-            $_SESSION['cliente_nome'] = $user['nome'];
-            session_write_close();
-            header("Location: client-app/index.php");
-            exit;
+    // CHECK MAINTENANCE BLOCK FOR CLIENTS
+    // If we are here, it's not admin. Check maintenance again to block client login.
+    try {
+        $stmtMaint = $pdo->query("SELECT setting_value FROM admin_settings WHERE setting_key = 'maintenance_mode'");
+        if ($stmtMaint && $stmtMaint->fetchColumn() == 1) {
+            $erro = "⚠️ Sistema em Manutenção. Acesso exclusivo para administradores.";
         } else {
-            $erro = "Usuário ou senha inválidos!";
+            // 2. Se não for Admin, busca Cliente no banco
+            $stmt = $pdo->prepare("SELECT * FROM clientes WHERE usuario = ?");
+            $stmt->execute([$usuario]);
+            $user = $stmt->fetch();
+            
+            // Verifica a senha (usando hash seguro)
+            if ($user && password_verify($senha, $user['senha'])) {
+                session_regenerate_id(true);
+                $_SESSION['cliente_id'] = $user['id'];
+                $_SESSION['cliente_nome'] = $user['nome'];
+                session_write_close();
+                header("Location: client-app/index.php");
+                exit;
+            } else {
+                $erro = "Usuário ou senha inválidos!";
+            }
         }
+    } catch(Exception $e) {
+        $erro = "Usuário ou senha inválidos!";
+    }
 }
 ?>
 <!DOCTYPE html>
