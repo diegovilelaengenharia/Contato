@@ -77,8 +77,8 @@
 
     <!-- 5. Perfil (Avatar) -->
     <div class="top-nav-dropdown" style="position:relative;">
-        <button class="nav-avatar-btn" onclick="toggleTopNavDropdown(this)" style="cursor:pointer;" title="Meu Perfil">
-            DV
+        <button class="nav-avatar-btn" onclick="toggleTopNavDropdown(this)" style="cursor:pointer; padding:0; overflow:hidden;" title="Meu Perfil">
+            <img src="assets/avatar_admin.jpg" alt="DV" style="width:100%; height:100%; object-fit:cover; display:block;">
         </button>
         <!-- Dropdown Menu (Right Aligned) -->
         <div class="top-nav-dropdown-menu" style="right:0; left:auto; width:200px;">
