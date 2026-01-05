@@ -25,7 +25,7 @@ $cols_needed = [
     'area_existente', 'area_acrescimo', 'area_permeavel',
     'taxa_ocupacao', 'fator_aproveitamento', 'geo_coords',
     // New Personal Fields
-    'data_nascimento', 'nome_conjuge', 'nacionalidade'
+    'data_nascimento', 'nome_conjuge', 'cpf_conjuge', 'nacionalidade', 'eh_procurador'
 ];
 
 foreach($cols_needed as $col) {

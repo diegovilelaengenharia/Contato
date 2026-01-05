@@ -687,6 +687,10 @@ if (isset($_POST['acao']) && $_POST['acao'] == 'editar_cliente_completo') {
             $_POST['taxa_ocupacao'] ?? null, $_POST['fator_aproveitamento'] ?? null, $_POST['geo_coords'] ?? null,
             $_POST['observacoes_gerais'] ?? null,
 
+            // New Fields (Doc Auto)
+            $_POST['cpf_conjuge'] ?? null,
+            $_POST['eh_procurador'] ?? 0,
+
             // Concatenações Automáticas para manter compatibilidade visual
             ($_POST['imovel_rua'] ?? '') . ', ' . ($_POST['imovel_numero'] ?? '') . ' - ' . ($_POST['imovel_bairro'] ?? '') . ' - ' . ($_POST['imovel_cidade'] ?? '') . '/' . ($_POST['imovel_uf'] ?? ''),
             ($_POST['res_rua'] ?? '') . ', ' . ($_POST['res_numero'] ?? '') . ' - ' . ($_POST['res_bairro'] ?? '') . ' - ' . ($_POST['res_cidade'] ?? '') . '/' . ($_POST['res_uf'] ?? ''),
@@ -710,6 +714,7 @@ if (isset($_POST['acao']) && $_POST['acao'] == 'editar_cliente_completo') {
                 processo_objeto=?, processo_numero=?, area_total_final=?,
                 valor_venal=?, area_existente=?, area_acrescimo=?, area_permeavel=?, taxa_ocupacao=?, fator_aproveitamento=?, geo_coords=?,
                 observacoes_gerais=?,
+                cpf_conjuge=?, eh_procurador=?,
                 endereco_imovel=?, endereco_residencial=?
                 WHERE cliente_id=?";
         } else {
@@ -723,9 +728,10 @@ if (isset($_POST['acao']) && $_POST['acao'] == 'editar_cliente_completo') {
                 processo_objeto, processo_numero, area_total_final,
                 valor_venal, area_existente, area_acrescimo, area_permeavel, taxa_ocupacao, fator_aproveitamento, geo_coords,
                 observacoes_gerais,
+                cpf_conjuge, eh_procurador,
                 endereco_imovel, endereco_residencial,
                 cliente_id
-            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         }
         
         $pdo->prepare($sqlDet)->execute($paramsDet);

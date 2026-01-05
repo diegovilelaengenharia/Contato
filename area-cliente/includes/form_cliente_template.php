@@ -19,6 +19,8 @@ $d_nasc = $detalhes['data_nascimento'] ?? '';
 $d_profissao = $detalhes['profissao'] ?? '';
 $d_civil = $detalhes['estado_civil'] ?? '';
 $d_conjuge = $detalhes['nome_conjuge'] ?? '';
+$d_cpf_conjuge = $detalhes['cpf_conjuge'] ?? '';
+$d_procurador = $detalhes['eh_procurador'] ?? 0;
 $d_tel = $detalhes['contato_tel'] ?? '';
 $d_email = $detalhes['contato_email'] ?? '';
 
@@ -92,6 +94,11 @@ $i_area = $detalhes['area_construida'] ?? '';
     <!-- 2. DADOS PESSOAIS -->
     <h3 style="margin:20px 0 15px 0; color:var(--color-primary); border-bottom:1px solid #eee; padding-bottom:5px;">2. Dados Pessoais</h3>
     <div class="form-grid">
+        <div class="form-group" style="grid-column: span 2; display:flex; align-items:center; gap:10px; background:#f0f8ff; padding:10px; border-radius:8px; border:1px solid #cce5ff;">
+            <label style="margin:0; font-weight:bold; color:#0056b3;">O cliente é Procurador?</label>
+            <label style="cursor:pointer; display:flex; align-items:center; gap:5px;"><input type="radio" name="eh_procurador" value="1" <?= $d_procurador == 1 ? 'checked' : '' ?>> Sim</label>
+            <label style="cursor:pointer; display:flex; align-items:center; gap:5px;"><input type="radio" name="eh_procurador" value="0" <?= $d_procurador == 0 ? 'checked' : '' ?>> Não</label>
+        </div>
         <div class="form-group"><label>CPF / CNPJ <span style="color:red">*</span></label><input type="text" name="cpf_cnpj" value="<?= htmlspecialchars($d_cpf) ?>" required oninput="atualizarLoginAuto()"></div>
         <div class="form-group"><label>RG / Inscrição Estadual</label><input type="text" name="rg_ie" value="<?= htmlspecialchars($d_rg) ?>"></div>
         <div class="form-group"><label>Nacionalidade</label><input type="text" name="nacionalidade" value="<?= htmlspecialchars($d_nacionalidade) ?>"></div>
@@ -110,6 +117,7 @@ $i_area = $detalhes['area_construida'] ?? '';
             </select>
         </div>
         <div class="form-group"><label>Nome Cônjuge</label><input type="text" name="nome_conjuge" value="<?= htmlspecialchars($d_conjuge) ?>"></div>
+        <div class="form-group"><label>CPF Cônjuge</label><input type="text" name="cpf_conjuge" value="<?= htmlspecialchars($d_cpf_conjuge) ?>"></div>
         <div class="form-group"><label>Telefone / WhatsApp</label><input type="text" name="contato_tel" value="<?= htmlspecialchars($d_tel) ?>" oninput="atualizarLoginAuto()"></div>
         <div class="form-group"><label>Email</label><input type="email" name="contato_email" value="<?= htmlspecialchars($d_email) ?>"></div>
     </div>
@@ -234,7 +242,8 @@ $i_area = $detalhes['area_construida'] ?? '';
 
             const inputs = {
                 'contato_tel': maskPhone,
-                'cpf_cnpj': maskCpfCnpj
+                'cpf_cnpj': maskCpfCnpj,
+                'cpf_conjuge': maskCpfCnpj
             };
 
             for (const [name, fn] of Object.entries(inputs)) {
