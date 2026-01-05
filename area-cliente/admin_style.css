@@ -1194,3 +1194,5 @@ html.sidebar-collapsed .sidebar-toggler {
 }
 
 /* Adjust Layout specific for admin container if needed, handled inline in PHP usually or here */
+/* Avatar Style Fix */
+.nav-avatar-btn { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, #146c43, #0f5132); color: white; display: flex; align-items: center; justify-content: center; border: 2px solid #e9ecef; overflow: hidden; padding: 0; cursor: pointer; transition: 0.3s; } .nav-avatar-btn:hover { transform: scale(1.05); box-shadow: 0 4px 10px rgba(20, 108, 67, 0.25); }
