@@ -60,6 +60,49 @@ try {
     <title>Área do Cliente | Vilela Engenharia</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link href="style.css?v=<?= time() ?>" rel="stylesheet">
+    <style>
+        /* CRITICAL MODAL FIX - INLINED FOR RELIABILITY */
+        .app-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+        .app-modal.active {
+            display: flex !important;
+            opacity: 1 !important;
+        }
+        .app-modal-content {
+            background: white;
+            width: 100%; max-width: 500px;
+            max-height: 90vh; overflow-y: auto;
+            border-radius: 20px; padding: 25px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            display: flex; flex-direction: column;
+        }
+        .app-modal.active .app-modal-content {
+            transform: translateY(0);
+        }
+        .app-modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eee;
+        }
+        .btn-close {
+            background: #f1f1f1; border: none; width: 36px; height: 36px;
+            border-radius: 50%; font-size: 1.2rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+        }
+    </style>
 </head>
 <body>
 
