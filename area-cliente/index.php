@@ -91,7 +91,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $erro = "Usuário ou senha inválidos!";
         }
-    }
 }
 ?>
 <!DOCTYPE html>
