@@ -9,29 +9,7 @@
 
 <header class="admin-header" style="height: 45px; min-height: 45px; padding: 0 20px; background: #fff; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
     <nav style="display:flex; align-items:center; gap:15px;">
-        <!-- Desktop Sidebar Toggle -->
-        <button id="desktopSidebarToggle" class="btn-icon" onclick="toggleDesktopSidebar()" style="background:none; border:none; cursor:pointer; color:var(--color-primary); display:flex; align-items:center; padding:5px; border-radius:50%; transition:0.2s;">
-            <span class="material-symbols-rounded" style="font-size:1.6rem;">menu_open</span>
-        </button>
-
-        <script>
-            // Immediate State Apply to prevent FOUC
-            (function(){
-                if(localStorage.getItem('sidebar_collapsed') === 'true') {
-                    document.documentElement.classList.add('sidebar-collapsed');
-                }
-            })();
-
-            function toggleDesktopSidebar() {
-                document.documentElement.classList.toggle('sidebar-collapsed');
-                const isCollapsed = document.documentElement.classList.contains('sidebar-collapsed');
-                localStorage.setItem('sidebar_collapsed', isCollapsed);
-                
-                // Change Icon
-                const btn = document.querySelector('#desktopSidebarToggle span');
-                if(btn) btn.innerText = isCollapsed ? 'menu' : 'menu_open';
-            }
-        </script>
+        <!-- Scripts moved to Sidebar for better context -->
         <ul style="display:flex; gap:20px; list-style:none; margin:0; padding:0; align-items:center;">
             
             <!-- Arquivo -->

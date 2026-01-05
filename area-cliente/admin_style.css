@@ -793,3 +793,87 @@ html.sidebar-collapsed .sidebar div[style*='margin-top:auto'] {
     border-top: none;
 }
 
+
+/* --- Floating Sidebar Toggler --- */
+.sidebar-toggler {
+    position: absolute;
+    top: 25px;
+    right: -15px;
+    width: 30px;
+    height: 30px;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 100;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+    color: var(--color-primary);
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.sidebar-toggler:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+}
+
+.sidebar-toggler .material-symbols-rounded {
+    font-size: 1.4rem;
+    transition: transform 0.3s ease;
+}
+
+/* Hide on mobile */
+@media (max-width: 768px) {
+    .sidebar-toggler {
+        display: none !important;
+    }
+}
+
+/* Rotated state when collapsed */
+html.sidebar-collapsed .sidebar-toggler .material-symbols-rounded {
+    transform: rotate(180deg);
+}
+
+/* Ensure sidebar allows overflow for the button? 
+   No, sticky sidebar usually clips if overflow-y:auto.
+   However, the button is absolute. If overflow is hidden/auto, it might be cut off.
+   We need to ensure the parent handles it. 
+   Currently sidebar uses overflow-y:auto. This WILL clip the button if it sticks out.
+   
+   Fix: 
+   We will put the button INSIDE the padding but visually sticking out? No.
+   Alternatively, we make the container padding-right larger to accommodate.
+   
+   Better Fix:
+   Remove overflow-y:auto from .sidebar and put it on a wrapper inside? 
+   Or just place the button inside the sidebar but aligned right: 0? 
+   Let's try right: 10px (inside) for now to avoid clipping issues with sticky+overflow.
+   OR, we remove 'overflow-x:hidden' from sidebar style inline.
+*/
+
+html.sidebar-collapsed .sidebar-toggler {
+    right: -12px; /* Pull it slightly out if possible, or keep it inside */
+}
+
+/* Override inline style for overflow to allow button to show? */
+/* Actually, let's just create a CSS rule to override the inline overflow if needed, or adjust placement. */
+/* Ideally, to avoid clipping, the button should be 'inside' right:0 or the sidebar should not have overflow:hidden. */
+/* Current inline: overflow-y:auto; overflow-x:hidden; */
+/* Force visible overflow for x? */
+.sidebar {
+    overflow: visible !important; 
+}
+/* But if content is long, we need scroll. */
+/* Solution: The scrollbar should be on a container INSIDE the sidebar for the content, leaving the shell static. */
+/* Or, for simplicity now: Position the button 'inside' the visual box, top right corner. */
+
+.sidebar-toggler {
+    right: 10px; /* Inside */
+    top: 10px;
+}
+

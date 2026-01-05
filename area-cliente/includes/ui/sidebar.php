@@ -6,9 +6,30 @@ $kpi_pre_pendentes = $kpi_pre_pendentes ?? 0;
     ☰ Menu de Navegação
 </button>
 <aside class="sidebar" id="mobileSidebar" style="display:flex; flex-direction:column; height:calc(100vh - 45px); position:sticky; top:45px; overflow-y:auto; overflow-x:hidden;">
+    
+    <!-- Floating Toggle Button (Desktop Only) -->
+    <button id="sidebarToggler" onclick="toggleDesktopSidebar()" class="sidebar-toggler" title="Recolher/Expandir Menu">
+        <span class="material-symbols-rounded">chevron_left</span>
+    </button>
+    <script>
+        // Logic moved here
+        (function(){
+            if(localStorage.getItem('sidebar_collapsed') === 'true') {
+                document.documentElement.classList.add('sidebar-collapsed');
+            }
+        })();
+        function toggleDesktopSidebar() {
+            document.documentElement.classList.toggle('sidebar-collapsed');
+            const isCollapsed = document.documentElement.classList.contains('sidebar-collapsed');
+            localStorage.setItem('sidebar_collapsed', isCollapsed);
+            
+            // Icon Rotation logic handled by CSS or updated here
+            // We will use CSS rotation for the chevron
+        }
+    </script>
 
     <!-- Client List REMOVED per user request -->
-    <div style="margin-bottom:10px;"></div>
+    <div style="margin-bottom:20px;"></div>
     
     <nav class="sidebar-menu">
         <h4 style="font-size:0.75rem; text-transform:uppercase; color:#adb5bd; font-weight:700; margin:10px 0 5px 10px;">Principal</h4>
