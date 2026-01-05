@@ -162,7 +162,7 @@
 
         <div class="finance-summary">
             <div class="fin-card pago">
-                <span>Pago</span>
+                <span>Total Pago</span>
                 <strong>R$ <?= number_format($total_pago, 2, ',', '.') ?></strong>
             </div>
             <div class="fin-card pendente">
@@ -171,23 +171,34 @@
             </div>
         </div>
 
-        <h3 style="margin-top:20px; font-size:1rem; color:#666;">Próximos Vencimentos</h3>
-        <div class="finance-list">
+        <h3 style="margin-top:20px; font-size:1.1rem; color:#333; border-bottom:1px solid #eee; padding-bottom:10px;">Lançamentos</h3>
+        <div class="finance-list" style="margin-top:15px;">
             <?php if(empty($lancamentos)): ?>
-                <div class="empty-state">Nenhum lançamento financeiro.</div>
+                <div class="empty-state">
+                    <span style="font-size:2rem; display:block; margin-bottom:10px;">💸</span>
+                    Nenhum registro financeiro encontrado.
+                </div>
             <?php else: 
                 foreach($lancamentos as $l): 
-                    $status_class = $l['status'] == 'pago' ? 'st-pago' : ($l['data_vencimento'] < date('Y-m-d') ? 'st-atra' : 'st-pend');
-                    $status_label = $l['status'] == 'pago' ? 'Pago' : ($l['data_vencimento'] < date('Y-m-d') ? 'Em Atraso' : 'Aberto');
+                    $is_pago = $l['status'] == 'pago';
+                    $is_atrasado = !$is_pago && ($l['data_vencimento'] < date('Y-m-d'));
+                    
+                    $status_class = $is_pago ? 'st-pago' : ($is_atrasado ? 'st-atra' : 'st-pend');
+                    $status_label = $is_pago ? 'Pago' : ($is_atrasado ? 'Atrasado' : 'Aberto');
+                    $date_label = date('d/m/Y', strtotime($l['data_vencimento']));
             ?>
-                <div class="fin-item <?= $status_class ?>">
+                <div class="fin-item <?= $status_class ?>" style="display:flex; justify-content:space-between; align-items:flex-start;">
                     <div class="fin-info">
-                        <div class="fin-title"><?= htmlspecialchars($l['descricao']) ?></div>
-                        <div class="fin-date">Vence: <?= date('d/m/Y', strtotime($l['data_vencimento'])) ?></div>
+                        <div class="fin-title" style="font-weight:600; color:#333;"><?= htmlspecialchars($l['descricao']) ?></div>
+                        <div class="fin-date" style="font-size:0.85rem; color:#777; margin-top:2px;">
+                            Vencimento: <strong><?= $date_label ?></strong>
+                        </div>
                     </div>
-                    <div class="fin-value">
-                        R$ <?= number_format($l['valor'], 2, ',', '.') ?>
-                        <div class="fin-badge"><?= $status_label ?></div>
+                    <div class="fin-value" style="text-align:right;">
+                        <span style="display:block; font-weight:700;">R$ <?= number_format($l['valor'], 2, ',', '.') ?></span>
+                        <span class="fin-badge" style="font-size:0.7rem; padding:3px 8px; border-radius:12px; display:inline-block; margin-top:4px; font-weight:600; text-transform:uppercase;">
+                            <?= $status_label ?>
+                        </span>
                     </div>
                 </div>
             <?php endforeach; endif; ?>
