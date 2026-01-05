@@ -1043,3 +1043,6 @@ html.sidebar-collapsed .sidebar-toggler {
 .sidebar {
     display: none !important;
 }
+/* Remove FAB styles that are no longer used */
+.fab-container, .fab-menu, .fab-main, .fab-item { display: none !important; }
+

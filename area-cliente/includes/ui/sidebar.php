@@ -5,58 +5,24 @@ $count_ani = count($aniversariantes ?? []);
 $count_par = count($parados ?? []);
 ?>
 
-<!-- Floating Action Menu Container -->
-<div class="fab-container" id="fabContainer">
+<!-- Fixed Sidebar Navigation (2 Buttons) -->
+<div style="position:fixed; bottom:20px; left:20px; z-index:2000; display:flex; flex-direction:column; gap:10px;">
     
-    <!-- Collapsible Menu Items -->
-    <div class="fab-menu">
-        
-        <!-- 4. Parados -->
-        <a href="#" onclick="document.getElementById('modalParados').showModal(); return false;" class="fab-item">
-            <span class="fab-label">Processos Parados</span>
-            <button class="fab-btn" style="color:#dc3545;">
-                <span class="material-symbols-rounded">timer_off</span>
-                <?php if($count_par > 0): ?>
-                    <span class="fab-badge"><?= $count_par ?></span>
-                <?php endif; ?>
-            </button>
-        </a>
-
-        <!-- 3. Aniversários -->
-        <a href="#" onclick="document.getElementById('modalAniversariantes').showModal(); return false;" class="fab-item">
-            <span class="fab-label">Aniversariantes</span>
-            <button class="fab-btn" style="color:#fd7e14;">
-                <span class="material-symbols-rounded">cake</span>
-                <?php if($count_ani > 0): ?>
-                    <span class="fab-badge"><?= $count_ani ?></span>
-                <?php endif; ?>
-            </button>
-        </a>
-
-        <!-- 2. Avisos -->
-        <a href="#" onclick="document.getElementById('modalNotificacoes').showModal(); return false;" class="fab-item">
-            <span class="fab-label">Avisos</span>
-            <button class="fab-btn" style="color:#ffc107;">
-                <span class="material-symbols-rounded">notifications</span>
-                <?php if($kpi_pre_pendentes > 0): ?>
-                    <span class="fab-badge"><?= $kpi_pre_pendentes ?></span>
-                <?php endif; ?>
-            </button>
-        </a>
-        
-        <!-- 1. Dashboard (Home) -->
-        <a href="gestao_admin_99.php" class="fab-item">
-            <span class="fab-label">Visão Geral</span>
-            <button class="fab-btn" style="color:var(--color-primary);">
-                <span class="material-symbols-rounded">dashboard</span>
-            </button>
-        </a>
-    </div>
-
-    <!-- Main Toggle Button -->
-    <button class="fab-main" onclick="toggleFab()">
-        <span class="material-symbols-rounded">add</span>
+    <!-- 2. Avisos -->
+    <button onclick="document.getElementById('modalNotificacoes').showModal()" style="display:flex; align-items:center; gap:10px; padding:12px 20px; background:white; border:1px solid #e0e0e0; border-radius:30px; cursor:pointer; font-weight:600; font-size:0.9rem; color:#444; box-shadow:0 4px 10px rgba(0,0,0,0.05); transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+        <span class="material-symbols-rounded" style="color:#ffc107;">notifications</span>
+        Avisos
+        <?php if($kpi_pre_pendentes > 0): ?>
+            <span style="background:#dc3545; color:white; padding:2px 8px; border-radius:10px; font-size:0.75rem; margin-left:5px;"><?= $kpi_pre_pendentes ?></span>
+        <?php endif; ?>
     </button>
+    
+    <!-- 1. Visão Geral (Home) -->
+    <a href="gestao_admin_99.php" style="display:flex; align-items:center; gap:10px; padding:12px 20px; background:var(--color-primary); border:none; border-radius:30px; text-decoration:none; font-weight:600; font-size:0.9rem; color:white; box-shadow:0 4px 10px rgba(20, 108, 67, 0.3); transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+        <span class="material-symbols-rounded">dashboard</span>
+        Visão Geral
+    </a>
+
 </div>
 
 <!-- Mobile Branding Footer (Optional: Fixed at bottom left or removed?) 
