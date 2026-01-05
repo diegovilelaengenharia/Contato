@@ -219,64 +219,89 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
         <?php elseif(isset($_GET['novo'])): ?>
             <div class="form-card">
                 <h2>Cadastrar Novo Cliente</h2>
-                <p style="color:#666; font-size:0.9rem; margin-bottom:20px;">Preencha os dados básicos. O restante será completado na tela de edição.</p>
+                <p style="color:#666; font-size:0.9rem; margin-bottom:20px;">Preencha o formulário completo para criar o cliente com todas as informações.</p>
                 
                 <form method="POST" enctype="multipart/form-data">
+                    
+                    <!-- 1. ACESSO -->
+                    <h3 style="margin:0 0 15px 0; color:var(--color-primary); border-bottom:1px solid #eee; padding-bottom:5px;">1. Acesso & Fotos</h3>
+                    <div style="display:flex; gap:20px; margin-bottom:20px;">
+                        <div style="flex:1;">
+                            <label style="display:block; margin-bottom:5px; font-weight:bold;">📸 Foto de Perfil</label>
+                            <input type="file" name="avatar_upload" accept="image/*" style="padding:10px; border:1px solid #ddd; width:100%; border-radius:8px;">
+                        </div>
+                    </div>
+                    
                     <div class="form-grid">
-                        <div class="form-group"><label>Nome Completo</label><input type="text" name="nome" required placeholder="Ex: João da Silva"></div>
-                        <div class="form-group"><label>Senha de Acesso</label><input type="text" name="senha" required placeholder="Crie uma senha inicial"></div>
-                    </div>
-                    
-                    <div class="form-group" style="margin-bottom:20px;">
-                        <label>📸 Foto de Perfil (Opcional)</label>
-                        <input type="file" name="avatar_upload" accept="image/*" style="padding:10px; border:1px solid #ddd; width:100%; border-radius:8px;">
-                    </div>
-                    
-                    <div style="background:#f8f9fa; padding:15px; border-radius:8px; border:1px solid #e9ecef; margin:20px 0;">
-                        <label style="display:block; margin-bottom:10px; font-weight:bold; color:var(--color-primary);">Definir Login Automático por:</label>
-                        <div style="display:flex; gap:20px; margin-bottom:15px;">
-                            <label style="cursor:pointer; display:flex; align-items:center; gap:5px;">
-                                <input type="radio" name="tipo_login" value="cpf" checked onclick="document.getElementById('req_cpf').innerText='*'; document.getElementById('req_tel').innerText='';"> 
-                                CPF (Recomendado)
-                            </label>
-                            <label style="cursor:pointer; display:flex; align-items:center; gap:5px;">
-                                <input type="radio" name="tipo_login" value="telefone" onclick="document.getElementById('req_cpf').innerText=''; document.getElementById('req_tel').innerText='*';"> 
-                                Telefone (Celular)
-                            </label>
-                        </div>
-                        
-                        <div class="form-grid">
-                            <div class="form-group"><label>CPF / CNPJ <span id="req_cpf" style="color:red">*</span></label><input type="text" name="cpf_cnpj" placeholder="Apenas números"></div>
-                            <div class="form-group"><label>RG / IE</label><input type="text" name="rg"></div>
-                            <div class="form-group"><label>Data Nascimento</label><input type="date" name="data_nascimento"></div>
-                            <div class="form-group"><label>Profissão</label><input type="text" name="profissao"></div>
-                            <div class="form-group"><label>Estado Civil</label><select name="estado_civil" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;"><option value="Solteiro(a)">Solteiro(a)</option><option value="Casado(a)">Casado(a)</option><option value="Divorciado(a)">Divorciado(a)</option><option value="Viúvo(a)">Viúvo(a)</option><option value="União Estável">União Estável</option></select></div>
-                            <div class="form-group"><label>Nome Cônjuge</label><input type="text" name="nome_conjuge" placeholder="Se casado(a)"></div>
-                            <div class="form-group"><label>Telefone <span id="req_tel" style="color:red"></span></label><input type="text" name="telefone" placeholder="(XX) XXXXX-XXXX"></div>
-                            <div class="form-group"><label>Email</label><input type="email" name="email" placeholder="cliente@email.com"></div>
-                        </div>
-
-                        <h3 style="margin:20px 0 10px 0; color:var(--color-primary); border-bottom:1px solid #eee; padding-bottom:5px;">Dados do Imóvel / Obra</h3>
-                        <div class="form-grid">
-                            <div class="form-group"><label>Rua</label><input type="text" name="imovel_rua"></div>
-                            <div class="form-group"><label>Número</label><input type="text" name="imovel_numero"></div>
-                            <div class="form-group"><label>Bairro</label><input type="text" name="imovel_bairro"></div>
-                            <div class="form-group"><label>Cidade/UF</label><input type="text" name="imovel_cidade"></div>
-                            <div class="form-group" style="grid-column: span 2;">
-                                <label>Tipo de Serviço</label>
-                                <select name="tipo_servico" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
-                                    <option value="Regularização de Imóvel">Regularização de Imóvel</option>
-                                    <option value="Projeto Arquitetônico">Projeto Arquitetônico</option>
-                                    <option value="Projeto Estrutural">Projeto Estrutural</option>
-                                    <option value="Desmembramento">Desmembramento / Unificação</option>
-                                    <option value="Laudo Técnico">Laudo Técnico</option>
-                                    <option value="Outros">Outros</option>
-                                </select>
+                        <div class="form-group"><label>Nome Completo (Titular)</label><input type="text" name="nome" required placeholder="Ex: João da Silva"></div>
+                        <div class="form-group">
+                            <label>Login de Acesso (Usuário) <span style="font-size:0.75rem; color:#888;">(Use CPF ou Tel)</span></label>
+                            <div style="display:flex; gap:10px;">
+                                <label style="display:flex; align-items:center; gap:5px; font-size:0.85rem; cursor:pointer;"><input type="radio" name="tipo_login" value="cpf" checked> CPF</label>
+                                <label style="display:flex; align-items:center; gap:5px; font-size:0.85rem; cursor:pointer;"><input type="radio" name="tipo_login" value="telefone"> Tel</label>
                             </div>
                         </div>
-                        
-                        <script>
-                        // Masks for Pre-Cadastro
+                        <div class="form-group"><label>Senha Inicial</label><input type="text" name="senha" required placeholder="123456"></div>
+                    </div>
+
+                    <!-- 2. DADOS PESSOAIS -->
+                    <h3 style="margin:20px 0 15px 0; color:var(--color-primary); border-bottom:1px solid #eee; padding-bottom:5px;">2. Dados Pessoais</h3>
+                    <div class="form-grid">
+                        <div class="form-group"><label>CPF / CNPJ <span style="color:red">*</span></label><input type="text" name="cpf_cnpj" required placeholder="Apenas números"></div>
+                        <div class="form-group"><label>RG / Inscrição Estadual</label><input type="text" name="rg"></div>
+                        <div class="form-group"><label>Nacionalidade</label><input type="text" name="nacionalidade" placeholder="Brasileira"></div>
+                        <div class="form-group"><label>Data Nascimento</label><input type="date" name="data_nascimento"></div>
+                        <div class="form-group"><label>Profissão</label><input type="text" name="profissao"></div>
+                        <div class="form-group"><label>Estado Civil</label><select name="estado_civil" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;"><option value="Solteiro(a)">Solteiro(a)</option><option value="Casado(a)">Casado(a)</option><option value="Divorciado(a)">Divorciado(a)</option><option value="Viúvo(a)">Viúvo(a)</option><option value="União Estável">União Estável</option></select></div>
+                        <div class="form-group"><label>Nome Cônjuge</label><input type="text" name="nome_conjuge" placeholder="Se casado(a)"></div>
+                        <div class="form-group"><label>Telefone / WhatsApp</label><input type="text" name="telefone" placeholder="(XX) XXXXX-XXXX"></div>
+                        <div class="form-group"><label>Email</label><input type="email" name="email"></div>
+                    </div>
+
+                    <!-- 3. ENDEREÇO RESIDENCIAL -->
+                    <h3 style="margin:20px 0 15px 0; color:var(--color-primary); border-bottom:1px solid #eee; padding-bottom:5px;">3. Endereço Residencial</h3>
+                    <div class="form-grid">
+                        <div class="form-group" style="grid-column: span 2;"><label>Rua / Logradouro</label><input type="text" name="res_rua"></div>
+                        <div class="form-group"><label>Número</label><input type="text" name="res_numero"></div>
+                        <div class="form-group"><label>Bairro</label><input type="text" name="res_bairro"></div>
+                        <div class="form-group"><label>Complemento</label><input type="text" name="res_complemento"></div>
+                        <div class="form-group"><label>Cidade</label><input type="text" name="res_cidade"></div>
+                        <div class="form-group"><label>UF</label><input type="text" name="res_uf" maxlength="2" style="text-transform:uppercase;"></div>
+                    </div>
+
+                    <!-- 4. DADOS DO IMÓVEL -->
+                    <h3 style="margin:20px 0 15px 0; color:var(--color-primary); border-bottom:1px solid #eee; padding-bottom:5px;">4. Dados do Imóvel / Obra</h3>
+                    <div class="form-grid">
+                        <div class="form-group" style="grid-column: span 3;">
+                            <label>Tipo de Serviço</label>
+                            <select name="tipo_servico" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
+                                <option value="Regularização de Imóvel">Regularização de Imóvel</option>
+                                <option value="Projeto Arquitetônico">Projeto Arquitetônico</option>
+                                <option value="Projeto Estrutural">Projeto Estrutural</option>
+                                <option value="Desmembramento">Desmembramento / Unificação</option>
+                                <option value="Laudo Técnico">Laudo Técnico</option>
+                                <option value="Outros">Outros</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;"><label>Rua / Logradouro (Obra)</label><input type="text" name="imovel_rua"></div>
+                        <div class="form-group"><label>Número</label><input type="text" name="imovel_numero"></div>
+                        <div class="form-group"><label>Bairro</label><input type="text" name="imovel_bairro"></div>
+                        <div class="form-group"><label>Complemento</label><input type="text" name="imovel_complemento"></div>
+                        <div class="form-group"><label>Cidade</label><input type="text" name="imovel_cidade"></div>
+                        <div class="form-group"><label>UF</label><input type="text" name="imovel_uf" maxlength="2" style="text-transform:uppercase;"></div>
+                    </div>
+                    
+                    <div class="form-grid" style="margin-top:15px; background:#f8f9fa; padding:15px; border-radius:8px;">
+                        <div class="form-group"><label>Inscrição Imobiliária (IPTU)</label><input type="text" name="inscricao_imob"></div>
+                        <div class="form-group"><label>Matrícula Cartório</label><input type="text" name="num_matricula"></div>
+                        <div class="form-group"><label>Área do Lote (m²)</label><input type="text" name="imovel_area_lote"></div>
+                        <div class="form-group"><label>Área Construída (m²)</label><input type="text" name="area_construida"></div>
+                    </div>
+
+                    <button type="submit" name="novo_cliente" class="btn-save" style="margin-top:20px; width:100%; justify-content:center; padding:15px; font-size:1.1rem;">✅ Criar Cadastro Completo</button>
+                    
+                    <script>
+                        // Masks
                         document.querySelector('input[name="cpf_cnpj"]').addEventListener('input', e => {
                             let v = e.target.value.replace(/\D/g, "");
                             if (v.length <= 11) {
@@ -297,10 +322,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             v = v.replace(/(\d)(\d{4})$/, "$1-$2");
                             e.target.value = v;
                         });
-                        </script>
-                    </div>
-
-                    <button type="submit" name="novo_cliente" class="btn-save">Criar Cliente e Editar ➡️</button>
+                    </script>
                 </form>
             </div>
 

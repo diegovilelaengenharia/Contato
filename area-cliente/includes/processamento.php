@@ -374,33 +374,52 @@ if (isset($_POST['novo_cliente'])) {
             contato_tel, 
             rg_ie, 
             data_nascimento,
+            nacionalidade,
             profissao,
             estado_civil,
             nome_conjuge,
             tipo_servico,
-            imovel_rua,
-            imovel_numero, 
-            imovel_bairro,
-            imovel_cidade,
+            
+            res_rua, res_numero, res_bairro, res_complemento, res_cidade, res_uf,
+            
+            imovel_rua, imovel_numero, imovel_bairro, imovel_complemento, imovel_cidade, imovel_uf,
+            inscricao_imob, num_matricula, imovel_area_lote, area_construida,
+            
             endereco_imovel,
             endereco_residencial
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")->execute([
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")->execute([
             $nid, 
             $cpf, 
             $tel, 
             $_POST['rg'] ?? null,
             $_POST['data_nascimento'] ?? null,
+            $_POST['nacionalidade'] ?? null,
             $_POST['profissao'] ?? null,
             $_POST['estado_civil'] ?? null,
             $_POST['nome_conjuge'] ?? null,
             $_POST['tipo_servico'] ?? null,
+            
+            $_POST['res_rua'] ?? null,
+            $_POST['res_numero'] ?? null,
+            $_POST['res_bairro'] ?? null,
+            $_POST['res_complemento'] ?? null,
+            $_POST['res_cidade'] ?? null,
+            $_POST['res_uf'] ?? null,
+            
             $_POST['imovel_rua'] ?? null,
             $_POST['imovel_numero'] ?? null,
             $_POST['imovel_bairro'] ?? null,
+            $_POST['imovel_complemento'] ?? null,
             $_POST['imovel_cidade'] ?? null,
-            // Compõe endereço visual
-            ($_POST['imovel_rua'] ?? '') . ', ' . ($_POST['imovel_numero'] ?? '') . ' - ' . ($_POST['imovel_bairro'] ?? '') . ' - ' . ($_POST['imovel_cidade'] ?? ''),
-            '' // Endereço residencial vazio por enquanto no cadastro rápido
+            $_POST['imovel_uf'] ?? null,
+            $_POST['inscricao_imob'] ?? null,
+            $_POST['num_matricula'] ?? null,
+            $_POST['imovel_area_lote'] ?? null,
+            $_POST['area_construida'] ?? null,
+
+            // Compõe endereços visuais (Concatenação)
+            ($_POST['imovel_rua'] ?? '') . ', ' . ($_POST['imovel_numero'] ?? '') . ' - ' . ($_POST['imovel_bairro'] ?? '') . ' - ' . ($_POST['imovel_cidade'] ?? '') . '/' . ($_POST['imovel_uf'] ?? ''),
+             ($_POST['res_rua'] ?? '') . ', ' . ($_POST['res_numero'] ?? '') . ' - ' . ($_POST['res_bairro'] ?? '') . ' - ' . ($_POST['res_cidade'] ?? '') . '/' . ($_POST['res_uf'] ?? '')
         ]);
 
         // AVATAR UPLOAD (NOVO)
