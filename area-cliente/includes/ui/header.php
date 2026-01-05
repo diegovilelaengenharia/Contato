@@ -19,9 +19,9 @@
     <!-- 2. Clientes (Dropdown) -->
     <div class="top-nav-dropdown" style="position:relative;">
         <button class="top-nav-btn" onclick="toggleTopNavDropdown(this)" style="cursor:pointer;">
-            <span class="material-symbols-rounded">groups</span>
+            <span class="material-symbols-rounded" style="color:#0d6efd;">groups</span>
             Clientes
-            <span class="material-symbols-rounded" style="font-size:1rem; margin-left:5px;">expand_more</span>
+            <span class="material-symbols-rounded" style="font-size:1rem; margin-left:5px; color:#aaa;">expand_more</span>
         </button>
         <div class="top-nav-dropdown-menu">
             <?php 
@@ -47,9 +47,9 @@
     <!-- 3. Acesso Rápido (Dropdown) -->
     <div class="top-nav-dropdown" style="position:relative;">
         <button class="top-nav-btn" onclick="toggleTopNavDropdown(this)" style="cursor:pointer;">
-            <span class="material-symbols-rounded">link</span>
+            <span class="material-symbols-rounded" style="color:#6610f2;">link</span>
             Acesso Rápido
-            <span class="material-symbols-rounded" style="font-size:1rem; margin-left:5px;">expand_more</span>
+            <span class="material-symbols-rounded" style="font-size:1rem; margin-left:5px; color:#aaa;">expand_more</span>
         </button>
         <div class="top-nav-dropdown-menu" style="width:220px;">
             <a href="https://oliveira.atende.net/atendenet?source=pwa" target="_blank" class="dropdown-item">
@@ -65,7 +65,7 @@
 
     <!-- 4. Avisos -->
     <button onclick="document.getElementById('modalNotificacoes').showModal()" class="top-nav-btn" style="cursor:pointer;">
-        <span class="material-symbols-rounded">notifications</span>
+        <span class="material-symbols-rounded" style="color:#fd7e14;">notifications</span>
         Avisos
         <?php if(isset($kpi_pre_pendentes) && $kpi_pre_pendentes > 0): ?>
             <span class="fab-badge-top"><?= $kpi_pre_pendentes ?></span>
