@@ -5,23 +5,64 @@ $count_ani = count($aniversariantes ?? []);
 $count_par = count($parados ?? []);
 ?>
 
-<!-- Top-Left Fixed Circular Buttons -->
-<div style="position:fixed; top:20px; left:20px; z-index:2000; display:flex; flex-direction:column; gap:15px;">
+<!-- Bottom-Right Discrete Speed Dial -->
+<div class="br-fab-container" id="brFab">
     
-    <!-- 1. Visão Geral (Home) -->
-    <a href="gestao_admin_99.php" class="tl-nav-btn" data-title="Visão Geral" style="background:var(--color-primary); color:white;">
-        <span class="material-symbols-rounded">dashboard</span>
-    </a>
+    <div class="br-fab-menu">
+        
+        <!-- 4. Avisos -->
+        <a href="#" onclick="document.getElementById('modalNotificacoes').showModal(); return false;" class="br-fab-item">
+            <span class="br-fab-label">Avisos</span>
+            <div class="br-fab-btn">
+                <span class="material-symbols-rounded">notifications</span>
+                <?php if($kpi_pre_pendentes > 0): ?>
+                    <span class="fab-badge" style="position:absolute; top:-2px; right:-2px; background:#dc3545; color:white; font-size:10px; padding:2px 5px; border-radius:10px; border:2px solid white;"><?= $kpi_pre_pendentes ?></span>
+                <?php endif; ?>
+            </div>
+        </a>
 
-    <!-- 2. Avisos -->
-    <button onclick="document.getElementById('modalNotificacoes').showModal()" class="tl-nav-btn" data-title="Avisos" style="background:#fff; color:#ffc107; border: 1px solid #ffc107;">
-        <span class="material-symbols-rounded">notifications</span>
-        <?php if($kpi_pre_pendentes > 0): ?>
-            <span class="tl-nav-badge"><?= $kpi_pre_pendentes ?></span>
-        <?php endif; ?>
+        <!-- 3. Matrículas -->
+        <a href="#" class="br-fab-item">
+            <span class="br-fab-label">Matrículas</span>
+            <div class="br-fab-btn">
+                <span class="material-symbols-rounded">assignment_ind</span>
+            </div>
+        </a>
+
+        <!-- 2. Atende Oliveira -->
+        <a href="#" class="br-fab-item">
+            <span class="br-fab-label">Atende Oliveira</span>
+            <div class="br-fab-btn">
+                <span class="material-symbols-rounded">support_agent</span>
+            </div>
+        </a>
+
+        <!-- 1. Visão Geral (Home) -->
+        <a href="gestao_admin_99.php" class="br-fab-item">
+            <span class="br-fab-label">Visão Geral</span>
+            <div class="br-fab-btn">
+                <span class="material-symbols-rounded">dashboard</span>
+            </div>
+        </a>
+
+    </div>
+
+    <!-- Main Settings Toggle -->
+    <button class="br-fab-main" onclick="document.getElementById('brFab').classList.toggle('active')">
+        <span class="material-symbols-rounded">settings</span>
     </button>
-    
+
 </div>
+
+<script>
+    // Click outside to close
+    document.addEventListener('click', function(e) {
+        const fab = document.getElementById('brFab');
+        if (!fab.contains(e.target) && fab.classList.contains('active')) {
+            fab.classList.remove('active');
+        }
+    });
+</script>
 
 <!-- Mobile Branding Footer (Optional: Fixed at bottom left or removed?) 
      User requested discreet buttons. Let's keep it clean and remove branding from screen, 

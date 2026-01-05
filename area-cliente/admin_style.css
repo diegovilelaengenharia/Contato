@@ -1116,3 +1116,103 @@ html.sidebar-collapsed .sidebar-toggler {
     border: 2px solid white;
 }
 
+
+/* --- Bottom Right Discrete Speed Dial --- */
+.br-fab-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: flex-end;
+    gap: 15px;
+}
+
+.br-fab-main {
+    width: 50px;
+    height: 50px;
+    background: #ffffff; /* Discrete White */
+    color: #555;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.br-fab-main:hover, .br-fab-container.active .br-fab-main {
+    background: #f8f9fa;
+    transform: rotate(90deg); /* Rotate Settings Icon */
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    border-color: #ccc;
+    color: #333;
+}
+
+.br-fab-menu {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px) scale(0.9);
+    transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+    align-items: flex-end;
+}
+
+.br-fab-container.active .br-fab-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+
+.br-fab-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #444;
+}
+
+.br-fab-btn {
+    width: 42px;
+    height: 42px;
+    background: white;
+    border: 1px solid #eee;
+    color: #555;
+    border-radius: 50%;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+    position: relative;
+}
+
+.br-fab-item:hover .br-fab-btn {
+    background: var(--color-primary);
+    color: white;
+    transform: scale(1.1);
+}
+
+.br-fab-label {
+    background: white;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    color: #444;
+    transition: 0.2s;
+    opacity: 0;
+    transform: translateX(10px);
+}
+
+.br-fab-container.active .br-fab-label {
+    opacity: 1;
+    transform: translateX(0);
+}
+
