@@ -1,3 +1,4 @@
+<?php
 session_name('CLIENTE_SESSID');
 session_start();
 require 'db.php'; // Database Connection
