@@ -47,7 +47,7 @@ if (isset($_POST['update_password'])) {
 // 2. Salvar Configurações Gerais
 if (isset($_POST['save_settings'])) {
     $settings = [
-        'theme_mode' => $_POST['theme_mode'],
+        'maintenance_mode' => isset($_POST['maintenance_mode']) ? 1 : 0,
         'company_phone' => $_POST['company_phone'],
         'company_email' => $_POST['company_email'],
         'company_crea' => $_POST['company_crea'],
@@ -108,7 +108,7 @@ foreach($rows as $r) {
 }
 
 // Defaults
-$theme = $curr_settings['theme_mode'] ?? 'light';
+$maint_mode = $curr_settings['maintenance_mode'] ?? 0;
 $c_phone = $curr_settings['company_phone'] ?? '(35) 98452-9577';
 $c_email = $curr_settings['company_email'] ?? 'vilela.eng.mg@gmail.com';
 $c_crea = $curr_settings['company_crea'] ?? 'MG 235474/D';
@@ -183,28 +183,32 @@ $notify = $curr_settings['notify_email'] ?? 0;
         <!-- 2. PERSONALIZAÇÃO -->
         <div class="config-card">
             <div class="config-title">
-                <span class="material-symbols-rounded">palette</span> Personalização & Empresa
+                <span class="material-symbols-rounded">tune</span> Preferências & Sistema
             </div>
             <form method="POST">
+                
+                <div style="background:#fff3cd; color:#856404; padding:15px; border-radius:8px; margin-bottom:20px; border:1px solid #ffecb5;">
+                    <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-weight:bold; font-size:1rem;">
+                        <input type="checkbox" name="maintenance_mode" value="1" <?= $maint_mode?'checked':'' ?> style="width:20px; height:20px;">
+                        <span>🚧 Ativar MODO MANUTENÇÃO</span>
+                    </label>
+                    <p style="margin:5px 0 0 30px; font-size:0.9rem;">
+                        Quando ativo, <strong>os clientes não conseguirão acessar a plataforma</strong>. Apenas você (Administrador) terá acesso.
+                    </p>
+                </div>
+
                 <div class="form-row">
                     <div class="form-col">
-                        <label>Tema do Painel</label>
-                        <select name="theme_mode">
-                            <option value="light" <?= $theme=='light'?'selected':'' ?>>☀️ Claro (Padrão)</option>
-                            <option value="dark" <?= $theme=='dark'?'selected':'' ?>>🌙 Escuro (Premium)</option>
-                        </select>
+                        <label>Telefone / WhatsApp (Rodapé PDF)</label>
+                        <input type="text" name="company_phone" value="<?= htmlspecialchars($c_phone) ?>">
                     </div>
                     <div class="form-col">
-                        <label>Email de Contato (Para Relatórios)</label>
+                        <label>Email de Contato (Rodapé PDF)</label>
                         <input type="text" name="company_email" value="<?= htmlspecialchars($c_email) ?>">
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="form-col">
-                        <label>Telefone / WhatsApp</label>
-                        <input type="text" name="company_phone" value="<?= htmlspecialchars($c_phone) ?>">
-                    </div>
-                    <div class="form-col">
+                <div class="form-col">
                         <label>Registro Profissional (CREA/CAU)</label>
                         <input type="text" name="company_crea" value="<?= htmlspecialchars($c_crea) ?>">
                     </div>

@@ -97,10 +97,7 @@
                 <div style="font-weight:700; color:#333;">Diego Vilela</div>
                 <div style="font-size:0.75rem; color:#888;">Administrador</div>
             </div>
-            <a href="#" class="dropdown-item">
-                <span class="material-symbols-rounded" style="font-size:1.1rem; vertical-align:middle; margin-right:8px; color:#555;">person</span>
-                Minha Conta
-            </a>
+
             <a href="admin_config.php" class="dropdown-item">
                 <span class="material-symbols-rounded" style="font-size:1.1rem; vertical-align:middle; margin-right:8px; color:#555;">settings</span>
                 Configurações

@@ -549,6 +549,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     </div>
 
                     <!-- Novo Form de Inserção Rápida -->
+                    <!-- Novo Form de Inserção Rápida -->
                     <form method="POST" style="background:#fff3e0; padding:20px; border-radius:12px; border:1px solid #ffe0b2; margin-bottom:25px;">
                         <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
                         <h4 style="margin-top:0; color:#ef6c00;">➕ Adicionar Nova Pendência</h4>
@@ -561,6 +562,19 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             </div>
                         </div>
                     </form>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', () => {
+                            if(document.querySelector('#new_pendencia_editor')) {
+                                ClassicEditor
+                                .create(document.querySelector('#new_pendencia_editor'), {
+                                    toolbar: [ 'bold', 'italic', 'link', 'bulletedList', '|', 'undo', 'redo' ],
+                                    language: 'pt-br',
+                                    placeholder: 'Digite a descrição da pendência aqui...'
+                                })
+                                .catch( error => { console.error( error ); } );
+                            }
+                        });
+                    </script>
                     
                     <!-- Lista de Pendências -->
                     <div class="table-responsive">

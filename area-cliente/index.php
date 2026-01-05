@@ -44,21 +44,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // 2. Se não for Admin, busca Cliente no banco
-    $stmt = $pdo->prepare("SELECT * FROM clientes WHERE usuario = ?");
-    $stmt->execute([$usuario]);
-    $user = $stmt->fetch();
-
-    // Verifica a senha (usando hash seguro)
-    if ($user && password_verify($senha, $user['senha'])) {
-        session_regenerate_id(true);
-        $_SESSION['cliente_id'] = $user['id'];
-        $_SESSION['cliente_nome'] = $user['nome'];
-        session_write_close();
-        header("Location: client-app/index.php");
-        exit;
+    // CHECK MAINTENANCE MODE
+    $stmtMaint = $pdo->query("SELECT setting_value FROM admin_settings WHERE setting_key = 'maintenance_mode'");
+    $is_maint = $stmtMaint->fetchColumn();
+    if($is_maint == 1) {
+        $erro = "⚠️ O sistema está em manutenção no momento. Tente novamente mais tarde.";
     } else {
-        $erro = "Usuário ou senha inválidos!";
+        // 2. Se não for Admin, busca Cliente no banco
+        $stmt = $pdo->prepare("SELECT * FROM clientes WHERE usuario = ?");
+        $stmt->execute([$usuario]);
+        $user = $stmt->fetch();
+    
+        // Verifica a senha (usando hash seguro)
+        if ($user && password_verify($senha, $user['senha'])) {
+            session_regenerate_id(true);
+            $_SESSION['cliente_id'] = $user['id'];
+            $_SESSION['cliente_nome'] = $user['nome'];
+            session_write_close();
+            header("Location: client-app/index.php");
+            exit;
+        } else {
+            $erro = "Usuário ou senha inválidos!";
+        }
     }
 }
 ?>
