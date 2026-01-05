@@ -27,7 +27,7 @@
             <?php 
             // Ensure $clientes is available. If not, fetch it lightly.
             if(!isset($clientes)) {
-                $clientes_nav = $pdo->query("SELECT id, nome FROM users WHERE tipo='cliente' ORDER BY nome ASC")->fetchAll(PDO::FETCH_ASSOC);
+                $clientes_nav = $pdo->query("SELECT id, nome FROM clientes ORDER BY nome ASC")->fetchAll(PDO::FETCH_ASSOC);
             } else {
                 $clientes_nav = $clientes;
             }
@@ -36,7 +36,7 @@
                 <div style="padding:10px; color:#666; font-size:0.9rem;">Nenhum cliente</div>
             <?php else: ?>
                 <?php foreach($clientes_nav as $cnav): ?>
-                    <a href="?cliente_id=<?= $cnav['id'] ?>" class="dropdown-item">
+                    <a href="gerenciar_cliente.php?id=<?= $cnav['id'] ?>" class="dropdown-item">
                         <?= htmlspecialchars($cnav['nome']) ?>
                     </a>
                 <?php endforeach; ?>
