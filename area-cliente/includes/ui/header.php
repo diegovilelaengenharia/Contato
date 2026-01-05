@@ -16,6 +16,34 @@
         Visão Geral
     </a>
 
+    <!-- 2. Clientes (Dropdown) -->
+    <div class="top-nav-dropdown" style="position:relative;">
+        <button class="top-nav-btn" onclick="toggleTopNavDropdown(this)" style="cursor:pointer;">
+            <span class="material-symbols-rounded">groups</span>
+            Clientes
+            <span class="material-symbols-rounded" style="font-size:1rem; margin-left:5px;">expand_more</span>
+        </button>
+        <div class="top-nav-dropdown-menu">
+            <?php 
+            // Ensure $clientes is available. If not, fetch it lightly.
+            if(!isset($clientes)) {
+                $clientes_nav = $pdo->query("SELECT id, nome FROM users WHERE tipo='cliente' ORDER BY nome ASC")->fetchAll(PDO::FETCH_ASSOC);
+            } else {
+                $clientes_nav = $clientes;
+            }
+            
+            if(empty($clientes_nav)): ?>
+                <div style="padding:10px; color:#666; font-size:0.9rem;">Nenhum cliente</div>
+            <?php else: ?>
+                <?php foreach($clientes_nav as $cnav): ?>
+                    <a href="?cliente_id=<?= $cnav['id'] ?>" class="dropdown-item">
+                        <?= htmlspecialchars($cnav['nome']) ?>
+                    </a>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+    </div>
+
     <!-- 2. Atende Oliveira -->
     <a href="https://oliveira.atende.net/atendenet?source=pwa" target="_blank" class="top-nav-btn">
         <span class="material-symbols-rounded">support_agent</span>
@@ -39,3 +67,23 @@
 
 </div>
 <div style="height:60px;"></div> <!-- Spacer to push content down -->
+
+<script>
+function toggleTopNavDropdown(btn) {
+    // Prevent event bubbling to window
+    event.stopPropagation();
+    
+    const dropdown = btn.closest('.top-nav-dropdown');
+    // Toggle current
+    dropdown.classList.toggle('active');
+}
+
+// Close when clicking outside
+window.addEventListener('click', function(e) {
+    if (!e.target.closest('.top-nav-dropdown')) {
+        document.querySelectorAll('.top-nav-dropdown.active').forEach(d => {
+            d.classList.remove('active');
+        });
+    }
+});
+</script>

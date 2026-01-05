@@ -1111,6 +1111,73 @@ html.sidebar-collapsed .sidebar-toggler {
     transform: scale(1.1);
 }
 
+/* --- Dropdown Logic --- */
+.top-nav-dropdown-menu {
+    position: absolute;
+    top: 110%;
+    /* Below button */
+    left: 0;
+    width: 280px;
+    /* Wide enough for names */
+    max-height: 400px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #f0f0f0;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    padding: 8px;
+    display: none;
+    /* Hidden by default */
+    flex-direction: column;
+    z-index: 3001;
+    animation: fadeInDrop 0.2s ease-out;
+}
+
+.top-nav-dropdown.active .top-nav-dropdown-menu {
+    display: flex;
+}
+
+.dropdown-item {
+    padding: 10px 12px;
+    color: #444;
+    text-decoration: none;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    transition: background 0.2s;
+    font-weight: 500;
+}
+
+.dropdown-item:hover {
+    background: #f8f9fa;
+    color: var(--color-primary);
+}
+
+@keyframes fadeInDrop {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Scrollbar for dropdown */
+.top-nav-dropdown-menu::-webkit-scrollbar {
+    width: 6px;
+}
+
+.top-nav-dropdown-menu::-webkit-scrollbar-thumb {
+    background: #e0e0e0;
+    border-radius: 3px;
+}
+
+.top-nav-dropdown-menu::-webkit-scrollbar-thumb:hover {
+    background: #ccc;
+}
+
 .fab-badge-top {
     background: #dc3545;
     color: white;
