@@ -5,24 +5,22 @@ $count_ani = count($aniversariantes ?? []);
 $count_par = count($parados ?? []);
 ?>
 
-<!-- Fixed Sidebar Navigation (2 Buttons) -->
-<div style="position:fixed; bottom:20px; left:20px; z-index:2000; display:flex; flex-direction:column; gap:10px;">
+<!-- Top-Left Fixed Circular Buttons -->
+<div style="position:fixed; top:20px; left:20px; z-index:2000; display:flex; flex-direction:column; gap:15px;">
     
+    <!-- 1. Visão Geral (Home) -->
+    <a href="gestao_admin_99.php" class="tl-nav-btn" data-title="Visão Geral" style="background:var(--color-primary); color:white;">
+        <span class="material-symbols-rounded">dashboard</span>
+    </a>
+
     <!-- 2. Avisos -->
-    <button onclick="document.getElementById('modalNotificacoes').showModal()" style="display:flex; align-items:center; gap:10px; padding:12px 20px; background:white; border:1px solid #e0e0e0; border-radius:30px; cursor:pointer; font-weight:600; font-size:0.9rem; color:#444; box-shadow:0 4px 10px rgba(0,0,0,0.05); transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-        <span class="material-symbols-rounded" style="color:#ffc107;">notifications</span>
-        Avisos
+    <button onclick="document.getElementById('modalNotificacoes').showModal()" class="tl-nav-btn" data-title="Avisos" style="background:#fff; color:#ffc107; border: 1px solid #ffc107;">
+        <span class="material-symbols-rounded">notifications</span>
         <?php if($kpi_pre_pendentes > 0): ?>
-            <span style="background:#dc3545; color:white; padding:2px 8px; border-radius:10px; font-size:0.75rem; margin-left:5px;"><?= $kpi_pre_pendentes ?></span>
+            <span class="tl-nav-badge"><?= $kpi_pre_pendentes ?></span>
         <?php endif; ?>
     </button>
     
-    <!-- 1. Visão Geral (Home) -->
-    <a href="gestao_admin_99.php" style="display:flex; align-items:center; gap:10px; padding:12px 20px; background:var(--color-primary); border:none; border-radius:30px; text-decoration:none; font-weight:600; font-size:0.9rem; color:white; box-shadow:0 4px 10px rgba(20, 108, 67, 0.3); transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-        <span class="material-symbols-rounded">dashboard</span>
-        Visão Geral
-    </a>
-
 </div>
 
 <!-- Mobile Branding Footer (Optional: Fixed at bottom left or removed?) 

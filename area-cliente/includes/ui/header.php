@@ -7,12 +7,5 @@
     </div>
 </div>
 
-<header class="admin-header" style="height: 45px; min-height: 45px; padding: 0 20px; background: #fff; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-    <div style="flex-grow:1;"></div> <!-- Spacer -->
-    <div style="display:flex; align-items:center; gap:15px;">
-        <span style="font-size:0.8rem; color:#888;">v1.2.0</span>
-        <a href="?sair=true" style="text-decoration:none; color:#dc3545; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:5px; padding:5px 10px; border:1px solid #f8d7da; border-radius:6px; background:#fff5f6;">
-            <span class="material-symbols-rounded" style="font-size:1.1rem;">logout</span> Sair
-        </a>
-    </div>
-</header>
+<!-- Header Removed per user request -->
+<div style="display:none;"></div>

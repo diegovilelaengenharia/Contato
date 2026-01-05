@@ -181,71 +181,9 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
         
         <main style="padding-bottom: 80px;"> <!-- Padding for fixed footer area -->
             
-            <!-- NEW: Dashboard Alert Widgets -->
+            <!-- NEW: Dashboard Alert Widgets REMOVED -->
             <?php if(!isset($_GET['cliente_id']) && !isset($_GET['novo']) && !isset($_GET['importar'])): ?>
-                
-                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px; margin-bottom:30px;">
-                    
-                    <!-- 1. Aniversariantes -->
-                    <div style="background:white; border-radius:12px; padding:20px; border:1px solid #ffeeba; box-shadow:0 4px 10px rgba(0,0,0,0.03); display:flex; flex-direction:column;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #ffeeba; padding-bottom:10px;">
-                            <h3 style="margin:0; font-size:1.1rem; color:#856404; display:flex; align-items:center; gap:8px;">
-                                <span class="material-symbols-rounded">cake</span> Aniversariantes do Mês
-                            </h3>
-                            <span style="background:#fff3cd; color:#856404; font-weight:bold; padding:2px 8px; border-radius:10px; font-size:0.8rem;"><?= count($aniversariantes) ?></span>
-                        </div>
-                        
-                        <div style="flex:1; max-height:200px; overflow-y:auto;">
-                            <?php if(empty($aniversariantes)): ?>
-                                <div style="color:#aaa; font-style:italic; font-size:0.9rem;">Nenhum aniversariante em <?= date('M/Y') ?>.</div>
-                            <?php else: ?>
-                                <ul style="list-style:none; padding:0; margin:0;">
-                                    <?php foreach($aniversariantes as $ani): ?>
-                                        <li style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #fafafa; font-size:0.95rem;">
-                                            <a href="?cliente_id=<?= $ani['id'] ?>" style="text-decoration:none; color:#444; font-weight:500; display:flex; gap:5px; align-items:center;">
-                                                <?= htmlspecialchars($ani['nome']) ?>
-                                            </a>
-                                            <span style="color:#fd7e14; font-weight:bold;"><?= date('d/m', strtotime($ani['data_nascimento'])) ?></span>
-                                        </li>
-                                    <?php endforeach; ?>
-                                </ul>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-
-                    <!-- 2. Processos Parados -->
-                    <div style="background:white; border-radius:12px; padding:20px; border:1px solid #f5c6cb; box-shadow:0 4px 10px rgba(0,0,0,0.03); display:flex; flex-direction:column;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #f5c6cb; padding-bottom:10px;">
-                            <h3 style="margin:0; font-size:1.1rem; color:#721c24; display:flex; align-items:center; gap:8px;">
-                                <span class="material-symbols-rounded">timer_off</span> Processos Parados (>15d)
-                            </h3>
-                            <span style="background:#f8d7da; color:#721c24; font-weight:bold; padding:2px 8px; border-radius:10px; font-size:0.8rem;"><?= count($parados) ?></span>
-                        </div>
-                        
-                        <div style="flex:1; max-height:200px; overflow-y:auto;">
-                            <?php if(empty($parados)): ?>
-                                <div style="color:#aaa; font-style:italic; font-size:0.9rem;">Tudo em movimento! 🚀</div>
-                            <?php else: ?>
-                                <ul style="list-style:none; padding:0; margin:0;">
-                                    <?php foreach($parados as $par): 
-                                        $dias = (new DateTime())->diff(new DateTime($par['ultima_mov']))->days;
-                                    ?>
-                                        <li style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #fafafa; font-size:0.95rem;">
-                                            <a href="?cliente_id=<?= $par['id'] ?>" style="text-decoration:none; color:#444; font-weight:500; display:flex; gap:5px; align-items:center;">
-                                                <?= htmlspecialchars($par['nome']) ?>
-                                            </a>
-                                            <span style="color:#dc3545; font-weight:bold; font-size:0.85rem; background:#fff5f5; padding:2px 6px; border-radius:4px;">
-                                                <?= $dias ?> dias
-                                            </span>
-                                        </li>
-                                    <?php endforeach; ?>
-                                </ul>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-
-                </div>
-
+                <!-- Widgets removed per user request -->
             <?php endif; ?>
 
         <?php if(isset($_GET['importar'])): ?>

@@ -1046,3 +1046,73 @@ html.sidebar-collapsed .sidebar-toggler {
 /* Remove FAB styles that are no longer used */
 .fab-container, .fab-menu, .fab-main, .fab-item { display: none !important; }
 
+
+/* Collapse Header Height if present */
+.admin-header { display: none !important; }
+
+
+/* --- Top Left Circular Buttons --- */
+.tl-nav-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    background: white;
+    color: #555;
+    position: relative;
+    text-decoration: none;
+}
+.tl-nav-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+    z-index: 2002;
+}
+.tl-nav-btn .material-symbols-rounded { font-size: 24px; }
+
+/* Tooltip on Hover */
+.tl-nav-btn::after {
+    content: attr(data-title);
+    position: absolute;
+    left: 110%; /* To the right */
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 2003;
+}
+.tl-nav-btn:hover::after {
+    opacity: 1;
+}
+
+/* Badge Style */
+.tl-nav-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: #dc3545;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: bold;
+    border-radius: 50%;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+}
+
