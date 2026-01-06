@@ -164,7 +164,7 @@ try {
         <div class="app-action-grid">
             
             <!-- 1. TIMELINE -->
-            <button type="button" class="app-button" onclick="openModal('modalTimeline')" style="cursor: pointer;">
+            <button id="btnTimeline" type="button" class="app-button" style="cursor: pointer;">
                 <div class="app-btn-icon" style="background:#e3f2fd; color:#0d47a1;">⏳</div>
                 <div class="app-btn-content">
                     <span class="app-btn-title">Linha do Tempo</span>
@@ -180,7 +180,7 @@ try {
                 $p_icon_bg = $has_pendency ? "#dc3545" : "#fff3cd";
                 $p_icon_col = $has_pendency ? "white" : "#856404";
             ?>
-            <button class="app-button" onclick="openModal('modalPendencias')" style="<?= $p_style ?>">
+            <button id="btnPendencias" type="button" class="app-button" style="<?= $p_style ?>">
                 <div class="app-btn-icon" style="background:<?= $p_icon_bg ?>; color:<?= $p_icon_col ?>;">⚠️</div>
                 <div class="app-btn-content">
                     <span class="app-btn-title" style="<?= $has_pendency ? 'color:#dc3545; font-weight:700;' : '' ?>">Pendências</span>
@@ -198,7 +198,7 @@ try {
             </button>
 
             <!-- 3. FINANCEIRO -->
-            <button class="app-button" onclick="openModal('modalFinanceiro')">
+            <button id="btnFinanceiro" type="button" class="app-button">
                 <div class="app-btn-icon" style="background:#d1e7dd; color:#146c43;">💰</div>
                 <div class="app-btn-content">
                     <span class="app-btn-title">Financeiro</span>
@@ -214,7 +214,7 @@ try {
             </button>
 
             <!-- 4. DOCUMENTOS -->
-            <button class="app-button" onclick="openModal('modalDocumentos')">
+            <button id="btnDocumentos" type="button" class="app-button">
                 <div class="app-btn-icon" style="background:#e0e0e0; color:#333;">📂</div>
                 <div class="app-btn-content">
                     <span class="app-btn-title">Documentos</span>
@@ -226,7 +226,7 @@ try {
 
         <!-- DEVELOPER CREDIT -->
         <div style="text-align:center; margin-top:50px; opacity:0.6; font-size:0.8rem;">
-            Desenvolvido por <strong>Diego T. N. Vilela</strong> (v2.3)
+            Desenvolvido por <strong>Diego T. N. Vilela</strong> (v2.4)
         </div>
 
     </div>
@@ -463,17 +463,35 @@ try {
 
     <!-- JAVASCRIPT GLOBAL -->
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('App JS Loaded v2.4'); // DEBUG
+            // Attach Listeners
+            const btnTimeline = document.getElementById('btnTimeline');
+            if(btnTimeline) {
+                btnTimeline.addEventListener('click', function() {
+                    openModal('modalTimeline');
+                });
+            } else { console.error('Botão Timeline não achado'); }
+
+            const btnPendencias = document.getElementById('btnPendencias');
+            if(btnPendencias) btnPendencias.addEventListener('click', () => openModal('modalPendencias'));
+
+            const btnFinanceiro = document.getElementById('btnFinanceiro');
+            if(btnFinanceiro) btnFinanceiro.addEventListener('click', () => openModal('modalFinanceiro'));
+
+            const btnDocumentos = document.getElementById('btnDocumentos');
+            if(btnDocumentos) btnDocumentos.addEventListener('click', () => openModal('modalDocumentos'));
+        });
+
         function openModal(id) {
-            // DEBUG: Alert to confirm click
-            alert('Debug: Clicou em ' + id); 
+            // DEBUG removed for production stability, re-enable if needed
+            // alert('Debug: Clicou em ' + id); 
             
             const modal = document.getElementById(id);
             if(modal) {
-                alert('Debug: Modal encontrado! Abrindo...');
                 modal.classList.add('active'); 
                 document.body.style.overflow = 'hidden';
             } else {
-                alert('ERRO: Modal não encontrado: ' + id);
                 console.error('Modal não encontrado:', id);
             }
         }
