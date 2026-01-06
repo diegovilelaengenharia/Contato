@@ -23,12 +23,12 @@ if (!$cliente) {
     exit;
 }
 
-// BUSCAR DETALHES DO PROCESSO (Para cabeçalho e info)
+// BUSCAR DETALHES DO PROCESSO
 $stmt_det = $pdo->prepare("SELECT * FROM processo_detalhes WHERE cliente_id = ?");
 $stmt_det->execute([$cliente_id]);
 $detalhes = $stmt_det->fetch(PDO::FETCH_ASSOC);
 
-// DEFINIÇÃO DAS FASES (Para mostrar info resumida no botão)
+// DEFINIÇÃO DAS FASES
 $fases_padrao = [
     'Levantamento de Dados',
     'Desenvolvimento de Projetos',
@@ -46,7 +46,7 @@ $fase_index = array_search($etapa_atual, $fases_padrao);
 if($fase_index === false) $fase_index = 0; 
 $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
 
-// CONTAR PENDÊNCIAS (Para badge do botão)
+// CONTAR PENDÊNCIAS
 $stmt_pend_count = $pdo->prepare("SELECT COUNT(*) FROM processo_pendencias WHERE cliente_id = ? AND status != 'resolvido'");
 $stmt_pend_count->execute([$cliente_id]);
 $pendencias_count = $stmt_pend_count->fetchColumn();
@@ -65,15 +65,14 @@ $pendencias_count = $stmt_pend_count->fetchColumn();
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- STYLES -->
-    <link rel="stylesheet" href="css/style.css?v=2.7">
+    <link rel="stylesheet" href="css/style.css?v=2.7.3">
     
     <style>
-        /* INLINE COMPONENT FIXES */
         .app-button {
             position: relative;
             z-index: 1;
-            text-decoration: none; /* Make buttons behave like links if using 'a' tags */
-            display: flex; /* Restore flex layout for 'a' tags */
+            text-decoration: none;
+            display: flex;
         }
     </style>
 </head>
@@ -81,89 +80,94 @@ $pendencias_count = $stmt_pend_count->fetchColumn();
 
     <div class="app-container">
         
-        <!-- LOGO HEADER -->
-        <div style="text-align:center; margin-bottom:20px;">
-            <img src="../../assets/logo.png" alt="Vilela Engenharia" style="max-height:80px;">
-        </div>
-        
-        <!-- HEADER PROFILE -->
-        <header style="display:flex; align-items:center; gap:15px; margin-bottom:30px; background:white; padding:15px; border-radius:16px; box-shadow:0 2px 10px rgba(0,0,0,0.03);">
-            <!-- Avatar -->
-            <div style="flex-shrink:0;">
-                <?php 
-                    $avatarPath = $cliente['foto_perfil'] ?? '';
-                    if($avatarPath && file_exists($avatarPath)): 
-                ?>
-                    <img src="<?= htmlspecialchars($avatarPath) ?>?v=<?= time() ?>" alt="Perfil" style="width:60px; height:60px; border-radius:50%; object-fit:cover; border:2px solid var(--color-primary);">
-                <?php else: ?>
-                    <div style="width:60px; height:60px; border-radius:50%; background:#e9ecef; color:#aaa; display:flex; align-items:center; justify-content:center; font-size:1.5rem;">👤</div>
-                <?php endif; ?>
+        <!-- 1. COMPANY HEADER (Branding) -->
+        <header class="company-header">
+            <!-- Bell Notification (Top Right) -->
+            <div style="position:absolute; top:10px; right:10px; cursor:pointer;" title="Notificações">
+                <div style="position:relative;">
+                    <span style="font-size:1.6rem;">🔔</span>
+                    <?php if($pendencias_count > 0): ?>
+                        <span style="position:absolute; top:-2px; right:-2px; background:red; color:white; font-size:0.6rem; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; border:2px solid #f4f6f8;"><?= $pendencias_count ?></span>
+                    <?php endif; ?>
+                </div>
             </div>
 
-            <!-- Info -->
-            <div style="flex:1; min-width:0;"> <!-- min-width 0 for text truncate -->
-                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                    <div>
-                        <div style="font-size:0.85rem; color:#666;">Olá,</div>
-                        <h1 style="color:#146c43; font-size:1.4rem; margin:0; line-height:1.2;"><?= htmlspecialchars(explode(' ', $cliente['nome'])[0]) ?></h1>
-                    </div>
-                     <a href="logout.php" style="background:#fffcfc; border:1px solid #f8d7da; color:#dc3545; padding:5px 10px; border-radius:8px; font-weight:600; font-size:0.75rem; text-decoration:none;">
-                        Sair
-                    </a>
+            <img src="../../assets/logo.png" alt="Vilela Engenharia" style="height:60px; margin-bottom:5px;">
+            <div class="company-name">Diego T. N. Vilela</div>
+            <div class="company-crea">Engenheiro Civil · CREA 235.474/D</div>
+        </header>
+
+        <!-- 2. CLIENT CARD (Profile) -->
+        <section class="client-card">
+            
+            <div class="client-header-row">
+                <!-- Avatar -->
+                <div style="flex-shrink:0;">
+                    <?php 
+                        $avatarPath = $cliente['foto_perfil'] ?? '';
+                        if($avatarPath && file_exists($avatarPath)): 
+                    ?>
+                        <img src="<?= htmlspecialchars($avatarPath) ?>?v=<?= time() ?>" alt="Perfil" style="width:50px; height:50px; border-radius:50%; object-fit:cover; border:2px solid var(--color-primary);">
+                    <?php else: ?>
+                        <div style="width:50px; height:50px; border-radius:50%; background:#e9ecef; color:#aaa; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">👤</div>
+                    <?php endif; ?>
                 </div>
                 
-                <div style="margin-top:8px; font-size:0.8rem; color:#555; display:flex; flex-direction:column; gap:2px;">
-                    <?php if(!empty($detalhes['endereco_imovel'])): ?>
-                        <div style="display:flex; align-items:center; gap:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                            <span>📍</span> <span style="font-weight:600;">Obra:</span> <?= htmlspecialchars($detalhes['endereco_imovel']) ?>
+                <!-- Name & Welcome -->
+                <div class="client-name-block" style="flex:1;">
+                    <span>Olá,</span>
+                    <h1><?= htmlspecialchars(explode(' ', $cliente['nome'])[0]) ?></h1>
+                </div>
+
+                <!-- Logout -->
+                <a href="logout.php" style="background:#fffcfc; border:1px solid #f8d7da; color:#dc3545; padding:6px 12px; border-radius:8px; font-weight:600; font-size:0.75rem; text-decoration:none;">
+                    Sair
+                </a>
+            </div>
+
+            <!-- Details Grid -->
+            <div class="client-details-row">
+                <?php if(!empty($detalhes['endereco_imovel'])): ?>
+                    <div style="display:flex; align-items:center; gap:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                        <span style="font-size:1rem;">📍</span> <span style="font-weight:600; color:#333;">Obra:</span> <?= htmlspecialchars($detalhes['endereco_imovel']) ?>
+                    </div>
+                <?php endif; ?>
+
+                <div style="display:flex; flex-wrap:wrap; gap:15px; margin-top:5px;">
+                    <?php if(!empty($detalhes['cpf_cnpj'])): ?>
+                        <div style="display:flex; align-items:center; gap:4px;">
+                            <span>🆔</span> <?= htmlspecialchars($detalhes['cpf_cnpj']) ?>
                         </div>
                     <?php endif; ?>
                     
-                    <div style="display:flex; flex-wrap:wrap; gap:10px;">
-                        <?php if(!empty($detalhes['cpf_cnpj'])): ?>
-                            <div style="display:flex; align-items:center; gap:4px;">
-                                <span>🆔</span> <?= htmlspecialchars($detalhes['cpf_cnpj']) ?>
-                            </div>
-                        <?php endif; ?>
-                        
-                        <?php if(!empty($detalhes['contato_tel'])): ?>
-                            <div style="display:flex; align-items:center; gap:4px;">
-                                <span>📞</span> <?= htmlspecialchars($detalhes['contato_tel']) ?>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
-             <!-- BELL ICON -->
-            <div style="position:absolute; top:20px; right:20px; cursor:pointer;" title="Notificações">
-                <div style="position:relative;">
-                    <span style="font-size:1.5rem;">🔔</span>
-                    <?php if($pendencias_count > 0): ?>
-                        <span style="position:absolute; top:-5px; right:-5px; background:red; color:white; font-size:0.6rem; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold;"><?= $pendencias_count ?></span>
+                    <?php if(!empty($detalhes['contato_tel'])): ?>
+                        <div style="display:flex; align-items:center; gap:4px;">
+                            <span>📞</span> <?= htmlspecialchars($detalhes['contato_tel']) ?>
+                        </div>
                     <?php endif; ?>
                 </div>
             </div>
-        </header>
 
-        <!-- MAIN MENU GRID (Vertical "App" Style) -->
+        </section>
+
+        <!-- 3. ACTION GRID (Buttons) -->
         <div class="app-action-grid">
             
-            <!-- 1. TIMELINE -->
+            <!-- TIMELINE -->
             <a href="timeline.php" class="app-button" style="cursor: pointer;">
                 <div class="app-btn-icon" style="background:#e3f2fd; color:#0d47a1;">⏳</div>
                 <div class="app-btn-content">
                     <span class="app-btn-title">Linha do Tempo</span>
                     <span class="app-btn-desc"><?= htmlspecialchars($etapa_atual) ?></span>
                 </div>
-                <div style="font-weight:800; color:#0d47a1;"><?= $porcentagem ?>%</div>
+                <div style="font-weight:800; color:#0d47a1; font-size:1.1rem;"><?= $porcentagem ?>%</div>
             </a>
 
-            <!-- 2. PENDÊNCIAS -->
+            <!-- PENDÊNCIAS -->
             <?php 
                 $has_pendency = $pendencias_count > 0;
-                // Subtle style for notification (not full red)
                 $p_style = $has_pendency ? "border-left: 4px solid #dc3545;" : ""; 
-                $p_icon_bg = "#fff3cd"; // Default warning color
+                $p_icon_bg = "#fff3cd"; 
                 $p_icon_col = "#856404";
             ?>
             <a href="pendencias.php" class="app-button" style="<?= $p_style ?>">
@@ -183,7 +187,7 @@ $pendencias_count = $stmt_pend_count->fetchColumn();
                 <?php endif; ?>
             </a>
 
-            <!-- 3. FINANCEIRO -->
+            <!-- FINANCEIRO -->
             <a href="financeiro.php" class="app-button">
                 <div class="app-btn-icon" style="background:#d1e7dd; color:#146c43;">💰</div>
                 <div class="app-btn-content">
@@ -193,7 +197,7 @@ $pendencias_count = $stmt_pend_count->fetchColumn();
                 <div style="color:#146c43;">➔</div>
             </a>
 
-            <!-- 4. DOCUMENTOS -->
+            <!-- DOCUMENTOS -->
             <a href="documentos.php" class="app-button">
                 <div class="app-btn-icon" style="background:#fff3cd; color:#856404;">📂</div>
                 <div class="app-btn-content">
@@ -207,7 +211,7 @@ $pendencias_count = $stmt_pend_count->fetchColumn();
 
         <!-- DEVELOPER CREDIT -->
         <div style="text-align:center; margin-top:50px; opacity:0.6; font-size:0.8rem;">
-            Desenvolvido por <strong>Diego T. N. Vilela</strong> (v2.7 Multi-page)
+            Desenvolvido por <strong>Diego T. N. Vilela</strong> (v2.7.3)
         </div>
 
         <div class="floating-buttons">
@@ -219,5 +223,6 @@ $pendencias_count = $stmt_pend_count->fetchColumn();
             </a>
         </div>
     </div>
+
 </body>
 </html>
