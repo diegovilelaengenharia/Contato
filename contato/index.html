@@ -37,7 +37,283 @@
         /* Estilo para o ícone de Consultoria customizado (SVG) */
         .icon-consultoria {
             background: linear-gradient(135deg, #6366f1, #4338ca);
-            /* Indigo */
+        }
+
+        /* Botão Flutuante Bio (Esquerda) */
+        .floating-bio-container {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            z-index: 999;
+            display: flex;
+            flex-direction: column-reverse;
+            /* Expande para cima */
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .bio-toggle-btn {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            padding: 0;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            background: #fff;
+            position: relative;
+            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: visible;
+        }
+
+        .bio-toggle-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .bio-toggle-btn img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .bio-label {
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--color-primary);
+            color: white;
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            white-space: nowrap;
+            font-weight: 600;
+        }
+
+        .bio-text {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            border-bottom-left-radius: 4px;
+            /* Efeito "balão" saindo do botão */
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            width: 280px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px) scale(0.95);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            transform-origin: bottom left;
+            pointer-events: none;
+        }
+
+        /* Classe de estado expandido */
+        .floating-bio-container.expanded .bio-text {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        .bio-text h3 {
+            margin: 0 0 8px 0;
+            color: var(--color-primary-strong);
+            font-size: 1.1rem;
+        }
+
+        .bio-text p {
+            font-size: 0.9rem;
+            color: #555;
+            margin: 0 0 8px;
+            line-height: 1.5;
+        }
+
+        .bio-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        .close-bio {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #999;
+            cursor: pointer;
+            padding: 4px;
+            line-height: 1;
+        }
+
+        /* Estilos para o novo floating-bio-container */
+        .floating-bio-container {
+            position: fixed;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 0 12px 12px 0;
+            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+            width: 100px;
+            /* Largura inicial do botão */
+            overflow: hidden;
+            box-sizing: border-box;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .floating-bio-container.expanded {
+            width: 280px;
+            /* Largura expandida */
+            transform: translateY(-50%) translateX(0);
+        }
+
+        .floating-bio-container .bio-toggle-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            color: var(--color-primary);
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-align: center;
+            transition: transform 0.2s;
+            flex-shrink: 0;
+            /* Evita que o botão encolha */
+        }
+
+        .floating-bio-container .bio-toggle-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .floating-bio-container .bio-toggle-btn img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #fff;
+            box-shadow: 0 4px 10px rgba(19, 111, 92, 0.2);
+        }
+
+        .floating-bio-container .bio-text {
+            display: none;
+            /* Escondido por padrão */
+            flex-direction: column;
+            gap: 10px;
+            padding-left: 10px;
+            /* Espaçamento para o botão */
+            text-align: left;
+            color: var(--color-text-subtle);
+            font-size: 0.9rem;
+            line-height: 1.4;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .floating-bio-container.expanded .bio-text {
+            display: flex;
+            /* Mostra quando expandido */
+        }
+
+        .floating-bio-container .bio-text h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: var(--color-heading);
+        }
+
+        .floating-bio-container .bio-text p {
+            margin: 0;
+        }
+
+        .floating-bio-container .close-bio {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--color-text-subtle);
+            line-height: 1;
+            padding: 0;
+        }
+
+        .floating-bio-container .bio-label {
+            margin-top: 5px;
+        }
+
+        /* Ajuste para o conteúdo principal não ficar por baixo do floating bio */
+        .page {
+            padding-left: 100px;
+            /* Largura inicial do floating bio */
+            box-sizing: border-box;
+        }
+
+        .floating-bio-container.expanded+.page {
+            padding-left: 280px;
+            /* Largura expandida do floating bio */
+        }
+
+        @media (max-width: 768px) {
+            .floating-bio-container {
+                top: auto;
+                bottom: 0;
+                left: 0;
+                transform: translateY(0);
+                width: 100%;
+                flex-direction: row;
+                justify-content: center;
+                border-radius: 12px 12px 0 0;
+                box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.1);
+                padding: 10px 20px;
+            }
+
+            .floating-bio-container.expanded {
+                width: 100%;
+                height: auto;
+                transform: translateY(0);
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .floating-bio-container .bio-toggle-btn {
+                flex-direction: row;
+                gap: 10px;
+                width: auto;
+            }
+
+            .floating-bio-container .bio-text {
+                padding-left: 0;
+                margin-top: 15px;
+            }
+
+            .floating-bio-container .close-bio {
+                top: 10px;
+                right: 20px;
+            }
+
+            .page {
+                padding-left: 0;
+                padding-bottom: 100px;
+                /* Altura do floating bio no mobile */
+            }
+
+            .floating-bio-container.expanded+.page {
+                padding-left: 0;
+                padding-bottom: auto;
+                /* Ajuste se a bio expandir muito */
+            }
         }
     </style>
 </head>
@@ -45,44 +321,17 @@
 <body>
     <div class="page">
         <header class="hero" role="banner">
-            <!-- Layout Flex Row: Foto (Esq) + Texto (Dir) -->
-            <div class="profile-container"
-                style="display: flex; align-items: center; gap: 24px; width: 100%; max-width: 600px; text-align: left;">
+            <picture class="logo">
+                <img src="../assets/logo.png" alt="Logotipo da Vilela Engenharia" width="160" height="160">
+            </picture>
 
-                <!-- Botão Foto (Toggle) -->
-                <button onclick="toggleBio()" aria-label="Ver biografia"
-                    style="background: none; border: none; padding: 0; cursor: pointer; flex-shrink: 0; transition: transform 0.2s;"
-                    onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                    <img src="../assets/foto-diego-new.jpg" alt="Diego Vilela"
-                        style="width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 4px solid #fff; box-shadow: 0 8px 20px rgba(19, 111, 92, 0.2);">
-                    <div
-                        style="font-size: 0.75rem; color: var(--color-primary); margin-top: 8px; font-weight: 600; text-align: center;">
-                        Ver Bio ▾</div>
-                </button>
-
-                <div class="heading" style="align-items: flex-start; text-align: left; gap: 6px;">
-                    <span class="badge" style="margin: 0;">Engenheiro Civil &middot; CREA 235.474/D</span>
-                    <h1 style="font-size: 1.8rem; line-height: 1.2;">Diego T. N. Vilela</h1>
-                    <p class="tagline" style="margin: 0; font-size: 0.95rem;">Seu imóvel 100% regularizado: do projeto à
-                        averbação</p>
-                </div>
+            <div class="heading">
+                <span class="badge">Engenheiro Civil &middot; CREA 235.474/D</span>
+                <h1>Diego T. N. Vilela</h1>
+                <p class="tagline">Seu imóvel 100% regularizado: do projeto à averbação</p>
             </div>
 
-            <!-- Bio Expansível (Hidden by default) -->
-            <div id="bioContent"
-                style="display: none; width: 100%; max-width: 600px; text-align: left; background: rgba(255,255,255,0.6); padding: 20px; border-radius: 16px; margin-top: 16px; border: 1px solid rgba(0,0,0,0.05);">
-                <p style="margin-bottom: 12px; line-height: 1.6; color: var(--color-text-subtle);">
-                    Com formação pela <strong>Universidade Federal de São João Del Rei (UFSJ)</strong> e experiência
-                    como <strong>Analista de Projetos na Prefeitura de Oliveira</strong>, uno o rigor técnico à eficácia
-                    processual.
-                </p>
-                <p style="margin: 0; line-height: 1.6; color: var(--color-text-subtle);">
-                    Meu compromisso é garantir que seu projeto ou regularização siga o caminho mais
-                    <strong>eficiente</strong>, evitando atrasos e custos desnecessários.
-                </p>
-            </div>
-
-            <div class="hero-actions" style="margin-top: 24px;">
+            <div class="hero-actions">
                 <a class="hero-whatsapp" href="https://wa.me/5535984529577?text=Ola%20Diego%20Vilela" target="_blank"
                     rel="noopener">
                     (35) 98452-9577
@@ -90,6 +339,24 @@
                 <a class="hero-vcard" href="../assets/diego-vilela.vcf" download>Salve meu contato</a>
             </div>
         </header>
+
+        <!-- Botão Flutuante Bio (Esquerda) -->
+        <div id="floatingBio" class="floating-bio-container">
+            <!-- Conteúdo da Bio (Expandido) -->
+            <div id="bioText" class="bio-text">
+                <button class="close-bio" onclick="toggleBio()">×</button>
+                <h3>Diego Vilela</h3>
+                <p>Com formação pela <strong>UFSJ</strong> e experiência na <strong>Prefeitura de Oliveira</strong>, uno
+                    rigor técnico à eficácia processual.</p>
+                <p>Garanto que seu projeto siga o caminho mais eficiente, evitando atrasos e custos desnecessários.</p>
+            </div>
+
+            <!-- Botão Foto (Sempre Visível) -->
+            <button class="bio-toggle-btn" onclick="toggleBio()" aria-label="Ver biografia">
+                <img src="../assets/foto-diego-new.jpg" alt="Diego Vilela">
+                <span class="bio-label">Sobre Mim</span>
+            </button>
+        </div>
 
         <main class="content">
 
@@ -294,15 +561,10 @@
                     document.body.classList.remove('modal-open');
                 }
 
-                // Bio Toggle (Inline)
+                // Bio Toggle (Floating)
                 window.toggleBio = function () {
-                    const bioDiv = document.getElementById('bioContent');
-                    if (bioDiv.style.display === 'none' || bioDiv.style.display === '') {
-                        bioDiv.style.display = 'block';
-                        // Optional: Animation or smooth scroll could happen here
-                    } else {
-                        bioDiv.style.display = 'none';
-                    }
+                    const bioContainer = document.getElementById('floatingBio');
+                    bioContainer.classList.toggle('expanded');
                 }
 
                 document.querySelectorAll('[data-micromodal-close]').forEach(btn => {
