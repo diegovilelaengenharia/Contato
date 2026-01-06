@@ -341,6 +341,16 @@
             if (yearSpan) {
                 yearSpan.textContent = new Date().getFullYear();
             }
+
+            // --- FORÇAR ATUALIZAÇÃO ---
+            // Remove Service Workers antigos para garantir que o cliente receba a versão nova
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function (registrations) {
+                    for (let registration of registrations) {
+                        registration.unregister();
+                    }
+                });
+            }
         </script>
 </body>
 
