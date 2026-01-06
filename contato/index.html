@@ -82,13 +82,85 @@
 
         /* REMOVIDO: .about-section-contact */
 
+        /* Novo Layout: Logo no Topo + Info abaixo (Menor) */
+        .header-profile-row {
+            display: flex;
+            flex-direction: column;
+            /* Vertical */
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .header-profile-row .logo img {
+            width: 140px;
+            height: 140px;
+            object-fit: contain;
+            margin-bottom: 8px;
+            /* Espaço para o texto */
+        }
+
+        .engineer-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            /* Centralizado */
+        }
+
+        .engineer-info .label-responsibility {
+            display: block;
+            font-size: 0.65rem;
+            /* Menor */
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #999;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .engineer-info h2 {
+            margin: 0 0 4px;
+            font-size: 1.3rem;
+            /* Menor (era 1.6) */
+            color: var(--color-text);
+            font-weight: 700;
+            line-height: 1.1;
+        }
+
+        .engineer-info .crea-badge {
+            display: inline-block;
+            font-size: 0.85rem;
+            /* Levemente menor */
+            color: var(--color-text-subtle);
+            margin-bottom: 0px;
+            font-weight: 400;
+        }
+
+        /* Tagline Final - Texto Menor */
+        .tagline {
+            text-align: center;
+            margin: 24px auto 0;
+            font-size: 0.85rem;
+            /* Menor */
+            font-weight: 500;
+            max-width: 90%;
+            display: block;
+            color: var(--color-text-subtle);
+            letter-spacing: 0.5px;
+        }
+
         /* Ajuste do botão whatsapp e bio lado a lado */
         body .hero-actions {
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 12px;
-            margin-top: 24px;
+            margin-top: 2px;
             width: 100%;
             flex-wrap: wrap;
         }
@@ -106,91 +178,11 @@
             max-width: 220px;
         }
 
-        /* Float Button Save Contact */
-        .floating-btn--vcard {
-            background-color: #333;
-        }
-
-        .floating-btn--vcard:hover {
-            background-color: #000;
-        }
-
-        /* Tagline Final - Maior destaque */
-        .tagline {
-            text-align: center;
-            margin: 32px auto 0;
-            font-size: 1rem;
-            font-weight: 500;
-            max-width: 90%;
-            display: block;
-            color: var(--color-text-subtle);
-            letter-spacing: 0.5px;
-        }
-
-        /* Novo Layout: Logo + Info lado a lado - MAIOR */
-        .header-profile-row {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 24px;
-            text-align: left;
-            margin-bottom: 12px;
-            max-width: 600px;
-            /* Mais largo */
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .header-profile-row .logo img {
-            width: 140px;
-            /* Maior */
-            height: 140px;
-            object-fit: contain;
-        }
-
-        .engineer-info {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: flex-start;
-        }
-
-        .engineer-info .label-responsibility {
-            display: block;
-            font-size: 0.75rem;
-            /* Maior */
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-            color: #999;
-            margin-bottom: 6px;
-            font-weight: 700;
-        }
-
-        .engineer-info h2 {
-            margin: 0 0 6px;
-            font-size: 1.6rem;
-            /* Maior */
-            color: var(--color-text);
-            font-weight: 700;
-            line-height: 1.1;
-        }
-
-        .engineer-info .crea-badge {
-            display: inline-block;
-            font-size: 0.95rem;
-            /* Maior */
-            color: var(--color-text-subtle);
-            margin-bottom: 0px;
-            font-weight: 400;
-        }
-
-        /* Botão Sobre Mim agora nos Actions */
         .btn-bio-green {
             background: white;
             border: 1px solid var(--color-primary);
             color: var(--color-primary);
             padding: 11px 24px;
-            /* Altura similar ao whats */
             border-radius: 50px;
             font-size: 1rem;
             font-weight: 600;
@@ -203,16 +195,18 @@
             white-space: nowrap;
         }
 
-        .btn-bio-green:hover {
-            background: var(--color-primary);
-            color: white;
-            box-shadow: 0 4px 12px rgba(19, 111, 92, 0.2);
+        /* Float Button Save Contact */
+        .floating-btn--vcard {
+            background-color: #333;
+        }
+
+        .floating-btn--vcard:hover {
+            background-color: #000;
         }
 
         /* Estilos Globais do Header Container - Preenchido */
         .hero {
-            padding: 60px 20px 40px;
-            /* Mais espaço vertical */
+            padding: 40px 20px 30px;
         }
 
         .engineer-card {
@@ -227,22 +221,11 @@
             position: relative;
         }
 
-        /* Remover detalhe decorativo */
         .engineer-card::before {
             display: none;
         }
 
-        /* Ajuste para telas muito pequenas - Stack vertical se precisar */
         @media (max-width: 400px) {
-            .header-profile-row .logo img {
-                width: 110px;
-                height: 110px;
-            }
-
-            .engineer-info h2 {
-                font-size: 1.4rem;
-            }
-
             body .hero-actions {
                 flex-direction: column;
                 gap: 12px;
@@ -261,14 +244,14 @@
     <div class="page">
         <header class="hero" role="banner">
 
-            <!-- Container Novo: Logo + Info lado a lado -->
+            <!-- Container Novo: Logo + Info Vertical -->
             <div class="header-profile-row">
-                <!-- Marca -->
+                <!-- Marca (Primeiro) -->
                 <picture class="logo">
                     <img src="../assets/logo.png" alt="Logotipo da Vilela Engenharia" width="160" height="160">
                 </picture>
 
-                <!-- Informações Pessoais -->
+                <!-- Informações Pessoais (Abaixo, menor) -->
                 <div class="engineer-info">
                     <span class="label-responsibility">Engenheiro Responsável</span>
                     <h2>Diego T. N. Vilela</h2>
@@ -276,19 +259,19 @@
                 </div>
             </div>
 
-            <!-- Botões e Tagline (Abaixo) -->
+            <!-- Botões e Tagline -->
             <div class="engineer-card">
-                <!-- Ações: Sobre Mim + Whats -->
+                <!-- Ações: Whats invertido com Sobre Mim -->
                 <div class="hero-actions">
-                    <button class="btn-bio-green" onclick="openBioModal()">Sobre mim</button>
-
                     <a class="hero-whatsapp" href="https://wa.me/5535984529577?text=Ola%20Diego%20Vilela"
                         target="_blank" rel="noopener">
                         (35) 98452-9577
                     </a>
+
+                    <button class="btn-bio-green" onclick="openBioModal()">Sobre mim</button>
                 </div>
 
-                <!-- Tagline Limpa e Corporativa -->
+                <!-- Tagline Menor -->
                 <p class="tagline">Seu imóvel 100% regularizado: do projeto à averbação</p>
             </div>
 
