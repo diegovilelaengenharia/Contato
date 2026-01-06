@@ -91,30 +91,28 @@
     <div class="maint-card">
         <img src="../assets/logo.png" alt="Vilela Engenharia" class="logo">
         
-        <div class="icon-area">
-            <span class="material-symbols-rounded" style="font-size: 4rem;">engineering</span>
-        </div>
+        <!-- Ícone removido a pedido -->
 
-        <h1>Melhorando para Você</h1>
+        <h1>Atualização Programada</h1>
         <p>
-            Estamos realizando uma atualização programada em nossa Área do Cliente para ofecerer uma experiência ainda mais rápida, segura e completa para o seu projeto.
-        </p>
-        <p>
-            Voltaremos em instantes! Agradecemos a compreensão.
+            Estamos otimizando nossa Área do Cliente para atendê-lo melhor.<br>
+            O acesso retornará em instantes.
         </p>
 
         <div class="contact-box">
-            <strong>Precisa falar com urgência?</strong><br>
-            Nos chame no WhatsApp: (35) 98452-9577
+            <strong>Urgência?</strong><br>
+            WhatsApp: (35) 98452-9577
         </div>
 
+        <div style="margin-top: 25px; font-size: 0.9rem; color: #888;">
             Equipe Vilela Engenharia
-            <div style="margin-top: 15px;">
-                <a href="?bypass=1" style="display:inline-block; padding:8px 20px; border:1px solid #ccc; border-radius:30px; color:#555; text-decoration:none; font-size:0.85rem; transition:0.3s; background:#f8f9fa;">
-                    <span class="material-symbols-rounded" style="font-size:1rem; vertical-align:middle; margin-right:5px;">lock_open</span>
-                    Acesso Administrativo
-                </a>
-            </div>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <a href="?bypass=1" style="color:#ccc; text-decoration:none; font-size:0.75rem;">
+                <span class="material-symbols-rounded" style="font-size:1rem; vertical-align:middle;">lock</span>
+                Admin
+            </a>
         </div>
     </div>
 </body>
