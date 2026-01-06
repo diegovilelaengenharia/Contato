@@ -41,14 +41,14 @@ if (isset($_SESSION['admin_logado']) && $_SESSION['admin_logado'] === true) {
 // Logic moved to inside POST handling below
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $usuario = $_POST['usuario'];
-    $senha = $_POST['senha'];
+    $usuario = trim($_POST['usuario']);
+    $senha = trim($_POST['senha']);
 
     // 1. Verifica se é ADMIN
     // Senha mestra definida em db.php
     $senhaMestraAdmin = defined('ADMIN_PASSWORD') ? ADMIN_PASSWORD : 'VilelaAdmin2025'; 
     
-    if (($usuario === 'admin' || $usuario === 'vilela') && $senha === $senhaMestraAdmin) {
+    if ((strtolower($usuario) === 'admin' || strtolower($usuario) === 'vilela') && $senha === $senhaMestraAdmin) {
         $_SESSION['admin_logado'] = true;
         header("Location: gestao_admin_99.php");
         exit;
@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($stmtMaint && $stmtMaint->fetchColumn() == 1) {
             
             // SE FOR ADMIN TENTANDO LOGAR (E ERROU A SENHA), NÃO MOSTRA MANUTENÇÃO, MOSTRA ERRO
-            if ($usuario !== 'admin' && $usuario !== 'vilela') {
+            if (strtolower($usuario) !== 'admin' && strtolower($usuario) !== 'vilela') {
                  // MOSTRAR AVISO DE MANUTENÇÃO (PÁGINA COMPLETA) PARA CLIENTES
                 require 'maintenance.php';
                 exit;

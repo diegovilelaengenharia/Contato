@@ -390,8 +390,8 @@ body {
     position: relative;
     display: flex;
     align-items: center;
-    gap: 18px;
-    padding: 24px 28px;
+    gap: 14px;
+    padding: 16px 20px;
     background: var(--color-surface);
     border-radius: 20px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
@@ -489,8 +489,8 @@ body {
 .icon {
     position: relative;
     flex: 0 0 54px;
-    width: 54px;
-    height: 54px;
+    width: 48px;
+    height: 48px;
     border-radius: 22px;
     background: var(--icon-bg);
     display: grid;
@@ -551,12 +551,12 @@ body {
 }
 
 .title {
-    font-size: 1.07rem;
+    font-size: 1rem;
     font-weight: 600;
 }
 
 .subtitle {
-    font-size: 0.94rem;
+    font-size: 0.85rem;
     color: var(--color-text-subtle);
 }
 
@@ -648,7 +648,7 @@ body {
     box-shadow: 0 6px 16px rgba(28, 181, 224, 0.4);
 }
 
-}
+
 
 
 .floating-btn:hover {
