@@ -151,16 +151,13 @@
             overflow: hidden;
             background: #e0f2f1;
             /* Verde Claro Fundo */
-            margin: 8px auto 12px;
-            /* Margem reduzida drasticamente */
+            margin: 8px auto 8px;
+            /* Margem ajustada */
             position: relative;
             max-width: 98%;
-            /* Aproveitar largura */
-            /* Levemente maior */
             border-radius: 8px;
-            /* Cantos suaves */
-            padding: 8px 0;
-            /* Espaço interno */
+            padding: 4px 0;
+            /* Caixa menor */
             mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
             -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
         }
@@ -170,16 +167,13 @@
             white-space: nowrap;
             animation: scroll-left 20s linear infinite;
             padding-left: 100%;
-            font-size: 1rem;
+            font-size: 0.9rem;
+            /* Fonte menor */
             color: var(--color-primary-strong);
-            /* Verde do Logo (Forte) */
             font-weight: 700;
             background: transparent;
-            /* Remove fundo amarelo do style.css */
             border: none;
-            /* Remove borda amarela do style.css */
             margin: 0;
-            /* Remove margem do style.css se necessário */
         }
 
 
@@ -262,7 +256,13 @@
         /* Estilos Globais do Header Container - Compacto */
         .hero {
             padding: 24px 16px 20px;
-            /* Padding MUITO reduzido */
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding-top: 60px;
+                /* Mais espaço no topo para o botão do cliente não sobrepor a logo */
+            }
         }
 
         /* Overrides para compactar a página toda */
@@ -401,18 +401,6 @@
             /* Verde ainda mais escuro no hover */
             box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
             transform: translateY(-1px);
-        }
-
-        @media (max-width: 480px) {
-            .btn-client-area span.desktop-only {
-                display: none;
-            }
-
-            .btn-client-area {
-                padding: 8px;
-                /* Circular no mobile */
-                border-radius: 50%;
-            }
         }
     </style>
 </head>
