@@ -374,6 +374,7 @@
         }
 
         /* Área do Cliente */
+        /* Área do Cliente */
         .btn-client-area {
             position: absolute;
             top: 16px;
@@ -382,21 +383,23 @@
             align-items: center;
             gap: 6px;
             padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.8);
-            border: 1px solid rgba(0, 0, 0, 0.1);
+            background-color: var(--color-primary-strong);
+            /* Verde Forte */
+            border: none;
             border-radius: 20px;
-            color: var(--color-text);
+            color: #ffffff;
             font-size: 0.85rem;
             font-weight: 600;
             text-decoration: none;
             z-index: 100;
-            backdrop-filter: blur(4px);
+            box-shadow: 0 4px 10px rgba(0, 77, 64, 0.2);
             transition: all 0.2s;
         }
 
         .btn-client-area:hover {
-            background: white;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            background-color: #00382e;
+            /* Verde ainda mais escuro no hover */
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
             transform: translateY(-1px);
         }
 
