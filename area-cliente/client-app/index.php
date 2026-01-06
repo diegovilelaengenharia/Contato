@@ -105,6 +105,53 @@ try {
             display: flex; align-items: center; justify-content: center;
         }
     </style>
+    <!-- JAVASCRIPT GLOBAL (MOVED TO HEAD FOR RELIABILITY) -->
+    <script>
+        console.log("App JS Loaded v2.6 - HEAD EXECUTION");
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("DOM Loaded - Attaching Listeners v2.6");
+
+            // Safe Attach Helper
+            function attach(id, modalId) {
+                const btn = document.getElementById(id);
+                if(btn) {
+                    console.log("Button FOUND: " + id);
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        console.log("Click: " + id);
+                        openModal(modalId);
+                    });
+                } else {
+                    console.error("Button MISSING: " + id);
+                }
+            }
+
+            attach('btnTimeline', 'modalTimeline');
+            attach('btnPendencias', 'modalPendencias');
+            attach('btnFinanceiro', 'modalFinanceiro');
+            attach('btnDocumentos', 'modalDocumentos');
+        });
+
+        function openModal(id) {
+            console.log('Attempting to open: ' + id);
+            const modal = document.getElementById(id);
+            if(modal) {
+                modal.classList.add('active'); 
+                document.body.style.overflow = 'hidden';
+            } else {
+                // If modal is missing, it means PHP likely crashed or HTML is malformed
+                alert('Erro: Modal ' + id + ' não encontrado. Ocorreu um erro ao carregar os dados.');
+                console.error('Modal missing: ' + id);
+            }
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            if(modal) modal.classList.remove('active');
+            document.body.style.overflow = ''; 
+        }
+    </script>
 </head>
 <body>
 
@@ -226,7 +273,7 @@ try {
 
         <!-- DEVELOPER CREDIT -->
         <div style="text-align:center; margin-top:50px; opacity:0.6; font-size:0.8rem;">
-            Desenvolvido por <strong>Diego T. N. Vilela</strong> (v2.5)
+            Desenvolvido por <strong>Diego T. N. Vilela</strong> (v2.6)
         </div>
 
     </div>
@@ -442,7 +489,7 @@ try {
             $drive = $stmt_drive->fetch();
             
             $embed = "";
-            if (!empty($drive['drive_link'])) {
+            if ($drive && !empty($drive['drive_link'])) {
                 if (preg_match('/folders\/([a-zA-Z0-9_-]+)/', $drive['drive_link'], $matches)) {
                     $embed = "https://drive.google.com/embeddedfolderview?id=" . $matches[1] . "#list";
                 } elseif (preg_match('/id=([a-zA-Z0-9_-]+)/', $drive['drive_link'], $matches)) {
@@ -461,72 +508,7 @@ try {
     </div>
 
 
-    <!-- JAVASCRIPT GLOBAL -->
-    <script>
-        console.log("App JS Loaded v2.5 - EXECUTION STARTED");
 
-        // Immediate Execution (Script is at bottom of body)
-        (function() {
-            // Attach Listeners
-            const btnTimeline = document.getElementById('btnTimeline');
-            if(btnTimeline) {
-                console.log("Button Timeline FOUND");
-                btnTimeline.addEventListener('click', function(e) {
-                    console.log("Click Event Triggered: Timeline");
-                    e.preventDefault(); // Prevent any default behavior
-                    openModal('modalTimeline');
-                });
-            } else { 
-                console.error('ERRO CRÍTICO: Botão Timeline (btnTimeline) NÃO ENCONTRADO no DOM.'); 
-            }
-
-            const btnPendencias = document.getElementById('btnPendencias');
-            if(btnPendencias) {
-                btnPendencias.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    openModal('modalPendencias');
-                });
-            }
-
-            const btnFinanceiro = document.getElementById('btnFinanceiro');
-            if(btnFinanceiro) {
-                btnFinanceiro.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    openModal('modalFinanceiro');
-                });
-            }
-
-            const btnDocumentos = document.getElementById('btnDocumentos');
-            if(btnDocumentos) {
-                btnDocumentos.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    openModal('modalDocumentos');
-                });
-            }
-        })();
-
-        function openModal(id) {
-            console.log('openModal called for: ' + id);
-            const modal = document.getElementById(id);
-            if(modal) {
-                console.log('Modal found. Adding active class.');
-                modal.classList.add('active'); 
-                document.body.style.overflow = 'hidden';
-            } else {
-                console.error('Modal não encontrado pelo ID:', id);
-                alert('Erro: Modal não encontrado.');
-            }
-        }
-
-        function closeModal(id) {
-            const modal = document.getElementById(id);
-            if(modal) {
-                // modal.close(); // REMOVED DIALOG API
-                modal.classList.remove('active'); // REMOVE CLASS
-                document.body.style.overflow = ''; 
-            }
-        }
-    </script>
 
 </body>
 </html>
