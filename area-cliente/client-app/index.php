@@ -226,7 +226,7 @@ try {
 
         <!-- DEVELOPER CREDIT -->
         <div style="text-align:center; margin-top:50px; opacity:0.6; font-size:0.8rem;">
-            Desenvolvido por <strong>Diego T. N. Vilela</strong> (v2.2)
+            Desenvolvido por <strong>Diego T. N. Vilela</strong> (v2.3)
         </div>
 
     </div>
@@ -464,16 +464,16 @@ try {
     <!-- JAVASCRIPT GLOBAL -->
     <script>
         function openModal(id) {
+            // DEBUG: Alert to confirm click
+            alert('Debug: Clicou em ' + id); 
+            
             const modal = document.getElementById(id);
             if(modal) {
-                // modal.showModal(); // REMOVED DIALOG API
-                modal.classList.add('active'); // ADD CLASS
-                document.body.style.overflow = 'hidden'; 
-                
-                // Trigger Progress bar if timeline (REMOVED DEAD CODE)
-                // if(id === 'modalTimeline') { ... }
-                
+                alert('Debug: Modal encontrado! Abrindo...');
+                modal.classList.add('active'); 
+                document.body.style.overflow = 'hidden';
             } else {
+                alert('ERRO: Modal não encontrado: ' + id);
                 console.error('Modal não encontrado:', id);
             }
         }
