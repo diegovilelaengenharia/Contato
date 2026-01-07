@@ -40,8 +40,9 @@ if (move_uploaded_file($file['tmp_name'], $target)) {
     $stmt_up = $pdo->prepare("UPDATE processo_pendencias SET status = 'em_analise', data_resolucao = NOW() WHERE id = ?");
     $stmt_up->execute([$pendencia_id]);
     
-    header("Location: dashboard.php?msg=sucesso_upload");
+    // Redirect back to the new client app pendencies page
+    header("Location: client-app/pendencias.php?msg=sucesso_upload");
 } else {
-    header("Location: dashboard.php?msg=erro_upload");
+    header("Location: client-app/pendencias.php?msg=erro_upload");
 }
 ?>

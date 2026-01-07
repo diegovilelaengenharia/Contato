@@ -1,0 +1,115 @@
+/* --- HEADER PREMIUM v4.0 (Polished) --- */
+.premium-header {
+    background: linear-gradient(135deg, #146c43 0%, #0a3622 100%);
+    color: white;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    padding: 30px 25px;
+    box-shadow: 0 10px 30px rgba(20, 108, 67, 0.25);
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Watermark */
+.premium-header::before {
+    content: '';
+    position: absolute;
+    top: -30px;
+    right: -30px;
+    width: 150px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+}
+
+.ph-profile {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 25px;
+    position: relative;
+    z-index: 2;
+}
+
+.ph-avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    /* Placeholder centering */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 2rem;
+}
+
+.ph-info h1 {
+    font-size: 1.6rem;
+    margin: 0;
+    font-weight: 700;
+    color: white;
+    line-height: 1.2;
+}
+
+.ph-info p {
+    margin: 0 0 4px 0;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+}
+
+.btn-logout {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 4px 10px;
+    border-radius: 20px;
+    transition: 0.2s;
+    display: inline-block;
+    margin-top: 5px;
+}
+
+.btn-logout:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+/* Details Grid */
+.ph-details-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    z-index: 2;
+}
+
+.ph-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.ph-icon-box {
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}

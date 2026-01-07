@@ -46,22 +46,29 @@ if($drive_link) {
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- STYLES -->
-    <link rel="stylesheet" href="css/style.css?v=2.7.3">
+    <link rel="stylesheet" href="css/style.css?v=2.7.4">
     
     <style>
         body { background: #f4f6f8; }
         
         .page-header {
-            background: white; padding: 15px; border-radius: 16px; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03); margin-bottom: 20px;
+            background: linear-gradient(135deg, #0d6efd, #0b5ed7); /* Blue Gradient for Docs */
+            padding: 25px 20px; 
+            border-bottom-left-radius: 25px; 
+            border-bottom-right-radius: 25px;
+            box-shadow: 0 4px 15px rgba(13, 110, 253, 0.2); 
+            margin-bottom: 25px;
             display: flex; align-items: center; gap: 10px;
+            color: white;
         }
         
         .btn-back {
-            text-decoration: none; color: #666; font-weight: 600; 
+            text-decoration: none; color: white; font-weight: 600; 
             display: flex; align-items: center; gap: 5px;
-            padding: 8px 12px; background: #f8f9fa; border-radius: 8px;
+            padding: 8px 12px; background: rgba(255,255,255,0.2); border-radius: 12px;
+            transition: 0.2s;
         }
+        .btn-back:active { transform: scale(0.95); }
 
         .drive-card {
             background: white;
@@ -108,64 +115,62 @@ if($drive_link) {
 </head>
 <body>
 
-    <div class="app-container">
+    <div class="app-container" style="padding: 0;">
         
         <!-- HEADER -->
         <div class="page-header">
             <a href="index.php" class="btn-back">
                 <span>←</span> Voltar
             </a>
-            <h1 style="font-size: 1.2rem; margin: 0; color: #0d6efd; display: flex; align-items: center; gap: 8px;">
+            <h1 style="font-size: 1.3rem; margin: 0; display: flex; align-items: center; gap: 8px;">
                 <span>📂</span> Documentos
             </h1>
         </div>
 
-        <!-- MAIN DRIVE CARD -->
-        <div class="drive-card">
-            <span class="drive-icon">📁</span>
-            <h2 style="font-size: 1.3rem; margin: 0 0 10px 0; color: #333;">Pasta do Projeto</h2>
-            <p style="color: #666; font-size: 0.9rem; margin-bottom: 20px;">
-                Acesse todos os seus projetos, plantas e contratos diretamente no Google Drive.
-            </p>
-            
-            <?php if ($drive_link): ?>
-                <a href="<?= htmlspecialchars($drive_link) ?>" target="_blank" class="btn-drive-primary">
-                    Abrir no Google Drive ↗
-                </a>
+        <div style="padding: 0 20px;">
+            <!-- MAIN DRIVE CARD -->
+            <div class="drive-card">
+                <span class="drive-icon">📁</span>
+                <h2 style="font-size: 1.3rem; margin: 0 0 10px 0; color: #333;">Pasta do Projeto</h2>
+                <p style="color: #666; font-size: 0.9rem; margin-bottom: 20px;">
+                    Acesse todos os seus projetos, plantas e contratos diretamente no Google Drive.
+                </p>
                 
-                <div class="iframe-wrapper">
-                    <iframe src="<?= htmlspecialchars($embed_url) ?>" width="100%" height="100%" frameborder="0" style="border:0;"></iframe>
-                </div>
-            <?php else: ?>
-                <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; color: #666; font-style: italic;">
-                    O link da pasta ainda não foi vinculado ao seu processo.
-                </div>
+                <?php if ($drive_link): ?>
+                    <a href="<?= htmlspecialchars($drive_link) ?>" target="_blank" class="btn-drive-primary">
+                        Abrir no Google Drive ↗
+                    </a>
+                    
+                    <div class="iframe-wrapper">
+                        <iframe src="<?= htmlspecialchars($embed_url) ?>" width="100%" height="100%" frameborder="0" style="border:0;"></iframe>
+                    </div>
+                <?php else: ?>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; color: #666; font-style: italic;">
+                        O link da pasta ainda não foi vinculado ao seu processo.
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <!-- RECENT ACTIVITY (IF ANY) -->
+            <?php if (!empty($docs_recents)): ?>
+                <h3 style="font-size: 1.1rem; color: #333; margin-bottom: 15px; padding-left: 5px;">Recentes</h3>
+                <?php foreach($docs_recents as $doc): ?>
+                    <div class="doc-list-item">
+                        <div style="width: 40px; height: 40px; background: #e3f2fd; color: #0d6efd; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                            📄
+                        </div>
+                        <div>
+                            <div style="font-weight: 600; color: #333; font-size: 0.95rem;"><?= htmlspecialchars($doc['titulo_fase']) ?></div>
+                            <div style="font-size: 0.8rem; color: #888;"><?= date('d/m/Y', strtotime($doc['data_movimento'])) ?></div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
             <?php endif; ?>
         </div>
-
-        <!-- RECENT ACTIVITY (IF ANY) -->
-        <?php if (!empty($docs_recents)): ?>
-            <h3 style="font-size: 1.1rem; color: #333; margin-bottom: 15px; padding-left: 5px;">Recentes</h3>
-            <?php foreach($docs_recents as $doc): ?>
-                <div class="doc-list-item">
-                    <div style="width: 40px; height: 40px; background: #e3f2fd; color: #0d6efd; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
-                        📄
-                    </div>
-                    <div>
-                        <div style="font-weight: 600; color: #333; font-size: 0.95rem;"><?= htmlspecialchars($doc['titulo_fase']) ?></div>
-                        <div style="font-size: 0.8rem; color: #888;"><?= date('d/m/Y', strtotime($doc['data_movimento'])) ?></div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        <?php endif; ?>
-        
         
         <div class="floating-buttons">
-            <a href="https://wa.me/5535984529577?text=Ola%20Engenheiro,%20tenho%20uma%20divida%20sobre%20o%20processo" class="floating-btn floating-btn--whatsapp" target="_blank" title="Falar com Engenheiro">
+            <a href="https://wa.me/5535984529577" class="floating-btn floating-btn--whatsapp" target="_blank" title="Falar com Engenheiro">
                 <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.66 15.14L2 22l5-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.08-1.13l-.29-.18-3 .79.8-2.91-.19-.3A8 8 0 1 1 12 20zm4.37-5.73-.52-.26a1.32 1.32 0 0 0-1.15.04l-.4.21a.5.5 0 0 1-.49 0 8.14 8.14 0 0 1-2.95-2.58.5.5 0 0 1 0-.49l.21-.4a1.32 1.32 0 0 0 .04-1.15l-.26-.52a1.32 1.32 0 0 0-1.18-.73h-.37a1 1 0 0 0-1 .86 3.47 3.47 0 0 0 .18 1.52A10.2 10.2 0 0 0 13 15.58a3.47 3.47 0 0 0 1.52.18 1 1 0 0 0 .86-1v-.37a1.32 1.32 0 0 0-.73-1.18z"></path></svg>
-            </a>
-            <a href="https://www.instagram.com/diegovilela.eng/" class="floating-btn floating-btn--instagram" target="_blank" title="Instagram">
-                <svg viewBox="0 0 24 24"><path d="M7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4zm0 2a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm5 3.5A3.5 3.5 0 1 1 8.5 12 3.5 3.5 0 0 1 12 8.5zm0 5A1.5 1.5 0 1 0 10.5 12 1.5 1.5 0 0 0 12 13.5zm4.25-6.75a1 1 0 1 1-1-1 1 1 0 0 1 1 1z"></path></svg>
             </a>
         </div>
 

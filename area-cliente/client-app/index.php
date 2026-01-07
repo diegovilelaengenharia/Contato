@@ -101,6 +101,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
     
     <!-- STYLES -->
     <link rel="stylesheet" href="css/style.css?v=2.7.4">
+    <link rel="stylesheet" href="css/header-premium.css?v=4.0">
     
     <style>
         /* MODAL DE NOTIFICAÇÕES */
@@ -128,44 +129,6 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
         }
         .notif-item:last-child { border-bottom: none; }
         .notif-icon { font-size: 1.2rem; }
-        
-        /* HEADER REFINADO */
-        .premium-header {
-            background: white; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px;
-            padding: 30px 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); margin-bottom: 30px;
-            position: relative;
-        }
-        
-        .ph-profile {
-            display: flex; align-items: center; gap: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .ph-avatar {
-            width: 80px; height: 80px; border-radius: 50%; object-fit: cover;
-            border: 4px solid #f4f6f8;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        
-        .ph-info h1 {
-            font-size: 1.5rem; margin: 0 0 5px 0; color: #146c43; letter-spacing: -0.5px;
-        }
-        
-        .ph-info p {
-            margin: 0; color: #666; font-size: 0.95rem; font-weight: 500;
-        }
-        
-        .ph-details {
-            background: #f8f9fa; border-radius: 16px; padding: 15px;
-            display: grid; grid-template-columns: 1fr; gap: 10px;
-            border: 1px solid #eee;
-        }
-        
-        .ph-row {
-            display: flex; align-items: center; gap: 8px; font-size: 0.95rem; color: #555;
-        }
-        
-        .ph-icon { color: #146c43; font-size: 1.1rem; }
 
         /* FOOTER BRANDING */
         .premium-footer {
@@ -217,61 +180,61 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
 
     <div class="app-container" style="padding: 0;"> <!-- Remove padding here, controlled by inner elements -->
         
-        <!-- HEADER PREMIUM -->
+        <!-- HEADER PREMIUM v4.0 -->
         <header class="premium-header">
             <!-- Bell Notification -->
-            <div onclick="document.getElementById('modalNotificacoes').classList.add('open')" style="position:absolute; top:20px; right:20px; cursor:pointer; background:white; padding:10px; border-radius:50%; box-shadow:0 4px 10px rgba(0,0,0,0.1);" title="Notificações">
+            <div onclick="document.getElementById('modalNotificacoes').classList.add('open')" style="position:absolute; top:25px; right:20px; cursor:pointer; background:rgba(255,255,255,0.2); padding:10px; border-radius:50%; backdrop-filter:blur(5px); z-index:10;" title="Notificações">
                 <div style="position:relative;">
                     <span style="font-size:1.6rem;">🔔</span>
                     <?php if($total_notif > 0): ?>
-                        <span style="position:absolute; top:-2px; right:-2px; background:#dc3545; color:white; font-size:0.8rem; width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; border:2px solid white;"><?= $total_notif ?></span>
+                        <span style="position:absolute; top:-2px; right:-2px; background:#ffc107; color:#333; font-size:0.7rem; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; border:2px solid rgba(255,255,255,0.5);"><?= $total_notif ?></span>
                     <?php endif; ?>
                 </div>
             </div>
 
             <div class="ph-profile">
-                <!-- Avatar Logic -->
                 <?php 
                     $avatarPath = $cliente['foto_perfil'] ?? '';
-                    // Resolve path relative to current file or absolute logic (adjust if needed)
-                    // Assuming upload path is standard. If not set, show placeholder.
+                    // Admin returns path like "uploads/clientes/ID/foto.jpg"
+                    // We are in "area-cliente/client-app/index.php"
+                    // We need to go up to "area-cliente/" to find "uploads/"
+                    if($avatarPath && !str_starts_with($avatarPath, '../') && !str_starts_with($avatarPath, 'http')) {
+                        $avatarPath = '../' . $avatarPath;
+                    }
                 ?>
-                <?php if($avatarPath && file_exists($avatarPath)): ?>
+                <?php if($avatarPath && file_exists($avatarPath) && !is_dir($avatarPath)): ?>
                     <img src="<?= htmlspecialchars($avatarPath) ?>?v=<?= time() ?>" alt="Perfil" class="ph-avatar">
                 <?php else: ?>
-                    <div class="ph-avatar" style="background:#e9ecef; color:#aaa; display:flex; align-items:center; justify-content:center; font-size:2rem;">👤</div>
+                    <div class="ph-avatar">👤</div>
                 <?php endif; ?>
                 
                 <div class="ph-info">
                     <p>Bem-vindo(a),</p>
                     <h1><?= htmlspecialchars(explode(' ', $cliente['nome'])[0]) ?></h1>
-                    
-                    <a href="logout.php" style="font-size:0.9rem; color:#dc3545; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:4px; margin-top:5px;">
-                        Sair da conta <span>→</span>
-                    </a>
+                    <a href="logout.php" class="btn-logout">Sair da conta</a>
                 </div>
             </div>
 
-            <div class="ph-details">
+            <div class="ph-details-grid">
                 <?php if(!empty($detalhes['endereco_imovel'])): ?>
                     <div class="ph-row">
-                        <span class="ph-icon">📍</span>
+                        <div class="ph-icon-box">📍</div>
                         <span><?= htmlspecialchars($detalhes['endereco_imovel']) ?></span>
                     </div>
                 <?php endif; ?>
                 
-                <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
                      <?php if(!empty($detalhes['contato_tel'])): ?>
                         <div class="ph-row">
-                            <span class="ph-icon">📞</span>
+                            <div class="ph-icon-box">📞</div>
                             <span><?= htmlspecialchars($detalhes['contato_tel']) ?></span>
                         </div>
                     <?php endif; ?>
                     
                     <?php if(!empty($detalhes['cpf_cnpj'])): ?>
                         <div class="ph-row">
-                            <span class="ph-icon">🆔</span>
-                            <span><?= htmlspecialchars($detalhes['cpf_cnpj']) ?></span>
+                            <div class="ph-icon-box">🆔</div>
+                            <span style="font-size:0.85rem;"><?= htmlspecialchars($detalhes['cpf_cnpj']) ?></span>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -341,12 +304,11 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
         <footer class="premium-footer">
             <img src="../../assets/logo.png" alt="Vilela Engenharia" class="pf-logo">
             <div class="pf-text">
-                Gestão e Responsabilidade Técnica
                 <span class="pf-strong">Eng. Diego T. N. Vilela</span>
                 CREA 235.474/D
             </div>
             <div style="margin-top: 20px; font-size: 0.8rem; opacity: 0.5;">
-                &copy; <?= date('Y') ?> Vilela Engenharia. Todos os direitos reservados.
+                &copy; <?= date('Y') ?> Todos os direitos reservados.
             </div>
         </footer>
 
