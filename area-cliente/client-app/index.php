@@ -206,7 +206,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
         </header>
 
         <!-- INFO CARD (Secondary) -->
-        <div style="background: #fff; margin: -10px 20px 25px 20px; padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); position: relative; z-index: 2;">
+        <div style="background: #fff8e1; margin: -10px 20px 25px 20px; padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); position: relative; z-index: 2;">
             <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--color-primary); font-weight: 700; letter-spacing: 1px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
                 Informações da Obra
             </div>
