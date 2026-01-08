@@ -577,17 +577,17 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             
                             // GERA TEXTO SEMPRE (independente de ter telefone)
                             $primeiro_nome = explode(' ', trim($cliente_ativo['nome']))[0];
-                            $msg_wpp_pend = "Olá {$primeiro_nome}, tudo bem? 👋\n\nSou a *Vilela Engenharia*. Segue o relatório das pendências necessárias para o andamento do seu processo:\n\n";
+                            $msg_wpp_pend = "Olá {$primeiro_nome}, tudo bem? Espero que sim! 🤝\n\nSou da *Vilela Engenharia*. Passando para lembrar das pendências necessárias para darmos andamento ao seu processo:\n\n";
                             
                             if(count($pend_abertas) > 0) {
                                 foreach($pend_abertas as $p) {
-                                    $msg_wpp_pend .= "🔸 " . strip_tags($p['descricao']) . "\n";
+                                    $msg_wpp_pend .= "👉 " . strip_tags($p['descricao']) . "\n";
                                 }
                             } else {
                                 $msg_wpp_pend .= "(Nenhuma pendência em aberto)\n";
                             }
                             
-                            $msg_wpp_pend .= "\n📂 *Acesse sua Área do Cliente* para anexar documentos ou ver detalhes:\nhttps://vilela.eng.br/area-cliente/\n\nQualquer dúvida, estou à disposição por aqui!";
+                            $msg_wpp_pend .= "\nVocê pode anexar os documentos ou ver mais detalhes acessando sua Área do Cliente:\nhttps://vilela.eng.br/area-cliente/\n\nQualquer dúvida, fique à vontade para me chamar!";
                             ?>
                              <a href="https://wa.me/55<?= preg_replace('/\D/','',$detalhes['contato_tel']??'') ?>?text=<?= urlencode($msg_wpp_pend) ?>" target="_blank" class="btn-save" style="background:#25D366; color:white; border:none; margin-left:10px; padding:8px 15px;">
                                 📱 Cobrar no WhatsApp
@@ -716,12 +716,16 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     </div>
 
                     <!-- Novo Form de Inserção Rápida (MOVIDO PARA BAIXO) -->
-                    <form method="POST" style="background:#fff3e0; padding:20px; border-radius:12px; border:1px solid #ffe0b2; margin-bottom:25px;">
+                    <form method="POST" enctype="multipart/form-data" style="background:#fff3e0; padding:20px; border-radius:12px; border:1px solid #ffe0b2; margin-bottom:25px;">
                         <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
                         <h4 style="margin-top:0; color:#ef6c00;">➕ Adicionar Nova Pendência</h4>
                         <div style="display:flex; flex-direction:column; gap:10px;">
+                            <div style="display:flex; gap:10px;">
+                                <input type="text" name="titulo_pendencia" placeholder="Título da Pendência (Resumido)" style="flex:1; padding:10px; border:1px solid #ddd; border-radius:8px;" required>
+                                <input type="file" name="arquivo_pendencia_admin" style="flex:1; padding:7px; background:white; border:1px solid #ddd; border-radius:8px;">
+                            </div>
                             <div style="flex-grow:1;">
-                                <textarea name="descricao_pendencia" id="new_pendencia_editor" placeholder="Digite a descrição..." style="width:100%;"></textarea>
+                                <textarea name="descricao_pendencia" id="new_pendencia_editor" placeholder="Digite a descrição detalhada..." style="width:100%;"></textarea>
                             </div>
                             <div style="text-align:right;">
                                 <button type="submit" name="btn_adicionar_pendencia" class="btn-save" style="width:auto; margin:0; padding:10px 25px; color:white; background: #fd7e14; border:none;">Adicionar Pendência</button>

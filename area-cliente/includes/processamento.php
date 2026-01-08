@@ -166,11 +166,45 @@ if (isset($_POST['btn_salvar_cadastro'])) {
 if (isset($_POST['btn_adicionar_pendencia'])) {
     $cid = $_POST['cliente_id'];
     $texto = trim($_POST['descricao_pendencia']);
+    $titulo = trim($_POST['titulo_pendencia'] ?? '');
     
+    // Fallback se titulo vier vazio (mas coloquei required no form)
+    if(empty($titulo)) $titulo = "Nova Pendência";
+
     if (!empty($texto)) {
         try {
-            $stmt = $pdo->prepare("INSERT INTO processo_pendencias (cliente_id, descricao, status, data_criacao) VALUES (?, ?, 'pendente', NOW())");
-            $stmt->execute([$cid, $texto]);
+            // 1. Inserir Pendência
+            // Verifica se a coluna 'titulo' existe na tabela primeiro? 
+            // Assumindo que SIM pois está sendo usado no frontend client-app/pendencias.php
+            $stmt = $pdo->prepare("INSERT INTO processo_pendencias (cliente_id, titulo, descricao, status, data_criacao) VALUES (?, ?, ?, 'pendente', NOW())");
+            $stmt->execute([$cid, $titulo, $texto]);
+            $pid = $pdo->lastInsertId();
+
+            // 2. Upload de Arquivo (Se houver)
+            if(isset($_FILES['arquivo_pendencia_admin']) && $_FILES['arquivo_pendencia_admin']['error'] == 0) {
+                $file = $_FILES['arquivo_pendencia_admin'];
+                $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+                $allowed = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx', 'zip'];
+                
+                if(in_array($ext, $allowed)) {
+                     // Define paths (Admin context -> Client uploads folder)
+                     // Estamos em includes/, precisamos ir para ../client-app/uploads/pendencias/
+                     $dir = __DIR__ . '/../client-app/uploads/pendencias/';
+                     if (!is_dir($dir)) mkdir($dir, 0755, true);
+                     
+                     // Nome do arquivo: ID_TIMESTAMP_ADMIN.ext
+                     $final_name = "{$pid}_" . time() . "_admin.{$ext}";
+                     
+                     if (move_uploaded_file($file['tmp_name'], $dir . $final_name)) {
+                         // Insere na tabela de arquivos
+                         $stmtArq = $pdo->prepare("INSERT INTO processo_pendencias_arquivos (pendencia_id, arquivo_nome, arquivo_path, data_upload) VALUES (?, ?, ?, NOW())");
+                         $stmtArq->execute([$pid, $file['name'], "uploads/pendencias/" . $final_name]);
+                         
+                         // Atualiza status para 'anexado' (opcional, ou mantem pendente pois foi o admin que enviou)
+                         // Vamos manter como pendente pois o admin está CRIANDO a solicitação
+                     }
+                }
+            }
             
             // PRG para evitar duplicidade
             header("Location: ?cliente_id=$cid&tab=pendencias&msg=pend_added");

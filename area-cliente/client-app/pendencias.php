@@ -384,18 +384,16 @@ function get_pendency_files($p_id) {
                         <?php endif; ?>
     
                         <!-- Área de Ação (Botões) -->
-                        <div style="border-top: 1px dashed <?= $border_card ?>; padding-top: 12px; margin-top: 10px; display: flex; gap: 10px;">
-                            
-                            <!-- Botão Abrir Modal de Resolução -->
-                            <button onclick="openResolveModal(<?= $p['id'] ?>, '<?= htmlspecialchars($p['titulo'], ENT_QUOTES) ?>')" style="flex: 1; background: #0d6efd; color: white; border: none; border-radius: 8px; padding: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s;">
-                                <span class="material-symbols-rounded">cloud_upload</span>
-                                <?= $has_attachment ? 'Enviar outro arquivo' : 'Resolver / Anexar' ?>
+                            <!-- Botão Abrir Modal de Resolução (Compact) -->
+                            <button onclick="openResolveModal(<?= $p['id'] ?>, '<?= htmlspecialchars($p['titulo'], ENT_QUOTES) ?>')" style="flex: 1; min-width: 0; background: #0d6efd; color: white; border: none; border-radius: 8px; padding: 10px 8px; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; transition: 0.2s; font-size: 0.75rem; text-align: center;">
+                                <span class="material-symbols-rounded" style="font-size: 1.2rem;">cloud_upload</span>
+                                <span style="line-height: 1.1;"><?= $has_attachment ? 'Enviar outro' : 'Resolver / Anexar' ?></span>
                             </button>
                             
                             <!-- Botão Whatsapp Compacto -->
-                            <a href="<?= getWhatsappLink($p['titulo']) ?>" target="_blank" class="btn-action-text" style="flex: 1; background: #e9ecef; color: #25D366; border: 1px solid #ced4da; font-size: 0.85rem; padding: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; border-radius: 8px; text-decoration: none;">
-                                <span class="material-symbols-rounded">chat</span>
-                                Fale c/ Eng.
+                            <a href="<?= getWhatsappLink($p['titulo']) ?>" target="_blank" class="btn-action-text" style="flex: 1; min-width: 0; background: #e9ecef; color: #25D366; border: 1px solid #ced4da; font-size: 0.75rem; padding: 10px 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; border-radius: 8px; text-decoration: none; text-align: center; font-weight: 600;">
+                                <span class="material-symbols-rounded" style="font-size: 1.2rem;">chat</span>
+                                <span style="line-height: 1.1;">Fale c/ Eng.</span>
                             </a>
                         </div>
     
@@ -505,14 +503,7 @@ function get_pendency_files($p_id) {
 </body>
 </html>
 
-             <!-- WHATSAPP CTA -->
-            <div style="text-align: center; margin-top: 20px; padding-bottom: 20px;">
-                 <a href="https://wa.me/5535984529577?text=Ola,%20tenho%20duvidas%20sobre%20as%20pendencias." style="display:inline-block; font-size: 0.85rem; color: #146c43; text-decoration: none; font-weight: 600; padding: 10px 20px; background: #d1e7dd; border-radius: 20px;">
-                    Dúvidas sobre as pendências? Fale conosco.
-                 </a>
-            </div>
-            
-        <?php endif; ?>
+<?php endif; ?>
 
     </div>
 
