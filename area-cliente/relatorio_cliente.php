@@ -3,12 +3,24 @@
 session_set_cookie_params(0, '/');
 session_name('CLIENTE_SESSID');
 session_start();
-if (!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true) {
-    die("Acesso Negado");
+$isAdmin = isset($_SESSION['admin_logado']) && $_SESSION['admin_logado'] === true;
+$isClient = isset($_SESSION['cliente_id']);
+
+if (!$isAdmin && !$isClient) {
+    die("Acesso Negado. Faça login.");
 }
+
 require 'db.php';
 
 $cliente_id = $_GET['id'] ?? null;
+
+// Segurança: Cliente só pode ver o próprio
+if ($isClient && !$isAdmin) {
+    if ($cliente_id != $_SESSION['cliente_id']) {
+        die("Acesso Restrito: Você só pode visualizar seu próprio relatório.");
+    }
+}
+
 if (!$cliente_id) die("ID não fornecido");
 
 // Buscar Dados Completo

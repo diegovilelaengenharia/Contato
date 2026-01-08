@@ -149,44 +149,44 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
 
     <div class="app-container" style="padding: 0;"> <!-- Remove padding here, controlled by inner elements -->
         
-        <!-- HEADER STYLE ADMIN (CLEAN) -->
-        <header class="premium-header" style="background:#fff; border-radius:15px; padding:25px; box-shadow:0 5px 20px rgba(0,0,0,0.05); border-left:6px solid #146c43; display:flex; justify-content:space-between; align-items:center; margin: 20px 20px 0 20px;">
+        <!-- HEADER STYLE ADMIN (DIFFERENTIATED - SOLID GREEN) -->
+        <header class="premium-header" style="background:#146c43; border-radius:15px; padding:25px; box-shadow:0 5px 20px rgba(20, 108, 67, 0.2); display:flex; justify-content:space-between; align-items:center; margin: 20px 20px 0 20px; color:white;">
             
             <div style="display:flex; align-items:center; gap:15px;">
                 <?php 
                     $avatarPath = $cliente['foto_perfil'] ?? '';
                     if($avatarPath && !str_starts_with($avatarPath, '../') && !str_starts_with($avatarPath, 'http')) $avatarPath = '../' . $avatarPath;
                 ?>
-                <div style="width:70px; height:70px; border-radius:50%; border:3px solid #e9ecef; overflow:hidden; display:flex; align-items:center; justify-content:center; background:#f8f9fa;">
+                <div style="width:70px; height:70px; border-radius:50%; border:3px solid rgba(255,255,255,0.2); overflow:hidden; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.1);">
                     <?php if($avatarPath && file_exists($avatarPath) && !is_dir($avatarPath)): ?>
                         <img src="<?= htmlspecialchars($avatarPath) ?>?v=<?= time() ?>" style="width:100%; height:100%; object-fit:cover;">
                     <?php else: ?>
-                        <span style="font-size:2rem;">👤</span>
+                        <span style="font-size:2rem; color:rgba(255,255,255,0.8);">👤</span>
                     <?php endif; ?>
                 </div>
 
                 <div>
-                    <div style="font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; color:#146c43; font-weight:700;">Área do Cliente</div>
-                    <h1 style="margin:2px 0; font-size:1.6rem; color:#333; font-weight:700;"><?= htmlspecialchars($cliente['nome']) ?></h1>
+                    <div style="font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.8); font-weight:700;">Área do Cliente</div>
+                    <h1 style="margin:2px 0; font-size:1.6rem; color:white; font-weight:700;"><?= htmlspecialchars($cliente['nome']) ?></h1>
                     
                     <?php 
                         $procNum = $detalhes['numero_processo'] ?? '---';
                         $procAno = !empty($detalhes['data_inicio']) ? date('Y', strtotime($detalhes['data_inicio'])) : date('Y');
                     ?>
-                    <div style="font-size:0.9rem; color:#666;">
-                        Processo <strong style="color:#333;"><?= htmlspecialchars($procNum) ?>/<?= $procAno ?></strong>
+                    <div style="font-size:0.9rem; color:rgba(255,255,255,0.9);">
+                        Processo <strong style="color:white;"><?= htmlspecialchars($procNum) ?>/<?= $procAno ?></strong>
                     </div>
                 </div>
             </div>
 
-            <!-- Lado Direito (Apenas Info, Sem botões de edição) -->
+            <!-- Lado Direito (Info) -->
             <div style="text-align:right;">
                 <div style="margin-bottom:5px;">
-                    <span style="display:block; font-size:0.7rem; text-transform:uppercase; color:#999; font-weight:bold;">Situação</span>
-                    <span style="background:#e8f5e9; color:#146c43; padding:4px 10px; border-radius:12px; font-size:0.85rem; font-weight:600;"><?= htmlspecialchars($detalhes['etapa_atual'] ?? 'Em Andamento') ?></span>
+                    <span style="display:block; font-size:0.7rem; text-transform:uppercase; color:rgba(255,255,255,0.7); font-weight:bold;">Situação</span>
+                    <span style="background:white; color:#146c43; padding:4px 10px; border-radius:12px; font-size:0.85rem; font-weight:700;"><?= htmlspecialchars($detalhes['etapa_atual'] ?? 'Em Andamento') ?></span>
                 </div>
                 <div style="margin-top:10px;">
-                     <a href="logout.php" style="color:#dc3545; text-decoration:none; font-size:0.85rem; display:flex; align-items:center; justify-content:flex-end; gap:5px; font-weight:600;">
+                     <a href="logout.php" style="color:rgba(255,255,255,0.9); text-decoration:none; font-size:0.85rem; display:flex; align-items:center; justify-content:flex-end; gap:5px; font-weight:600; transition:0.2s;">
                         <span style="font-size:1rem;">logout</span> Sair
                      </a>
                 </div>
@@ -264,23 +264,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                     </div>
                 </a>
 
-                 <!-- FOTOS -->
-                 <a href="fotos.php" class="app-button" style="border-left: 5px solid #6f42c1;">
-                    <div class="app-btn-icon" style="background:#e2d9f3; color:#6f42c1;">📸</div>
-                    <div class="app-btn-content">
-                        <span class="app-btn-title">Fotos da Obra</span>
-                        <span class="app-btn-desc">Acompanhamento</span>
-                    </div>
-                </a>
-                
-                <!-- PROJETOS -->
-                 <a href="projetos.php" class="app-button" style="border-left: 5px solid #fd7e14;">
-                    <div class="app-btn-icon" style="background:#ffe8cc; color:#fd7e14;">🏗️</div>
-                    <div class="app-btn-content">
-                        <span class="app-btn-title">Projetos</span>
-                        <span class="app-btn-desc">Arquivos Técnicos</span>
-                    </div>
-                </a>
+
 
             </div>
             
