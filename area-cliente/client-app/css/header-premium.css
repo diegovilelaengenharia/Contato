@@ -151,15 +151,18 @@
     }
 
     .ph-content {
-        flex-direction: column;
+        flex-direction: row;
         width: 100%;
-        gap: 10px;
+        gap: 15px;
+        text-align: left;
+        align-items: center;
+        justify-content: flex-start;
     }
 
     .ph-avatar-box {
         width: 50px;
-        /* Smaller avatar */
         height: 50px;
+        flex-shrink: 0;
     }
 
     .ph-info h1 {

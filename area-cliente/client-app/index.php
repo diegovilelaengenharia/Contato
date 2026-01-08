@@ -112,12 +112,12 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
         @media (max-width: 420px) {
             .premium-header {
                 flex-direction: column;
-                text-align: center;
+                text-align: left;
                 gap: 15px;
                 padding: 20px !important;
             }
             .premium-header > div {
-                justify-content: center;
+                justify-content: flex-start;
                 width: 100%;
             }
             .premium-header > div:last-child {
@@ -196,12 +196,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                     </div>
                 </div>
 
-                <div class="ph-actions">
-                    <a href="logout.php" class="ph-logout" style="background: rgba(220, 53, 69, 0.2); color: #ffcccc; border: 1px solid rgba(220, 53, 69, 0.3); padding: 6px 12px; border-radius: 8px; text-decoration: none; display: flex; align-items: center; gap: 6px;">
-                        <span class="material-symbols-rounded" style="font-size:1.1rem;">logout</span>
-                        <span style="font-size: 0.85rem; font-weight: 600;">Sair</span>
-                    </a>
-                </div>
+                
             </div>
 
         </header>
@@ -249,7 +244,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
         </div>
 
         <!-- MAIN CONTENT (With Padding) -->
-        <div style="padding: 0 20px 100px 20px;">
+        <div style="padding: 0 20px;">
             
             <div class="app-action-grid">
                 
@@ -267,7 +262,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                     // 2. Latest Finance (Safe Fetch)
                     $last_fin_name = '';
                     try {
-                        $stmt_lf = $pdo->prepare("SELECT titulo FROM processo_financeiro WHERE cliente_id = ? AND (status = 'pendente' OR status = 'atrasado') ORDER BY data_vencimento ASC LIMIT 1");
+                        $stmt_lf = $pdo->prepare("SELECT descricao FROM processo_financeiro WHERE cliente_id = ? AND (status = 'pendente' OR status = 'atrasado') ORDER BY data_vencimento ASC LIMIT 1");
                         $stmt_lf->execute([$cliente_id]);
                         $res_lf = $stmt_lf->fetchColumn();
                         if($res_lf) $last_fin_name = $res_lf;
@@ -309,7 +304,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                         <span class="app-btn-title" style="<?= ($pend_qtd > 0) ? 'color:#dc3545;' : '' ?>">Pendências</span>
                         <?php if($pend_qtd > 0): ?>
                             <span class="app-btn-desc" style="color:#dc3545; font-weight:600;">
-                                <?= htmlspecialchars(mb_strimwidth($last_pend_name, 0, 30, "...")) ?>
+                                <?= htmlspecialchars(mb_strimwidth($last_pend_name, 0, 40, "...")) ?>
                             </span>
                         <?php else: ?>
                             <span class="app-btn-desc">Nenhuma pendência recente</span>
@@ -329,7 +324,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                         <span class="app-btn-title">Financeiro</span>
                          <?php if($fin_qtd > 0): ?>
                             <span class="app-btn-desc" style="color:#d9a406; font-weight:600;">
-                                <?= htmlspecialchars(mb_strimwidth($last_fin_name, 0, 30, "...")) ?>
+                                <?= htmlspecialchars(mb_strimwidth($last_fin_name, 0, 40, "...")) ?>
                             </span>
                         <?php else: ?>
                             <span class="app-btn-desc">Nenhum pagamento pendente</span>
@@ -353,7 +348,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
         </div>
 
         <!-- FOOTER PREMIUM -->
-        <footer class="premium-footer" style="padding: 30px 20px; background: #fff; border-top: 1px solid #eee;">
+        <footer class="premium-footer" style="padding: 30px 20px 100px 20px; background: #fff; border-top: 1px solid #eee; margin-top: 0;">
             <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
                 <!-- Logo -->
                 <div style="flex-shrink: 0;">
