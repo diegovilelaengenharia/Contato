@@ -210,13 +210,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             
             <div class="app-action-grid">
                 
-                <!-- CLIENT DATA (SUMMARY) -->
-                <a href="../../area-cliente/relatorio_cliente.php?id=<?= $cliente['id'] ?>" target="_blank" class="app-button" style="border-left-color: #0d6efd;">
-                    <div class="app-btn-icon" style="background:#e0f8fc; color:#0d6efd;">📋</div>
-                    <div class="app-btn-content">
-                        <span class="app-btn-title">Dados do Cliente</span>
-                        <span class="app-btn-desc">Resumo do Processo</span>
-                    </div>
+
                 <!-- LOGIC: Fetch Latest Pendency and Finance -->
                  <?php
                     // Latest Pendency Name
