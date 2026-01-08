@@ -54,8 +54,7 @@ body.dark-mode {
 }
 
 html {
-    font-size: 18.5px;
-    /* Increased by ~15% */
+    font-size: 16px;
     scroll-behavior: smooth;
     height: 100%;
 }
@@ -1183,29 +1182,30 @@ a {
     border-radius: 12px;
     color: white;
     font-weight: 700;
+}
 
-    /* --- INFO CARD RESPONSIVE --- */
+/* --- INFO CARD RESPONSIVE --- */
+.info-card-container {
+    background: #fff8e1;
+    margin: -15px 20px 25px 20px;
+    /* Negative margin to pull up under header */
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    position: relative;
+    z-index: 2;
+}
+
+@media (max-width: 480px) {
     .info-card-container {
-        background: #fff8e1;
-        margin: -15px 20px 25px 20px;
-        /* Negative margin to pull up under header */
-        padding: 20px;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
-        position: relative;
-        z-index: 2;
+        margin: -10px 15px 20px 15px !important;
+        /* Tighter margins */
+        padding: 15px !important;
     }
 
-    @media (max-width: 480px) {
-        .info-card-container {
-            margin: -10px 15px 20px 15px !important;
-            /* Tighter margins */
-            padding: 15px !important;
-        }
-
-        .info-card-container .grid-area-proc {
-            grid-template-columns: 1fr !important;
-            /* Stack columns on mobile */
-            gap: 10px !important;
-        }
+    .info-card-container .grid-area-proc {
+        grid-template-columns: 1fr !important;
+        /* Stack columns on mobile */
+        gap: 10px !important;
     }
+}

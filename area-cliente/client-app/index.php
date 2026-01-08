@@ -249,7 +249,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
         </div>
 
         <!-- MAIN CONTENT (With Padding) -->
-        <div style="padding: 0 20px;">
+        <div style="padding: 0 20px 100px 20px;">
             
             <div class="app-action-grid">
                 

@@ -136,28 +136,44 @@
     color: white;
 }
 
-/* Mobile Adjustment from inline style moved here for cleanliness */
-@media (max-width: 420px) {
+/* Mobile Adjustment */
+@media (max-width: 480px) {
     .premium-header {
         flex-direction: column;
         text-align: center;
-        gap: 15px;
-        padding: 20px !important;
+        gap: 12px;
+        padding: 20px 15px !important;
+        /* Reduced padding */
+        border-radius: 24px;
+        /* Slightly smaller radius */
+        margin: 15px 15px 0 15px !important;
+        /* Tighter margins */
     }
 
     .ph-content {
         flex-direction: column;
         width: 100%;
+        gap: 10px;
     }
 
-    .ph-info {
-        align-items: center;
+    .ph-avatar-box {
+        width: 50px;
+        /* Smaller avatar */
+        height: 50px;
+    }
+
+    .ph-info h1 {
+        font-size: 1.25rem;
+        /* Smaller Title */
     }
 
     .ph-actions {
         width: 100%;
         align-items: center;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        padding-top: 15px;
+        justify-content: center;
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+        padding-top: 12px;
+        flex-direction: row;
+        /* Keep logout inline on mobile? Or centered column? User wanted top right "Sair". But in column layout it's hard. Let's keep column but tighter. */
     }
 }

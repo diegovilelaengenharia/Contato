@@ -187,81 +187,88 @@ function getWhatsappLink($pendency_desc) {
             </div>
         <?php endif; ?>
 
-        <!-- TABLE LAYOUT -->
-        <div style="overflow-x:hidden;"> <!-- hidden/auto depending on pref -->
-            
             <?php if(empty($pendencias)): ?>
                 <div style="text-align:center; padding:40px; color:#999;">
                     <span style="font-size:2rem; display:block; margin-bottom:10px;">🎉</span>
                     Nenhuma pendência encontrada.
                 </div>
             <?php else: ?>
-                <table class="pendency-table">
-                    <thead>
-                        <tr>
-                            <th width="50%">Descrição</th>
-                            <th>Data</th>
-                            <th>Status</th>
-                            <th style="text-align:right;">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach($pendencias as $p): 
-                            $status_class = 'st-pendente';
-                            $status_label = 'Pendente';
-                            if($p['status'] == 'resolvido') { $status_class = 'st-resolvido'; $status_label = 'Resolvido'; }
-                            elseif($p['status'] == 'em_analise') { $status_class = 'st-analise'; $status_label = 'Encaminhado'; }
-                        ?>
-                        <tr>
-                            <td class="col-desc">
+                
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <?php foreach($pendencias as $p): 
+                        $status_class = 'st-pendente';
+                        $status_label = 'Pendente';
+                        if($p['status'] == 'resolvido') { $status_class = 'st-resolvido'; $status_label = 'Resolvido'; }
+                        elseif($p['status'] == 'em_analise') { $status_class = 'st-analise'; $status_label = 'Encaminhado'; }
+                    ?>
+                    
+                    <div class="card-pendency" style="background: white; border-radius: 20px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee;">
+                        
+                        <!-- Header: Descrição e Status -->
+                        <div style="margin-bottom: 15px;">
+                             <div style="font-weight: 600; font-size: 1.05rem; color: #333; margin-bottom: 5px; line-height: 1.4;">
                                 <?= htmlspecialchars($p['titulo']) ?>
-                                <?php if($p['descricao']): ?>
-                                    <div style="font-size:0.8rem; color:#777; margin-top:3px; font-weight:400;">
-                                        <?= htmlspecialchars(mb_strimwidth($p['descricao'], 0, 50, "...")) ?>
-                                    </div>
-                                <?php endif; ?>
-                            </td>
-                            
-                            <!-- Mobile Meta Wrapper (Hidden on Desktop, Visible on Mobile via Flex check) -->
-                            <!-- Doing a simpler approach: keeping TD structure but CSS handles display -->
-                            
-                            <td>
-                                <span style="font-size:0.85rem; color:#555;">
+                             </div>
+                             <?php if($p['descricao']): ?>
+                                <div style="font-size: 0.9rem; color: #777; margin-bottom: 10px;">
+                                    <?= htmlspecialchars($p['descricao']) ?>
+                                </div>
+                             <?php endif; ?>
+                             
+                             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                                <span style="font-size: 0.85rem; color: #999;">
                                     <?= date('d/m/Y', strtotime($p['data_criacao'])) ?>
                                 </span>
-                            </td>
-                            <td>
-                                <span class="status-badge <?= $status_class ?>">
+                                <span class="status-badge <?= $status_class ?>" style="font-size: 0.75rem;">
                                     <?= $status_label ?>
                                 </span>
-                            </td>
-                            <td style="text-align:right;">
-                                <div style="display:flex; align-items:center; justify-content:flex-end; gap:5px;">
-                                    
-                                    <!-- Upload Form (If not resolved) -->
-                                    <?php if($p['status'] != 'resolvido'): ?>
-                                        <form method="POST" enctype="multipart/form-data" style="margin:0;">
-                                            <input type="hidden" name="pendencia_id" value="<?= $p['id'] ?>">
-                                            <input type="file" name="arquivo_pendencia" id="file_<?= $p['id'] ?>" style="display:none;" onchange="this.form.submit()">
-                                            
-                                            <label for="file_<?= $p['id'] ?>" class="action-btn btn-upload" title="Anexar Arquivo/Comprovante">
-                                                <span class="material-symbols-rounded" style="font-size:1.1rem;">attach_file</span>
-                                            </label>
-                                        </form>
-                                    <?php endif; ?>
+                             </div>
+                        </div>
 
-                                    <!-- Whatsapp -->
-                                    <a href="<?= getWhatsappLink($p['titulo']) ?>" target="_blank" class="action-btn btn-whatsapp" title="Falar no WhatsApp">
-                                        <span class="material-symbols-rounded" style="font-size:1.1rem;">chat</span>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                        <!-- Actions Row -->
+                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px; border-top: 1px solid #f9f9f9; padding-top: 15px;">
+                            
+                            <!-- 1. Botão Anexar (Se não resolvido) -->
+                            <?php if($p['status'] != 'resolvido'): ?>
+                                <form method="POST" enctype="multipart/form-data" style="margin:0;">
+                                    <input type="hidden" name="pendencia_id" value="<?= $p['id'] ?>">
+                                    <input type="file" name="arquivo_pendencia" id="file_<?= $p['id'] ?>" style="display:none;" onchange="this.form.submit()">
+                                    
+                                    <button type="button" onclick="document.getElementById('file_<?= $p['id'] ?>').click()" class="btn-action-text" style="background: #f0f2f5; color: #333; border: 1px solid #ccc;">
+                                        <span class="material-symbols-rounded">attach_file</span>
+                                        Anexar Arquivo
+                                    </button>
+                                </form>
+                            <?php endif; ?>
+
+                            <!-- 2. Botão Whatsapp -->
+                            <a href="<?= getWhatsappLink($p['titulo']) ?>" target="_blank" class="btn-action-text" style="background: #d1e7dd; color: #0f5132; border: 1px solid #badbcc;">
+                                <span class="material-symbols-rounded">chat</span>
+                                Fale com o Engenheiro
+                            </a>
+
+                        </div>
+
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+
             <?php endif; ?>
         </div>
+
+        <!-- Styles for new buttons -->
+        <style>
+            .btn-action-text {
+                display: flex; align-items: center; justify-content: center; gap: 8px;
+                width: 100%; padding: 12px;
+                border-radius: 12px;
+                font-weight: 600; font-size: 0.95rem;
+                text-decoration: none;
+                cursor: pointer;
+                transition: transform 0.1s;
+            }
+            .btn-action-text:active { transform: scale(0.98); }
+        </style>
         
     </div>
 
