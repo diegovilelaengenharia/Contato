@@ -160,11 +160,25 @@ function get_pendency_files($p_id) {
             </div>
         </div>
 
-        <!-- CONTENT: COMMENTED OUT LOOPS -->
-        <div style="padding: 20px; text-align: center; color: #666;">
-            <h3>Debug: Loops Disabled</h3>
-            <p>Resolved Count: <?= count($resolvidas) ?></p>
-            <p>Open Count: <?= count($abertas) ?></p>
+        <!-- CONTENT: MINIMAL LOOPS -->
+        <div style="padding: 20px;">
+            <h3>Debug: Restoring Loops (Minimal)</h3>
+            
+            <h4>Resolvidas (<?= count($resolvidas) ?>)</h4>
+            <?php foreach($resolvidas as $p): ?>
+                <div style="background:white; margin:10px 0; padding:10px; border:1px solid #ccc;">
+                    ID: <?= $p['id'] ?> <br>
+                    Title: <?= htmlspecialchars($p['titulo']) ?>
+                </div>
+            <?php endforeach; ?>
+
+            <h4>Abertas (<?= count($abertas) ?>)</h4>
+            <?php foreach($abertas as $p): ?>
+                <div style="background:white; margin:10px 0; padding:10px; border:1px solid #ccc;">
+                    ID: <?= $p['id'] ?> <br>
+                    Title: <?= htmlspecialchars($p['titulo']) ?>
+                </div>
+            <?php endforeach; ?>
         </div>
 
 
