@@ -205,30 +205,44 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
 
         </header>
 
-        <!-- INFO BAR (New) -->
-        <div class="app-info-bar" style="padding: 0 25px; margin-top: 15px; margin-bottom: 20px; color: #555;">
-            <!-- Endereço -->
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;">
-                <span class="material-symbols-rounded" style="color:var(--color-primary); font-size: 1.1rem;">location_on</span>
-                <span style="font-size: 0.9rem; font-weight: 500;">
-                    <?= htmlspecialchars($detalhes['endereco_imovel'] ?? 'Endereço não cadastrado') ?>
-                </span>
+        <!-- INFO CARD (Secondary) -->
+        <div style="background: #fff; margin: -10px 20px 25px 20px; padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); position: relative; z-index: 2;">
+            <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--color-primary); font-weight: 700; letter-spacing: 1px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                Informações da Obra
             </div>
             
-            <div style="display: flex; gap: 20px;">
-                <!-- Área -->
-                <div style="display: flex; align-items: center; gap: 6px;">
-                    <span class="material-symbols-rounded" style="color:var(--color-primary); font-size: 1.1rem;">square_foot</span>
-                    <span style="font-size: 0.85rem;">
-                        <?= htmlspecialchars($detalhes['area_total_final'] ?? $detalhes['area_construida'] ?? '--') ?> m²
-                    </span>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <!-- Endereço -->
+                <div style="display: flex; align-items: start; gap: 10px;">
+                    <span class="material-symbols-rounded" style="color: #999; font-size: 1.1rem; margin-top:2px;">location_on</span>
+                    <div>
+                        <span style="font-size: 0.95rem; font-weight: 600; color: #333; line-height: 1.4; display: block;">
+                            <?= htmlspecialchars($detalhes['endereco_imovel'] ?? 'Endereço não cadastrado') ?>
+                        </span>
+                    </div>
                 </div>
-                <!-- Processo -->
-                <div style="display: flex; align-items: center; gap: 6px;">
-                    <span class="material-symbols-rounded" style="color:var(--color-primary); font-size: 1.1rem;">folder_open</span>
-                    <span style="font-size: 0.85rem;">
-                       Proc: <?= htmlspecialchars($detalhes['processo_numero'] ?? '--') ?>/<?= date('Y', strtotime($detalhes['data_inicio'] ?? 'now')) ?>
-                    </span>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 5px;">
+                    <!-- Área -->
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span class="material-symbols-rounded" style="color: #999; font-size: 1.1rem;">square_foot</span>
+                        <div>
+                            <span style="font-size: 0.7rem; color: #999; text-transform: uppercase; font-weight: 700; display: block;">Área Total</span>
+                            <span style="font-size: 0.9rem; font-weight: 600; color: #333;">
+                                <?= htmlspecialchars($detalhes['area_total_final'] ?? $detalhes['area_construida'] ?? '--') ?> m²
+                            </span>
+                        </div>
+                    </div>
+                    <!-- Processo -->
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span class="material-symbols-rounded" style="color: #999; font-size: 1.1rem;">folder_open</span>
+                        <div>
+                            <span style="font-size: 0.7rem; color: #999; text-transform: uppercase; font-weight: 700; display: block;">Processo</span>
+                            <span style="font-size: 0.9rem; font-weight: 600; color: #333;">
+                                <?= htmlspecialchars($detalhes['processo_numero'] ?? '---') ?>/<?= date('Y', strtotime($detalhes['data_inicio'] ?? 'now')) ?>
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
