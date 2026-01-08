@@ -281,6 +281,13 @@ $obs_atual = $stmt_obs->fetchColumn();
                 </div>
              <?php endif; ?>
 
+             <!-- WHATSAPP CTA -->
+             <div style="text-align: center; margin-top: 30px; margin-bottom: 20px;">
+                 <a href="https://wa.me/5535984529577?text=Ola,%20tenho%20duvidas%20sobre%20o%20andamento%20do%20processo." style="display:inline-block; font-size: 0.85rem; color: #146c43; text-decoration: none; font-weight: 600; padding: 10px 20px; background: #d1e7dd; border-radius: 20px;">
+                    Dúvidas sobre o andamento? Fale conosco.
+                 </a>
+             </div>
+
         </div>
         </div>
         

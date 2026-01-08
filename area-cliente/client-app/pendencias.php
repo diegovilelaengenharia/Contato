@@ -29,14 +29,30 @@ if(isset($_FILES['arquivo_pendencia']) && isset($_POST['pendencia_id'])) {
              $new_name = $pid . '_' . time() . '.' . $ext;
              
              if(move_uploaded_file($file['tmp_name'], $dir . $new_name)) {
-                 // Update Status to 'em_analise' (or similar)
-                 try {
-                    $pdo->prepare("UPDATE processo_pendencias SET status='em_analise' WHERE id=? AND cliente_id=?")->execute([$pid, $cliente_id]);
-                 } catch(Exception $e) { /* Ignore enum error */ }
+                 // Tenta atualizar status para 'em_analise' e salvar nome do arquivo se possível
+                 // Vamos tentar atualizar apenas o status primeiro, pois não temos certeza da coluna de arquivo.
+                 // SE a coluna 'status' for ENUM restrito, isso pode falhar.
                  
-                 $msg_success = "Arquivo enviado com sucesso!";
+                 try {
+                    $sql = "UPDATE processo_pendencias SET status='em_analise' WHERE id=? AND cliente_id=?";
+                    $stmtUpdate = $pdo->prepare($sql);
+                    $stmtUpdate->execute([$pid, $cliente_id]);
+                    
+                    if($stmtUpdate->rowCount() > 0) {
+                        $msg_success = "Arquivo enviado! Pendência em análise.";
+                    } else {
+                        // Se não afetou linhas, pode ser que o status já fosse 'em_analise' ou erro de ID
+                        $msg_success = "Arquivo salvo em: uploads/pendencias/" . $new_name;
+                    }
+
+                 } catch(PDOException $e) {
+                     // Erro detalhado para debug
+                     $msg_error = "Arquivo salvo, mas erro ao atualizar status: " . $e->getMessage();
+                     // Fallback: se o status 'em_analise' não for aceito, o arquivo já está na pasta.
+                 }
+                 
              } else {
-                 $msg_error = "Erro ao salvar arquivo.";
+                 $msg_error = "Erro ao mover arquivo para pasta de uploads.";
              }
         } else {
             $msg_error = "Formato inválido.";
@@ -237,6 +253,13 @@ function getWhatsappLink($pendency_title) {
             <a href="https://wa.me/5535984529577" class="floating-btn floating-btn--whatsapp" target="_blank" title="Falar com Engenheiro">
                 <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.66 15.14L2 22l5-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.08-1.13l-.29-.18-3 .79.8-2.91-.19-.3A8 8 0 1 1 12 20zm4.37-5.73-.52-.26a1.32 1.32 0 0 0-1.15.04l-.4.21a.5.5 0 0 1-.49 0 8.14 8.14 0 0 1-2.95-2.58.5.5 0 0 1 0-.49l.21-.4a1.32 1.32 0 0 0 .04-1.15l-.26-.52a1.32 1.32 0 0 0-1.18-.73h-.37a1 1 0 0 0-1 .86 3.47 3.47 0 0 0 .18 1.52A10.2 10.2 0 0 0 13 15.58a3.47 3.47 0 0 0 1.52.18 1 1 0 0 0 .86-1v-.37a1.32 1.32 0 0 0-.73-1.18z"></path></svg>
             </a>
+        </div>
+        
+        <!-- WHATSAPP CTA -->
+        <div style="text-align: center; margin-top: 20px; padding-bottom: 20px;">
+             <a href="https://wa.me/5535984529577?text=Ola,%20tenho%20duvidas%20sobre%20as%20pendencias." style="display:inline-block; font-size: 0.85rem; color: #146c43; text-decoration: none; font-weight: 600; padding: 10px 20px; background: #d1e7dd; border-radius: 20px;">
+                Dúvidas sobre as pendências? Fale conosco.
+             </a>
         </div>
         
     </div>

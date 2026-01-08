@@ -46,25 +46,25 @@ if($drive_link) {
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- STYLES -->
-    <link rel="stylesheet" href="css/style.css?v=2.7.4">
+    <link rel="stylesheet" href="css/style.css?v=2.7.5">
     
     <style>
         body { background: #f4f6f8; }
         
+        /* HEADER PADRONIZADO (Verde Brand) */
         .page-header {
-            background: #cfe2ff; /* Light Blue */
+            background: #e8f5e9; /* Light Green Standard */
             border-bottom: none;
             padding: 25px 20px; 
             border-bottom-left-radius: 20px; 
             border-bottom-right-radius: 20px;
-            box-shadow: 0 4px 15px rgba(13, 110, 253, 0.1); 
+            box-shadow: 0 4px 15px rgba(25, 135, 84, 0.1); 
             margin-bottom: 25px;
-            display: flex; align-items: center; gap: 10px;
-            color: #084298;
+            display: flex; align-items: center; justify-content: space-between;
+            color: #146c43;
         }
-        
         .btn-back {
-            text-decoration: none; color: #084298; font-weight: 600; 
+            text-decoration: none; color: #146c43; font-weight: 600; 
             display: flex; align-items: center; gap: 5px;
             padding: 8px 16px; background: #fff; border-radius: 20px;
             transition: 0.2s;
@@ -122,12 +122,10 @@ if($drive_link) {
         
         <!-- HEADER -->
         <div class="page-header">
-            <a href="index.php" class="btn-back">
-                <span>←</span> Voltar
-            </a>
-            <h1 style="font-size: 1.3rem; margin: 0; display: flex; align-items: center; gap: 8px;">
-                <span>📂</span> Documentos
-            </h1>
+            <div style="display:flex; align-items:center; gap:15px;">
+                <a href="index.php" class="btn-back"><span>←</span> Voltar</a>
+                <h1 style="font-size:1.2rem; margin:0; font-weight: 700;">Documentos</h1>
+            </div>
         </div>
 
         <div style="padding: 0 20px;">
@@ -169,6 +167,14 @@ if($drive_link) {
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
+            
+            <!-- WHATSAPP CTA -->
+            <div style="text-align: center; margin-top: 30px; padding-bottom: 20px;">
+                 <a href="https://wa.me/5535984529577?text=Ola,%20tenho%20duvidas%20sobre%20os%20documentos." style="display:inline-block; font-size: 0.85rem; color: #146c43; text-decoration: none; font-weight: 600; padding: 10px 20px; background: #d1e7dd; border-radius: 20px;">
+                    Dúvidas sobre os documentos? Fale conosco.
+                 </a>
+            </div>
+            
         </div>
         
         <div class="floating-buttons">
