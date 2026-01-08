@@ -64,7 +64,7 @@ $obs_atual = $stmt_obs->fetchColumn();
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- STYLES -->
-    <link rel="stylesheet" href="css/style.css?v=2.6"> 
+    <link rel="stylesheet" href="css/style.css?v=2.7.4"> 
     
     <style>
         /* Override basic settings for full page view */
@@ -95,59 +95,133 @@ $obs_atual = $stmt_obs->fetchColumn();
         
 
 
-        <!-- HEADER COM BOTÃO VOLTAR + CHART -->
+        <!-- HEADER COM BOTÃO VOLTAR + COMPASS -->
         <div class="page-header" style="justify-content:space-between;">
             <div style="display:flex; align-items:center; gap:15px;">
                 <a href="index.php" class="btn-back">
                     <span>←</span> Voltar
                 </a>
-                <h1 style="font-size:1.2rem; margin:0; color:#198754;">Linha do Tempo</h1>
+                <h1 style="font-size:1.2rem; margin:0; color:#198754;">Acompanhamento do Processo</h1>
             </div>
             
-            <!-- Pie Chart (Small) -->
-            <div style="position:relative; width:50px; height:50px; border-radius:50%; background:conic-gradient(#198754 <?= $porcentagem ?>%, #e9ecef <?= $porcentagem ?>% 100%); display:flex; align-items:center; justify-content:center; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
-                <div style="width:38px; height:38px; background:white; border-radius:50%; display:flex; align-items:center; justify-content:center;">
-                    <span style="font-size:0.75rem; font-weight:800; color:#198754;"><?= $porcentagem ?>%</span>
-                </div>
+            <!-- Interactve Compass (CSS) -->
+            <div class="compass-container" title="Processo em Andamento">
+                <div class="compass-ring"></div>
+                <div class="compass-needle"></div>
             </div>
         </div>
 
-        <!-- CONTEÚDO DA TIMELINE (Portado do Modal) -->
+        <style>
+            /* Compass Animation */
+            .compass-container {
+                width: 50px; height: 50px;
+                position: relative;
+                display: flex; align-items: center; justify-content: center;
+            }
+            .compass-ring {
+                width: 100%; height: 100%;
+                border-radius: 50%;
+                border: 3px solid #e9ecef;
+                box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+                background: white;
+            }
+            .compass-needle {
+                width: 6px; height: 30px;
+                background: linear-gradient(to top, #dc3545 50%, #333 50%);
+                position: absolute;
+                top: 10px; left: 22px;
+                clip-path: polygon(50% 0, 0 100%, 100% 100%); /* Simple pointer shape logic changed below */
+                border-radius: 2px;
+                animation: compassSpin 3s infinite ease-in-out alternate;
+            }
+            /* Refined Needle Shape */
+            .compass-needle {
+                width: 8px; height: 34px;
+                background: transparent;
+                position: absolute;
+                top: 8px; left: 21px;
+                clip-path: none;
+                border-radius: 0;
+            }
+            .compass-needle::before {
+                content: ''; position: absolute; top:0; left:0; width:0; height:0;
+                border-left: 4px solid transparent; border-right: 4px solid transparent;
+                border-bottom: 17px solid #dc3545; /* North (Red) points Down in this construction implies rotation? No, let's make North Top */
+                transform: rotate(180deg); transform-origin: center bottom; top: -17px; /* Tricky css shapes, simpler approach below */
+            }
+            /* Simplified Needle: A single div rotating */
+            .compass-needle {
+                width: 4px; height: 36px;
+                background: linear-gradient(to bottom, #dc3545 50%, #333 50%); /* Red Top, Dark Bottom */
+                position: absolute;
+                top: 7px; left: 23px;
+                border-radius: 2px;
+                box-shadow: 0 0 4px rgba(0,0,0,0.2);
+                animation: compassWiggle 4s ease-in-out infinite;
+            }
+            @keyframes compassWiggle {
+                0% { transform: rotate(-25deg); }
+                40% { transform: rotate(40deg); }
+                60% { transform: rotate(10deg); }
+                100% { transform: rotate(-25deg); }
+            }
+        </style>
+
+        <!-- CONTEÚDO DA TIMELINE -->
         <div style="background:white; border-radius:16px; padding:20px; box-shadow:0 4px 12px rgba(0,0,0,0.05);">
             
-            <!-- DETALHES DO PROCESSO -->
+            <!-- STATUS CARD (Resumo Fase Atual) -->
             <?php if ($detalhes): ?>
-            <div style="background:#f8f9fa; border:1px solid #e9ecef; border-radius:12px; padding:20px; margin-bottom:30px;">
-                <h3 style="margin:0 0 15px 0; font-size:1.1rem; color:#333; border-bottom:1px solid #dee2e6; padding-bottom:8px;">
-                    📋 Dados do Processo
-                </h3>
-                <div style="display:grid; grid-template-columns: 1fr; gap:15px; font-size:0.9rem;">
+            <div style="border-radius:12px; overflow:hidden; border:1px solid #e0e0e0; margin-bottom:30px; box-shadow:0 10px 30px rgba(0,0,0,0.03);">
+                <!-- Card Header -->
+                <div style="background: linear-gradient(135deg, #198754 0%, #146c43 100%); padding:20px; color:white;">
+                    <span style="display:block; font-size:0.75rem; text-transform:uppercase; opacity:0.8; letter-spacing:1px; font-weight:600; margin-bottom:5px;">Fase Atual</span>
+                    <h2 style="margin:0; font-size:1.3rem; font-weight:700; display:flex; align-items:center; gap:10px;">
+                        📍 <?= htmlspecialchars($etapa_atual) ?>
+                    </h2>
+                </div>
+
+                <!-- Card Body -->
+                <div style="padding:20px; background:#fff;">
                     
-                    <!-- Current Observation -->
-                    <div style="background:#fff3cd; padding:15px; border-radius:8px; border-left:4px solid #ffc107; margin-bottom:5px;">
-                        <label style="display:block; font-size:0.7rem; color:#856404; text-transform:uppercase; font-weight:800; margin-bottom:5px;">
-                            📌 Status Atual: <?= htmlspecialchars($etapa_atual) ?>
-                        </label>
-                        <div style="color:#555; line-height:1.4; font-size:0.95rem;">
-                            <?= !empty($obs_atual) ? strip_tags($obs_atual) : 'Aguardando atualizações detalhadas desta etapa.' ?>
+                    <!-- Engineer Observation -->
+                    <div style="background:#fff8e1; border-left:4px solid #ffc107; padding:15px; border-radius:4px; margin-bottom:20px;">
+                        <div style="display:flex; gap:10px; margin-bottom:8px;">
+                            <span style="font-size:1.2rem;">👷‍♂️</span>
+                            <strong style="color:#856404; font-size:0.9rem;">Observação do Engenheiro:</strong>
+                        </div>
+                        <div style="color:#555; line-height:1.5; font-size:0.95rem; font-style:italic;">
+                            "<?= !empty($obs_atual) ? strip_tags($obs_atual) : 'O processo segue em análise conforme o cronograma previsto. Nenhuma pendência urgente no momento.' ?>"
                         </div>
                     </div>
 
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
-                        <?php if (!empty($detalhes['endereco_imovel'])): ?>
-                            <div style="grid-column: span 2;">
-                                <label style="display:block; font-size:0.75rem; color:#999; text-transform:uppercase; font-weight:700;">Local da Obra</label>
-                                <span style="color:#333; font-weight:600;"><?= htmlspecialchars($detalhes['endereco_imovel']) ?></span>
-                            </div>
-                        <?php endif; ?>
-                        
+                    <!-- Process Details Grid -->
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; border-top:1px solid #eee; padding-top:20px;">
                         <?php if (!empty($detalhes['numero_processo'])): ?>
                             <div>
-                                <label style="display:block; font-size:0.75rem; color:#999; text-transform:uppercase; font-weight:700;">Nº Protocolo</label>
-                                <span style="color:#333; font-weight:600;"><?= htmlspecialchars($detalhes['numero_processo']) ?></span>
+                                <label style="display:block; font-size:0.7rem; color:#999; text-transform:uppercase; font-weight:700; margin-bottom:3px;">Nº Protocolo</label>
+                                <span style="color:#333; font-weight:600; font-size:1rem;"><?= htmlspecialchars($detalhes['numero_processo']) ?></span>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if (!empty($detalhes['endereco_imovel'])): ?>
+                            <div>
+                                <label style="display:block; font-size:0.7rem; color:#999; text-transform:uppercase; font-weight:700; margin-bottom:3px;">Local da Obra</label>
+                                <span style="color:#333; font-weight:600; font-size:0.95rem; display:block; line-height:1.3;"><?= htmlspecialchars($detalhes['endereco_imovel']) ?></span>
                             </div>
                         <?php endif; ?>
                     </div>
+                </div>
+                
+                <!-- Card Footer (Progress Bar Visual) -->
+                <div style="background:#f8f9fa; padding:10px 20px; border-top:1px solid #eee; display:flex; align-items:center; justify-content:space-between;">
+                   <span style="font-size:0.75rem; color:#666; font-weight:600;">Progresso Geral</span>
+                   <div style="display:flex; align-items:center; gap:10px;">
+                        <div style="width:100px; height:6px; background:#e9ecef; border-radius:3px; overflow:hidden;">
+                            <div style="width:<?= $porcentagem ?>%; height:100%; background:#198754;"></div>
+                        </div>
+                        <span style="font-size:0.8rem; font-weight:700; color:#198754;"><?= $porcentagem ?>%</span>
+                   </div>
                 </div>
             </div>
             <?php endif; ?>
