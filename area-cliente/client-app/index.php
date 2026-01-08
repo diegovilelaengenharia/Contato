@@ -108,26 +108,10 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
     <link rel="stylesheet" href="css/header-premium.css?v=<?= time() ?>">
     
     <style>
-        /* Mobile adjustment for Header */
+        /* Mobile adjustment for Header - Handled mostly in header-premium.css now, but ensuring overrides */
         @media (max-width: 420px) {
             .premium-header {
-                flex-direction: column;
-                text-align: left;
-                gap: 15px;
-                padding: 20px !important;
-            }
-            .premium-header > div {
-                justify-content: flex-start;
-                width: 100%;
-            }
-            .premium-header > div:last-child {
-                text-align: center !important;
-                border-top: 1px solid rgba(255,255,255,0.1);
-                padding-top: 15px;
-                margin-top: 5px;
-            }
-            .premium-header a[href="logout.php"] {
-                justify-content: center !important;
+                padding: 15px !important;
             }
         }
     </style>
@@ -178,26 +162,17 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             
             <div style="display: flex; align-items: center; justify-content: space-between;">
                 <div class="ph-content" style="flex: 1;">
-                    <?php 
-                        $avatarPath = $cliente['foto_perfil'] ?? '';
-                        if($avatarPath && !str_starts_with($avatarPath, '../') && !str_starts_with($avatarPath, 'http')) $avatarPath = '../' . $avatarPath;
-                    ?>
-                    <div class="ph-avatar-box" style="width: 60px; height: 60px;">
-                        <?php if($avatarPath && file_exists($avatarPath) && !is_dir($avatarPath)): ?>
-                            <img src="<?= htmlspecialchars($avatarPath) ?>?v=<?= time() ?>" style="width:100%; height:100%; object-fit:cover;">
-                        <?php else: ?>
-                            <span style="font-size:1.5rem; color:white;">👤</span>
-                        <?php endif; ?>
-                    </div>
-
-                    <div class="ph-info" style="margin-left: 15px;">
-                        <div style="font-size:0.85rem; color:rgba(255,255,255,0.9); font-weight:400;">Olá meu querido cliente,</div>
-                        <h1 style="margin:0; font-size:1.4rem;"><?= htmlspecialchars(explode(' ', $cliente['nome'])[0]) ?></h1>
+                    <div class="ph-info">
+                        <h1 style="margin:0; font-size:1.4rem;">Olá, <?= htmlspecialchars(explode(' ', $cliente['nome'])[0]) ?></h1>
                     </div>
                 </div>
 
-                
-            </div>
+                <div class="ph-actions">
+                    <a href="logout.php" class="ph-logout" style="background: rgba(220, 53, 69, 0.2); color: #ffcccc; border: 1px solid rgba(220, 53, 69, 0.3); padding: 6px 12px; border-radius: 8px; text-decoration: none; display: flex; align-items: center; gap: 6px;">
+                        <span class="material-symbols-rounded" style="font-size:1.1rem;">logout</span>
+                        <span style="font-size: 0.85rem; font-weight: 600;">Sair</span>
+                    </a>
+                </div>
 
         </header>
 
@@ -238,16 +213,6 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                         }
                     } catch(Exception $e) { $last_fin_name = ''; }
                 ?>
-
-                <!-- 1. RESUMO -->
-                <a href="../../area-cliente/relatorio_cliente.php?id=<?= $cliente['id'] ?>" target="_blank" class="app-button" style="border-left-color: #0d6efd;">
-                    <div class="app-btn-icon" style="background:#e0f8fc; color:#0d6efd;">📋</div>
-                    <div class="app-btn-content">
-                        <span class="app-btn-title">Resumo em PDF</span>
-                        <span class="app-btn-desc">Visualize os dados principais</span>
-                    </div>
-                    <div class="app-btn-arrow" style="color:#0d6efd;">➔</div>
-                </a>
 
                 <!-- 2. TIMELINE -->
                 <a href="timeline.php" class="app-button" style="border-left-color: #198754;">
@@ -311,6 +276,16 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                         <span class="app-btn-desc">Acesso aos documentos digitais</span>
                     </div>
                     <div class="app-btn-arrow" style="color:#0dcaf0;">➔</div>
+                </a>
+
+                <!-- 6. RESUMO (MOVED & RESTYLED) -->
+                <a href="../../area-cliente/relatorio_cliente.php?id=<?= $cliente['id'] ?>" target="_blank" class="app-button" style="border: 2px dashed #0d6efd; background: #f8fbff;">
+                    <div class="app-btn-icon" style="background:#0d6efd; color:#fff;">🖨️</div>
+                    <div class="app-btn-content">
+                        <span class="app-btn-title" style="color:#0d6efd;">Imprimir Resumo do Processo</span>
+                        <span class="app-btn-desc">Gerar PDF completo</span>
+                    </div>
+                    <div class="app-btn-arrow" style="color:#0d6efd;">➔</div>
                 </a>
 
             </div>
