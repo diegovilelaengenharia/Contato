@@ -431,7 +431,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     <!-- Unified Header with Actions -->
                     <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; margin-bottom:20px; gap:15px; border-bottom:1px solid #eee; padding-bottom:15px;">
                         <div>
-                            <h3 style="margin:0; font-size:1.3rem; color: #6610f2;">📜 Histórico Completo do Processo</h3>
+                            <h3 style="margin:0; font-size:1.3rem; color: #198754;">📜 Histórico Completo do Processo</h3>
                             <p style="margin:5px 0 0 0; color:#888; font-size:0.9rem;">Registre aqui todos os passos e comunicações.</p>
                         </div>
                         
