@@ -381,22 +381,21 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     z-index: 10;
                 }
                 
-                /* 1. HISTÓRICO (Roxo Claro) */
-                .tab-link.t-hist.active { background: #9d4edd; color: white !important; box-shadow: 0 4px 15px rgba(157, 78, 221, 0.4); }
-                .tab-link.t-hist.active span { color: white; }
+                /* UNIFORM COLOR (Vilela Green) for all tabs */
+                .tab-link.active {
+                    background: #146c43 !important; /* Brand Green */
+                    color: white !important;
+                    box-shadow: 0 4px 15px rgba(20, 108, 67, 0.4);
+                }
+                .tab-link.active span { color: white; }
                 
-                /* 2. PENDÊNCIAS (Laranja Claro) */
-                .tab-link.t-pend.active { background: #ffb74d; color: white !important; box-shadow: 0 4px 15px rgba(255, 183, 77, 0.4); }
-                .tab-link.t-pend.active span { color: white; }
-
-                /* 3. FINANCEIRO (Verde Claro) */
-                .tab-link.t-fin.active { background: #66bb6a; color: white !important; box-shadow: 0 4px 15px rgba(102, 187, 106, 0.4); }
-                .tab-link.t-fin.active span { color: white; }
-
-                /* 4. ARQUIVOS (Azul Claro) */
-                .tab-link.t-arq.active { background: #4dabf5; color: white !important; box-shadow: 0 4px 15px rgba(77, 171, 245, 0.4); }
-                .tab-link.t-arq.active span { color: white; }
-                
+                /* Remove individual colors but keep classes for targeting if needed later */
+                .tab-link.t-hist.active, 
+                .tab-link.t-pend.active, 
+                .tab-link.t-fin.active, 
+                .tab-link.t-arq.active {
+                    background: #146c43;
+                }
             </style>
             
             <div class="tabs-container">
@@ -419,12 +418,8 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             
             <!-- WINDOW CONTENT CONTAINER -->
             <?php 
-                // Define window color based on active tab (Matched Lighter Colors)
-                $win_border_color = '#ccc';
-                if($active_tab=='andamento'||$active_tab=='cadastro') $win_border_color = '#9d4edd'; 
-                elseif($active_tab=='pendencias') $win_border_color = '#ffb74d'; 
-                elseif($active_tab=='financeiro') $win_border_color = '#66bb6a'; 
-                elseif($active_tab=='arquivos') $win_border_color = '#4dabf5'; 
+                // Define window color based on active tab (Unified Green)
+                $win_border_color = '#146c43';
             ?>
 
             <div style="background:#fff; border-top: 4px solid <?= $win_border_color ?>; border-radius: 0 0 12px 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); padding: 25px; margin-bottom: 30px;">
