@@ -147,55 +147,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
 </head>
 <body>
 
-    <!-- NOTIFICATION MODAL -->
-    <div id="modalNotificacoes" onclick="if(event.target === this) this.classList.remove('open')">
-        <div class="notification-box">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <h3 style="margin:0; font-size:1.2rem;">🔔 Notificações</h3>
-                <button onclick="document.getElementById('modalNotificacoes').classList.remove('open')" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
-            </div>
-            
-            <?php if(empty($notificacoes)): ?>
-                <div style="text-align:center; padding:30px; color:#999;">
-                    <div style="font-size:2rem; opacity:0.3;">🔕</div>
-                    <p>Nenhuma nova notificação.</p>
-                </div>
-            <?php else: ?>
-                <div style="max-height:300px; overflow-y:auto;">
-                    <?php foreach($notificacoes as $n): 
-                        $icone = '📌';
-                        if($n['tipo'] == 'alerta') $icone = '⚠️';
-                        if($n['tipo'] == 'financeiro') $icone = '💰';
-                    ?>
-                        <a href="<?= $n['link'] ?>" class="notif-item">
-                            <span class="notif-icon"><?= $icone ?></span>
-                            <div>
-                                <div style="font-weight:600; font-size:1rem;"><?= htmlspecialchars($n['msg']) ?></div>
-                                <div style="font-size:0.8rem; color:#aaa; margin-top:2px;">Clique para ver detalhes</div>
-                            </div>
-                        </a>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
-        </div>
-    </div>
 
-
-    <div class="app-container" style="padding: 0;"> <!-- Remove padding here, controlled by inner elements -->
-        
-        <!-- HEADER PREMIUM v4.0 -->
-        <header class="premium-header">
-            <!-- Bell Notification (Modern & Animated) -->
-            <div onclick="document.getElementById('modalNotificacoes').classList.add('open')" class="bell-container" title="Notificações">
-                <div style="position:relative;">
-                    <svg class="bell-icon bell-ringing" width="28" height="28" viewBox="0 0 24 24" style="fill:#198754;">
-                        <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/>
-                    </svg>
-                    <?php if($total_notif > 0): ?>
-                        <span class="notif-badge"><?= $total_notif ?></span>
-                    <?php endif; ?>
-                </div>
-            </div>
 
             <div class="ph-profile">
                 <?php 
