@@ -149,6 +149,12 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
 
 
 
+            <!-- CLIENT AREA TITLE -->
+            <div style="margin-bottom: 20px; border-left: 4px solid #ffc107; padding-left: 10px;">
+                <h6 style="font-size: 0.75rem; color: #198754; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin: 0;">Área do Cliente</h6>
+                <div style="font-size: 0.7rem; color: #888; margin-top: 2px;">Vilela Engenharia</div>
+            </div>
+
             <div class="ph-profile">
                 <?php 
                     $avatarPath = $cliente['foto_perfil'] ?? '';
@@ -183,7 +189,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                     </div>
                 <?php endif; ?>
                 
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <div style="display:grid; grid-template-columns: 1fr; gap:10px;">
                      <?php if(!empty($detalhes['contato_tel'])): ?>
                         <div class="ph-row">
                             <div class="ph-icon-box">📞</div>
