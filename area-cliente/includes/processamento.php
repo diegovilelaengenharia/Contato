@@ -232,7 +232,7 @@ if (isset($_POST['btn_adicionar_pendencia'])) {
                 }
             }
 
-            }
+
             
             // PRG para evitar duplicidade
             header("Location: ?cliente_id=$cid&tab=pendencias&msg=pend_added");
