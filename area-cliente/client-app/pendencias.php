@@ -1,24 +1,85 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// DISABLE DEBUGGING FOR PRODUCTION
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+error_reporting(0);
 
 session_set_cookie_params(0, '/');
 session_name('CLIENTE_SESSID');
 session_start();
 require_once '../db.php';
 
+// 1. AUTHENTICATION
 if (!isset($_SESSION['cliente_id'])) {
     header("Location: ../index.php");
     exit;
 }
 $cliente_id = $_SESSION['cliente_id'];
 
+// 2. LOGIC: HANDLE UPLOAD & DELETION
+
+// A) EXCLUSÃO DE ARQUIVO (CLIENTE)
+if(isset($_POST['delete_file']) && isset($_POST['file_name']) && isset($_POST['pendencia_id'])) {
+    $f_del = basename($_POST['file_name']); // Security: basename
+    $p_id_del = $_POST['pendencia_id'];
+    
+    // Check if filename starts with ID (Security)
+    if(strpos($f_del, $p_id_del . '_') === 0) {
+        $path_del = __DIR__ . '/uploads/pendencias/' . $f_del;
+        if(file_exists($path_del)) {
+            unlink($path_del);
+            $msg_success = "Arquivo removido com sucesso.";
+        } else {
+             $msg_error = "Arquivo não encontrado.";
+        }
+    } else {
+        $msg_error = "Permissão negada para excluir este arquivo.";
+    }
+}
+
+// B) UPLOAD
+if(isset($_FILES['arquivo_pendencia']) && isset($_POST['pendencia_id'])) {
+    $pid = $_POST['pendencia_id'];
+    $file = $_FILES['arquivo_pendencia'];
+    
+    if($file['error'] === 0) {
+        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        // ALLOW ALL FILES except executables
+        $blacklist = ['php', 'php3', 'php4', 'phtml', 'exe', 'js', 'sh', 'bat', 'cmd', 'bin', 'pl', 'cgi', 'jar', 'vbs'];
+        
+        if(!in_array($ext, $blacklist)) {
+             // Create Dir
+             $dir = __DIR__ . '/uploads/pendencias/';
+             if(!is_dir($dir)) mkdir($dir, 0755, true);
+             
+             // Name: ID_TIMESTAMP.ext
+             $new_name = $pid . '_' . time() . '.' . $ext;
+             
+             if(move_uploaded_file($file['tmp_name'], $dir . $new_name)) {
+                 // Tenta atualizar status para 'em_analise' apenas visualmente ou DB se possível
+                 try {
+                    $sql = "UPDATE processo_pendencias SET status='em_analise' WHERE id=? AND cliente_id=? AND status != 'resolvido'";
+                    $stmtUpdate = $pdo->prepare($sql);
+                    $stmtUpdate->execute([$pid, $cliente_id]);
+                    $msg_success = "Arquivo enviado! Pendência em análise.";
+                 } catch(PDOException $e) {
+                     $msg_success = "Arquivo enviado com sucesso!";
+                 }
+             } else {
+                 $msg_error = "Erro ao mover arquivo para pasta de uploads.";
+             }
+        } else {
+            $msg_error = "Formato de arquivo inseguro bloqueado pelo servidor.";
+        }
+    }
+}
+
 // 3. FETCH PENDENCIES
 $stmt_pend = $pdo->prepare("SELECT * FROM processo_pendencias WHERE cliente_id = ? ORDER BY data_criacao DESC");
 $stmt_pend->execute([$cliente_id]);
 $all_pendencias = $stmt_pend->fetchAll(PDO::FETCH_ASSOC);
 
+// SEPARATE LISTS
 $resolvidas = [];
 $abertas = [];
 
@@ -30,8 +91,30 @@ foreach($all_pendencias as $p) {
     }
 }
 
+function getWhatsappLink($pendency_title) {
+    $text = "Olá, estou entrando em contato sobre a pendência: *" . strip_tags($pendency_title) . "*.";
+    return "https://wa.me/5535984529577?text=" . urlencode($text);
+}
+
+// Helper para buscar arquivos
 function get_pendency_files($p_id) {
-    return []; // DUMMY
+    $upload_dir = __DIR__ . '/uploads/pendencias/';
+    $web_path = 'uploads/pendencias/';
+    $anexos = [];
+    if(is_dir($upload_dir)) {
+        $files = glob($upload_dir . $p_id . "_*.*");
+        if($files) {
+            foreach($files as $f) {
+                $filename = basename($f);
+                $anexos[] = [
+                    'name' => $filename,
+                    'path' => $web_path . $filename,
+                    'date' => filemtime($f)
+                ];
+            }
+        }
+    }
+    return $anexos;
 }
 ?>
 <!DOCTYPE html>
@@ -155,43 +238,188 @@ function get_pendency_files($p_id) {
                  
                  <!-- Icon -->
                  <div style="background: white; border:1px solid #f5c2c7; color: #dc3545; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(220, 53, 69, 0.1);">
-                    &#9888;&#65039;
+                    ⚠️
                  </div>
             </div>
         </div>
 
-        <!-- CONTENT: MINIMAL LOOPS -->
-        <div style="padding: 20px;">
-            <h3>Debug: Restoring Loops (Minimal)</h3>
+        <?php if(isset($msg_success)): ?>
+            <div style="background:#d1e7dd; color:#0f5132; padding:15px; border-radius:12px; margin-bottom:20px; font-size:0.9rem; border: 1px solid #badbcc;">
+                ✅ <?= $msg_success ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if(isset($msg_error)): ?>
+            <div style="background:#f8d7da; color:#842029; padding:15px; border-radius:12px; margin-bottom:20px; font-size:0.9rem; border: 1px solid #f5c2c7;">
+                ❌ <?= $msg_error ?>
+            </div>
+        <?php endif; ?>
+
+        <!-- CONTENT -->
+        <?php if(empty($all_pendencias)): ?>
+            <div class="empty-state">
+                <span style="font-size:2rem; display:block; margin-bottom:10px;">🎉</span>
+                <h3 style="color:#333; margin:0;">Tudo Certo!</h3>
+                <div style="font-size:0.9rem; margin-top:5px;">Nenhuma pendência encontrada.</div>
+            </div>
+        <?php else: ?>
             
-            <h4>Resolvidas (<?= count($resolvidas) ?>)</h4>
-            <?php foreach($resolvidas as $p): ?>
-                <div style="background:white; margin:10px 0; padding:10px; border:1px solid #ccc;">
-                    ID: <?= $p['id'] ?> <br>
-                    Title: <?= htmlspecialchars($p['titulo']) ?>
-                </div>
-            <?php endforeach; ?>
+            <div style="display: flex; flex-direction: column; gap: 15px; padding-bottom: 20px;">
 
-            <h4>Abertas (<?= count($abertas) ?>)</h4>
-            <?php foreach($abertas as $p): ?>
-                <div style="background:white; margin:10px 0; padding:10px; border:1px solid #ccc;">
-                    ID: <?= $p['id'] ?> <br>
-                    Title: <?= htmlspecialchars($p['titulo']) ?>
-                </div>
-            <?php endforeach; ?>
-        </div>
+                <!-- 1. HISTÓRICO DE RESOLUÇÕES (TOPO) -->
+                <?php if(count($resolvidas) > 0): ?>
+                    <h3 class="section-title" style="margin-bottom:20px;">
+                        <span class="material-symbols-rounded" style="color:#198754;">history</span> Histórico de Resoluções
+                    </h3>
+                    
+                    <div class="history-list">
+                        <?php foreach($resolvidas as $p): 
+                             $time = strtotime($p['data_criacao']);
+                             $day = date('d', $time);
+                             $month = date('M', $time);
+                             $months_pt = ['Jan'=>'JAN','Feb'=>'FEV','Mar'=>'MAR','Apr'=>'ABR','May'=>'MAI','Jun'=>'JUN','Jul'=>'JUL','Aug'=>'AGO','Sep'=>'SET','Oct'=>'OUT','Nov'=>'NOV','Dec'=>'DEZ'];
+                             $month_pt = $months_pt[$month] ?? strtoupper($month);
+                             $year = date('Y', $time);
+                             
+                             $anexos = get_pendency_files($p['id']);
+                        ?>
+                        <div style="display: flex; gap: 20px; margin-bottom: 20px; align-items: flex-start;">
+                            <!-- Data Column -->
+                            <div style="text-align: center; min-width: 60px; padding-top: 5px;">
+                                <div style="font-size: 1.6rem; font-weight: 800; color: #333; line-height: 1; letter-spacing: -1px;"><?= $day ?></div>
+                                <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; font-weight: 700; margin-top: 2px;"><?= $month_pt ?></div>
+                                <div style="font-size: 0.65rem; color: #aaa; font-weight: 600;"><?= $year ?></div>
+                            </div>
+                            
+                            <!-- Card Column -->
+                            <div style="flex: 1; background: white; border: 1px solid #e9ecef; border-radius: 16px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); position: relative;">
+                                <!-- Status Badge (Optional, but nice) -->
+                                <div style="font-size: 0.7rem; font-weight: 700; color: #198754; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;">
+                                    ✅ Resolvido
+                                </div>
+
+                                <h4 style="margin: 0 0 8px 0; font-size: 1.1rem; color: #198754; font-weight: 700;">
+                                    <?= htmlspecialchars($p['titulo'] ?? '') ?>
+                                </h4>
+                                
+                                <?php if(!empty($p['descricao'])): ?>
+                                    <div style="font-size: 0.9rem; color: #555; line-height: 1.5; margin-bottom: 15px;">
+                                        <?= $p['descricao'] ?>
+                                    </div>
+                                <?php endif; ?>
+
+                                <!-- Arquivos -->
+                                <?php if(!empty($anexos)): ?>
+                                    <div style="border-top: 1px solid #f0f0f0; padding-top: 10px; display: flex; flex-wrap: wrap; gap: 10px;">
+                                        <?php foreach($anexos as $arq): ?>
+                                            <a href="<?= $arq['path'] ?>" target="_blank" style="text-decoration:none; color:#666; font-size:0.8rem; display: inline-flex; align-items: center; gap: 6px; background: #f8f9fa; padding: 6px 12px; border-radius: 20px; border: 1px solid #e9ecef;">
+                                                <span class="material-symbols-rounded" style="font-size:16px; color: #aaa;">description</span>
+                                                <?= (strlen($arq['name']) > 25) ? substr($arq['name'], 0, 22) . '...' : $arq['name'] ?>
+                                            </a>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
 
 
-        <!-- WHATSAPP CTA -->
-        <div style="text-align: center; margin-top: 20px; padding-bottom: 20px;">
-                <a href="https://wa.me/5535984529577?text=Ola,%20tenho%20duvidas%20sobre%20as%20pendencias." style="display:inline-block; font-size: 0.85rem; color: #146c43; text-decoration: none; font-weight: 600; padding: 10px 20px; background: #d1e7dd; border-radius: 20px;">
-                Dúvidas sobre as pendências? Fale conosco.
-            </a>
-        </div>
+                <!-- 2. PENDÊNCIAS EM ABERTO (EMBAIXO) -->
+                <?php if(count($abertas) > 0): ?>
+                    <h3 class="section-title" style="margin-top: 15px; margin-bottom: 10px;">
+                        <span class="material-symbols-rounded" style="color:#e65100;">warning</span> Pendências em Aberto
+                    </h3>
+
+                    <?php foreach($abertas as $p): 
+                        $anexos = get_pendency_files($p['id']);
+                        $has_attachment = !empty($anexos);
+                        $data_criacao = date('d/m/Y', strtotime($p['data_criacao']));
+                        
+                        // Cores
+                        if($has_attachment) {
+                             $status_label = "Em Análise";
+                             $bg_badge = "#0d6efd"; $bg_card = "#f0f8ff"; $border_card = "#cce5ff"; $text_title = "#084298";
+                        } else {
+                             $status_label = "Pendente";
+                             $bg_badge = "#ffc107"; $bg_card = "#fff9d6"; $border_card = "#ffeeba"; $text_title = "#856404";
+                        }
+                    ?>
+                    <div style="background: <?= $bg_card ?>; border: 1px solid <?= $border_card ?>; border-radius: 12px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                        
+                        <!-- Header Compacto -->
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                            <span style="font-size: 0.75rem; font-weight: 700; color: #666;">
+                                📅 <?= $data_criacao ?>
+                            </span>
+                             <span style="background: <?= $bg_badge ?>; color: <?= ($status_label=='Pendente')?'#333':'white' ?>; padding: 2px 8px; border-radius: 8px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase;">
+                                <?= $status_label ?>
+                            </span>
+                        </div>
+
+                        <h3 style="margin: 0 0 8px 0; font-size: 1.1rem; font-weight: 800; color: <?= $text_title ?>; line-height: 1.2;">
+                            <?= htmlspecialchars($p['titulo'] ?? '') ?>
+                        </h3>
+
+                        <!-- Descrição (HTML FIXED) -->
+                        <?php if(!empty($p['descricao'])): ?>
+                            <div style="font-size: 0.9rem; color: #444; margin-bottom: 12px; line-height: 1.4;">
+                                <?= $p['descricao'] ?>
+                            </div>
+                        <?php endif; ?>
+    
+                        <!-- Arquivos Enviados -->
+                        <?php if($has_attachment): ?>
+                            <div style="margin-bottom: 12px; background: rgba(255,255,255,0.6); padding: 8px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.05);">
+                                <strong style="display:block; font-size:0.75rem; margin-bottom:5px; color:#555;">Arquivos Enviados:</strong>
+                                <div style="display:flex; flex-wrap:wrap; gap:5px;">
+                                <?php foreach($anexos as $arq): ?>
+                                    <div style="display:inline-flex; align-items:center; gap:5px; background:white; padding:4px 8px; border-radius:6px; border:1px solid #ddd;">
+                                        <a href="<?= $arq['path'] ?>" target="_blank" style="color:#0d6efd; text-decoration:none; font-size:0.8rem; display: flex; align-items: center; gap: 3px;">
+                                            📎 <?= $arq['name'] ?>
+                                        </a>
+                                        <!-- Delete Button -->
+                                        <form method="POST" onsubmit="return confirm('Apagar arquivo?');" style="margin:0; display:flex;">
+                                            <input type="hidden" name="delete_file" value="true">
+                                            <input type="hidden" name="file_name" value="<?= htmlspecialchars($arq['name']) ?>">
+                                            <input type="hidden" name="pendencia_id" value="<?= $p['id'] ?>">
+                                            <button type="submit" style="background:none; border:none; cursor:pointer; padding:0; display:flex; color:#dc3545;" title="Apagar">
+                                                <span class="material-symbols-rounded" style="font-size:1rem;">delete</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                <?php endforeach; ?>
+                                </div>
+                                <div style="font-size:0.7rem; color:#888; margin-top:4px;">*Aguardando análise.</div>
+                            </div>
+                        <?php endif; ?>
+    
+                        <!-- Área de Ação Simplificada (Botão Pequeno) -->
+                        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 10px;">
+                            <!-- Botão Resolver (Pequeno) -->
+                            <button onclick="openResolveModal(<?= $p['id'] ?>, '<?= htmlspecialchars($p['titulo'] ?? '', ENT_QUOTES) ?>')" style="background: #0d6efd; color: white; border: none; border-radius: 6px; padding: 6px 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 0.8rem; box-shadow: 0 2px 5px rgba(13,110,253,0.2);">
+                                <span class="material-symbols-rounded" style="font-size: 1rem;">cloud_upload</span>
+                                Resolver
+                            </button>
+                        </div>
+    
+                    </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+
+            </div>
+
+             <!-- WHATSAPP CTA -->
+            <div style="text-align: center; margin-top: 20px; padding-bottom: 20px;">
+                 <a href="https://wa.me/5535984529577?text=Ola,%20tenho%20duvidas%20sobre%20as%20pendencias." style="display:inline-block; font-size: 0.85rem; color: #146c43; text-decoration: none; font-weight: 600; padding: 10px 20px; background: #d1e7dd; border-radius: 20px;">
+                    Dúvidas sobre as pendências? Fale conosco.
+                </a>
+            </div>
             
     </div>
 
-    <!-- MODAL DE RESOLUÇÃO (HTML Structure Only) -->
+    <!-- MODAL DE RESOLUÇÃO -->
     <div id="resolveModal" class="modal-overlay" style="display: none;">
         <div class="modal-content">
             <span class="close-modal" onclick="closeResolveModal()">&times;</span>
