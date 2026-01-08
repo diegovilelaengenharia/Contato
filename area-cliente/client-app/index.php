@@ -149,48 +149,48 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
 
     <div class="app-container" style="padding: 0;"> <!-- Remove padding here, controlled by inner elements -->
         
-        <!-- HEADER PREMIUM v4.0 -->
-        <header class="premium-header">
+        <!-- HEADER STYLE ADMIN (CLEAN) -->
+        <header class="premium-header" style="background:#fff; border-radius:15px; padding:25px; box-shadow:0 5px 20px rgba(0,0,0,0.05); border-left:6px solid #146c43; display:flex; justify-content:space-between; align-items:center; margin: 20px 20px 0 20px;">
             
-            <!-- CLIENT AREA TITLE -->
-            <!-- CLIENT AREA TITLE (Centered & Larger) -->
-            <!-- CLIENT AREA TITLE (Centered & Larger) -->
-            <div style="text-align: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid rgba(0,0,0,0.05);">
-                <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.8rem; font-weight: 700; color: #198754; text-transform: uppercase; letter-spacing: 1px; margin: 0;">Área do Cliente</h2>
-                
-                <?php 
-                    $procNum = $detalhes['numero_processo'] ?? '---';
-                    $procAno = !empty($detalhes['data_inicio']) ? date('Y', strtotime($detalhes['data_inicio'])) : date('Y');
-                ?>
-                <div style="font-family: 'Outfit', sans-serif; font-size: 0.9rem; color: #666; font-weight: 500; margin-top: 5px;">
-                    Processo: <span style="color:#333; font-weight:700;"><?= htmlspecialchars($procNum) ?></span> / <?= $procAno ?>
-                </div>
-
-            </div>
-
-            <div class="ph-profile">
+            <div style="display:flex; align-items:center; gap:15px;">
                 <?php 
                     $avatarPath = $cliente['foto_perfil'] ?? '';
-                    // Admin returns path like "uploads/clientes/ID/foto.jpg"
-                    // We are in "area-cliente/client-app/index.php"
-                    // We need to go up to "area-cliente/" to find "uploads/"
-                    if($avatarPath && !str_starts_with($avatarPath, '../') && !str_starts_with($avatarPath, 'http')) {
-                        $avatarPath = '../' . $avatarPath;
-                    }
+                    if($avatarPath && !str_starts_with($avatarPath, '../') && !str_starts_with($avatarPath, 'http')) $avatarPath = '../' . $avatarPath;
                 ?>
-                <?php if($avatarPath && file_exists($avatarPath) && !is_dir($avatarPath)): ?>
-                    <img src="<?= htmlspecialchars($avatarPath) ?>?v=<?= time() ?>" alt="Perfil" class="ph-avatar">
-                <?php else: ?>
-                    <div class="ph-avatar">👤</div>
-                <?php endif; ?>
-                
-                <div class="ph-info">
-                    <p>Bem-vindo(a),</p>
-                    <h1><?= htmlspecialchars(explode(' ', $cliente['nome'])[0]) ?></h1>
-                    <a href="logout.php" class="btn-logout">Sair da conta</a>
+                <div style="width:70px; height:70px; border-radius:50%; border:3px solid #e9ecef; overflow:hidden; display:flex; align-items:center; justify-content:center; background:#f8f9fa;">
+                    <?php if($avatarPath && file_exists($avatarPath) && !is_dir($avatarPath)): ?>
+                        <img src="<?= htmlspecialchars($avatarPath) ?>?v=<?= time() ?>" style="width:100%; height:100%; object-fit:cover;">
+                    <?php else: ?>
+                        <span style="font-size:2rem;">👤</span>
+                    <?php endif; ?>
+                </div>
+
+                <div>
+                    <div style="font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; color:#146c43; font-weight:700;">Área do Cliente</div>
+                    <h1 style="margin:2px 0; font-size:1.6rem; color:#333; font-weight:700;"><?= htmlspecialchars($cliente['nome']) ?></h1>
+                    
+                    <?php 
+                        $procNum = $detalhes['numero_processo'] ?? '---';
+                        $procAno = !empty($detalhes['data_inicio']) ? date('Y', strtotime($detalhes['data_inicio'])) : date('Y');
+                    ?>
+                    <div style="font-size:0.9rem; color:#666;">
+                        Processo <strong style="color:#333;"><?= htmlspecialchars($procNum) ?>/<?= $procAno ?></strong>
+                    </div>
                 </div>
             </div>
 
+            <!-- Lado Direito (Apenas Info, Sem botões de edição) -->
+            <div style="text-align:right;">
+                <div style="margin-bottom:5px;">
+                    <span style="display:block; font-size:0.7rem; text-transform:uppercase; color:#999; font-weight:bold;">Situação</span>
+                    <span style="background:#e8f5e9; color:#146c43; padding:4px 10px; border-radius:12px; font-size:0.85rem; font-weight:600;"><?= htmlspecialchars($detalhes['etapa_atual'] ?? 'Em Andamento') ?></span>
+                </div>
+                <div style="margin-top:10px;">
+                     <a href="logout.php" style="color:#dc3545; text-decoration:none; font-size:0.85rem; display:flex; align-items:center; justify-content:flex-end; gap:5px; font-weight:600;">
+                        <span style="font-size:1rem;">logout</span> Sair
+                     </a>
+                </div>
+            </div>
 
         </header>
 
@@ -200,64 +200,87 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             <div class="app-action-grid">
                 
                 <!-- CLIENT DATA (SUMMARY) -->
-                <a href="../../exportar_resumo.php" target="_blank" class="app-button" style="border-left: 5px solid #0dcaf0;">
-                    <div class="app-btn-icon" style="background:#e0f8fc; color:#0dcaf0;">📋</div>
+                <a href="../../area-cliente/relatorio_cliente.php?id=<?= $cliente['id'] ?>" target="_blank" class="app-button" style="border-left: 5px solid #0d6efd;">
+                    <div class="app-btn-icon" style="background:#e0f8fc; color:#0d6efd;">📋</div>
                     <div class="app-btn-content">
                         <span class="app-btn-title">Dados do Cliente</span>
                         <span class="app-btn-desc">Resumo do Processo</span>
                     </div>
-                    <div style="font-weight:800; color:#0dcaf0; font-size:1.4rem;">➔</div>
+                    <div style="font-weight:800; color:#0d6efd; font-size:1.4rem;">➔</div>
                 </a>
 
                 <!-- TIMELINE -->
-                <a href="timeline.php" class="app-button">
-                    <div class="app-btn-icon" style="background:#f0f4f8; color:#5c7c93;">🧭</div>
+                <a href="timeline.php" class="app-button" style="border-left: 5px solid #198754;">
+                    <div class="app-btn-icon" style="background:#e8f5e9; color:#198754;">🧭</div>
                     <div class="app-btn-content">
                         <span class="app-btn-title">Linha do Tempo</span>
-                        <span class="app-btn-desc"><?= htmlspecialchars($etapa_atual) ?> (<?= $porcentagem ?>%)</span>
+                        <div class="progress-mini">
+                            <div class="bar" style="width: <?= $porcentagem ?>%;"></div>
+                        </div>
+                        <span class="app-btn-desc" style="margin-top:5px; font-size:0.75rem; color:#198754;">
+                            <?= htmlspecialchars($etapa_atual) ?>
+                        </span>
                     </div>
-                    <div style="font-weight:800; color:#5c7c93; font-size:1.4rem;">➔</div>
                 </a>
 
                 <!-- PENDÊNCIAS -->
                 <?php 
                     $has_pendency = $pend_qtd > 0;
-                    $p_style = $has_pendency ? "border-left: 6px solid #dba7a7;" : ""; 
+                    $p_color = $has_pendency ? '#dc3545' : '#198754';
                 ?>
-                <a href="pendencias.php" class="app-button" style="<?= $p_style ?>">
-                    <div class="app-btn-icon" style="background:<?= $has_pendency ? '#fdf2f2' : '#fcf8e8' ?>; color:<?= $has_pendency ? '#c25e5e' : '#9e8538' ?>;">⚠️</div>
+                <a href="pendencias.php" class="app-button" style="border-left: 5px solid <?= $p_color ?>;">
+                    <div class="app-btn-icon" style="background:<?= $has_pendency ? '#fce8e6' : '#e8f5e9' ?>; color:<?= $p_color ?>;">⚠️</div>
                     <div class="app-btn-content">
-                        <span class="app-btn-title" style="<?= $has_pendency ? 'color:#c25e5e; font-weight:800;' : '' ?>">Pendências</span>
+                        <span class="app-btn-title" style="<?= $has_pendency ? 'color:#dc3545; font-weight:800;' : '' ?>">Pendências</span>
                         <?php if($has_pendency): ?>
                             <span class="app-btn-desc" style="color:#d97575; font-weight:600;"><?= $pend_qtd ?> Ação(ões) Necessária(s)</span>
                         <?php else: ?>
                             <span class="app-btn-desc">Tudo em dia!</span>
                         <?php endif; ?>
                     </div>
+                    <?php if($has_pendency): ?>
+                        <span class="badge-count" style="background:#dc3545;"><?= $pend_qtd ?></span>
+                    <?php endif; ?>
                 </a>
 
                 <!-- FINANCEIRO -->
                 <?php 
                     $has_fin = $fin_qtd > 0;
                 ?>
-                <a href="financeiro.php" class="app-button">
-                    <div class="app-btn-icon" style="background:#eaf4ed; color:#4a8b5c;">💰</div>
+                <a href="financeiro.php" class="app-button" style="border-left: 5px solid #ffc107;">
+                    <div class="app-btn-icon" style="background:#fff3cd; color:#ffc107;">💰</div>
                     <div class="app-btn-content">
                         <span class="app-btn-title">Financeiro</span>
                         <span class="app-btn-desc"><?= $has_fin ? "$fin_qtd Pagamento(s) Pendente(s)" : "Faturas e Recibos" ?></span>
                     </div>
-                    <div style="color:#4a8b5c; font-size:1.4rem;">➔</div>
                 </a>
-
+                
                 <!-- DOCUMENTOS -->
-                <a href="documentos.php" class="app-button">
-                    <div class="app-btn-icon" style="background:#fff8e6; color:#a1832d;">📂</div>
+                <a href="documentos.php" class="app-button" style="border-left: 5px solid #0dcaf0;">
+                    <div class="app-btn-icon" style="background:#d1ecf1; color:#0dcaf0;">📂</div>
                     <div class="app-btn-content">
                         <span class="app-btn-title">Documentos</span>
                         <span class="app-btn-desc">Projetos e Contratos</span>
                     </div>
-                    <div style="color:#a1832d; font-size:1.4rem;">➔</div>
-                </a> 
+                </a>
+
+                 <!-- FOTOS -->
+                 <a href="fotos.php" class="app-button" style="border-left: 5px solid #6f42c1;">
+                    <div class="app-btn-icon" style="background:#e2d9f3; color:#6f42c1;">📸</div>
+                    <div class="app-btn-content">
+                        <span class="app-btn-title">Fotos da Obra</span>
+                        <span class="app-btn-desc">Acompanhamento</span>
+                    </div>
+                </a>
+                
+                <!-- PROJETOS -->
+                 <a href="projetos.php" class="app-button" style="border-left: 5px solid #fd7e14;">
+                    <div class="app-btn-icon" style="background:#ffe8cc; color:#fd7e14;">🏗️</div>
+                    <div class="app-btn-content">
+                        <span class="app-btn-title">Projetos</span>
+                        <span class="app-btn-desc">Arquivos Técnicos</span>
+                    </div>
+                </a>
 
             </div>
             
