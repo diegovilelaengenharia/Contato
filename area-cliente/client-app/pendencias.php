@@ -185,7 +185,7 @@ function get_pendency_files($p_id) {
                 <div style="font-size:0.9rem; margin-top:5px;">Nenhuma pendência encontrada.</div>
             </div>
         <?php else: ?>
-            <div style="display: flex; flex-direction: column; gap: 15px; padding-bottom: 20px;">
+            <div style="display: flex; flex-direction: column; gap: 15px; padding-bottom: 20px; padding: 0 25px;">
 
                 <!-- RESOLVIDAS -->
                 <?php if(count($resolvidas) > 0): ?>
