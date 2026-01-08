@@ -716,35 +716,15 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     </div>
 
                     <!-- Novo Form de Inserção Rápida (MOVIDO PARA BAIXO) -->
-                    <form method="POST" enctype="multipart/form-data" style="background:#fff3e0; padding:20px; border-radius:12px; border:1px solid #ffe0b2; margin-bottom:25px;">
-                        <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
-                        <h4 style="margin-top:0; color:#ef6c00;">➕ Adicionar Nova Pendência</h4>
-                        <div style="display:flex; flex-direction:column; gap:10px;">
-                            <div style="display:flex; gap:10px;">
-                                <input type="text" name="titulo_pendencia" placeholder="Título da Pendência (Resumido)" style="flex:1; padding:10px; border:1px solid #ddd; border-radius:8px;" required>
-                                <input type="file" name="arquivo_pendencia_admin" style="flex:1; padding:7px; background:white; border:1px solid #ddd; border-radius:8px;">
-                            </div>
-                            <div style="flex-grow:1;">
-                                <textarea name="descricao_pendencia" id="new_pendencia_editor" placeholder="Digite a descrição detalhada..." style="width:100%;"></textarea>
-                            </div>
-                            <div style="text-align:right;">
-                                <button type="submit" name="btn_adicionar_pendencia" class="btn-save" style="width:auto; margin:0; padding:10px 25px; color:white; background: #fd7e14; border:none;">Adicionar Pendência</button>
-                            </div>
+                    <!-- Botão Nova Pendência (Modal) -->
+                    <div style="background:#fff3e0; padding:20px; border-radius:12px; border:1px solid #ffe0b2; margin-bottom:25px; display:flex; justify-content:space-between; align-items:center;">
+                        <div style="color:#ef6c00; font-weight:bold; font-size:1.1rem;">
+                            Nova Pendência e/ou Solicitação de Documento
                         </div>
-                    </form>
-                    <script>
-                        document.addEventListener('DOMContentLoaded', () => {
-                            if(document.querySelector('#new_pendencia_editor')) {
-                                ClassicEditor
-                                .create(document.querySelector('#new_pendencia_editor'), {
-                                    toolbar: [ 'bold', 'italic', 'link', 'bulletedList', '|', 'undo', 'redo' ],
-                                    language: 'pt-br',
-                                    placeholder: 'Digite a descrição da pendência aqui...'
-                                })
-                                .catch( error => { console.error( error ); } );
-                            }
-                        });
-                    </script>
+                        <button onclick="document.getElementById('modalNovaPendencia').showModal()" style="padding:10px 25px; background:linear-gradient(135deg, #fd7e14, #ff9800); border:none; border-radius:30px; font-size:0.95rem; font-weight:700; color:white; cursor:pointer; display:flex; align-items:center; gap:8px; box-shadow:0 4px 10px rgba(253, 126, 20, 0.3); transition:all 0.2s;">
+                            <span style="font-size:1.2rem;">➕</span> Criar Pendência
+                        </button>
+                    </div>
                     
                 </div>
 
