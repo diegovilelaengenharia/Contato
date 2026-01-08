@@ -247,43 +247,40 @@ function get_pendency_files($p_id) {
             </div>
         <?php else: ?>
             
-            <div style="display: flex; flex-direction: column; gap: 10px; padding-bottom: 20px;">
+            <div style="display: flex; flex-direction: column; gap: 15px; padding-bottom: 20px;">
 
                 <!-- 1. HISTÓRICO DE RESOLUÇÕES (TOPO) -->
                 <?php if(count($resolvidas) > 0): ?>
-                    <h3 class="section-title">
+                    <h3 class="section-title" style="margin-bottom:10px;">
                         <span class="material-symbols-rounded" style="color:#198754;">history</span> Histórico de Resoluções
                     </h3>
                     
                     <?php foreach($resolvidas as $p): 
                          $data_criacao = date('d/m/Y', strtotime($p['data_criacao']));
                          $anexos = get_pendency_files($p['id']);
-                         // Resolvidos tem estilo mais compacto/suave
                     ?>
-                    <div style="background: #e8f5e9; border: 1px solid #c3e6cb; border-radius: 12px; padding: 15px; opacity: 0.9;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                            <span style="font-size: 0.8rem; font-weight: 700; color: #198754;">Concluído em: <?= $data_criacao ?></span>
-                            <span class="material-symbols-rounded" style="color:#198754; font-size:1.2rem;">check_circle</span>
+                    <div style="background: #e8f5e9; border: 1px solid #c3e6cb; border-radius: 12px; padding: 12px; position: relative;">
+                        <!-- Icon Check -->
+                        <div style="position: absolute; top: 12px; right: 12px;">
+                            <span class="material-symbols-rounded" style="color:#198754; font-size:1.5rem;">check_circle</span>
                         </div>
-                        
-                        <h4 style="margin: 0 0 5px 0; font-size: 1rem; color: #155724; font-weight: 700;">
-                            <?= htmlspecialchars($p['titulo']) ?>
-                        </h4>
-                        
-                        <?php if(!empty($p['descricao'])): ?>
-                            <div style="font-size: 0.9rem; color: #155724; line-height: 1.4; opacity: 0.8;">
-                                <?= nl2br(htmlspecialchars($p['descricao'])) ?>
-                            </div>
-                        <?php endif; ?>
 
-                        <!-- Arquivos do Histórico -->
+                        <div style="padding-right: 30px;">
+                            <h4 style="margin: 0 0 2px 0; font-size: 1rem; color: #155724; font-weight: 700;">
+                                <?= htmlspecialchars($p['titulo']) ?>
+                            </h4>
+                            <span style="font-size: 0.75rem; font-weight: 600; color: #198754; opacity: 0.8;">
+                                Concluído em: <?= $data_criacao ?>
+                            </span>
+                        </div>
+
                         <?php if(!empty($anexos)): ?>
-                            <div style="margin-top:10px; padding-top:10px; border-top:1px dashed #c3e6cb;">
-                                <strong style="font-size:0.75rem; color:#198754;">Arquivos do Processo:</strong>
-                                <div style="display:flex; flex-wrap:wrap; gap:5px; margin-top:5px;">
+                            <div style="margin-top:8px; padding-top:8px; border-top:1px dashed #c3e6cb;">
+                                <strong style="font-size:0.75rem; color:#198754; display:block; margin-bottom:4px;">Arquivos Anexados:</strong>
+                                <div style="display:flex; flex-wrap:wrap; gap:6px;">
                                 <?php foreach($anexos as $arq): ?>
-                                    <a href="<?= $arq['path'] ?>" target="_blank" style="text-decoration:none; background:white; color:#198754; padding:3px 8px; border-radius:10px; font-size:0.75rem; border:1px solid #c3e6cb;">
-                                        📎 Anexo
+                                    <a href="<?= $arq['path'] ?>" target="_blank" style="text-decoration:none; background:white; color:#198754; padding:4px 8px; border-radius:6px; font-size:0.75rem; border:1px solid #c3e6cb; display: flex; align-items: center; gap: 4px;">
+                                        <span class="material-symbols-rounded" style="font-size:14px;">attachment</span> <?= $arq['name'] ?>
                                     </a>
                                 <?php endforeach; ?>
                                 </div>
@@ -296,7 +293,7 @@ function get_pendency_files($p_id) {
 
                 <!-- 2. PENDÊNCIAS EM ABERTO (EMBAIXO) -->
                 <?php if(count($abertas) > 0): ?>
-                    <h3 class="section-title">
+                    <h3 class="section-title" style="margin-top: 15px; margin-bottom: 10px;">
                         <span class="material-symbols-rounded" style="color:#e65100;">warning</span> Pendências em Aberto
                     </h3>
 
@@ -307,79 +304,81 @@ function get_pendency_files($p_id) {
                         
                         // Cores
                         if($has_attachment) {
-                             $status_label = "Arquivo Enviado / Em Análise";
+                             $status_label = "Em Análise";
                              $bg_badge = "#0d6efd"; $bg_card = "#f0f8ff"; $border_card = "#cce5ff"; $text_title = "#084298";
                         } else {
                              $status_label = "Pendente";
                              $bg_badge = "#ffc107"; $bg_card = "#fff9d6"; $border_card = "#ffeeba"; $text_title = "#856404";
                         }
                     ?>
-                    <div style="background: <?= $bg_card ?>; border: 1px solid <?= $border_card ?>; border-radius: 16px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                    <div style="background: <?= $bg_card ?>; border: 1px solid <?= $border_card ?>; border-radius: 12px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
                         
-                        <!-- Header do Card -->
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-                            <div>
-                                <span style="display: block; font-size: 0.8rem; font-weight: 700; color: #555; margin-bottom: 4px; opacity: 0.7;">
-                                    📅 <?= $data_criacao ?>
-                                </span>
-                                <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: <?= $text_title ?>; line-height: 1.3;">
-                                    <?= htmlspecialchars($p['titulo']) ?>
-                                </h3>
-                            </div>
-                            <span style="background: <?= $bg_badge ?>; color: <?= ($status_label=='Pendente')?'#333':'white' ?>; padding: 4px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">
+                        <!-- Header Compacto -->
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                            <span style="font-size: 0.75rem; font-weight: 700; color: #666;">
+                                📅 <?= $data_criacao ?>
+                            </span>
+                             <span style="background: <?= $bg_badge ?>; color: <?= ($status_label=='Pendente')?'#333':'white' ?>; padding: 2px 8px; border-radius: 8px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase;">
                                 <?= $status_label ?>
                             </span>
                         </div>
-    
+
+                        <h3 style="margin: 0 0 8px 0; font-size: 1.1rem; font-weight: 800; color: <?= $text_title ?>; line-height: 1.2;">
+                            <?= htmlspecialchars($p['titulo']) ?>
+                        </h3>
+
                         <!-- Descrição -->
                         <?php if(!empty($p['descricao'])): ?>
-                            <div style="font-size: 0.95rem; color: #444; margin-bottom: 15px; line-height: 1.5; font-weight: 500;">
+                            <div style="font-size: 0.9rem; color: #444; margin-bottom: 12px; line-height: 1.4;">
                                 <?= nl2br(htmlspecialchars($p['descricao'])) ?>
                             </div>
                         <?php endif; ?>
     
-                        <!-- Arquivos Enviados (Com Botão Delete) -->
+                        <!-- Arquivos Enviados -->
                         <?php if($has_attachment): ?>
-                            <div style="margin-bottom: 15px; background: rgba(255,255,255,0.7); padding: 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.05);">
-                                <strong style="display:block; font-size:0.8rem; margin-bottom:5px; color:#555;">Arquivos Enviados:</strong>
+                            <div style="margin-bottom: 12px; background: rgba(255,255,255,0.6); padding: 8px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.05);">
+                                <strong style="display:block; font-size:0.75rem; margin-bottom:5px; color:#555;">Arquivos Enviados:</strong>
+                                <div style="display:flex; flex-wrap:wrap; gap:5px;">
                                 <?php foreach($anexos as $arq): ?>
-                                    <div style="display:inline-flex; align-items:center; gap:5px; background:white; padding:5px 10px; border-radius:15px; border:1px solid #ddd; margin-right:5px; margin-bottom:5px;">
-                                        <a href="<?= $arq['path'] ?>" target="_blank" style="display:flex; align-items:center; gap:5px; color:#0d6efd; text-decoration:none; font-size:0.85rem;">
+                                    <div style="display:inline-flex; align-items:center; gap:5px; background:white; padding:4px 8px; border-radius:6px; border:1px solid #ddd;">
+                                        <a href="<?= $arq['path'] ?>" target="_blank" style="color:#0d6efd; text-decoration:none; font-size:0.8rem; display: flex; align-items: center; gap: 3px;">
                                             📎 <?= $arq['name'] ?>
                                         </a>
-                                        <!-- Delete Button (Form Inline) -->
-                                        <form method="POST" onsubmit="return confirm('Deseja realmente apagar este arquivo?');" style="margin:0; display:flex;">
+                                        <!-- Delete Button -->
+                                        <form method="POST" onsubmit="return confirm('Apagar arquivo?');" style="margin:0; display:flex;">
                                             <input type="hidden" name="delete_file" value="true">
                                             <input type="hidden" name="file_name" value="<?= htmlspecialchars($arq['name']) ?>">
                                             <input type="hidden" name="pendencia_id" value="<?= $p['id'] ?>">
-                                            <button type="submit" style="background:none; border:none; cursor:pointer; padding:0; display:flex; color:#dc3545;" title="Apagar Arquivo">
+                                            <button type="submit" style="background:none; border:none; cursor:pointer; padding:0; display:flex; color:#dc3545;" title="Apagar">
                                                 <span class="material-symbols-rounded" style="font-size:1rem;">delete</span>
                                             </button>
                                         </form>
                                     </div>
                                 <?php endforeach; ?>
-                                <div style="font-size:0.75rem; color:#888; margin-top:5px;">*Aguardando análise. Você pode excluir se enviou errado.</div>
+                                </div>
+                                <div style="font-size:0.7rem; color:#888; margin-top:4px;">*Aguardando análise.</div>
                             </div>
                         <?php endif; ?>
     
-                        <!-- Ações -->
-                        <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
-                            <!-- Form Upload -->
-                            <form action="pendencias.php" method="POST" enctype="multipart/form-data" style="background: rgba(255,255,255,0.6); padding: 15px; border-radius: 12px; border: 1px dashed <?= $text_title ?>; margin-bottom:0;">
+                        <!-- Área de Ação (Upload + Chat) -->
+                        <div style="border-top: 1px dashed <?= $border_card ?>; padding-top: 12px; margin-top: 10px;">
+                            
+                            <!-- Form Upload Compacto -->
+                            <form action="pendencias.php" method="POST" enctype="multipart/form-data" style="margin-bottom: 10px;">
                                 <input type="hidden" name="pendencia_id" value="<?= $p['id'] ?>">
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.85rem; color: #333;">
-                                    <?= $has_attachment ? 'Enviar novo arquivo:' : 'Anexar Comprovante/Arquivo:' ?>
+                                <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.8rem; color: #333;">
+                                    <?= $has_attachment ? 'Enviar outro arquivo:' : 'Anexar Solução:' ?>
                                 </label>
-                                <div style="display: flex; gap: 10px;">
-                                    <input type="file" name="arquivo_pendencia" required style="font-size: 0.85rem; width: 100%; border-radius: 6px; border: 1px solid #ccc; background: #fff; padding:5px;">
+                                <div style="display: flex; gap: 5px;">
+                                    <input type="file" name="arquivo_pendencia" required style="font-size: 0.8rem; flex-grow: 1; border-radius: 6px; border: 1px solid #ccc; background: #fff; padding: 4px;">
+                                    <button type="submit" name="upload_arquivo" style="background: #0d6efd; color: white; border: none; border-radius: 6px; padding: 0 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center;">
+                                        <span class="material-symbols-rounded">cloud_upload</span>
+                                    </button>
                                 </div>
-                                <button type="submit" name="upload_arquivo" style="margin-top: 10px; width: 100%; padding: 10px; background: #0d6efd; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                                    <span class="material-symbols-rounded">cloud_upload</span> Enviar Arquivo
-                                </button>
                             </form>
-    
-                            <!-- Botão Whatsapp -->
-                            <a href="<?= getWhatsappLink($p['titulo']) ?>" target="_blank" class="btn-action-text" style="background: #25D366; color: white; border: 1px solid #badbcc; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            
+                            <!-- Botão Whatsapp Compacto -->
+                            <a href="<?= getWhatsappLink($p['titulo']) ?>" target="_blank" class="btn-action-text" style="background: #e9ecef; color: #25D366; border: 1px solid #ced4da; font-size: 0.85rem; padding: 8px;">
                                 <span class="material-symbols-rounded">chat</span>
                                 Fale com o Engenheiro
                             </a>
