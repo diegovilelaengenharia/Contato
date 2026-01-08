@@ -207,7 +207,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                         if($row_lp) {
                             $last_pend_name = $row_lp['titulo'];
                             if(!empty($row_lp['descricao'])) {
-                                $last_pend_name .= ' - ' . $row_lp['descricao'];
+                                $last_pend_name .= ' - ' . strip_tags($row_lp['descricao']);
                             }
                         }
                     } catch(Exception $e) { $last_pend_name = ''; }
