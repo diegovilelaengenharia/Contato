@@ -221,9 +221,10 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 <a href="../../area-cliente/relatorio_cliente.php?id=<?= $cliente['id'] ?>" target="_blank" class="app-button" style="border-left-color: #0d6efd;">
                     <div class="app-btn-icon" style="background:#e0f8fc; color:#0d6efd;">📋</div>
                     <div class="app-btn-content">
-                        <span class="app-btn-title">Dados</span>
-                        <span class="app-btn-desc">Resumo PDF</span>
+                        <span class="app-btn-title">Dados do Cliente</span>
+                        <span class="app-btn-desc">Resumo do Processo</span>
                     </div>
+                    <div class="app-btn-arrow" style="color:#0d6efd;">➔</div>
                 </a>
 
                 <!-- TIMELINE -->
@@ -231,8 +232,14 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                     <div class="app-btn-icon" style="background:#e8f5e9; color:#198754;">🧭</div>
                     <div class="app-btn-content">
                         <span class="app-btn-title">Linha do Tempo</span>
-                        <span class="app-btn-desc"><?= $porcentagem ?>% Concluído</span>
+                        <div class="progress-mini" style="margin-top:5px; height:6px; background:#e9ecef; border-radius:3px; overflow:hidden; width:100px;">
+                            <div class="bar" style="width: <?= $porcentagem ?>%; height:100%; background:#198754;"></div>
+                        </div>
+                        <span class="app-btn-desc" style="margin-top:5px;">
+                            <?= htmlspecialchars($etapa_atual) ?> (<?= $porcentagem ?>%)
+                        </span>
                     </div>
+                    <div class="app-btn-arrow" style="color:#198754;">➔</div>
                 </a>
 
                 <!-- PENDÊNCIAS -->
@@ -243,11 +250,17 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 <a href="pendencias.php" class="app-button" style="border-left-color: <?= $p_color ?>;">
                     <div class="app-btn-icon" style="background:<?= $has_pendency ? '#fce8e6' : '#e8f5e9' ?>; color:<?= $p_color ?>;">⚠️</div>
                     <div class="app-btn-content">
-                        <span class="app-btn-title">Pendências</span>
-                        <span class="app-btn-desc"><?= $has_pendency ? "$pend_qtd Ação(ões)" : "Tudo Certo" ?></span>
+                        <span class="app-btn-title" style="<?= $has_pendency ? 'color:#dc3545;' : '' ?>">Pendências</span>
+                        <?php if($has_pendency): ?>
+                            <span class="app-btn-desc" style="color:#dc3545; font-weight:600;"><?= $pend_qtd ?> Ação(ões) Necessária(s)</span>
+                        <?php else: ?>
+                            <span class="app-btn-desc">Tudo em dia!</span>
+                        <?php endif; ?>
                     </div>
                     <?php if($has_pendency): ?>
                         <span class="badge-count" style="background:#dc3545;"><?= $pend_qtd ?></span>
+                    <?php else: ?>
+                        <div class="app-btn-arrow" style="color:<?= $p_color ?>;">➔</div>
                     <?php endif; ?>
                 </a>
 
@@ -259,17 +272,19 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                     <div class="app-btn-icon" style="background:#fff3cd; color:#ffc107;">💰</div>
                     <div class="app-btn-content">
                         <span class="app-btn-title">Financeiro</span>
-                        <span class="app-btn-desc"><?= $has_fin ? "Pendente" : "Em Dia" ?></span>
+                        <span class="app-btn-desc"><?= $has_fin ? "$fin_qtd Pagamento(s) Pendente(s)" : "Faturas e Recibos" ?></span>
                     </div>
+                    <div class="app-btn-arrow" style="color:#ffc107;">➔</div>
                 </a>
                 
                 <!-- DOCUMENTOS -->
                 <a href="documentos.php" class="app-button" style="border-left-color: #0dcaf0;">
                     <div class="app-btn-icon" style="background:#d1ecf1; color:#0dcaf0;">📂</div>
                     <div class="app-btn-content">
-                        <span class="app-btn-title">Docs</span>
-                        <span class="app-btn-desc">Arquivos</span>
+                        <span class="app-btn-title">Documentos</span>
+                        <span class="app-btn-desc">Projetos e Contratos</span>
                     </div>
+                    <div class="app-btn-arrow" style="color:#0dcaf0;">➔</div>
                 </a>
 
             </div>
