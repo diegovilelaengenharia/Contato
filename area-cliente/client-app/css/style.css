@@ -125,29 +125,130 @@ a {
     }
 }
 
-/* --- HEADER PREMIUM v3.0 --- */
-.header-premium-card {
-    background: linear-gradient(145deg, var(--color-primary), #0a3622);
-    color: white;
-    padding: 25px;
+/* --- HEADER PREMIUM WOW v4.0 --- */
+.premium-header {
+    background: linear-gradient(135deg, #146c43 0%, #0b3d26 100%);
     border-radius: var(--radius-lg);
-    box-shadow: 0 15px 30px -10px rgba(20, 108, 67, 0.5);
-    margin-bottom: 30px;
+    padding: 25px;
+    box-shadow: 0 15px 40px -10px rgba(20, 108, 67, 0.4);
+    margin: 20px 20px 0 20px;
+    color: white;
     position: relative;
     overflow: hidden;
+    animation: slideDown 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
 }
 
-/* Watermark/Texture */
-.header-premium-card::before {
+/* Glass/Texture Overlay */
+.premium-header::before {
     content: '';
     position: absolute;
-    top: -50px;
-    right: -50px;
-    width: 200px;
-    height: 200px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 50%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at top right, rgba(255, 255, 255, 0.1), transparent 60%),
+        url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
     pointer-events: none;
+    z-index: 0;
+}
+
+/* Content Container relative to z-index */
+.ph-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ph-avatar-box {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.ph-info h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.1;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.ph-proc {
+    font-size: 0.8rem;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 2px 8px;
+    border-radius: 10px;
+    display: inline-block;
+    margin-top: 4px;
+    backdrop-filter: blur(4px);
+    font-weight: 500;
+}
+
+.ph-actions {
+    position: relative;
+    z-index: 1;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+.ph-badge {
+    background: white;
+    color: #146c43;
+    font-weight: 800;
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.ph-logout {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: 0.2s;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 4px 10px;
+    border-radius: 8px;
+}
+
+.ph-logout:hover {
+    background: rgba(0, 0, 0, 0.4);
+    color: white;
 }
 
 .hp-top {

@@ -101,11 +101,36 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
     
     <!-- STYLES -->
-    <link rel="stylesheet" href="css/style.css?v=4.7">
-    <link rel="stylesheet" href="css/header-premium.css?v=4.7">
+    <link rel="stylesheet" href="css/style.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="css/header-premium.css?v=<?= time() ?>">
     
+    <style>
+        /* Mobile adjustment for Header */
+        @media (max-width: 420px) {
+            .premium-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+                padding: 20px !important;
+            }
+            .premium-header > div {
+                justify-content: center;
+                width: 100%;
+            }
+            .premium-header > div:last-child {
+                text-align: center !important;
+                border-top: 1px solid rgba(255,255,255,0.1);
+                padding-top: 15px;
+                margin-top: 5px;
+            }
+            .premium-header a[href="logout.php"] {
+                justify-content: center !important;
+            }
+        }
+    </style>
     <style>
         /* MODAL DE NOTIFICAÇÕES */
         #modalNotificacoes {
@@ -149,47 +174,40 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
 
     <div class="app-container" style="padding: 0;"> <!-- Remove padding here, controlled by inner elements -->
         
-        <!-- HEADER STYLE ADMIN (DIFFERENTIATED - SOLID GREEN) -->
-        <header class="premium-header" style="background:#146c43; border-radius:15px; padding:25px; box-shadow:0 5px 20px rgba(20, 108, 67, 0.2); display:flex; justify-content:space-between; align-items:center; margin: 20px 20px 0 20px; color:white;">
+        <!-- HEADER STYLE PREMIUM WOW (Glass + Gradient) -->
+        <header class="premium-header">
             
-            <div style="display:flex; align-items:center; gap:15px;">
+            <div class="ph-content">
                 <?php 
                     $avatarPath = $cliente['foto_perfil'] ?? '';
                     if($avatarPath && !str_starts_with($avatarPath, '../') && !str_starts_with($avatarPath, 'http')) $avatarPath = '../' . $avatarPath;
                 ?>
-                <div style="width:70px; height:70px; border-radius:50%; border:3px solid rgba(255,255,255,0.2); overflow:hidden; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.1);">
+                <div class="ph-avatar-box">
                     <?php if($avatarPath && file_exists($avatarPath) && !is_dir($avatarPath)): ?>
                         <img src="<?= htmlspecialchars($avatarPath) ?>?v=<?= time() ?>" style="width:100%; height:100%; object-fit:cover;">
                     <?php else: ?>
-                        <span style="font-size:2rem; color:rgba(255,255,255,0.8);">👤</span>
+                        <span style="font-size:1.5rem; color:white;">👤</span>
                     <?php endif; ?>
                 </div>
 
-                <div>
-                    <div style="font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.8); font-weight:700;">Área do Cliente</div>
-                    <h1 style="margin:2px 0; font-size:1.6rem; color:white; font-weight:700;"><?= htmlspecialchars($cliente['nome']) ?></h1>
+                <div class="ph-info">
+                    <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.7); font-weight:700;">Área do Cliente</div>
+                    <h1><?= htmlspecialchars(explode(' ', $cliente['nome'])[0]) ?></h1> <!-- Primeiro Nome only for clean look -->
                     
                     <?php 
                         $procNum = $detalhes['numero_processo'] ?? '---';
                         $procAno = !empty($detalhes['data_inicio']) ? date('Y', strtotime($detalhes['data_inicio'])) : date('Y');
                     ?>
-                    <div style="font-size:0.9rem; color:rgba(255,255,255,0.9);">
-                        Processo <strong style="color:white;"><?= htmlspecialchars($procNum) ?>/<?= $procAno ?></strong>
-                    </div>
+                    <div class="ph-proc"><?= htmlspecialchars($procNum) ?>/<?= $procAno ?></div>
                 </div>
             </div>
 
-            <!-- Lado Direito (Info) -->
-            <div style="text-align:right;">
-                <div style="margin-bottom:5px;">
-                    <span style="display:block; font-size:0.7rem; text-transform:uppercase; color:rgba(255,255,255,0.7); font-weight:bold;">Situação</span>
-                    <span style="background:white; color:#146c43; padding:4px 10px; border-radius:12px; font-size:0.85rem; font-weight:700;"><?= htmlspecialchars($detalhes['etapa_atual'] ?? 'Em Andamento') ?></span>
-                </div>
-                <div style="margin-top:10px;">
-                     <a href="logout.php" style="color:rgba(255,255,255,0.9); text-decoration:none; font-size:0.85rem; display:flex; align-items:center; justify-content:flex-end; gap:5px; font-weight:600; transition:0.2s;">
-                        <span style="font-size:1rem;">logout</span> Sair
-                     </a>
-                </div>
+            <div class="ph-actions">
+                <span class="ph-badge"><?= htmlspecialchars($detalhes['etapa_atual'] ?? 'Ativo') ?></span>
+                <a href="logout.php" class="ph-logout">
+                    <span class="material-symbols-rounded" style="font-size:1.1rem;">logout</span>
+                    <span>Sair</span>
+                </a>
             </div>
 
         </header>
@@ -200,26 +218,20 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             <div class="app-action-grid">
                 
                 <!-- CLIENT DATA (SUMMARY) -->
-                <a href="../../area-cliente/relatorio_cliente.php?id=<?= $cliente['id'] ?>" target="_blank" class="app-button" style="border-left: 5px solid #0d6efd;">
+                <a href="../../area-cliente/relatorio_cliente.php?id=<?= $cliente['id'] ?>" target="_blank" class="app-button" style="border-left-color: #0d6efd;">
                     <div class="app-btn-icon" style="background:#e0f8fc; color:#0d6efd;">📋</div>
                     <div class="app-btn-content">
-                        <span class="app-btn-title">Dados do Cliente</span>
-                        <span class="app-btn-desc">Resumo do Processo</span>
+                        <span class="app-btn-title">Dados</span>
+                        <span class="app-btn-desc">Resumo PDF</span>
                     </div>
-                    <div style="font-weight:800; color:#0d6efd; font-size:1.4rem;">➔</div>
                 </a>
 
                 <!-- TIMELINE -->
-                <a href="timeline.php" class="app-button" style="border-left: 5px solid #198754;">
+                <a href="timeline.php" class="app-button" style="border-left-color: #198754;">
                     <div class="app-btn-icon" style="background:#e8f5e9; color:#198754;">🧭</div>
                     <div class="app-btn-content">
                         <span class="app-btn-title">Linha do Tempo</span>
-                        <div class="progress-mini">
-                            <div class="bar" style="width: <?= $porcentagem ?>%;"></div>
-                        </div>
-                        <span class="app-btn-desc" style="margin-top:5px; font-size:0.75rem; color:#198754;">
-                            <?= htmlspecialchars($etapa_atual) ?>
-                        </span>
+                        <span class="app-btn-desc"><?= $porcentagem ?>% Concluído</span>
                     </div>
                 </a>
 
@@ -228,15 +240,11 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                     $has_pendency = $pend_qtd > 0;
                     $p_color = $has_pendency ? '#dc3545' : '#198754';
                 ?>
-                <a href="pendencias.php" class="app-button" style="border-left: 5px solid <?= $p_color ?>;">
+                <a href="pendencias.php" class="app-button" style="border-left-color: <?= $p_color ?>;">
                     <div class="app-btn-icon" style="background:<?= $has_pendency ? '#fce8e6' : '#e8f5e9' ?>; color:<?= $p_color ?>;">⚠️</div>
                     <div class="app-btn-content">
-                        <span class="app-btn-title" style="<?= $has_pendency ? 'color:#dc3545; font-weight:800;' : '' ?>">Pendências</span>
-                        <?php if($has_pendency): ?>
-                            <span class="app-btn-desc" style="color:#d97575; font-weight:600;"><?= $pend_qtd ?> Ação(ões) Necessária(s)</span>
-                        <?php else: ?>
-                            <span class="app-btn-desc">Tudo em dia!</span>
-                        <?php endif; ?>
+                        <span class="app-btn-title">Pendências</span>
+                        <span class="app-btn-desc"><?= $has_pendency ? "$pend_qtd Ação(ões)" : "Tudo Certo" ?></span>
                     </div>
                     <?php if($has_pendency): ?>
                         <span class="badge-count" style="background:#dc3545;"><?= $pend_qtd ?></span>
@@ -247,24 +255,22 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 <?php 
                     $has_fin = $fin_qtd > 0;
                 ?>
-                <a href="financeiro.php" class="app-button" style="border-left: 5px solid #ffc107;">
+                <a href="financeiro.php" class="app-button" style="border-left-color: #ffc107;">
                     <div class="app-btn-icon" style="background:#fff3cd; color:#ffc107;">💰</div>
                     <div class="app-btn-content">
                         <span class="app-btn-title">Financeiro</span>
-                        <span class="app-btn-desc"><?= $has_fin ? "$fin_qtd Pagamento(s) Pendente(s)" : "Faturas e Recibos" ?></span>
+                        <span class="app-btn-desc"><?= $has_fin ? "Pendente" : "Em Dia" ?></span>
                     </div>
                 </a>
                 
                 <!-- DOCUMENTOS -->
-                <a href="documentos.php" class="app-button" style="border-left: 5px solid #0dcaf0;">
+                <a href="documentos.php" class="app-button" style="border-left-color: #0dcaf0;">
                     <div class="app-btn-icon" style="background:#d1ecf1; color:#0dcaf0;">📂</div>
                     <div class="app-btn-content">
-                        <span class="app-btn-title">Documentos</span>
-                        <span class="app-btn-desc">Projetos e Contratos</span>
+                        <span class="app-btn-title">Docs</span>
+                        <span class="app-btn-desc">Arquivos</span>
                     </div>
                 </a>
-
-
 
             </div>
             
