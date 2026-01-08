@@ -192,13 +192,14 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
 
                     <div class="ph-info" style="margin-left: 15px;">
                         <div style="font-size:0.85rem; color:rgba(255,255,255,0.9); font-weight:400;">Olá meu querido cliente,</div>
-                        <h1 style="margin:0; font-size:1.4rem;"><?= htmlspecialchars($cliente['nome']) ?></h1>
+                        <h1 style="margin:0; font-size:1.4rem;"><?= htmlspecialchars(explode(' ', $cliente['nome'])[0]) ?></h1>
                     </div>
                 </div>
 
                 <div class="ph-actions">
-                    <a href="logout.php" class="ph-logout" style="background: rgba(220, 53, 69, 0.2); color: #ffcccc; border: 1px solid rgba(220, 53, 69, 0.3);">
+                    <a href="logout.php" class="ph-logout" style="background: rgba(220, 53, 69, 0.2); color: #ffcccc; border: 1px solid rgba(220, 53, 69, 0.3); padding: 6px 12px; border-radius: 8px; text-decoration: none; display: flex; align-items: center; gap: 6px;">
                         <span class="material-symbols-rounded" style="font-size:1.1rem;">logout</span>
+                        <span style="font-size: 0.85rem; font-weight: 600;">Sair</span>
                     </a>
                 </div>
             </div>
