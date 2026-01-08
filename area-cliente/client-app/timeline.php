@@ -247,36 +247,37 @@ $obs_atual = $stmt_obs->fetchColumn();
                     Nenhum registro no histórico.
                 </div>
              <?php else: ?>
-                <div style="overflow-x:auto;">
-                    <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
-                        <thead>
-                            <tr style="background:#f8f9fa; text-align:left; color:#666;">
-                                <th style="padding:12px; border-bottom:2px solid #e9ecef;">Data</th>
-                                <th style="padding:12px; border-bottom:2px solid #e9ecef;">Evento</th>
-                                <th style="padding:12px; border-bottom:2px solid #e9ecef;">Descrição</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach($historico as $h): 
-                                $parts = explode("||COMENTARIO_USER||", $h['descricao']);
-                                $desc_principal = $parts[0];
-                            ?>
-                            <tr style="border-bottom:1px solid #eee;">
-                                <td style="padding:12px; color:#555; font-weight:600; vertical-align:top; white-space:nowrap;">
-                                    <?= date('d/m/Y H:i', strtotime($h['data_movimento'])) ?>
-                                </td>
-                                <td style="padding:12px; vertical-align:top;">
-                                    <span style="display:inline-block; background:#e9ecef; color:#333; padding:4px 10px; border-radius:12px; font-weight:700; font-size:0.8rem;">
-                                        <?= htmlspecialchars($h['titulo_fase']) ?>
-                                    </span>
-                                </td>
-                                <td style="padding:12px; color:#666; vertical-align:top; line-height:1.5;">
-                                    <?= $desc_principal ?>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                    <?php foreach($historico as $h): 
+                        $parts = explode("||COMENTARIO_USER||", $h['descricao']);
+                        $desc_principal = $parts[0];
+                    ?>
+                    <details style="background:white; border:1px solid #eee; border-radius:12px; overflow:hidden; transition:all 0.2s;">
+                        <summary style="display:grid; grid-template-columns: 80px 1fr; gap:15px; padding:15px; cursor:pointer; list-style:none; align-items:center;">
+                            <!-- Date Column (Narrow) -->
+                            <div style="font-size:0.8rem; font-weight:700; color:#999; text-align:center; display:flex; flex-direction:column; line-height:1.2;">
+                                <span style="font-size:1rem; color:#333;"><?= date('d', strtotime($h['data_movimento'])) ?></span>
+                                <span><?= date('M', strtotime($h['data_movimento'])) ?></span>
+                                <span style="font-size:0.7rem; font-weight:400;"><?= date('Y', strtotime($h['data_movimento'])) ?></span>
+                            </div>
+
+                            <!-- Title (Expandable Arrow implied) -->
+                            <div style="display:flex; align-items:center; justify-content:space-between;">
+                                <span style="font-weight:600; color:#333; font-size:0.95rem;">
+                                    <?= htmlspecialchars($h['titulo_fase']) ?>
+                                </span>
+                                <span class="material-symbols-rounded" style="color:#ccc; font-size:1.2rem;">expand_more</span>
+                            </div>
+                        </summary>
+                        
+                        <!-- Content (Description) -->
+                        <div style="padding:0 15px 15px 110px; border-top:1px solid #f8f9fa;">
+                             <p style="margin:10px 0 0 0; font-size:0.9rem; color:#666; line-height:1.6;">
+                                <?= $desc_principal ?>
+                             </p>
+                        </div>
+                    </details>
+                    <?php endforeach; ?>
                 </div>
              <?php endif; ?>
 

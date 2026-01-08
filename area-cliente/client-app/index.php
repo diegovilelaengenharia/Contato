@@ -197,7 +197,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 </div>
 
                 <div class="ph-actions">
-                    <a href="logout.php" class="ph-logout" style="background: rgba(255,255,255,0.2); border:none;">
+                    <a href="logout.php" class="ph-logout" style="background: rgba(220, 53, 69, 0.2); color: #ffcccc; border: 1px solid rgba(220, 53, 69, 0.3);">
                         <span class="material-symbols-rounded" style="font-size:1.1rem;">logout</span>
                     </a>
                 </div>
