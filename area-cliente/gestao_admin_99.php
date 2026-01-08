@@ -591,12 +591,44 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                 <?php 
                                 // Query de pendências já feita acima para o botão WhatsApp
                                 
-                                // Buscar Arquivos (Novo Sistema)
+                                // Buscar Arquivos (DB + FileSystem)
                                 $stmtArq = $pdo->prepare("SELECT pendencia_id, id, arquivo_nome, arquivo_path, data_upload FROM processo_pendencias_arquivos WHERE pendencia_id IN (SELECT id FROM processo_pendencias WHERE cliente_id=?)");
                                 $stmtArq->execute([$cliente_ativo['id']]);
                                 $arquivos_por_pendencia = [];
+                                
+                                // 1. Do DB
                                 foreach($stmtArq->fetchAll() as $arq) {
                                     $arquivos_por_pendencia[$arq['pendencia_id']][] = $arq;
+                                }
+                                
+                                // 2. Do Sistema de Arquivos (Robustez)
+                                $upload_dir_admin = __DIR__ . '/client-app/uploads/pendencias/';
+                                $web_path_admin = 'client-app/uploads/pendencias/';
+                                
+                                if(is_dir($upload_dir_admin)) {
+                                    foreach($pendencias as $p_check) {
+                                        $files_fs = glob($upload_dir_admin . $p_check['id'] . "_*.*");
+                                        if($files_fs) {
+                                            foreach($files_fs as $f_fs) {
+                                              $fname = basename($f_fs);
+                                              // Evita duplicatas se já vieram do banco (por nome)
+                                              $ja_existe = false;
+                                              if(isset($arquivos_por_pendencia[$p_check['id']])) {
+                                                  foreach($arquivos_por_pendencia[$p_check['id']] as $ex) {
+                                                      if($ex['arquivo_nome'] == $fname) $ja_existe = true;
+                                                  }
+                                              }
+                                              
+                                              if(!$ja_existe) {
+                                                  $arquivos_por_pendencia[$p_check['id']][] = [
+                                                      'arquivo_nome' => $fname,
+                                                      'arquivo_path' => $web_path_admin . $fname,
+                                                      'data_upload' => date('Y-m-d H:i:s', filemtime($f_fs))
+                                                  ];
+                                              }
+                                            }
+                                        }
+                                    }
                                 }
                                 
                                 if(count($pendencias) == 0): ?>

@@ -173,11 +173,49 @@ function getWhatsappLink($pendency_title) {
                     $status = $p['status'];
                     $is_resolvido = ($status == 'resolvido');
                     
-                    // Cores Dinâmicas
-                    // Verde para Resolvido, Amarelo para Pendente/Outros
-                    $bg_card = $is_resolvido ? '#d1e7dd' : '#fff9d6'; 
-                    $border_card = $is_resolvido ? '#badbcc' : '#ffeeba';
-                    $text_title = $is_resolvido ? '#0f5132' : '#856404';
+                    // Detect Files Logic (FileSystem Scan)
+                    // Pattern: ID_TIMESTAMP.ext or just ID.ext (legacy)
+                    $upload_dir = __DIR__ . '/uploads/pendencias/';
+                    $web_path = 'uploads/pendencias/'; // Relative to this file
+                    $anexos = [];
+                    
+                    if(is_dir($upload_dir)) {
+                        // Scan for files starting with ID_
+                        $files = glob($upload_dir . $p['id'] . "_*.*");
+                        if($files) {
+                            foreach($files as $f) {
+                                $filename = basename($f);
+                                $anexos[] = [
+                                    'name' => $filename,
+                                    'path' => $web_path . $filename,
+                                    'date' => filemtime($f)
+                                ];
+                            }
+                        }
+                    }
+                    
+                    // Se tiver anexo e status nao for resolvido, considera como "Em Análise/Anexado" visualmente
+                    $has_attachment = !empty($anexos);
+                    if($has_attachment && !$is_resolvido) {
+                         $status_label = "Arquivo Enviado / Em Análise";
+                         $bg_badge = "#0d6efd"; // Blue
+                         $bg_card = "#f0f8ff"; // Light Blue bg
+                         $border_card = "#cce5ff";
+                         $text_title = "#084298";
+                    } elseif($is_resolvido) {
+                         $status_label = "Resolvido";
+                         $bg_badge = "#198754"; // Green
+                         $bg_card = "#d1e7dd"; 
+                         $border_card = "#badbcc";
+                         $text_title = "#0f5132";
+                    } else {
+                         // Default Pendente
+                         $status_label = "Pendente";
+                         $bg_badge = "#ffc107"; // Yellow
+                         $bg_card = "#fff9d6";
+                         $border_card = "#ffeeba";
+                         $text_title = "#856404";
+                    }
                     
                     $data_criacao = date('d/m/Y', strtotime($p['data_criacao']));
                 ?>
@@ -196,17 +234,28 @@ function getWhatsappLink($pendency_title) {
                             </h3>
                         </div>
                         
-                        <?php if($is_resolvido): ?>
-                                <span style="background: #198754; color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Resolvido</span>
-                        <?php else: ?>
-                                <span style="background: #ffc107; color: #333; padding: 4px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Pendente</span>
-                        <?php endif; ?>
+                        <span style="background: <?= $bg_badge ?>; color: <?= ($status_label=='Pendente')?'#333':'white' ?>; padding: 4px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">
+                            <?= $status_label ?>
+                        </span>
                     </div>
 
                     <!-- Descrição -->
                     <?php if(!empty($p['descricao'])): ?>
                         <div style="font-size: 0.95rem; color: #444; margin-bottom: 15px; line-height: 1.5; font-weight: 500;">
                             <?= nl2br(htmlspecialchars($p['descricao'])) ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- Arquivos Já Enviados (Feedback Visual) -->
+                    <?php if($has_attachment): ?>
+                        <div style="margin-bottom: 15px; background: rgba(255,255,255,0.7); padding: 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.05);">
+                            <strong style="display:block; font-size:0.8rem; margin-bottom:5px; color:#555;">Arquivos Enviados:</strong>
+                            <?php foreach($anexos as $arq): ?>
+                                <a href="<?= $arq['path'] ?>" target="_blank" style="display:inline-flex; align-items:center; gap:6px; font-size:0.85rem; color: #0d6efd; text-decoration:none; background:white; padding:5px 10px; border-radius:15px; border:1px solid #ddd; margin-right:5px; margin-bottom:5px;">
+                                    📎 Anexo (<?= date('d/m H:i', $arq['date']) ?>)
+                                </a>
+                            <?php endforeach; ?>
+                            <div style="font-size:0.75rem; color:#888; margin-top:5px;">*O arquivo foi enviado e está sob análise do engenheiro.</div>
                         </div>
                     <?php endif; ?>
 
@@ -218,7 +267,9 @@ function getWhatsappLink($pendency_title) {
                         <form action="pendencias.php" method="POST" enctype="multipart/form-data" style="background: rgba(255,255,255,0.6); padding: 15px; border-radius: 12px; border: 1px dashed <?= $text_title ?>; margin-bottom:0;">
                             <input type="hidden" name="pendencia_id" value="<?= $p['id'] ?>">
                             
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.85rem; color: #333;">Anexar Comprovante/Arquivo:</label>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.85rem; color: #333;">
+                                <?= $has_attachment ? 'Enviar novo arquivo (sobrescrever/adicional):' : 'Anexar Comprovante/Arquivo:' ?>
+                            </label>
                             <div style="display: flex; gap: 10px;">
                                 <input type="file" name="arquivo_pendencia" required style="font-size: 0.85rem; width: 100%; border-radius: 6px; border: 1px solid #ccc; background: #fff; padding:5px;">
                             </div>
