@@ -95,7 +95,7 @@ $obs_atual = $stmt_obs->fetchColumn();
         
 
 
-        <!-- HEADER COM BOTÃO VOLTAR + COMPASS -->
+        <!-- HEADER COM BOTÃO VOLTAR + ANITMATED COMPASS -->
         <div class="page-header" style="justify-content:space-between;">
             <div style="display:flex; align-items:center; gap:15px;">
                 <a href="index.php" class="btn-back">
@@ -104,66 +104,19 @@ $obs_atual = $stmt_obs->fetchColumn();
                 <h1 style="font-size:1.2rem; margin:0; color:#198754;">Acompanhamento do Processo</h1>
             </div>
             
-            <!-- Interactve Compass (CSS) -->
-            <div class="compass-container" title="Processo em Andamento">
-                <div class="compass-ring"></div>
-                <div class="compass-needle"></div>
+            <!-- Animated Compass Icon -->
+            <div class="app-btn-icon" style="background:#f0f4f8; color:#5c7c93; width:50px; height:50px; font-size:1.5rem; animation: compassWiggle 3s ease-in-out infinite;">
+                🧭
             </div>
         </div>
 
         <style>
-            /* Compass Animation */
-            .compass-container {
-                width: 50px; height: 50px;
-                position: relative;
-                display: flex; align-items: center; justify-content: center;
-            }
-            .compass-ring {
-                width: 100%; height: 100%;
-                border-radius: 50%;
-                border: 3px solid #e9ecef;
-                box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
-                background: white;
-            }
-            .compass-needle {
-                width: 6px; height: 30px;
-                background: linear-gradient(to top, #dc3545 50%, #333 50%);
-                position: absolute;
-                top: 10px; left: 22px;
-                clip-path: polygon(50% 0, 0 100%, 100% 100%); /* Simple pointer shape logic changed below */
-                border-radius: 2px;
-                animation: compassSpin 3s infinite ease-in-out alternate;
-            }
-            /* Refined Needle Shape */
-            .compass-needle {
-                width: 8px; height: 34px;
-                background: transparent;
-                position: absolute;
-                top: 8px; left: 21px;
-                clip-path: none;
-                border-radius: 0;
-            }
-            .compass-needle::before {
-                content: ''; position: absolute; top:0; left:0; width:0; height:0;
-                border-left: 4px solid transparent; border-right: 4px solid transparent;
-                border-bottom: 17px solid #dc3545; /* North (Red) points Down in this construction implies rotation? No, let's make North Top */
-                transform: rotate(180deg); transform-origin: center bottom; top: -17px; /* Tricky css shapes, simpler approach below */
-            }
-            /* Simplified Needle: A single div rotating */
-            .compass-needle {
-                width: 4px; height: 36px;
-                background: linear-gradient(to bottom, #dc3545 50%, #333 50%); /* Red Top, Dark Bottom */
-                position: absolute;
-                top: 7px; left: 23px;
-                border-radius: 2px;
-                box-shadow: 0 0 4px rgba(0,0,0,0.2);
-                animation: compassWiggle 4s ease-in-out infinite;
-            }
             @keyframes compassWiggle {
-                0% { transform: rotate(-25deg); }
-                40% { transform: rotate(40deg); }
-                60% { transform: rotate(10deg); }
-                100% { transform: rotate(-25deg); }
+                0% { transform: rotate(0deg); }
+                25% { transform: rotate(-15deg); }
+                50% { transform: rotate(10deg); }
+                75% { transform: rotate(-5deg); }
+                100% { transform: rotate(0deg); }
             }
         </style>
 

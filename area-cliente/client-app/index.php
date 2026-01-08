@@ -260,7 +260,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 
                 <!-- TIMELINE -->
                 <a href="timeline.php" class="app-button">
-                    <div class="app-btn-icon" style="background:#f0f4f8; color:#5c7c93;">⏳</div>
+                    <div class="app-btn-icon" style="background:#f0f4f8; color:#5c7c93;">🧭</div>
                     <div class="app-btn-content">
                         <span class="app-btn-title">Linha do Tempo</span>
                         <span class="app-btn-desc"><?= htmlspecialchars($etapa_atual) ?> (<?= $porcentagem ?>%)</span>
