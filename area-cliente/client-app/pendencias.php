@@ -258,7 +258,8 @@ function get_pendency_files($p_id) {
                              $month_pt = $months_pt[$month] ?? strtoupper($month);
                              $year = date('Y', $time);
                              
-                             $anexos = get_pendency_files($p['id']);
+                             // $anexos = get_pendency_files($p['id']);
+                             $anexos = []; // DEBUG: Disabled for testing
                         ?>
                         <div style="display: flex; gap: 20px; margin-bottom: 20px; align-items: flex-start;">
                             <!-- Data Column -->
