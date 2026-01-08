@@ -25,47 +25,51 @@ $taxas_padrao = require 'config/taxas.php';
 function renderFinTable($stmt, $title, $color, $cid) {
     if(!$stmt) return;
     $rows = $stmt->fetchAll();
-    echo "<div class='form-card' style='border-left: 6px solid $color;'>
-            <h3 style='color:$color;'>$title</h3>";
+    // Use admin-tab-content but with dynamic border color
+    echo "<div class='admin-tab-content' style='border-top: 4px solid $color;'>
+            <h3 class='admin-title' style='color:$color; margin-bottom:20px;'>$title</h3>";
     
     if(count($rows) == 0) {
-        echo "<p style='color:#666; font-style:italic;'>Nenhum lançamento encontrado nesta categoria.</p>";
+        echo "<p class='admin-subtitle' style='font-style:italic;'>Nenhum lançamento encontrado nesta categoria.</p>";
     } else {
-        echo "<div class='table-responsive'>
-              <table style='width:100%; border-collapse:collapse; font-size:0.95rem; min-width:600px;'>
-                <thead><tr style='background:#f8f9fa; border-bottom:2px solid #dee2e6;'>
-                    <th style='padding:12px; text-align:left;'>Descrição</th>
-                    <th style='padding:12px; text-align:left;'>Valor</th>
-                    <th style='padding:12px; text-align:left;'>Vencimento</th>
-                    <th style='padding:12px; text-align:center;'>Status</th>
-                    <th style='padding:12px; text-align:center;'>Ação</th>
-                    <th style='padding:12px;'></th>
+        echo "<div class='admin-table-container'>
+              <table class='admin-table' style='min-width:600px;'>
+                <thead><tr>
+                    <th>Descrição</th>
+                    <th>Valor</th>
+                    <th>Vencimento</th>
+                    <th style='text-align:center;'>Status</th>
+                    <th style='text-align:center;'>Ação</th>
+                    <th></th>
                 </tr></thead><tbody>";
         foreach($rows as $r) {
             $st_color = 'black';
             $st_icon = '';
+            // Badge classes for status
+            $badge_class = 'status-badge'; 
+            $status_label = ucfirst($r['status']);
+            
             switch($r['status']){
-                case 'pago': $st_color='#198754'; $st_icon='✅ Pago'; break;
-                case 'pendente': $st_color='#ffc107'; $st_icon='⏳ Pendente'; break;
-                case 'atrasado': $st_color='#dc3545'; $st_icon='❌ Atrasado'; break;
-                case 'isento': $st_color='#6c757d'; $st_icon='⚪ Isento'; break;
-                default: $st_icon=$r['status'];
+                case 'pago': $badge_class.=' success'; $st_icon='✅'; break;
+                case 'pendente': $badge_class.=' warning'; $st_icon='⏳'; break;
+                case 'atrasado': $badge_class.=' danger'; $st_icon='❌'; break;
+                case 'isento': $badge_class.=' info'; $st_icon='⚪'; break;
             }
             $valor = number_format($r['valor'], 2, ',', '.');
             $data = date('d/m/Y', strtotime($r['data_vencimento']));
-            $link = $r['link_comprovante'] ? "<a href='{$r['link_comprovante']}' target='_blank' style='color:white; background:#0d6efd; padding:4px 8px; border-radius:4px; text-decoration:none; font-size:0.8rem;'>📄 Ver Doc</a>" : "<span style='opacity:0.5'>--</span>";
+            $link = $r['link_comprovante'] ? "<a href='{$r['link_comprovante']}' target='_blank' style='color:#0d6efd; font-weight:600; text-decoration:none;'>📄 Ver Doc</a>" : "<span style='opacity:0.5'>--</span>";
             
-            echo "<tr style='border-bottom:1px solid #eee;'>
-                    <td style='padding:12px;'>{$r['descricao']}</td>
-                    <td style='padding:12px; font-weight:bold;'>R$ {$valor}</td>
-                    <td style='padding:12px;'>{$data}</td>
-                    <td style='padding:12px; text-align:center;'>
-                        <button onclick=\"openStatusFinModal({$r['id']}, '{$r['status']}')\" style=\"background:none; border:1px solid {$st_color}; color:{$st_color}; border-radius:12px; padding:2px 8px; font-weight:bold; cursor:pointer; font-size:0.85rem;\" title=\"Alterar Status\">
-                            {$st_icon} ✏️
-                        </button>
+            echo "<tr>
+                    <td style='font-weight:500;'>{$r['descricao']}</td>
+                    <td style='font-weight:bold;'>R$ {$valor}</td>
+                    <td>{$data}</td>
+                    <td style='text-align:center;'>
+                         <span class='$badge_class' onclick=\"openStatusFinModal({$r['id']}, '{$r['status']}')\" style='cursor:pointer;' title='Alterar Status'>
+                            {$st_icon} {$status_label}
+                         </span>
                     </td>
-                    <td style='padding:12px; text-align:center;'>{$link}</td>
-                    <td style='padding:12px; text-align:right;'>
+                    <td style='text-align:center;'>{$link}</td>
+                    <td style='text-align:right;'>
                         <a href='?cliente_id={$cid}&tab=financeiro&del_fin={$r['id']}' onclick='confirmAction(event, \"Tem certeza que deseja EXCLUIR este lançamento financeiro?\")' style='color:#dc3545; text-decoration:none; font-size:1.1rem;'>🗑️</a>
                     </td>
                   </tr>";
@@ -427,12 +431,12 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             <!-- Script removed as logic is now backend-driven -->
 
             <?php if($active_tab == 'cadastro' || $active_tab == 'andamento'): ?>
-                <div class=""> <!-- Removed inner card style since outer wrapper handles it -->
+                <div class="admin-tab-content">
                     <!-- Unified Header with Actions -->
-                    <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; margin-bottom:20px; gap:15px; border-bottom:1px solid #eee; padding-bottom:15px;">
+                    <div class="admin-header-row">
                         <div>
-                            <h3 style="margin:0; font-size:1.3rem; color: #198754;">📜 Histórico Completo do Processo</h3>
-                            <p style="margin:5px 0 0 0; color:#888; font-size:0.9rem;">Registre aqui todos os passos e comunicações.</p>
+                            <h3 class="admin-title">📜 Histórico Completo do Processo</h3>
+                            <p class="admin-subtitle">Registre aqui todos os passos e comunicações.</p>
                         </div>
                         
                         <div style="display:flex; gap:10px; align-items:center;">
@@ -451,9 +455,9 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             </a>
                         </div>
                     </div>
-                    <div class="table-responsive">
-                        <table style="width:100%; border-collapse:collapse;">
-                            <thead><tr style="background:rgba(0,0,0,0.03);"><th style="padding:10px; text-align:left;">Data</th><th style="padding:10px; text-align:left;">Evento</th><th style="padding:10px; text-align:center;">Ação</th></tr></thead>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead><tr><th>Data</th><th>Evento</th><th style="text-align:center;">Ação</th></tr></thead>
                             <tbody>
                                 <?php 
                                 $hist = $pdo->prepare("SELECT * FROM processo_movimentos WHERE cliente_id=? ORDER BY data_movimento DESC");
@@ -470,12 +474,12 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                         $icon_type = "📄";
                                     }
                                 ?>
-                                    <tr style="border-bottom:1px solid #eee; <?= $row_style ?>">
-                                        <td style="padding:15px; font-size:0.9rem; color:#555; white-space:nowrap; vertical-align:top;">
+                                    <tr style="<?= $row_style ?>">
+                                        <td style="white-space:nowrap; vertical-align:top;">
                                             <?= date('d/m/Y H:i', strtotime($h['data_movimento'])) ?>
                                         </td>
-                                        <td style="padding:15px;">
-                                            <div style="font-weight:bold; margin-bottom:5px; color:#212529;"><?= htmlspecialchars($h['titulo_fase']) ?></div>
+                                        <td>
+                                            <div style="font-weight:bold; margin-bottom:5px; color:#212529; font-size:1rem;"><?= htmlspecialchars($h['titulo_fase']) ?></div>
                                             <?php 
                                                 // Lógica de exibição de comentários estilizados
                                                 $parts = explode("||COMENTARIO_USER||", $h['descricao']);
@@ -483,7 +487,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                                 // Mas previne XSS grosseiro se quiser, porem aqui confiamos no admin.
                                                 // removemos htmlspecialchars e nl2br pois o CKEditor já formata p/ html
                                                 $sys_desc = $parts[0]; 
-                                                echo "<div style='color:var(--color-text-subtle); line-height:1.5;'>{$sys_desc}</div>";
+                                                echo "<div style='color:var(--color-text-subtle); line-height:1.5; font-size:0.95rem;'>{$sys_desc}</div>";
                                                 
                                                 // Se tiver comentário do usuário
                                                 if (count($parts) > 1) {
@@ -496,7 +500,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                             ?>
                                         </td>
 
-                                        <td style="padding:15px; text-align:center; vertical-align:top;">
+                                        <td style="text-align:center; vertical-align:top;">
                                             <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento&del_hist=<?= $h['id'] ?>" onclick="confirmAction(event, 'ATENÇÃO: Deseja realmente apagar este histórico? Essa ação é irreversível.')" style="text-decoration:none; color:#dc3545; font-size:1.1rem; padding:5px;" title="Excluir Histórico">🗑️</a>
                                         </td>
                                     </tr>
@@ -509,7 +513,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             <?php elseif($active_tab == 'pendencias'): ?>
 
                 <!-- PENDÊNCIAS CONTENT (Laranja) -->
-                <div>
+                <div class="admin-tab-content">
                     <!-- LÓGICA DE EXCLUSÃO (Backend) -->
                     <?php
                     // 1. Exclusão Individual
@@ -545,10 +549,10 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     }
                     ?>
 
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 20px;">
+                    <div class="admin-header-row">
                         <div>
-                            <h3 style="color:#198754; margin-bottom:5px;">📋 Checklist de Pendências</h3>
-                            <p style="color:var(--color-text-subtle); margin-bottom:10px;">Gerencie os itens pendentes e verifique os arquivos enviados.</p>
+                            <h3 class="admin-title">📋 Checklist de Pendências</h3>
+                            <p class="admin-subtitle">Gerencie os itens pendentes e verifique os arquivos enviados.</p>
                         </div>
                         
                         <div style="text-align:right;">
@@ -595,14 +599,14 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     </div>
                     
                     <!-- Lista de Pendências (MOVIDO PARA CIMA) -->
-                    <div class="table-responsive" style="margin-bottom: 30px;">
-                        <table style="width:100%; border-collapse:collapse;">
+                    <div class="admin-table-container">
+                        <table class="admin-table">
                             <thead>
-                                <tr style="border-bottom:2px solid #dee2e6; background:#f8f9fa; color:#198754;">
-                                    <th style="padding:15px; text-align:left; width:60%;">Descrição</th>
-                                    <th style="padding:15px; text-align:center;">Data</th>
-                                    <th style="padding:15px; text-align:center;">Status</th>
-                                    <th style="padding:15px; text-align:right;">Ações</th>
+                                <tr>
+                                    <th style="width:60%;">Descrição</th>
+                                    <th style="text-align:center;">Data</th>
+                                    <th style="text-align:center;">Status</th>
+                                    <th style="text-align:right;">Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -665,8 +669,8 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                         $arquivos[] = ['arquivo_nome' => 'Anexo (Antigo)', 'arquivo_path' => $p['arquivo_path']];
                                     }
                                 ?>
-                                    <tr style="border-bottom:1px solid #eee; background:<?= $bg_row ?>; opacity:<?= $row_opac ?>;">
-                                        <td style="padding:15px;">
+                                    <tr style="background:<?= $bg_row ?>; opacity:<?= $row_opac ?>;">
+                                        <td>
                                             <div style="font-size:1.05rem; color:#333; text-decoration:<?= $txt_dec ?>;">
                                                 <?= $p['descricao'] // Já permite HTML do editor ?>
                                             </div>
@@ -686,19 +690,19 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                                 </div>
                                             <?php endif; ?>
                                         </td>
-                                        <td style="padding:15px; text-align:center; color:#777; font-size:0.9rem;">
+                                        <td style="text-align:center; color:#777; font-size:0.9rem;">
                                             <?= date('d/m/Y', strtotime($p['data_criacao'])) ?>
                                         </td>
-                                        <td style="padding:15px; text-align:center;">
+                                        <td style="text-align:center;">
                                             <?php if($is_res): ?>
-                                                <span style="background:#198754; color:white; padding:4px 10px; border-radius:20px; font-size:0.8rem; font-weight:bold;">RESOLVIDO</span>
+                                                <span class="status-badge success">RESOLVIDO</span>
                                             <?php elseif($is_anexo): ?>
-                                                <span style="background:#0d6efd; color:white; padding:4px 10px; border-radius:20px; font-size:0.8rem; font-weight:bold;">ANEXADO</span>
+                                                <span class="status-badge info">ANEXADO</span>
                                             <?php else: ?>
-                                                <span style="background:#ffc107; color:#000; padding:4px 10px; border-radius:20px; font-size:0.8rem; font-weight:bold;">PENDENTE</span>
+                                                <span class="status-badge warning">PENDENTE</span>
                                             <?php endif; ?>
                                         </td>
-                                        <td style="padding:15px; text-align:right;">
+                                        <td style="text-align:right;">
                                             <?php if(!$is_res): ?>
                                                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias&toggle_pendencia=<?= $p['id'] ?>" class="btn-icon" style="background:#fff3e0; color:#ef6c00; border:1px solid #ffe0b2; margin-right:5px;" title="Marcar como Resolvido">✅</a>
                                                 <button onclick="openEditPendencia(<?= $p['id'] ?>, '<?= addslashes(str_replace(["\r", "\n"], '', $p['descricao'])) // Encode seguro para JS inline ?>')" class="btn-icon" style="background:#e3f2fd; color:#0d6efd; border:1px solid #d1e7dd; margin-right:5px;" title="Editar">✏️</button>
@@ -725,20 +729,20 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
             <?php elseif($active_tab == 'arquivos'): ?>
                 
-                <!-- ARQUIVOS CONTENT (Azul) -->
-                <div>
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <!-- ARQUIVOS CONTENT (Verde Vilela) -->
+                <div class="admin-tab-content">
+                    <div class="admin-header-row">
                         <div>
-                            <h3 style="color:#198754;">📂 Arquivos do Cliente</h3>
-                            <p style="margin-bottom:20px; color:var(--color-text-subtle);">Central de links e pastas do Google Drive.</p>
+                            <h3 class="admin-title">📂 Arquivos do Cliente</h3>
+                            <p class="admin-subtitle">Central de links e pastas do Google Drive.</p>
                         </div>
                     </div>
                     
                     <form method="POST">
                         <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
-                        <div class="form-group">
-                            <label>🔗 Link da Pasta Geral (Backup/Drive)</label>
-                            <input type="text" name="link_drive_pasta" value="<?= $detalhes['link_drive_pasta']??'' ?>" placeholder="https://drive.google.com/...">
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">🔗 Link da Pasta Geral (Backup/Drive)</label>
+                            <input type="text" name="link_drive_pasta" value="<?= $detalhes['link_drive_pasta']??'' ?>" class="admin-form-input" placeholder="https://drive.google.com/...">
                         </div>
 
                         <button type="submit" name="btn_salvar_arquivos" class="btn-save" style="background:#198754; color:white; border:none; box-shadow:0 4px 10px rgba(25, 135, 84, 0.3);">Salvar Links</button>
@@ -771,12 +775,12 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             <?php elseif($active_tab == 'financeiro'): ?>
 
                 <!-- FINANCEIRO CONTENT (Verde) -->
-                <div>
+                <div class="admin-tab-content">
                 <!-- Header e Botão Novo Lançamento -->
-                <div style="margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; padding-bottom:15px; border-bottom:1px solid #e0e0e0;">
+                <div class="admin-header-row">
                     <div>
-                        <h3 style="margin:0; color:#198754;">💰 Fluxo Financeiro</h3>
-                        <p style="margin:5px 0 0 0; font-size:0.9rem; color:#666;">Gerencie honorários, taxas e despesas do processo.</p>
+                        <h3 class="admin-title">💰 Fluxo Financeiro</h3>
+                        <p class="admin-subtitle">Gerencie honorários, taxas e despesas do processo.</p>
                     </div>
                     <button type="button" onclick="document.getElementById('modalFinanceiro').showModal()" style="background:linear-gradient(135deg, #198754, #146c43); color:white; border:none; padding:12px 25px; border-radius:30px; font-weight:700; font-size:1rem; cursor:pointer; display:flex; align-items:center; gap:8px; box-shadow:0 4px 15px rgba(25, 135, 84, 0.3); transition:all 0.2s;">
                         <span style="font-size:1.2rem;">➕</span> Novo Lançamento

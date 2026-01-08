@@ -1197,3 +1197,133 @@ html.sidebar-collapsed .sidebar-toggler {
 /* Avatar Style Fix */
 .nav-avatar-btn { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, #146c43, #0f5132); color: white; display: flex; align-items: center; justify-content: center; border: 2px solid #e9ecef; overflow: hidden; padding: 0; cursor: pointer; transition: 0.3s; } .nav-avatar-btn:hover { transform: scale(1.05); box-shadow: 0 4px 10px rgba(20, 108, 67, 0.25); }
 
+
+/* --- NEW STANDARDIZED TYPOGRAPHY & LAYOUT SYSTEM (2026) --- */
+
+/* 1. Typography Standards */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', sans-serif;
+    color: var(--color-primary);
+}
+
+/* Unified Section Headers */
+.admin-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e0e0e0;
+    gap: 15px;
+    flex-wrap: wrap; 
+}
+
+.admin-title {
+    margin: 0;
+    font-size: 1.5rem; 
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1.2;
+}
+
+.admin-subtitle {
+    margin: 5px 0 0 0;
+    font-size: 1rem;
+    color: var(--color-text-subtle);
+    font-weight: 400;
+}
+
+/* 2. Container Standard */
+.admin-tab-content {
+    background: #fff;
+    border-top: 4px solid var(--color-primary);
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    padding: 30px; 
+    margin-bottom: 30px;
+}
+
+/* 3. Table Standard */
+.admin-table-container {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem; 
+}
+
+.admin-table thead tr {
+    background: #f8f9fa;
+    border-bottom: 2px solid var(--color-border);
+}
+
+.admin-table th {
+    padding: 15px;
+    text-align: left;
+    font-weight: 700;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.admin-table td {
+    padding: 15px;
+    vertical-align: middle;
+    border-bottom: 1px solid #eee;
+    color: var(--color-text);
+}
+
+.admin-table tbody tr:hover {
+    background-color: #f8fdfa; 
+}
+
+/* 4. Form & Input Improvements */
+.admin-form-group {
+    margin-bottom: 20px;
+}
+
+.admin-form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--color-primary);
+    font-size: 0.95rem;
+}
+
+.admin-form-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: 'Outfit', sans-serif;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+}
+
+.admin-form-input:focus {
+    border-color: var(--color-primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(20, 108, 67, 0.1);
+}
+
+/* 5. Badge & Status Utility */
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: inline-block;
+    text-transform: uppercase;
+}
+
+.status-badge.success { background: #d1e7dd; color: #0f5132; }
+.status-badge.warning { background: #fff3cd; color: #856404; }
+.status-badge.danger  { background: #f8d7da; color: #842029; }
+.status-badge.info    { background: #cff4fc; color: #055160; }
+
