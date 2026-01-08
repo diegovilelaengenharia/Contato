@@ -243,20 +243,23 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 </a>
 
                 <!-- 3. PENDÊNCIAS -->
-                <!-- 3. PENDÊNCIAS -->
                 <?php 
-                    $p_color = '#dc3545'; // Always Red
+                    // Se houver pendências: Vermelho (#dc3545)
+                    // Se NÃO houver: Cinza Bacana (#6c757d)
+                    $p_color = ($pend_qtd > 0) ? '#dc3545' : '#6c757d';
+                    $p_bg    = ($pend_qtd > 0) ? '#fce8e6' : '#e9ecef';
+                    $p_icon  = ($pend_qtd > 0) ? '⚠️' : '✅'; // Warning se tiver, Check se não
                 ?>
                 <a href="pendencias.php" class="app-button" style="border-left-color: <?= $p_color ?>;">
-                    <div class="app-btn-icon" style="background:#fce8e6; color:<?= $p_color ?>;">⚠️</div>
+                    <div class="app-btn-icon" style="background:<?= $p_bg ?>; color:<?= $p_color ?>;"><?= $p_icon ?></div>
                     <div class="app-btn-content">
                         <span class="app-btn-title" style="color: #333;">Pendências</span>
                         <?php if($pend_qtd > 0): ?>
                             <span class="app-btn-desc" style="color:#dc3545; font-weight:600;">
-                                <?= htmlspecialchars(mb_strimwidth($last_pend_name, 0, 40, "...")) ?>
+                                <?= htmlspecialchars(mb_strimwidth($last_pend_name, 0, 35, "...")) ?>
                             </span>
                         <?php else: ?>
-                            <span class="app-btn-desc">Nenhuma pendência recente</span>
+                            <span class="app-btn-desc" style="color:#888;">Nenhuma pendência recente</span>
                         <?php endif; ?>
                     </div>
                     <?php if($pend_qtd > 0): ?>
