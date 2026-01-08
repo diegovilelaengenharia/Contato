@@ -70,44 +70,68 @@ $obs_atual = $stmt_obs->fetchColumn();
         /* Override basic settings for full page view */
         body { background: #f4f6f8; }
         .page-header {
-            background: #e8f5e9; /* Light Green */
+            background: linear-gradient(135deg, #198754 0%, #0f5132 100%); /* Green Gradient Premium */
             border-bottom: none;
-            padding: 25px 20px; 
-            border-bottom-left-radius: 20px; 
-            border-bottom-right-radius: 20px;
-            box-shadow: 0 4px 15px rgba(25, 135, 84, 0.1); 
-            margin-bottom: 25px;
-            display: flex; align-items: center; gap: 10px;
-            color: #146c43;
+            padding: 30px 25px; 
+            border-bottom-left-radius: 30px; 
+            border-bottom-right-radius: 30px;
+            box-shadow: 0 10px 30px rgba(25, 135, 84, 0.25); 
+            margin-bottom: 30px;
+            display: flex; align-items: center; justify-content: space-between;
+            color: white;
+            position: relative;
+            overflow: hidden;
         }
+        
+        /* Decorative Circle */
+        .page-header::after {
+            content: ''; position: absolute; top: -50px; right: -50px;
+            width: 150px; height: 150px; background: rgba(255,255,255,0.1);
+            border-radius: 50%; pointer-events: none;
+        }
+
         .btn-back {
-            text-decoration: none; color: #146c43; font-weight: 600; 
-            display: flex; align-items: center; gap: 5px;
-            padding: 8px 16px; background: #fff; border-radius: 20px;
-            transition: 0.2s;
-            font-size: 0.9rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            text-decoration: none; color: white; font-weight: 600; 
+            display: flex; align-items: center; gap: 8px;
+            padding: 10px 20px; 
+            background: rgba(255,255,255,0.2); /* Glassmorphism */
+            backdrop-filter: blur(5px);
+            border-radius: 25px;
+            transition: 0.3s;
+            font-size: 0.95rem;
+            border: 1px solid rgba(255,255,255,0.3);
         }
+        .btn-back:hover { background: rgba(255,255,255,0.3); transform: translateX(-3px); }
+        
+        .header-title-box {
+            display: flex; flex-direction: column; align-items: flex-end; text-align: right;
+        }
+        .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; }
+        .header-title-sub { font-size: 0.8rem; opacity: 0.8; font-weight: 400; margin-top: 2px; }
     </style>
 </head>
 <body>
 
     <div class="app-container">
         
-
-
         <!-- HEADER COM BOTÃO VOLTAR + ANITMATED COMPASS -->
-        <div class="page-header" style="justify-content:space-between;">
-            <div style="display:flex; align-items:center; gap:15px;">
-                <a href="index.php" class="btn-back">
-                    <span>←</span> Voltar
-                </a>
-                <h1 style="font-size:1.2rem; margin:0; color:#198754;">Acompanhamento do Processo</h1>
-            </div>
-            
-            <!-- Animated Compass Icon -->
-            <div class="app-btn-icon" style="background:#f0f4f8; color:#5c7c93; width:50px; height:50px; font-size:1.5rem; animation: compassWiggle 3s ease-in-out infinite;">
-                🧭
+        <div class="page-header">
+            <!-- Left: Back Button -->
+            <a href="index.php" class="btn-back">
+                <span class="material-symbols-rounded">arrow_back</span> Voltar
+            </a>
+
+            <!-- Right: Title & Icon -->
+            <div style="display:flex; align-items:center; gap:15px; z-index:2;">
+                 <div class="header-title-box">
+                    <span class="header-title-main">Linha do Tempo</span>
+                    <span class="header-title-sub">Acompanhamento do Processo</span>
+                 </div>
+                 
+                 <!-- Animated Compass Icon -->
+                 <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(5px); border:1px solid rgba(255,255,255,0.3); color: white; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; animation: compassWiggle 4s ease-in-out infinite;">
+                    🧭
+                 </div>
             </div>
         </div>
 
