@@ -170,52 +170,49 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
         
         <!-- HEADER STYLE PREMIUM WOW (Glass + Gradient) -->
         <!-- HEADER STYLE PREMIUM WOW (Glass + Gradient) -->
-        <!-- HEADER TITLE - Portal Definition -->
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 25px; margin-top: 25px;">
-            <img src="../../assets/logo.png" alt="Vilela Engenharia" style="height: 55px; margin-bottom: 12px; opacity: 1;">
+        <!-- UNIFIED HEADER (Premium Card Style) -->
+        <header style="background: white; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); overflow: hidden; margin: 20px 20px 30px 20px; position: relative;">
             
-            <div style="background: #222; padding: 10px 30px; border-radius: 50px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 215, 0, 0.2); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
-                <!-- Shine Effect Background -->
-                <div style="position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); animation: shine 3s infinite;"></div>
-                
-                <span style="font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: white;">
+            <!-- TOP: BRANDING Area -->
+            <div style="padding: 25px 20px 20px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #fff;">
+                <img src="../../assets/logo.png" alt="Vilela Engenharia" style="height: 55px; margin-bottom: 8px; opacity: 1;">
+                <span style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #666;">
                     Portal de Acompanhamento
                 </span>
             </div>
-        </div>
-        <style>
-            @keyframes shine { 0% { left: -100%; } 20% { left: 100%; } 100% { left: 100%; } }
-            @keyframes textShine { to { background-position: 200% center; } }
-        </style>
-        <header class="premium-header" style="flex-direction: column; gap: 10px; align-items: stretch;">
-            
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-                <div class="ph-content" style="flex: 1;">
-                    <!-- AVATAR (Re-added, small) -->
+
+            <!-- BOTTOM: USER Area (Green) -->
+            <div style="background: linear-gradient(135deg, #198754 0%, #146c43 100%); padding: 18px 25px; display: flex; align-items: center; justify-content: space-between;">
+                
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <!-- AVATAR -->
                     <?php 
                         $avatarPath = $cliente['foto_perfil'] ?? '';
                         if($avatarPath && !str_starts_with($avatarPath, '../') && !str_starts_with($avatarPath, 'http')) $avatarPath = '../' . $avatarPath;
                     ?>
-                    <div class="ph-avatar-box" style="width: 45px; height: 45px; margin-right: 12px;">
+                    <div style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.8); overflow: hidden; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center;">
                         <?php if($avatarPath && file_exists($avatarPath) && !is_dir($avatarPath)): ?>
                             <img src="<?= htmlspecialchars($avatarPath) ?>?v=<?= time() ?>" style="width:100%; height:100%; object-fit:cover;">
                         <?php else: ?>
-                            <span style="font-size:1.2rem; color:white;">👤</span>
+                            <span style="font-size:1.1rem; color:white;">👤</span>
                         <?php endif; ?>
                     </div>
 
-                    <div class="ph-info">
-                        <h1 style="margin:0; font-size:1.4rem;">Olá, <?= htmlspecialchars(explode(' ', $cliente['nome'])[0]) ?>!</h1>
+                    <!-- NAME -->
+                    <div style="display: flex; flex-direction: column;">
+                        <span style="font-size: 0.75rem; color: rgba(255,255,255,0.8); font-weight: 500; line-height: 1;">Bem-vindo(a),</span>
+                        <span style="font-size: 1.1rem; color: white; font-weight: 700; line-height: 1.2;">
+                            <?= htmlspecialchars(explode(' ', $cliente['nome'])[0]) ?>
+                        </span>
                     </div>
                 </div>
 
-                <div class="ph-actions">
-                    <a href="logout.php" class="ph-logout" style="background: rgba(220, 53, 69, 0.2); color: #ffcccc; border: 1px solid rgba(220, 53, 69, 0.3); padding: 6px 12px; border-radius: 8px; text-decoration: none; display: flex; align-items: center; gap: 6px;">
-                        <span class="material-symbols-rounded" style="font-size:1.1rem;">logout</span>
-                        <span style="font-size: 0.85rem; font-weight: 600;">Sair</span>
-                    </a>
-                </div>
+                <!-- LOGOUT -->
+                <a href="logout.php" style="background: rgba(0,0,0,0.2); width: 38px; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: background 0.2s;">
+                    <span class="material-symbols-rounded" style="font-size: 1.2rem;">logout</span>
+                </a>
 
+            </div>
         </header>
 
 
