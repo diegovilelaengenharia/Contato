@@ -172,36 +172,23 @@ $obs_atual = $stmt_obs->fetchColumn();
 
     <div class="app-container">
         
-        <!-- HEADER COM BOTÃO VOLTAR + ANITMATED COMPASS -->
-        <div class="page-header">
+        <!-- SIMPLE HEADER -->
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 30px; padding: 20px 0; border-bottom: 1px solid #e0e0e0;">
             <!-- Left: Back Button -->
-            <a href="index.php" class="btn-back">
+            <a href="index.php" style="text-decoration:none; color:#333; font-weight:600; display:flex; align-items:center; gap:5px; padding:8px 15px; background:white; border-radius:20px; border:1px solid #ddd; box-shadow:0 2px 5px rgba(0,0,0,0.05); font-size: 0.9rem;">
                 <span class="material-symbols-rounded">arrow_back</span> Voltar
             </a>
 
-            <!-- Right: Title & Icon -->
-            <div style="display:flex; align-items:center; gap:15px; z-index:2;">
-                 <div class="header-title-box">
-                    <span class="header-title-main">Linha do Tempo</span>
-                    <span class="header-title-sub">Acompanhamento do Processo</span>
-                 </div>
-                 
-                 <!-- Animated Compass Icon -->
-                 <div style="background: white; border:1px solid #dee2e6; color: #343a40; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05); animation: compassWiggle 4s ease-in-out infinite;">
-                    🧭
-                 </div>
+            <!-- Center/Right: Logo & Title -->
+            <div style="display:flex; align-items:center; gap:15px;">
+                <div style="text-align:right;">
+                    <h1 style="margin:0; font-size:1.2rem; color:#146c43; font-weight:700;">Acompanhamento</h1>
+                    <span style="display:block; font-size:0.7rem; color:#999; text-transform:uppercase; letter-spacing:1px;">Linha do Tempo</span>
+                </div>
+                <!-- LOGO - Adjust path if needed, assuming assets is in root -->
+                <img src="../../assets/logo.png" alt="Vilela Engenharia" style="height:50px; width:auto; opacity:0.9;">
             </div>
         </div>
-
-        <style>
-            @keyframes compassWiggle {
-                0% { transform: rotate(0deg); }
-                25% { transform: rotate(-15deg); }
-                50% { transform: rotate(10deg); }
-                75% { transform: rotate(-5deg); }
-                100% { transform: rotate(0deg); }
-            }
-        </style>
 
         <!-- CONTEÚDO DA TIMELINE -->
         <div style="background:white; border-radius:16px; padding:20px; box-shadow:0 4px 12px rgba(0,0,0,0.05);">
@@ -256,52 +243,70 @@ $obs_atual = $stmt_obs->fetchColumn();
             <!-- TIMELINE STEPPER (GROUPED - INTERACTIVE) -->
             <div class="timeline-container-full" style="padding-left:0; margin-bottom:30px;">
                 <?php 
-                    // DETALHAMENTO EDUCATIVO DAS FASES
+                    // DETALHAMENTO EDUCATIVO DAS FASES (Atualizado com textos Premium)
                     $fases_detalhes = [
                         'Abertura de Processo (Guichê)' => [
-                            'desc' => 'Iniciamos o protocolo oficial na Prefeitura. Seu processo recebe um número único e entra na fila de distribuição.',
-                            'prazo' => '2 a 5 dias úteis',
-                            'icon' => '📂'
+                            'titulo_display' => 'Abertura de Processo (Protocolo)',
+                            'desc' => 'Realizamos o protocolo oficial na Secretaria de Obras. Seu processo recebe um número único de identificação para acompanhamento legal e entra na fila de distribuição interna.',
+                            'prazo' => 'Variável conforme demanda',
+                            'icon' => '📂',
+                            'proxima_fase' => 'O processo será encaminhado para o Setor de Fiscalização.'
                         ],
                         'Fiscalização (Parecer Fiscal)' => [
-                            'desc' => 'Um fiscal da Prefeitura visita o local (ou analisa via satélite) para conferir se a construção existe e bate com as medidas básicas.',
-                            'prazo' => '7 a 15 dias',
-                            'icon' => '🧐'
+                            'titulo_display' => 'Vistoria Técnica (Parecer Fiscal)',
+                            'desc' => 'Um fiscal da Prefeitura realiza a diligência in loco para verificar a realidade do imóvel (se a obra já existe, se está em estágio de alicerce ou se é lote vago), confrontando com as medidas da matrícula.',
+                            'prazo' => 'Variável conforme rota',
+                            'icon' => '🧐',
+                            'proxima_fase' => 'Após o laudo fiscal, o processo segue para Triagem Administrativa.'
                         ],
                         'Triagem (Documentos Necessários)' => [
-                            'desc' => 'Conferência administrativa para ver se todas as certidões e documentos pessoais estão anexados corretamente.',
-                            'prazo' => '3 a 7 dias',
-                            'icon' => '📑'
+                            'titulo_display' => 'Triagem Administrativa (Documentação)',
+                            'desc' => 'Conferência rigorosa da validade jurídica dos documentos (Matrícula atualizada, ART/RRT quitada, documentos pessoais) conforme exigido pelo Decreto Municipal de documentos obrigatórios.',
+                            'prazo' => 'Análise administrativa',
+                            'icon' => '📑',
+                            'proxima_fase' => 'Estando tudo ok, segue para a Engenharia. Se não, gera Comunicado.'
                         ],
                         'Comunicado de Pendências (Triagem)' => [
-                            'desc' => 'A Prefeitura solicitou algum documento extra ou correção. Nossa equipe já está providenciando para destravar.',
-                            'prazo' => 'Depende da pendência',
-                            'icon' => '⚠️'
+                            'titulo_display' => 'Saneamento de Pendências (Administrativo)',
+                            'desc' => 'A Prefeitura emitiu um "Comunique-se" solicitando documentos complementares ou correções na titularidade. Nossa equipe atua imediatamente para sanar e destravar o fluxo.',
+                            'prazo' => 'Aguarda regularização',
+                            'icon' => '⚠️',
+                            'proxima_fase' => 'Retorno para reanálise na Triagem ou Engenharia.'
                         ],
                         'Análise Técnica (Engenharia)' => [
-                            'desc' => 'A fase mais rigorosa. Engenheiros da Prefeitura analisam cada detalhe do projeto arquitetônico (recuos, áreas, iluminação).',
-                            'prazo' => '15 a 45 dias',
-                            'icon' => '📐'
+                            'titulo_display' => 'Análise de Engenharia (Urbanística)',
+                            'desc' => 'Etapa crítica onde os Analistas Técnicos verificam se o projeto respeita a LC 267/2019: recuos obrigatórios, taxa de ocupação e a permeabilidade mínima de 20%.',
+                            'prazo' => 'Conforme complexidade',
+                            'icon' => '📐',
+                            'proxima_fase' => 'Emissão de taxas de aprovação ou solicitação de ajustes técnicos.'
                         ],
                         'Comunicado (Pendências e Taxas)' => [
-                            'desc' => 'O projeto precisa de ajustes técnicos solicitados pelo analista ou há taxas de aprovação emitidas para pagamento.',
-                            'prazo' => '5 a 10 dias',
-                            'icon' => '💰'
+                            'titulo_display' => 'Adequação de Projeto e Taxas',
+                            'desc' => 'Fase de ajustes técnicos no desenho (se houver infrações edilícias ou urbanísticas apontadas) e emissão das Guias de Arrecadação Municipal (Taxas de Licença e Aprovação) para pagamento.',
+                            'prazo' => 'Depende do pagamento/ajuste',
+                            'icon' => '💰',
+                            'proxima_fase' => 'Com taxas pagas e projeto deferido, segue para emissão do Alvará.'
                         ],
                         'Confecção de Documentos' => [
-                            'desc' => 'Projeto aprovado! Agora a Prefeitura está gerando o Alvará, a Certidão de Conclusão ou o Habite-se oficial.',
-                            'prazo' => '5 a 10 dias',
-                            'icon' => '🖨️'
+                            'titulo_display' => 'Emissão de Alvará/Habite-se',
+                            'desc' => 'Processo Deferido! A Secretaria de Obras confecciona e assina o Alvará de Construção (ou Regularização) e, quando aplicável, a Certidão de Conclusão de Obra (Habite-se).',
+                            'prazo' => 'Trâmite interno de assinatura',
+                            'icon' => '🖨️',
+                            'proxima_fase' => 'Entrega da documentação física/digital para averbação.'
                         ],
                         'Avaliação (ITBI/Averbação)' => [
-                            'desc' => 'Fase de regularização fiscal e cartorária. Cálculo de impostos de transmissão e preparação para registro em cartório.',
-                            'prazo' => '15 a 30 dias',
-                            'icon' => '🏦'
+                            'titulo_display' => 'Trâmites Finais (Cartório/CND)',
+                            'desc' => 'Com o Habite-se e a CND (Certidão Negativa de Débitos) em mãos, iniciamos a averbação da construção na matrícula do imóvel junto ao Cartório de Registro de Imóveis.',
+                            'prazo' => 'Prazo do Cartório',
+                            'icon' => '🏦',
+                            'proxima_fase' => 'Entrega do processo finalizado.'
                         ],
                         'Processo Finalizado (Documentos Prontos)' => [
-                            'desc' => 'Tudo pronto! Seu imóvel está 100% regularizado com documentação em mãos.',
+                            'titulo_display' => 'Regularização Concluída',
+                            'desc' => 'Ciclo encerrado. Seu imóvel está 100% regular, valorizado de mercado e apto para financiamento ou venda legal.',
                             'prazo' => 'Concluído',
-                            'icon' => '🎉'
+                            'icon' => '🎉',
+                            'proxima_fase' => 'Processo Arquivado.'
                         ]
                     ];
 
@@ -328,8 +333,17 @@ $obs_atual = $stmt_obs->fetchColumn();
                                 $is_curr = $global_index === $fase_index;
                                 
                                 // Dados da Fase
-                                $dados = $fases_detalhes[$fase] ?? ['desc'=>'Sem detalhes.', 'prazo'=>'-', 'icon'=>'▫️'];
+                                $dados = $fases_detalhes[$fase] ?? [
+                                    'titulo_display' => $fase,
+                                    'desc' => 'Sem detalhes.', 
+                                    'prazo' => '-', 
+                                    'icon' => '▫️', 
+                                    'proxima_fase' => ''
+                                ];
                                 
+                                // Display Title Logic
+                                $display_title = $dados['titulo_display'];
+
                                 // Icons logic
                                 $icon_display = '▫️'; 
                                 if($is_past) $icon_display = '✅';
@@ -341,7 +355,7 @@ $obs_atual = $stmt_obs->fetchColumn();
                         ?>
                             <!-- CLICKABLE WRAPPER -->
                             <div 
-                                onclick="openPhaseModal('<?= htmlspecialchars($fase) ?>', '<?= htmlspecialchars($dados['desc']) ?>', '<?= htmlspecialchars($dados['prazo']) ?>', '<?= $dados['icon'] ?>', '<?= $is_curr ? 'atual' : ($is_past ? 'concluido' : 'futuro') ?>')"
+                                onclick="openPhaseModal('<?= htmlspecialchars($display_title) ?>', '<?= htmlspecialchars($dados['desc']) ?>', '<?= htmlspecialchars($dados['prazo']) ?>', '<?= $dados['icon'] ?>', '<?= $is_curr ? 'atual' : ($is_past ? 'concluido' : 'futuro') ?>', '<?= htmlspecialchars($dados['proxima_fase'] ?? '') ?>')"
                                 style="display:flex; gap:15px; position:relative; padding-bottom:25px; cursor:pointer; transition: opacity 0.2s;"
                                 onmouseover="this.style.opacity='0.7'"
                                 onmouseout="this.style.opacity='1'"
@@ -357,7 +371,7 @@ $obs_atual = $stmt_obs->fetchColumn();
                                 <!-- Text -->
                                 <div style="padding-top:4px;">
                                     <span style="font-size:0.95rem; display:block; <?= $text_style ?>">
-                                        <?= $fase ?> <span style="font-size:0.7rem; color:#ccc; margin-left:5px;">(Ver +)</span>
+                                        <?= $display_title ?> <span style="font-size:0.7rem; color:#ccc; margin-left:5px;">(Ver +)</span>
                                     </span>
                                     <?php if($is_curr): ?>
                                         <div style="margin-top:5px;">
@@ -461,12 +475,18 @@ $obs_atual = $stmt_obs->fetchColumn();
                 </div>
             </div>
 
+            <!-- NEXT STEP SECTION -->
+            <div id="modalNextBox" style="margin-top:20px; padding-top:20px; border-top:1px solid #eee; display:none;">
+                <strong style="display:block; font-size:0.8rem; color:#198754; text-transform:uppercase; margin-bottom:5px;">👉 Próxima Etapa</strong>
+                <p id="modalNext" style="font-size:0.9rem; color:#555; margin:0; line-height:1.4;"></p>
+            </div>
+
             <button class="btn-close-modal" onclick="closePhaseModal()">Entendi</button>
         </div>
     </div>
 
     <script>
-        function openPhaseModal(title, desc, time, icon, status) {
+        function openPhaseModal(title, desc, time, icon, status, next) {
             document.getElementById('modalTitle').textContent = title;
             document.getElementById('modalDesc').textContent = desc;
             document.getElementById('modalTime').textContent = time;
@@ -474,6 +494,15 @@ $obs_atual = $stmt_obs->fetchColumn();
             
             const badge = document.getElementById('modalBadge');
             const overlay = document.getElementById('detailModalOverlay');
+            
+            // Next Step Logic
+            const nextBox = document.getElementById('modalNextBox');
+            if(next && next !== '') {
+                document.getElementById('modalNext').textContent = next;
+                nextBox.style.display = 'block';
+            } else {
+                nextBox.style.display = 'none';
+            }
             
             // Status Logic
             if(status === 'atual') {
