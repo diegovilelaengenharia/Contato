@@ -174,9 +174,13 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
         <header style="background: white; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); overflow: hidden; margin: 20px 20px 30px 20px; position: relative; border: 1px solid #e0e0e0;">
             
             <!-- TOP: BRANDING Area -->
-            <div style="padding: 25px 20px 20px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #fff;">
-                <img src="../../assets/logo.png" alt="Vilela Engenharia" style="height: 55px; margin-bottom: 8px; opacity: 1;">
-                <span style="font-size: 1.1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #666;">
+            <div style="padding: 25px 30px; display: flex; flex-direction: row; align-items: center; justify-content: flex-start; background: #fff; gap: 20px;">
+                <img src="../../assets/logo.png" alt="Vilela Engenharia" style="height: 50px; opacity: 1;">
+                
+                <!-- Vertical Separator -->
+                <div style="width: 1px; height: 35px; background: #e0e0e0;"></div>
+
+                <span style="font-size: 1.1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #444;">
                     Portal de Acompanhamento
                 </span>
             </div>
