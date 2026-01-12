@@ -2,9 +2,6 @@
 session_set_cookie_params(0, '/');
 session_name('CLIENTE_SESSID');
 session_start();
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 require_once '../db.php';
 
 // VERIFICAR LOGIN
@@ -32,14 +29,6 @@ $stmt_docs->execute([$cliente_id]);
 $dados_docs = $stmt_docs->fetch(PDO::FETCH_ASSOC);
 
 // LOAD CONFIG
-$docs_config = require '../area-cliente/config/docs_config.php'; // Path check: client-app/ is execution root relative? No, client-app/documentos_iniciais.php. Config is in area-cliente/config/
-// Wait, file path structure:
-// area-cliente/
-//   client-app/
-//     documentos_iniciais.php
-//   config/
-//     docs_config.php
-// Relative path from client-app/documentos_iniciais.php to config/docs_config.php is ../config/docs_config.php
 $docs_config = require '../config/docs_config.php';
 
 ?>
