@@ -329,19 +329,19 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                     <div class="app-btn-arrow" style="color:#0dcaf0;">➔</div>
                 </a>
 
-                <!-- 6. RESUMO (REDESIGNED) -->
-                <div style="background: #fff3cd; border: 1px solid #ffecb5; border-radius: 20px; padding: 15px 25px; display: flex; align-items: center; justify-content: space-between; gap: 15px; grid-column: 1 / -1; margin-top: 5px;">
+                <!-- 6. RESUMO (MOBILE SIMPLIFIED) -->
+                <a href="../../area-cliente/relatorio_cliente.php?id=<?= $cliente['id'] ?>" target="_blank" style="grid-column: 1 / -1; background: #fff3cd; border: 1px solid #ffecb5; border-radius: 20px; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; text-decoration: none; margin-top: 5px; transition: transform 0.2s; box-shadow: 0 4px 6px rgba(255, 193, 7, 0.05);">
                     <div style="display: flex; align-items: center; gap: 15px;">
-                        <div style="font-size: 1.6rem;">🖨️</div>
+                        <div style="font-size: 1.8rem;">🖨️</div>
                         <div style="display: flex; flex-direction: column;">
-                            <span style="font-size: 0.9rem; font-weight: 700; color: #856404;">Download: Visão Geral do Processo</span>
-                            <span style="font-size: 0.75rem; color: #856404; opacity: 0.8;">Baixar Resumo Completo do processo</span>
+                            <span style="font-size: 1rem; font-weight: 800; color: #856404; line-height: 1.2;">Visão Geral do Processo</span>
+                            <span style="font-size: 0.75rem; color: #856404; opacity: 0.8; font-weight: 500;">Clique para baixar o PDF</span>
                         </div>
                     </div>
-                    <a href="../../area-cliente/relatorio_cliente.php?id=<?= $cliente['id'] ?>" target="_blank" style="background: #ffc107; color: #4e3e06; font-weight: 700; font-size: 0.8rem; padding: 10px 20px; border-radius: 12px; text-decoration: none; box-shadow: 0 4px 6px rgba(133, 100, 4, 0.1); transition: transform 0.2s; text-align: center; white-space: nowrap;">
-                        Clique aqui para download
-                    </a>
-                </div>
+                    <div style="background: #ffc107; color: #4e3e06; width: 45px; height: 45px; border-radius: 14px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(133, 100, 4, 0.15);">
+                        <span class="material-symbols-rounded" style="font-size: 1.5rem;">download</span>
+                    </div>
+                </a>
 
             </div>
             
