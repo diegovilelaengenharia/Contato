@@ -256,6 +256,8 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             <!-- Card Resumo do Cliente (Grid Layout: Info + Timelime) -->
             <div class="form-card" style="margin-bottom:20px; border-left:5px solid var(--color-primary); background:#fff; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.05); padding:0;">
                 
+                <div style="display:flex; justify-content:space-between; align-items:stretch;">
+                    
                     <!-- ESQUERDA: Info do Cliente -->
                     <div style="padding:20px 25px; display:flex; align-items:center; gap:20px;">
                         
@@ -293,7 +295,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     </div>
 
                     <!-- MEIO: Abas de Navegação (Agora NO Header) -->
-                    <div style="display:flex; justify-content:center; align-items:center; padding:0 10px;">
+                    <div style="flex:1; display:flex; justify-content:center; align-items:center; padding:0 10px;">
                         <style>
                             .header-tabs {
                                 display: flex;
@@ -379,6 +381,8 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         </div>
                     </div>
 
+                    </div>
+                    
                 </div>
                 
                 <!-- Extra Info Row (Process Type & Addr) -->
