@@ -406,6 +406,9 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="tab-link t-hist <?= ($active_tab=='andamento'||$active_tab=='cadastro')?'active':'' ?>">
                     <span>📜</span> Histórico
                 </a>
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=documentos" class="tab-link t-docs <?= ($active_tab=='documentos')?'active':'' ?>">
+                    <span>📁</span> Documentos
+                </a>
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="tab-link t-pend <?= ($active_tab=='pendencias')?'active':'' ?>">
                     <span>⚠️</span> Pendências
                 </a>
@@ -508,6 +511,151 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             </tbody>
                         </table>
                     </div>
+                </div>
+
+            <?php elseif($active_tab == 'documentos'): ?>
+                <?php
+                    // Load Config and Data
+                    $docs_config = require 'config/docs_config.php';
+                    $curr_docs = $pdo->query("SELECT * FROM processo_docs_iniciais WHERE cliente_id={$cliente_ativo['id']}")->fetch();
+                    $curr_type = $curr_docs['tipo_processo'] ?? '';
+                    $curr_checked = $curr_docs['docs_entregues'] ? json_decode($curr_docs['docs_entregues'], true) : [];
+                    $curr_obs = $curr_docs['observacoes'] ?? '';
+                    
+                    // JSON for JS
+                    $registry_json = json_encode($docs_config['document_registry']);
+                    $processes_json = json_encode($docs_config['processes']);
+                    $checked_json = json_encode($curr_checked ?: []); // Ensure array
+                ?>
+                <div class="admin-tab-content">
+                     <div class="admin-header-row">
+                        <div>
+                            <h3 class="admin-title">📁 Documentos Iniciais</h3>
+                            <p class="admin-subtitle">Gerencie o checklist de documentos para este processo.</p>
+                        </div>
+                    </div>
+
+                    <form method="POST" style="margin-top:20px;">
+                        <input type="hidden" name="cliente_id" value="<?= $cliente_ativo['id'] ?>">
+                        
+                        <!-- Process Type Selection -->
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Tipo de Processo</label>
+                            <select name="tipo_processo" id="sel_tipo_processo" class="admin-form-input" style="font-weight:600; color:var(--color-primary);" onchange="renderChecklist()" required>
+                                <option value="">-- Selecione o Processo --</option>
+                                <?php foreach($docs_config['processes'] as $key => $proc): ?>
+                                    <option value="<?= $key ?>" <?= ($curr_type == $key) ? 'selected' : '' ?>>
+                                        <?= $proc['titulo'] ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <!-- Dynamic Checklist Area -->
+                        <div id="checklist_container" style="display:none; margin-top:30px;">
+                            
+                            <!-- Obrigatorios -->
+                            <h4 style="color:#2c3e50; border-bottom:2px solid #ddd; padding-bottom:5px; margin-bottom:15px;">📌 Documentos Obrigatórios</h4>
+                            <div id="list_obrigatorios" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap:15px; margin-bottom:30px;"></div>
+
+                            <!-- Excepcionais -->
+                            <h4 style="color:#d35400; border-bottom:2px solid #ddd; padding-bottom:5px; margin-bottom:15px;">⚠️ Documentos Excepcionais / Complementares</h4>
+                            <div id="list_excepcionais" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap:15px;"></div>
+                        </div>
+
+                        <!-- Observations -->
+                        <div class="admin-form-group" style="margin-top:30px;">
+                            <label class="admin-form-label">Observações sobre a Documentação</label>
+                            <textarea name="observacoes" class="admin-form-input" rows="4" placeholder="Alguma pendência específica? Detalhe aqui..."><?= htmlspecialchars($curr_obs) ?></textarea>
+                        </div>
+
+                        <div style="margin-top:20px; text-align:right;">
+                             <button type="submit" name="btn_save_docs_iniciais" class="btn-save" style="background:#198754; color:white; border:none; padding:12px 30px; font-size:1rem; box-shadow:0 4px 15px rgba(25, 135, 84, 0.4);">
+                                💾 Salvar Checklist
+                             </button>
+                        </div>
+                    </form>
+
+                    <script>
+                        const DOC_REGISTRY = <?= $registry_json ?>;
+                        const PROCESSES = <?= $processes_json ?>;
+                        const CHECKED_IDS = <?= $checked_json ?>;
+
+                        function renderChecklist() {
+                            const type = document.getElementById('sel_tipo_processo').value;
+                            const container = document.getElementById('checklist_container');
+                            const listOb = document.getElementById('list_obrigatorios');
+                            const listEx = document.getElementById('list_excepcionais');
+
+                            listOb.innerHTML = '';
+                            listEx.innerHTML = '';
+
+                            if (!type || !PROCESSES[type]) {
+                                container.style.display = 'none';
+                                return;
+                            }
+
+                            container.style.display = 'block';
+                            const pData = PROCESSES[type];
+
+                            // Render Obrigatorios
+                            pData.docs_obrigatorios.forEach(docId => {
+                                listOb.appendChild(createDocItem(docId));
+                            });
+
+                            // Render Excepcionais
+                            if(pData.docs_excepcionais && pData.docs_excepcionais.length > 0) {
+                                pData.docs_excepcionais.forEach(docId => {
+                                    listEx.appendChild(createDocItem(docId));
+                                });
+                            } else {
+                                listEx.innerHTML = '<p style="color:#999; font-style:italic;">Nenhum documento excepcional para este processo.</p>';
+                            }
+                        }
+
+                        function createDocItem(docId) {
+                            const col = document.createElement('label');
+                            col.style.display = 'flex';
+                            col.style.alignItems = 'center';
+                            col.style.gap = '10px';
+                            col.style.background = '#f8f9fa';
+                            col.style.padding = '10px';
+                            col.style.borderRadius = '8px';
+                            col.style.border = '1px solid #eee';
+                            col.style.cursor = 'pointer';
+                            col.style.transition = 'all 0.2s';
+                            
+                            col.onmouseover = function() { this.style.background = '#e9ecef'; }
+                            col.onmouseout = function() { this.style.background = '#f8f9fa'; }
+
+                            // Checkbox
+                            const chk = document.createElement('input');
+                            chk.type = 'checkbox';
+                            chk.name = 'docs_checked[]';
+                            chk.value = docId;
+                            chk.style.width = '18px';
+                            chk.style.height = '18px';
+                            chk.style.accentColor = '#198754';
+                            
+                            if (CHECKED_IDS.includes(docId)) {
+                                chk.checked = true;
+                            }
+
+                            // Label Text
+                            const span = document.createElement('span');
+                            span.innerText = DOC_REGISTRY[docId] || docId;
+                            span.style.fontWeight = '500';
+                            span.style.color = '#333';
+                            span.style.fontSize = '0.95rem';
+
+                            col.appendChild(chk);
+                            col.appendChild(span);
+                            return col;
+                        }
+
+                        // Init on load
+                        document.addEventListener('DOMContentLoaded', renderChecklist);
+                    </script>
                 </div>
 
             <?php elseif($active_tab == 'pendencias'): ?>
