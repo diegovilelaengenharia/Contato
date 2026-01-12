@@ -171,7 +171,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
         <!-- HEADER STYLE PREMIUM WOW (Glass + Gradient) -->
         <!-- HEADER STYLE PREMIUM WOW (Glass + Gradient) -->
         <!-- UNIFIED HEADER (Premium Card Style) -->
-        <header style="background: white; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); overflow: hidden; margin: 20px 20px 30px 20px; position: relative;">
+        <header style="background: white; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); overflow: hidden; margin: 20px 20px 30px 20px; position: relative; border: 1px solid #e0e0e0;">
             
             <!-- TOP: BRANDING Area -->
             <div style="padding: 25px 20px 20px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #fff;">
