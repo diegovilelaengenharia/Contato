@@ -180,13 +180,17 @@ $obs_atual = $stmt_obs->fetchColumn();
             </a>
 
             <!-- Center/Right: Logo & Title -->
-            <div style="display:flex; align-items:center; gap:15px;">
-                <div style="text-align:right;">
+            <div style="display:flex; align-items:center; gap:20px;">
+                <!-- LOGO -->
+                <img src="../../assets/logo.png" alt="Vilela Engenharia" style="height:65px; width:auto; opacity:1;">
+                
+                <!-- Vertical Separator -->
+                <div style="width: 1px; height: 35px; background: #e0e0e0;"></div>
+
+                <div style="text-align:left;">
                     <h1 style="margin:0; font-size:1.2rem; color:#146c43; font-weight:700;">Acompanhamento</h1>
                     <span style="display:block; font-size:0.7rem; color:#999; text-transform:uppercase; letter-spacing:1px;">Linha do Tempo</span>
                 </div>
-                <!-- LOGO - Adjust path if needed, assuming assets is in root -->
-                <img src="../../assets/logo.png" alt="Vilela Engenharia" style="height:50px; width:auto; opacity:0.9;">
             </div>
         </div>
 
