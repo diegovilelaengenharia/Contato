@@ -403,11 +403,11 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             </style>
             
             <div class="tabs-container">
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="tab-link t-hist <?= ($active_tab=='andamento'||$active_tab=='cadastro')?'active':'' ?>">
-                    <span>📜</span> Histórico
-                </a>
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=documentos" class="tab-link t-docs <?= ($active_tab=='documentos')?'active':'' ?>">
                     <span>📁</span> Documentos
+                </a>
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="tab-link t-hist <?= ($active_tab=='andamento'||$active_tab=='cadastro')?'active':'' ?>">
+                    <span>📜</span> Histórico
                 </a>
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="tab-link t-pend <?= ($active_tab=='pendencias')?'active':'' ?>">
                     <span>⚠️</span> Pendências
