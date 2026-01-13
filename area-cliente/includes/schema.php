@@ -74,14 +74,4 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS admin_settings (
     setting_key VARCHAR(50) NOT NULL UNIQUE,
     setting_value TEXT
 )");
-// Create Initial Documents Table
-$pdo->exec("CREATE TABLE IF NOT EXISTS processo_docs_iniciais (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    cliente_id INT NOT NULL,
-    tipo_processo VARCHAR(100) NOT NULL,
-    docs_entregues TEXT, -- JSON Array of IDs
-    observacoes TEXT,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 ?>

@@ -832,30 +832,4 @@ if (isset($_POST['acao']) && $_POST['acao'] == 'editar_cliente_completo') {
         exit;
     }
 }
-// 11. Salvar Documentos Iniciais (Checklist)
-if (isset($_POST['btn_save_docs_iniciais'])) {
-    $cid = $_POST['cliente_id'];
-    $tipo = $_POST['tipo_processo'];
-    $obs = $_POST['observacoes'] ?? '';
-    // docs_checked comes as array ['DOC_001', 'DOC_002']
-    $docs = isset($_POST['docs_checked']) ? json_encode($_POST['docs_checked']) : '[]';
-
-    try {
-        $check = $pdo->prepare("SELECT id FROM processo_docs_iniciais WHERE cliente_id = ?");
-        $check->execute([$cid]);
-        
-        if ($check->rowCount() > 0) {
-            $pdo->prepare("UPDATE processo_docs_iniciais SET tipo_processo=?, docs_entregues=?, observacoes=? WHERE cliente_id=?")
-                ->execute([$tipo, $docs, $obs, $cid]);
-        } else {
-            $pdo->prepare("INSERT INTO processo_docs_iniciais (cliente_id, tipo_processo, docs_entregues, observacoes) VALUES (?, ?, ?, ?)")
-                ->execute([$cid, $tipo, $docs, $obs]);
-        }
-        
-        header("Location: ?cliente_id=$cid&tab=documentos&msg=docs_updated");
-        exit;
-    } catch (PDOException $e) {
-        $erro = "Erro ao salvar documentos: " . $e->getMessage();
-    }
-}
 ?>

@@ -121,77 +121,42 @@ $obs_atual = $stmt_obs->fetchColumn();
         }
         .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #0f5132; }
         .header-title-sub { font-size: 0.8rem; opacity: 0.8; font-weight: 500; margin-top: 2px; color: #198754; }
-
-        /* MODAL STYLES */
-        .detail-modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
-            z-index: 10000;
-            display: none; align-items: flex-end; justify-content: center;
-            opacity: 0; transition: opacity 0.3s ease;
-        }
-        .detail-modal-overlay.active { display: flex; opacity: 1; }
-
-        .detail-modal {
-            background: white; width: 100%; max-width: 500px;
-            border-top-left-radius: 25px; border-top-right-radius: 25px;
-            padding: 30px 25px;
-            transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-        }
-        .detail-modal-overlay.active .detail-modal { transform: translateY(0); }
-        
-        @media(min-width: 768px) {
-            .detail-modal-overlay { align-items: center; }
-            .detail-modal { border-radius: 20px; transform: scale(0.95); opacity: 0; }
-            .detail-modal-overlay.active .detail-modal { transform: scale(1); opacity: 1; }
-        }
-
-        .modal-icon-box {
-            width: 60px; height: 60px; background: #e8f5e9; color: #198754;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 1.8rem; margin-bottom: 20px;
-        }
-        .modal-title { font-size: 1.4rem; font-weight: 700; color: #333; margin-bottom: 10px; line-height: 1.2; }
-        .modal-badge { 
-            display: inline-block; padding: 4px 12px; border-radius: 20px; 
-            font-size: 0.75rem; font-weight: 600; text-transform: uppercase; margin-bottom: 20px;
-        }
-        .modal-desc { font-size: 1rem; color: #555; line-height: 1.6; margin-bottom: 25px; }
-        .modal-meta { 
-            background: #f8f9fa; border-radius: 12px; padding: 15px; display: flex; gap: 15px; border: 1px solid #eee;
-        }
-        .btn-close-modal {
-            background: #198754; color: white; border: none; width: 100%; padding: 16px;
-            border-radius: 16px; font-size: 1rem; font-weight: 600; cursor: pointer;
-            margin-top: 25px; box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);
-        }
     </style>
 </head>
 <body>
 
     <div class="app-container">
         
-        <!-- SIMPLE HEADER (Pendências Style) -->
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 30px; padding: 25px 30px; border-radius: 30px; background: linear-gradient(135deg, #d1e7dd 0%, #effcf6 100%); box-shadow: 0 10px 30px rgba(25, 135, 84, 0.1); border: 1px solid #c3e6cb;">
+        <!-- HEADER COM BOTÃO VOLTAR + ANITMATED COMPASS -->
+        <div class="page-header">
             <!-- Left: Back Button -->
-            <a href="index.php" style="text-decoration:none; color:#146c43; font-weight:600; display:flex; align-items:center; gap:5px; padding:10px 20px; background:white; border-radius:25px; border:1px solid #c3e6cb; box-shadow:0 2px 5px rgba(0,0,0,0.05); font-size: 0.95rem;">
+            <a href="index.php" class="btn-back">
                 <span class="material-symbols-rounded">arrow_back</span> Voltar
             </a>
 
             <!-- Right: Title & Icon -->
-            <div style="display:flex; align-items:center; gap:15px;">
-                <div style="display:flex; flex-direction:column; align-items:flex-end; text-align:right;">
-                    <h1 style="margin:0; font-size:1.4rem; color:#0f5132; font-weight:700; letter-spacing:-0.5px;">Acompanhamento</h1>
-                    <span style="display:block; font-size:0.8rem; color:#146c43; font-weight:500; margin-top:2px; opacity:0.9;">Linha do Tempo</span>
-                </div>
-                
-                <!-- Icon Box -->
-                <div style="background: white; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(25, 135, 84, 0.15); border: 1px solid #c3e6cb; color: #198754;">
+            <div style="display:flex; align-items:center; gap:15px; z-index:2;">
+                 <div class="header-title-box">
+                    <span class="header-title-main">Linha do Tempo</span>
+                    <span class="header-title-sub">Acompanhamento do Processo</span>
+                 </div>
+                 
+                 <!-- Animated Compass Icon -->
+                 <div style="background: white; border:1px solid #dee2e6; color: #343a40; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05); animation: compassWiggle 4s ease-in-out infinite;">
                     🧭
-                </div>
+                 </div>
             </div>
         </div>
+
+        <style>
+            @keyframes compassWiggle {
+                0% { transform: rotate(0deg); }
+                25% { transform: rotate(-15deg); }
+                50% { transform: rotate(10deg); }
+                75% { transform: rotate(-5deg); }
+                100% { transform: rotate(0deg); }
+            }
+        </style>
 
         <!-- CONTEÚDO DA TIMELINE -->
         <div style="background:white; border-radius:16px; padding:20px; box-shadow:0 4px 12px rgba(0,0,0,0.05);">
@@ -243,76 +208,9 @@ $obs_atual = $stmt_obs->fetchColumn();
             </div>
             <?php endif; ?>
 
-            <!-- TIMELINE STEPPER (GROUPED - INTERACTIVE) -->
+            <!-- TIMELINE STEPPER (GROUPED) -->
             <div class="timeline-container-full" style="padding-left:0; margin-bottom:30px;">
                 <?php 
-                    // DETALHAMENTO EDUCATIVO DAS FASES (Atualizado com textos Premium)
-                    $fases_detalhes = [
-                        'Abertura de Processo (Guichê)' => [
-                            'titulo_display' => 'Abertura de Processo (Protocolo)',
-                            'desc' => 'Realizamos o protocolo oficial na Secretaria de Obras. Seu processo recebe um número único de identificação para acompanhamento legal e entra na fila de distribuição interna.',
-                            'prazo' => 'Variável conforme demanda',
-                            'icon' => '📂',
-                            'proxima_fase' => 'O processo será encaminhado para o Setor de Fiscalização.'
-                        ],
-                        'Fiscalização (Parecer Fiscal)' => [
-                            'titulo_display' => 'Vistoria Técnica (Parecer Fiscal)',
-                            'desc' => 'Um fiscal da Prefeitura realiza a diligência in loco para verificar a realidade do imóvel (se a obra já existe, se está em estágio de alicerce ou se é lote vago), confrontando com as medidas da matrícula.',
-                            'prazo' => 'Variável conforme rota',
-                            'icon' => '🧐',
-                            'proxima_fase' => 'Após o laudo fiscal, o processo segue para Triagem Administrativa.'
-                        ],
-                        'Triagem (Documentos Necessários)' => [
-                            'titulo_display' => 'Triagem Administrativa (Documentação)',
-                            'desc' => 'Conferência rigorosa da validade jurídica dos documentos (Matrícula atualizada, ART/RRT quitada, documentos pessoais) conforme exigido pelo Decreto Municipal de documentos obrigatórios.',
-                            'prazo' => 'Análise administrativa',
-                            'icon' => '📑',
-                            'proxima_fase' => 'Estando tudo ok, segue para a Engenharia. Se não, gera Comunicado.'
-                        ],
-                        'Comunicado de Pendências (Triagem)' => [
-                            'titulo_display' => 'Saneamento de Pendências (Administrativo)',
-                            'desc' => 'A Prefeitura emitiu um "Comunique-se" solicitando documentos complementares ou correções na titularidade. Nossa equipe atua imediatamente para sanar e destravar o fluxo.',
-                            'prazo' => 'Aguarda regularização',
-                            'icon' => '⚠️',
-                            'proxima_fase' => 'Retorno para reanálise na Triagem ou Engenharia.'
-                        ],
-                        'Análise Técnica (Engenharia)' => [
-                            'titulo_display' => 'Análise de Engenharia (Urbanística)',
-                            'desc' => 'Etapa crítica onde os Analistas Técnicos verificam se o projeto respeita a LC 267/2019: recuos obrigatórios, taxa de ocupação e a permeabilidade mínima de 20%.',
-                            'prazo' => 'Conforme complexidade',
-                            'icon' => '📐',
-                            'proxima_fase' => 'Emissão de taxas de aprovação ou solicitação de ajustes técnicos.'
-                        ],
-                        'Comunicado (Pendências e Taxas)' => [
-                            'titulo_display' => 'Adequação de Projeto e Taxas',
-                            'desc' => 'Fase de ajustes técnicos no desenho (se houver infrações edilícias ou urbanísticas apontadas) e emissão das Guias de Arrecadação Municipal (Taxas de Licença e Aprovação) para pagamento.',
-                            'prazo' => 'Depende do pagamento/ajuste',
-                            'icon' => '💰',
-                            'proxima_fase' => 'Com taxas pagas e projeto deferido, segue para emissão do Alvará.'
-                        ],
-                        'Confecção de Documentos' => [
-                            'titulo_display' => 'Emissão de Alvará/Habite-se',
-                            'desc' => 'Processo Deferido! A Secretaria de Obras confecciona e assina o Alvará de Construção (ou Regularização) e, quando aplicável, a Certidão de Conclusão de Obra (Habite-se).',
-                            'prazo' => 'Trâmite interno de assinatura',
-                            'icon' => '🖨️',
-                            'proxima_fase' => 'Entrega da documentação física/digital para averbação.'
-                        ],
-                        'Avaliação (ITBI/Averbação)' => [
-                            'titulo_display' => 'Trâmites Finais (Cartório/CND)',
-                            'desc' => 'Com o Habite-se e a CND (Certidão Negativa de Débitos) em mãos, iniciamos a averbação da construção na matrícula do imóvel junto ao Cartório de Registro de Imóveis.',
-                            'prazo' => 'Prazo do Cartório',
-                            'icon' => '🏦',
-                            'proxima_fase' => 'Entrega do processo finalizado.'
-                        ],
-                        'Processo Finalizado (Documentos Prontos)' => [
-                            'titulo_display' => 'Regularização Concluída',
-                            'desc' => 'Ciclo encerrado. Seu imóvel está 100% regular, valorizado de mercado e apto para financiamento ou venda legal.',
-                            'prazo' => 'Concluído',
-                            'icon' => '🎉',
-                            'proxima_fase' => 'Processo Arquivado.'
-                        ]
-                    ];
-
                     // Define Groups
                     $grupos = [
                         '🚀 Fase Inicial' => array_slice($fases_padrao, 0, 4), // 0-3
@@ -335,35 +233,16 @@ $obs_atual = $stmt_obs->fetchColumn();
                                 $is_past = $global_index < $fase_index;
                                 $is_curr = $global_index === $fase_index;
                                 
-                                // Dados da Fase
-                                $dados = $fases_detalhes[$fase] ?? [
-                                    'titulo_display' => $fase,
-                                    'desc' => 'Sem detalhes.', 
-                                    'prazo' => '-', 
-                                    'icon' => '▫️', 
-                                    'proxima_fase' => ''
-                                ];
-                                
-                                // Display Title Logic
-                                $display_title = $dados['titulo_display'];
-
-                                // Icons logic
+                                // Icons
                                 $icon_display = '▫️'; 
                                 if($is_past) $icon_display = '✅';
-                                if($is_curr) $icon_display = $dados['icon']; // Use custom icon for current
-                                if(!$is_past && !$is_curr) $icon_display = '🔒'; // Lock for future
-
+                                if($is_curr) $icon_display = '📍';
+                                
                                 $text_style = $is_curr ? 'font-weight:700; color:#333;' : ($is_past ? 'color:#198754;' : 'color:#aaa;');
                                 $line_color = ($is_past) ? '#198754' : '#e9ecef';
                         ?>
-                            <!-- CLICKABLE WRAPPER -->
-                            <div 
-                                onclick="openPhaseModal('<?= htmlspecialchars($display_title) ?>', '<?= htmlspecialchars($dados['desc']) ?>', '<?= htmlspecialchars($dados['prazo']) ?>', '<?= $dados['icon'] ?>', '<?= $is_curr ? 'atual' : ($is_past ? 'concluido' : 'futuro') ?>', '<?= htmlspecialchars($dados['proxima_fase'] ?? '') ?>')"
-                                style="display:flex; gap:15px; position:relative; padding-bottom:25px; cursor:pointer; transition: opacity 0.2s;"
-                                onmouseover="this.style.opacity='0.7'"
-                                onmouseout="this.style.opacity='1'"
-                            >
-                                <!-- Connect Line -->
+                            <div style="display:flex; gap:15px; position:relative; padding-bottom:25px;">
+                                <!-- Connect Line (Logic: if not last in group) -->
                                 <div style="position:absolute; left:11px; top:25px; bottom:0; width:2px; background:<?= $line_color ?>; z-index:0;"></div>
                                 
                                 <!-- Icon -->
@@ -374,7 +253,7 @@ $obs_atual = $stmt_obs->fetchColumn();
                                 <!-- Text -->
                                 <div style="padding-top:4px;">
                                     <span style="font-size:0.95rem; display:block; <?= $text_style ?>">
-                                        <?= $display_title ?> <span style="font-size:0.7rem; color:#ccc; margin-left:5px;">(Ver +)</span>
+                                        <?= $fase ?>
                                     </span>
                                     <?php if($is_curr): ?>
                                         <div style="margin-top:5px;">
@@ -460,77 +339,6 @@ $obs_atual = $stmt_obs->fetchColumn();
         </div>
 
     </div>
-
-    <!-- MODAL DE DETALHES DA FASE -->
-    <div class="detail-modal-overlay" id="detailModalOverlay" onclick="closePhaseModal(event)">
-        <div class="detail-modal" onclick="event.stopPropagation()">
-            <div class="modal-icon-box" id="modalIcon"></div>
-            
-            <span class="modal-badge" id="modalBadge">Status</span>
-            <h3 class="modal-title" id="modalTitle">Título da Fase</h3>
-            <p class="modal-desc" id="modalDesc">Descrição educativa sobre essa fase.</p>
-            
-            <div class="modal-meta">
-                <span style="font-size:1.5rem;">⏳</span>
-                <div>
-                    <strong style="display:block; font-size:0.8rem; color:#999; text-transform:uppercase;">Prazo Médio Estimado</strong>
-                    <span style="font-size:1rem; color:#333; font-weight:600;" id="modalTime">15 dias</span>
-                </div>
-            </div>
-
-            <!-- NEXT STEP SECTION -->
-            <div id="modalNextBox" style="margin-top:20px; padding-top:20px; border-top:1px solid #eee; display:none;">
-                <strong style="display:block; font-size:0.8rem; color:#198754; text-transform:uppercase; margin-bottom:5px;">👉 Próxima Etapa</strong>
-                <p id="modalNext" style="font-size:0.9rem; color:#555; margin:0; line-height:1.4;"></p>
-            </div>
-
-            <button class="btn-close-modal" onclick="closePhaseModal()">Entendi</button>
-        </div>
-    </div>
-
-    <script>
-        function openPhaseModal(title, desc, time, icon, status, next) {
-            document.getElementById('modalTitle').textContent = title;
-            document.getElementById('modalDesc').textContent = desc;
-            document.getElementById('modalTime').textContent = time;
-            document.getElementById('modalIcon').textContent = icon;
-            
-            const badge = document.getElementById('modalBadge');
-            const overlay = document.getElementById('detailModalOverlay');
-            
-            // Next Step Logic
-            const nextBox = document.getElementById('modalNextBox');
-            if(next && next !== '') {
-                document.getElementById('modalNext').textContent = next;
-                nextBox.style.display = 'block';
-            } else {
-                nextBox.style.display = 'none';
-            }
-            
-            // Status Logic
-            if(status === 'atual') {
-                badge.style.backgroundColor = '#fff3cd'; 
-                badge.style.color = '#856404'; 
-                badge.textContent = 'EM ANDAMENTO';
-            } else if (status === 'concluido') {
-                badge.style.backgroundColor = '#d1e7dd'; 
-                badge.style.color = '#0f5132'; 
-                badge.textContent = 'CONCLUÍDO';
-            } else {
-                badge.style.backgroundColor = '#e2e3e5'; 
-                badge.style.color = '#6c757d'; 
-                badge.textContent = 'AGUARDANDO';
-            }
-
-            // Open Animation
-            overlay.classList.add('active');
-        }
-
-        function closePhaseModal(event) {
-            // If event is passed (click on overlay), verification is already done in onclick html
-            document.getElementById('detailModalOverlay').classList.remove('active');
-        }
-    </script>
 
 </body>
 </html>

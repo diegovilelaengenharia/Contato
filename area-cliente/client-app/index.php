@@ -170,53 +170,49 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
         
         <!-- HEADER STYLE PREMIUM WOW (Glass + Gradient) -->
         <!-- HEADER STYLE PREMIUM WOW (Glass + Gradient) -->
-        <!-- UNIFIED HEADER (Premium Card Style) -->
-        <header style="background: white; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); overflow: hidden; margin: 20px 20px 30px 20px; position: relative; border: 1px solid #e0e0e0;">
-            
-            <!-- TOP: BRANDING Area -->
-            <div style="padding: 25px 30px; display: flex; flex-direction: row; align-items: center; justify-content: flex-start; background: #fff; gap: 20px;">
-                <img src="../../assets/logo.png" alt="Vilela Engenharia" style="height: 65px; opacity: 1;">
+        <div style="display: flex; justify-content: center; margin-bottom: 20px; margin-top: 20px;">
+            <div style="background: #222; padding: 12px 35px; border-radius: 50px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 215, 0, 0.2); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+                <!-- Shine Effect Background -->
+                <div style="position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); animation: shine 3s infinite;"></div>
                 
-                <!-- Vertical Separator -->
-                <div style="width: 1px; height: 35px; background: #e0e0e0;"></div>
-
-                <span style="font-size: 1.1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #444;">
-                    Portal de Acompanhamento
+                <span style="font-size: 1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; background: linear-gradient(45deg, #B8860B, #FFD700, #F0E68C, #DAA520); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% auto; animation: textShine 4s linear infinite;">
+                    Área do Cliente
                 </span>
             </div>
-
-            <!-- BOTTOM: USER Area (Green) -->
-            <div style="background: linear-gradient(135deg, #198754 0%, #146c43 100%); padding: 18px 25px; display: flex; align-items: center; justify-content: space-between;">
-                
-                <div style="display: flex; align-items: center; gap: 15px;">
-                    <!-- AVATAR -->
+        </div>
+        <style>
+            @keyframes shine { 0% { left: -100%; } 20% { left: 100%; } 100% { left: 100%; } }
+            @keyframes textShine { to { background-position: 200% center; } }
+        </style>
+        <header class="premium-header" style="flex-direction: column; gap: 10px; align-items: stretch;">
+            
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div class="ph-content" style="flex: 1;">
+                    <!-- AVATAR (Re-added, small) -->
                     <?php 
                         $avatarPath = $cliente['foto_perfil'] ?? '';
                         if($avatarPath && !str_starts_with($avatarPath, '../') && !str_starts_with($avatarPath, 'http')) $avatarPath = '../' . $avatarPath;
                     ?>
-                    <div style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.8); overflow: hidden; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center;">
+                    <div class="ph-avatar-box" style="width: 45px; height: 45px; margin-right: 12px;">
                         <?php if($avatarPath && file_exists($avatarPath) && !is_dir($avatarPath)): ?>
                             <img src="<?= htmlspecialchars($avatarPath) ?>?v=<?= time() ?>" style="width:100%; height:100%; object-fit:cover;">
                         <?php else: ?>
-                            <span style="font-size:1.1rem; color:white;">👤</span>
+                            <span style="font-size:1.2rem; color:white;">👤</span>
                         <?php endif; ?>
                     </div>
 
-                    <!-- NAME -->
-                    <div style="display: flex; flex-direction: column;">
-                        <span style="font-size: 0.75rem; color: rgba(255,255,255,0.8); font-weight: 500; line-height: 1;">Bem-vindo(a),</span>
-                        <span style="font-size: 1.1rem; color: white; font-weight: 700; line-height: 1.2;">
-                            <?= htmlspecialchars(explode(' ', $cliente['nome'])[0]) ?>
-                        </span>
+                    <div class="ph-info">
+                        <h1 style="margin:0; font-size:1.4rem;">Olá, <?= htmlspecialchars(explode(' ', $cliente['nome'])[0]) ?>!</h1>
                     </div>
                 </div>
 
-                <!-- LOGOUT -->
-                <a href="logout.php" style="background: rgba(0,0,0,0.2); width: 38px; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: background 0.2s;">
-                    <span class="material-symbols-rounded" style="font-size: 1.2rem;">logout</span>
-                </a>
+                <div class="ph-actions">
+                    <a href="logout.php" class="ph-logout" style="background: rgba(220, 53, 69, 0.2); color: #ffcccc; border: 1px solid rgba(220, 53, 69, 0.3); padding: 6px 12px; border-radius: 8px; text-decoration: none; display: flex; align-items: center; gap: 6px;">
+                        <span class="material-symbols-rounded" style="font-size:1.1rem;">logout</span>
+                        <span style="font-size: 0.85rem; font-weight: 600;">Sair</span>
+                    </a>
+                </div>
 
-            </div>
         </header>
 
 
@@ -256,16 +252,6 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                         }
                     } catch(Exception $e) { $last_fin_name = ''; }
                 ?>
-
-                <!-- 1. DOCUMENTOS INICIAIS -->
-                <a href="documentos_iniciais.php" class="app-button" style="border-left-color: #0d6efd;">
-                    <div class="app-btn-icon" style="background:#e3f2fd; color:#0d6efd;">📂</div>
-                    <div class="app-btn-content">
-                        <span class="app-btn-title">Documentos Iniciais</span>
-                        <span class="app-btn-desc">Checklist de Entrada</span>
-                    </div>
-                    <div class="app-btn-arrow" style="color:#0d6efd;">➔</div>
-                </a>
 
                 <!-- 2. TIMELINE -->
                 <a href="timeline.php" class="app-button" style="border-left-color: #198754;">
@@ -339,17 +325,12 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                     <div class="app-btn-arrow" style="color:#0dcaf0;">➔</div>
                 </a>
 
-                <!-- 6. RESUMO (MOBILE SIMPLIFIED) -->
-                <a href="../../area-cliente/relatorio_cliente.php?id=<?= $cliente['id'] ?>" target="_blank" style="grid-column: 1 / -1; background: #fff3cd; border: 1px solid #ffecb5; border-radius: 20px; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; text-decoration: none; margin-top: 5px; transition: transform 0.2s; box-shadow: 0 4px 6px rgba(255, 193, 7, 0.05);">
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <div style="font-size: 1.8rem;">🖨️</div>
-                        <div style="display: flex; flex-direction: column;">
-                            <span style="font-size: 1rem; font-weight: 800; color: #856404; line-height: 1.2;">Visão Geral do Processo</span>
-                            <span style="font-size: 0.75rem; color: #856404; opacity: 0.8; font-weight: 500;">Clique para baixar o PDF</span>
-                        </div>
-                    </div>
-                    <div style="background: #ffc107; color: #4e3e06; width: 45px; height: 45px; border-radius: 14px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(133, 100, 4, 0.15);">
-                        <span class="material-symbols-rounded" style="font-size: 1.5rem;">download</span>
+                <!-- 6. RESUMO (MOVED & RESTYLED) -->
+                <a href="../../area-cliente/relatorio_cliente.php?id=<?= $cliente['id'] ?>" target="_blank" class="app-button" style="background: #fff3cd; border: 1px solid #ffecb5; padding: 12px 15px; min-height: auto;">
+                    <div class="app-btn-icon" style="background: rgba(255, 193, 7, 0.2); color: #856404; width: 32px; height: 32px; font-size: 1.1rem; flex-shrink: 0;">🖨️</div>
+                    <div class="app-btn-content">
+                        <span class="app-btn-title" style="color: #856404; font-size: 0.95rem; font-weight: 700; display: block; margin-bottom: 2px;">Download: Visão Geral do Processo</span>
+                        <span class="app-btn-desc" style="color: #856404; font-size: 0.75rem; opacity: 0.9;">Baixar Resumo Completo do processo</span>
                     </div>
                 </a>
 
@@ -357,17 +338,15 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             
         </div>
 
-        <!-- FOOTER PREMIUM (Harmonized) -->
-        <footer class="premium-footer" style="background: #fff; margin-top: 0; margin-bottom: 25px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid #e0e0e0;">
-            
-            <!-- Top: Info -->
-            <div style="padding: 15px 20px; display: flex; align-items: center; justify-content: center; gap: 15px;">
+        <!-- FOOTER PREMIUM -->
+        <footer class="premium-footer" style="padding: 20px 20px; background: #fff; border-top: 1px solid #eee; margin-top: 0; margin-bottom: 25px; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px;">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
                 <!-- Logo -->
                 <div style="flex-shrink: 0;">
-                    <img src="../../assets/logo.png" alt="Vilela Engenharia" style="max-height: 50px; opacity: 1;">
+                    <img src="../../assets/logo.png" alt="Vilela Engenharia" style="max-height: 45px; opacity: 1;">
                 </div>
                 
-                <!-- Vertical Divider -->
+                <!-- Vertical Divider (Optional, subtle) -->
                 <div style="width:1px; height:35px; background:#eee;"></div>
 
                 <!-- Info -->
@@ -377,10 +356,8 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                     <span style="display:block; font-size: 0.75rem; color: #666; line-height:1;">CREA 235.474/D</span>
                 </div>
             </div>
-
-            <!-- Bottom: Green Harmony Bar -->
-            <div style="background: linear-gradient(135deg, #198754 0%, #146c43 100%); padding: 12px; text-align: center;">
-                <span style="font-size: 0.75rem; color: rgba(255,255,255,0.9); font-weight: 500;">&copy; <?= date('Y') ?> Vilela Engenharia</span>
+            <div style="margin-top: 15px; font-size: 0.7rem; color: #ccc; text-align: center;">
+                &copy; <?= date('Y') ?> Vilela Engenharia
             </div>
         </footer>
 
