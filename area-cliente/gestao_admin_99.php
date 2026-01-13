@@ -767,41 +767,41 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             $pdo->prepare("INSERT INTO processo_detalhes (cliente_id, tipo_processo_chave, observacoes_gerais) VALUES (?, ?, ?)")->execute([$cliente_ativo['id'], $new_proc, $_POST['observacoes_gerais']??'']);
                         }
                         
-                        // 2. Save Checks (Smart Merge - NON DESTRUCTIVE)
-                        // Get current DB Docs to compare
-                        $current_docs_stmt = $pdo->prepare("SELECT doc_chave FROM processo_docs_entregues WHERE cliente_id = ?");
-                        $current_docs_stmt->execute([$cliente_ativo['id']]);
-                        $current_docs = $current_docs_stmt->fetchAll(PDO::FETCH_COLUMN);
+                        // 2. Process Actions (New Workflow)
+                        if(isset($_POST['action_doc'])) {
+                            $act = $_POST['action_doc'];
+                            $d_key = $_POST['doc_chave'];
+                            
+                            // Check existence
+                            $chk = $pdo->prepare("SELECT id FROM processo_docs_entregues WHERE cliente_id = ? AND doc_chave = ?");
+                            $chk->execute([$cliente_ativo['id'], $d_key]);
+                            $exists = $chk->fetch();
 
-                        $submitted_docs = $_POST['docs_entregues'] ?? [];
-
-                        // A. Docs to ADD (In submitted, not in DB)
-                        $to_add = array_diff($submitted_docs, $current_docs);
-                        if (!empty($to_add)) {
-                            $stmt_ins = $pdo->prepare("INSERT INTO processo_docs_entregues (cliente_id, doc_chave, data_entrega) VALUES (?, ?, NOW())");
-                            foreach($to_add as $new_key) {
-                                $stmt_ins->execute([$cliente_ativo['id'], $new_key]);
+                            if($act == 'approve') {
+                                if($exists) {
+                                    $pdo->prepare("UPDATE processo_docs_entregues SET status = 'aprovado' WHERE id = ?")->execute([$exists['id']]);
+                                } else {
+                                    // Manually approve without file (Manual Check)
+                                    $pdo->prepare("INSERT INTO processo_docs_entregues (cliente_id, doc_chave, status, data_entrega) VALUES (?, ?, 'aprovado', NOW())")->execute([$cliente_ativo['id'], $d_key]);
+                                }
+                            }
+                            elseif($act == 'reopen') {
+                                // Reopen -> Back to 'em_analise' (if file exists) or 'pendente'
+                                if($exists) {
+                                    // Check if has file
+                                    $pdo->prepare("UPDATE processo_docs_entregues SET status = 'em_analise' WHERE id = ?")->execute([$exists['id']]);
+                                }
+                            }
+                            elseif($act == 'reject') {
+                                // Reject -> DELETE record (Reset)
+                                // Optional: Delete file physically? Maybe safer to keep file in uploads folder but remove DB ref.
+                                if($exists) {
+                                    $pdo->prepare("DELETE FROM processo_docs_entregues WHERE id = ?")->execute([$exists['id']]);
+                                }
                             }
                         }
-
-                        // B. Docs to REMOVE (In DB, not in submitted) - BUT ONLY IF NO FILE ATTACHED
-                        // If admin unchecks a doc that has a file, we should probably Keep it or Warn? 
-                        // For now, let's assume Uncheck = Delete metadata too (Reset), OR we can protect files.
-                        // User request: "quando assinalo que recebi... nao mostra". 
-                        // FIX: The issue was overwriting. This merge fixes adding checks without deleting files.
-                        // However, if admin WANTS to uncheck, we should remove. 
                         
-                        $to_remove = array_diff($current_docs, $submitted_docs);
-                        if(!empty($to_remove)) {
-                            // Only delete if NO file is attached? Or force delete?
-                            // Let's force delete to allow admin to "Undo" a receipt.
-                            // Ideally, we should check if file exists and maybe delete file physics too?
-                            // For safety/simplicity now: Just delete record.
-                             $stmt_del = $pdo->prepare("DELETE FROM processo_docs_entregues WHERE cliente_id = ? AND doc_chave = ?");
-                             foreach($to_remove as $del_key) {
-                                 $stmt_del->execute([$cliente_ativo['id'], $del_key]);
-                             }
-                        }
+                        // Clean redirect
                         echo "<script>window.location.href='?cliente_id={$cliente_ativo['id']}&tab=docs_iniciais&msg=docs_updated';</script>";
                     }
                 ?>
@@ -842,12 +842,100 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         <?php if($active_proc_key && isset($processos[$active_proc_key])): 
                             $proc_data = $processos[$active_proc_key];
                             $doc_list = array_merge($proc_data['docs_obrigatorios'], $proc_data['docs_excepcionais']);
+
+                            // Fetch detailed docs info map
+                            $stmt_map = $pdo->prepare("SELECT doc_chave, arquivo_path, nome_original, data_entrega, status FROM processo_docs_entregues WHERE cliente_id = ?");
+                            $stmt_map->execute([$cliente_ativo['id']]);
+                            $entregues_map = [];
+                            foreach($stmt_map->fetchAll(PDO::FETCH_ASSOC) as $row) {
+                                $entregues_map[$row['doc_chave']] = $row;
+                            }
                         ?>
-                            <style>
-                                .doc-item-card {
-                                    background:white; border:1px solid #eee; border-radius:8px; padding:12px 15px; margin-bottom:10px;
-                                    display:flex; align-items:center; gap:15px; transition:all 0.2s ease; cursor:pointer;
-                                    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+                            <!-- TABLE VIEW for Approval -->
+                            <div class="table-container" style="margin-top:20px;">
+                                <table class="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Documento Exigido</th>
+                                            <th style="width:150px;">Status</th>
+                                            <th>Arquivo</th>
+                                            <th style="text-align:right; width:140px;">Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach($doc_list as $key => $doc_name): 
+                                            // Get Data
+                                            $doc_data = $entregues_map[$key] ?? null;
+                                            $status = $doc_data['status'] ?? 'pendente';
+                                            $has_file = !empty($doc_data['arquivo_path']);
+                                            
+                                            // Status Badge Logic
+                                            $badge_class = 'warning'; $badge_text = 'PENDENTE';
+                                            if($status == 'em_analise') { $badge_class = 'info'; $badge_text = 'EM ANÁLISE'; }
+                                            if($status == 'aprovado') { $badge_class = 'success'; $badge_text = 'APROVADO'; }
+                                            if($status == 'rejeitado') { $badge_class = 'danger'; $badge_text = 'REJEITADO'; }
+                                        ?>
+                                            <tr>
+                                                <td>
+                                                    <div style="font-weight:600; color:#333;"><?= htmlspecialchars($doc_name) ?></div>
+                                                    <div style="font-size:0.75rem; color:#888;">Chave: <?= $key ?></div>
+                                                </td>
+                                                <td>
+                                                    <span class="status-badge <?= $badge_class ?>"><?= $badge_text ?></span>
+                                                </td>
+                                                <td>
+                                                    <?php if($has_file): ?>
+                                                        <a href="<?= htmlspecialchars($doc_data['arquivo_path']) ?>" target="_blank" style="text-decoration:none; color:#0d6efd; display:flex; align-items:center; gap:5px; font-weight:500;">
+                                                            <span class="material-symbols-rounded">description</span>
+                                                            <?= htmlspecialchars($doc_data['nome_original'] ?? 'Ver Arquivo') ?>
+                                                        </a>
+                                                        <div style="font-size:0.7rem; color:#aaa; margin-top:2px;">
+                                                            <?= date('d/m/Y H:i', strtotime($doc_data['data_entrega'])) ?>
+                                                        </div>
+                                                    <?php else: ?>
+                                                        <span style="color:#ccc; font-style:italic; font-size:0.85rem;">Nenhum arquivo</span>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td style="text-align:right;">
+                                                    <div style="display:flex; justify-content:flex-end; gap:5px;">
+                                                        <?php if($status == 'aprovado'): ?>
+                                                            <!-- Reopen -->
+                                                            <form method="POST">
+                                                                <input type="hidden" name="update_docs_settings" value="1">
+                                                                <input type="hidden" name="action_doc" value="reopen">
+                                                                <input type="hidden" name="doc_chave" value="<?= $key ?>">
+                                                                <input type="hidden" name="tipo_processo_chave" value="<?= $active_proc_key ?>">
+                                                                <button type="submit" class="btn-icon" style="background:#fff3cd; color:#856404; border:1px solid #ffeeba;" title="Reabrir">↩️</button>
+                                                            </form>
+                                                        <?php else: ?>
+                                                            <?php if($has_file || $status == 'pendente'): ?>
+                                                                <!-- Accept -->
+                                                                <form method="POST">
+                                                                    <input type="hidden" name="update_docs_settings" value="1">
+                                                                    <input type="hidden" name="action_doc" value="approve">
+                                                                    <input type="hidden" name="doc_chave" value="<?= $key ?>">
+                                                                    <input type="hidden" name="tipo_processo_chave" value="<?= $active_proc_key ?>">
+                                                                    <button type="submit" class="btn-icon" style="background:#d1e7dd; color:#198754; border:1px solid #badbcc;" title="Aprovar">✅</button>
+                                                                </form>
+                                                            <?php endif; ?>
+                                                            
+                                                            <!-- Reject/Reset -->
+                                                            <form method="POST" onsubmit="return confirm('Recusar/Limpar este documento?')">
+                                                                <input type="hidden" name="update_docs_settings" value="1">
+                                                                <input type="hidden" name="action_doc" value="reject">
+                                                                <input type="hidden" name="doc_chave" value="<?= $key ?>">
+                                                                <input type="hidden" name="tipo_processo_chave" value="<?= $active_proc_key ?>">
+                                                                <button type="submit" class="btn-icon" style="background:#f8d7da; color:#dc3545; border:1px solid #f5c2c7;" title="Rejeitar">🗑️</button>
+                                                            </form>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php endif; ?>
                                 }
                                 .doc-item-card:hover { transform:translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-color:#badbcc; }
                                 .doc-check-input { width:22px; height:22px; accent-color:#198754; cursor:pointer; }
