@@ -56,10 +56,11 @@ if(isset($_FILES['arquivo_doc']) && isset($_POST['doc_chave'])) {
             $existing = $stmt->fetch();
 
             if ($existing) {
-                $update = $pdo->prepare("UPDATE processo_docs_entregues SET arquivo_path = ?, nome_original = ?, data_entrega = NOW() WHERE id = ?");
+                // Se já existe, atualiza arquivo e volta status para analise (caso fosse rejeitado)
+                $update = $pdo->prepare("UPDATE processo_docs_entregues SET arquivo_path = ?, nome_original = ?, data_entrega = NOW(), status = 'em_analise' WHERE id = ?");
                 $update->execute([$db_path, $file['name'], $existing['id']]);
             } else {
-                $insert = $pdo->prepare("INSERT INTO processo_docs_entregues (cliente_id, doc_chave, arquivo_path, nome_original, data_entrega) VALUES (?, ?, ?, ?, NOW())");
+                $insert = $pdo->prepare("INSERT INTO processo_docs_entregues (cliente_id, doc_chave, arquivo_path, nome_original, data_entrega, status) VALUES (?, ?, ?, ?, NOW(), 'em_analise')");
                 $insert->execute([$cliente_id, $doc_chave, $db_path, $file['name']]);
             }
             
