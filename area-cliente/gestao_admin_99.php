@@ -89,12 +89,10 @@ function renderFinTable($stmt, $title, $color, $cid) {
 }
 
 // --- Processamento (POST/GET) ---
-// require 'includes/processamento.php'; // DEBUG: COMMENTED TO TEST 500 ERROR CAUSE
+require 'includes/processamento.php';
 
 // Exportar Relatório (Exaustivo e Profissional)
-// require 'includes/exportacao.php'; // DEBUG: COMMENTED TO TEST CAUSE
-echo "<h1>ALIVE - CONFIGS LOADED</h1>"; 
-// die(); // Let it continue to see if it crashes later
+require 'includes/exportacao.php';
 
 
 // --- Consultas Iniciais e Dashboard Data ---
