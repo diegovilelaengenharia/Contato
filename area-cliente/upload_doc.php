@@ -31,12 +31,9 @@ if (!isset($_FILES['arquivo']) || $_FILES['arquivo']['error'] !== UPLOAD_ERR_OK)
 
 $file = $_FILES['arquivo'];
 $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-$allowed = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx'];
-
-if (!in_array($ext, $allowed)) {
-    echo json_encode(['success' => false, 'error' => 'Formato não permitido (apenas PDF, Imagens ou Word)']);
-    exit;
-}
+// ALLOW ALL FORMATS
+// $allowed = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx'];
+// Extension check removed per user request
 
 // Directory: uploads/cliente_{id}/docs/ (Inside area-cliente)
 $upload_dir_rel = "uploads/cliente_{$cliente_id}/docs/";
