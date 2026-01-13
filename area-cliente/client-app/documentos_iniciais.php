@@ -55,6 +55,60 @@ $entregues = $stmt_entregues->fetchAll(PDO::FETCH_COLUMN);
     <link rel="stylesheet" href="css/header-premium.css?v=<?= time() ?>">
     
     <style>
+        /* FORCE SOCIAL UPDATE v2 */
+        .floating-buttons { position: fixed; bottom: 25px; right: 25px; display: flex; flex-direction: column; gap: 16px; z-index: 99999 !important; }
+        .floating-btn { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: var(--btn-bg); color: #ffffff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 8px 24px rgba(0, 0, 0, 0.1); transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease; text-decoration: none; position: relative; border: none !important; }
+        .floating-btn svg { width: 28px; height: 28px; fill: currentColor; }
+        .floating-btn--whatsapp { --btn-bg: #25d366; }
+        .floating-btn--whatsapp:hover { background: #20bd5a; box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4); }
+        .floating-btn--instagram { --btn-bg: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+        .floating-btn--instagram:hover { box-shadow: 0 6px 16px rgba(220, 39, 67, 0.4); }
+        .floating-btn:hover { transform: scale(1.1) rotate(-4deg); }
+        .floating-btn:active { transform: scale(0.95); }
+
+        /* Override basic settings for full page view */
+        body { background: #f4f6f8; }
+        .page-header {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c3e6cb 100%); /* Light Green Gradient */
+            border-bottom: none;
+            padding: 30px 25px; 
+            border-bottom-left-radius: 30px; 
+            border-bottom-right-radius: 30px;
+            box-shadow: 0 10px 30px rgba(25, 135, 84, 0.15); 
+            margin-bottom: 30px;
+            display: flex; align-items: center; justify-content: space-between;
+            color: #146c43; /* Dark Green Text */
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #badbcc;
+        }
+        
+        /* Decorative Circle (Subtle) */
+        .page-header::after {
+            content: ''; position: absolute; top: -50px; right: -50px;
+            width: 150px; height: 150px; background: rgba(255,255,255,0.4);
+            border-radius: 50%; pointer-events: none;
+        }
+
+        .btn-back {
+            text-decoration: none; color: #146c43; font-weight: 600; 
+            display: flex; align-items: center; gap: 8px;
+            padding: 10px 20px; 
+            background: white; 
+            border-radius: 25px;
+            transition: 0.3s;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid #badbcc;
+        }
+        .btn-back:hover { background: #f0fff4; transform: translateX(-3px); }
+        
+        .header-title-box {
+            display: flex; flex-direction: column; align-items: flex-end; text-align: right;
+        }
+        .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #0f5132; }
+        .header-title-sub { font-size: 0.8rem; opacity: 0.8; font-weight: 500; margin-top: 2px; color: #198754; }
+
         .doc-card {
             background: #fff;
             border-radius: 12px;
@@ -86,22 +140,40 @@ $entregues = $stmt_entregues->fetchAll(PDO::FETCH_COLUMN);
         
         .status-ok { color: #198754; background: #d1e7dd; }
         .status-pend { color: #dc3545; background: #f8d7da; }
+
+        @keyframes docWiggle {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+            75% { transform: rotate(-5deg); }
+            100% { transform: rotate(0deg); }
+        }
     </style>
 </head>
 <body>
 
-    <div class="app-container" style="padding: 20px;">
+    <div class="app-container">
         
-        <!-- HEADER -->
-        <header style="display: flex; align-items: center; margin-bottom: 25px;">
-            <a href="index.php" style="background: white; border: 1px solid #ddd; width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #333; margin-right: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-decoration: none;">
-                <span class="material-symbols-rounded">arrow_back</span>
+        <!-- HEADER NOVA IDENTIDADE VISUAL -->
+        <div class="page-header">
+            <!-- Left: Back Button -->
+            <a href="index.php" class="btn-back">
+                <span class="material-symbols-rounded">arrow_back</span> Voltar
             </a>
-            <div>
-                <span style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: #888; font-weight: 700;">Checklist</span>
-                <h1 style="font-size: 1.5rem; font-weight: 700; color: #222; margin: 0;">Documentos Iniciais <span style="font-size:0.8rem; color:#aaa; font-weight:400;">v3.1</span></h1>
+
+            <!-- Right: Title & Icon -->
+            <div style="display:flex; align-items:center; gap:15px; z-index:2;">
+                 <div class="header-title-box">
+                    <span class="header-title-main">Documentos Iniciais</span>
+                    <span class="header-title-sub">Checklist do Processo (v3.1)</span>
+                 </div>
+                 
+                 <!-- Animated Icon -->
+                 <div style="background: white; border:1px solid #dee2e6; color: #343a40; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05); animation: docWiggle 4s ease-in-out infinite;">
+                    📋
+                 </div>
             </div>
-        </header>
+        </div>
 
         <?php if($proc_data): ?>
             
