@@ -774,14 +774,14 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         echo "<script>window.location.href='?cliente_id={$cliente_ativo['id']}&tab=docs_iniciais&msg=docs_updated';</script>";
                     }
                 ?>
-                <div class="admin-tab-content" style="border-top: 4px solid #0d6efd;">
+                <div class="admin-tab-content" style="border-top: 4px solid #198754;">
                     <div class="admin-header-row">
                         <div>
-                            <h3 class="admin-title" style="color:#0d6efd;">📑 Documentos Iniciais <small style="font-size:0.7rem;">(v3.1 Fix)</small></h3>
+                            <h3 class="admin-title" style="color:#198754;">📑 Documentos Iniciais <small style="font-size:0.7rem;">(v3.1 Fix)</small></h3>
                             <p class="admin-subtitle">Defina o tipo de processo e controle a entrega de documentos.</p>
                         </div>
                         
-                         <button type="submit" form="formDocs" name="update_docs_settings" class="btn-save" style="background:#0d6efd; color:white; border:none; padding:10px 25px; box-shadow:0 4px 15px rgba(13, 110, 253, 0.3);">
+                         <button type="submit" form="formDocs" name="update_docs_settings" class="btn-save" style="background:#198754; color:white; border:none; padding:10px 25px; box-shadow:0 4px 15px rgba(25, 135, 84, 0.3);">
                             💾 Salvar Alterações
                         </button>
                     </div>
@@ -803,7 +803,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             </div>
                             
                              <div>
-                                <label class="admin-form-label">📝 Observações do Engenheiro (Aparece para o cliente)</label>
+                                <label class="admin-form-label" style="color:#198754;">📝 Observações do Engenheiro (Aparece para o cliente)</label>
                                 <textarea name="observacoes_gerais" class="admin-form-input" rows="3" placeholder="Ex: Aguardando emissão do protocolo..." style="resize:vertical;"><?= htmlspecialchars($detalhes['observacoes_gerais'] ?? '') ?></textarea>
                             </div>
                         </div>
@@ -818,8 +818,8 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                     display:flex; align-items:center; gap:15px; transition:all 0.2s ease; cursor:pointer;
                                     box-shadow: 0 2px 4px rgba(0,0,0,0.02);
                                 }
-                                .doc-item-card:hover { transform:translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-color:#ddd; }
-                                .doc-check-input { width:22px; height:22px; accent-color:#0d6efd; cursor:pointer; }
+                                .doc-item-card:hover { transform:translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-color:#badbcc; }
+                                .doc-check-input { width:22px; height:22px; accent-color:#198754; cursor:pointer; }
                                 .doc-status-badge { font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:12px; text-transform:uppercase; letter-spacing:0.5px; }
                                 .badge-pendente { background:#fff5f5; color:#dc3545; border:1px solid #ffebeb; }
                                 .badge-entregue { background:#e8f5e9; color:#198754; border:1px solid #d1e7dd; }
@@ -831,7 +831,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                 <!-- COLUNA 1: Obrigatórios -->
                                 <div>
                                     <h4 style="color:#333; font-weight:700; font-size:1.1rem; margin-bottom:15px; display:flex; align-items:center; gap:8px;">
-                                        <span style="background:#e8f0fe; color:#0d6efd; padding:5px; border-radius:6px; font-size:1rem;">📋</span> 
+                                        <span style="background:#e8f5e9; color:#198754; padding:5px; border-radius:6px; font-size:1rem;">📋</span> 
                                         Obrigatórios
                                     </h4>
                                     <?php foreach($proc_data['docs_obrigatorios'] as $d_key): 
