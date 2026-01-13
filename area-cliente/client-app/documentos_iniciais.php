@@ -5,6 +5,13 @@ session_start();
 require_once '../db.php';
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
+register_shutdown_function(function() {
+    $error = error_get_last();
+    if ($error !== NULL && $error['type'] === E_ERROR) {
+        echo "<div style='background:red; color:white; padding:20px; font-weight:bold; z-index:99999; position:relative;'>FATAL ERROR CHECKLIST: " . $error['message'] . " in " . $error['file'] . " on line " . $error['line'] . "</div>";
+        die();
+    }
+});
 
 // VERIFICAR LOGIN
 if (!isset($_SESSION['cliente_id'])) {

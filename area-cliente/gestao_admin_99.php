@@ -1,6 +1,13 @@
 <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
+register_shutdown_function(function() {
+    $error = error_get_last();
+    if ($error !== NULL && $error['type'] === E_ERROR) {
+        echo "<div style='background:red; color:white; padding:20px; font-weight:bold; z-index:99999; position:relative;'>FATAL ERROR ADMIN: " . $error['message'] . " in " . $error['file'] . " on line " . $error['line'] . "</div>";
+        die();
+    }
+});
 require 'includes/init.php';
 
 // --- Atualização de Schema ---
