@@ -73,6 +73,30 @@ $p_obj = $detalhes['objeto_processo'] ?? '';
     <div class="form-grid">
         <div class="form-group"><label>Número do Processo</label><input type="text" name="processo_numero" value="<?= htmlspecialchars($p_num) ?>" placeholder="Ex: 2024/0058"></div>
         <div class="form-group"><label>Data de Início</label><input type="date" name="data_inicio" value="<?= htmlspecialchars($p_data) ?>"></div>
+        
+        <div class="form-group" style="grid-column: span 2;">
+            <label>Tipo de Processo (Lista de Documentos)</label>
+            <?php 
+                // Load Docs Config safely
+                $docs_config_path = __DIR__ . '/../config/docs_config.php';
+                if(file_exists($docs_config_path)) {
+                    $docs_data_conf = require $docs_config_path;
+                    $processos_opts = $docs_data_conf['processes'] ?? [];
+                } else {
+                    $processos_opts = [];
+                }
+                $p_tipo_chave = $detalhes['tipo_processo_chave'] ?? '';
+            ?>
+            <select name="tipo_processo_chave" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; background-color:#fff;">
+                <option value="">-- Selecione o Tipo (Define o Checklist) --</option>
+                <?php foreach($processos_opts as $chave => $proc): ?>
+                    <option value="<?= $chave ?>" <?= ($p_tipo_chave == $chave) ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($proc['titulo']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <small style="color:#666; font-size:0.8rem;">Selecionar o tipo correto ativa a lista de documentos personalizada.</small>
+        </div>
         <div class="form-group" style="grid-column: span 2;"><label>Objeto do Processo</label><input type="text" name="processo_objeto" value="<?= htmlspecialchars($p_obj) ?>" placeholder="Ex: Regularização Residencial Unifamiliar"></div>
     </div>
     <h3 style="margin:0 0 15px 0; color:var(--color-primary); border-bottom:1px solid #eee; padding-bottom:5px;">1. Acesso & Fotos</h3>

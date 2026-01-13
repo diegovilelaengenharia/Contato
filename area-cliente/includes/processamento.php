@@ -436,6 +436,7 @@ if (isset($_POST['novo_cliente']) || (isset($_POST['acao']) && $_POST['acao'] ==
         // Inserção Detalhes (Campos Expandidos Standardizados)
         $pdo->prepare("INSERT INTO processo_detalhes (
             cliente_id, 
+
             cpf_cnpj, 
             contato_tel, 
             rg_ie, 
@@ -451,12 +452,12 @@ if (isset($_POST['novo_cliente']) || (isset($_POST['acao']) && $_POST['acao'] ==
             imovel_rua, imovel_numero, imovel_bairro, imovel_complemento, imovel_cidade, imovel_uf,
             inscricao_imob, num_matricula, imovel_area_lote, area_construida,
             
-            processo_numero, data_inicio, processo_objeto,
+            processo_numero, data_inicio, processo_objeto, tipo_processo_chave, // [NEW]
 
             endereco_imovel,
             endereco_residencial,
             contato_email
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")->execute([
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")->execute([
             $nid, 
             $cpf, 
             $tel, 
@@ -489,6 +490,7 @@ if (isset($_POST['novo_cliente']) || (isset($_POST['acao']) && $_POST['acao'] ==
             $_POST['processo_numero'] ?? null,
             $_POST['data_inicio'] ?? null,
             $_POST['processo_objeto'] ?? null,
+            $_POST['tipo_processo_chave'] ?? null,
 
             // Compõe endereços visuais
             ($_POST['imovel_rua'] ?? '') . ', ' . ($_POST['imovel_numero'] ?? '') . ' - ' . ($_POST['imovel_bairro'] ?? '') . ' - ' . ($_POST['imovel_cidade'] ?? '') . '/' . ($_POST['imovel_uf'] ?? ''),
@@ -776,6 +778,7 @@ if (isset($_POST['acao']) && $_POST['acao'] == 'editar_cliente_completo') {
                 tipo_pessoa=?, cpf_cnpj=?, rg_ie=?, nacionalidade=?, data_nascimento=?, contato_email=?, contato_tel=?, 
                 res_rua=?, res_numero=?, res_bairro=?, res_complemento=?, res_cidade=?, res_uf=?,
                 profissao=?, estado_civil=?, nome_conjuge=?, tipo_servico=?, 
+                tipo_processo_chave=?, // [NEW] 
                 imovel_rua=?, imovel_numero=?,
                 imovel_bairro=?, imovel_complemento=?, imovel_cidade=?, imovel_uf=?, inscricao_imob=?,
                 num_matricula=?, imovel_area_lote=?, area_construida=?,
@@ -791,6 +794,7 @@ if (isset($_POST['acao']) && $_POST['acao'] == 'editar_cliente_completo') {
                 tipo_pessoa, cpf_cnpj, rg_ie, nacionalidade, data_nascimento, contato_email, contato_tel, 
                 res_rua, res_numero, res_bairro, res_complemento, res_cidade, res_uf,
                 profissao, estado_civil, nome_conjuge, tipo_servico,
+                tipo_processo_chave, // [NEW]
                 imovel_rua, imovel_numero,
                 imovel_bairro, imovel_complemento, imovel_cidade, imovel_uf, inscricao_imob,
                 num_matricula, imovel_area_lote, area_construida, 
@@ -799,8 +803,8 @@ if (isset($_POST['acao']) && $_POST['acao'] == 'editar_cliente_completo') {
                 observacoes_gerais,
                 cpf_conjuge, eh_procurador, data_inicio,
                 endereco_imovel, endereco_residencial,
-                cliente_id
-            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                cliente_id, tipo_processo_chave
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         }
         
         $pdo->prepare($sqlDet)->execute($paramsDet);
