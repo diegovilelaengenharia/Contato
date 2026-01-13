@@ -1,4 +1,7 @@
 <?php
+// FIX: Ensure DB connection is available
+require_once __DIR__ . '/init.php';
+
 // 0. Update Process Header (Top of Client Page)
 if (isset($_POST['update_processo_header'])) {
     $cid = $_POST['cliente_id'];
@@ -147,13 +150,27 @@ if (isset($_POST['btn_salvar_cadastro'])) {
         $ext = strtolower(pathinfo($_FILES['avatar_upload']['name'], PATHINFO_EXTENSION));
         $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
         if(in_array($ext, $allowed)) {
-            $dir = __DIR__ . '/../uploads/avatars/';
-            if(!is_dir($dir)) mkdir($dir, 0755, true);
+            // Path relative to execution context (assuming includes/processamento.php is called directly)
+            // But verify: if called direct, __DIR__ is includes/
+            // relative path for STORAGE: ../uploads/avatars/
+            // relative path for DB: uploads/avatars/
+            
+            $target_dir_abs = __DIR__ . '/../uploads/avatars/';
+            if(!is_dir($target_dir_abs)) mkdir($target_dir_abs, 0755, true);
+            
+            $new_name = "avatar_{$cid}.{$ext}";
             
             // Remove antigos
-            array_map('unlink', glob($dir . "avatar_{$cid}.*"));
+            array_map('unlink', glob($target_dir_abs . "avatar_{$cid}.*"));
             
-            move_uploaded_file($_FILES['avatar_upload']['tmp_name'], $dir . "avatar_{$cid}.{$ext}");
+            if(move_uploaded_file($_FILES['avatar_upload']['tmp_name'], $target_dir_abs . $new_name)) {
+                // UPDATE DB
+                try {
+                     // Path relative to area-cliente root (for display in Views)
+                     $db_path = "uploads/avatars/" . $new_name;
+                     $pdo->prepare("UPDATE clientes SET foto_perfil=? WHERE id=?")->execute([$db_path, $cid]);
+                } catch(Exception $e) { /* Column might not exist */ }
+            }
         }
     }
 
