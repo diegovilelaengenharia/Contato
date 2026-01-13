@@ -204,6 +204,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
         }
     </style>
 
+        /* FORCE SOCIAL UPDATE v2 */
         .floating-buttons { position: fixed; bottom: 25px; right: 25px; display: flex; flex-direction: column; gap: 16px; z-index: 99999 !important; }
         .floating-btn { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: var(--btn-bg); color: #ffffff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 8px 24px rgba(0, 0, 0, 0.1); transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease; text-decoration: none; position: relative; border: none !important; }
         .floating-btn svg { width: 28px; height: 28px; fill: currentColor; }
