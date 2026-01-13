@@ -936,18 +936,25 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                 </table>
                             </div>
                         <?php endif; ?>
-                                }
-                                .doc-item-card:hover { transform:translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-color:#badbcc; }
-                                .doc-check-input { width:22px; height:22px; accent-color:#198754; cursor:pointer; }
-                                .doc-status-badge { font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:12px; text-transform:uppercase; letter-spacing:0.5px; }
-                                .badge-pendente { background:#fff5f5; color:#dc3545; border:1px solid #ffebeb; }
-                                .badge-entregue { background:#e8f5e9; color:#198754; border:1px solid #d1e7dd; }
-                                .doc-label { flex:1; font-weight:500; color:#444; font-size:0.95rem; }
-                            </style>
 
-                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:25px;">
-                                
-                                <!-- COLUNA 1: Obrigatórios -->
+                             <!-- CSS para Tabela (Novo) -->
+                             <style>
+                                .admin-table { width:100%; border-collapse:collapse; margin-top:10px; }
+                                .admin-table th { text-align:left; padding:12px 15px; background:#f8f9fa; color:#444; border-bottom:2px solid #ddd; font-weight:600; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.5px; }
+                                .admin-table td { padding:15px; border-bottom:1px solid #eee; vertical-align:middle; }
+                                .admin-table tr:hover { background: #fdfdfd; }
+                                .status-badge { display:inline-block; padding:5px 10px; border-radius:12px; font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
+                                .status-badge.warning { background:#fff3cd; color:#856404; }
+                                .status-badge.info { background:#cff4fc; color:#055160; }
+                                .status-badge.success { background:#d1e7dd; color:#0f5132; }
+                                .status-badge.danger { background:#f8d7da; color:#842029; }
+                                .btn-icon { width:32px; height:32px; display:inline-flex; align-items:center; justify-content:center; border-radius:6px; cursor:pointer; font-size:1rem; transition:0.2s; text-decoration:none; }
+                                .btn-icon:hover { transform:scale(1.1); filter:brightness(0.95); }
+                             </style>
+
+                    </form>
+                </div>
+            <?php endif; ?>
                                 <div>
                                     <h4 style="color:#333; font-weight:700; font-size:1.1rem; margin-bottom:15px; display:flex; align-items:center; gap:8px;">
                                         <span style="background:#e8f5e9; color:#198754; padding:5px; border-radius:6px; font-size:1rem;">📋</span> 
