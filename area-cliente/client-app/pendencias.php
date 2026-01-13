@@ -123,6 +123,9 @@ function get_pendency_files($p_id) {
     }
     return $anexos;
 }
+
+// 4. FIX: Ensure no unexpected output before HTML
+if (ob_get_length()) ob_clean();
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">

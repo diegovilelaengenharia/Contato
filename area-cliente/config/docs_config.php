@@ -129,7 +129,7 @@ return [
     "USUCAPIAO" => [
       "titulo" => "Usucapião",
       "docs_obrigatorios" => ["DOC_001", "DOC_002", "DOC_003", "DOC_019", "DOC_020", "DOC_022", "DOC_010"],
-      "docs_excepcionais": ["DOC_011"]
+      "docs_excepcionais" => ["DOC_011"]
     ]
   ]
 ];
