@@ -182,6 +182,18 @@ $entregues = $stmt_entregues->fetchAll(PDO::FETCH_COLUMN);
                 <span style="font-size: 1.1rem; font-weight: 700;"><?= htmlspecialchars($proc_data['titulo']) ?></span>
             </div>
 
+            <?php if(!empty($detalhes['observacoes_gerais'])): ?>
+                <div style="background: #fff3cd; border: 1px solid #ffeeba; border-left: 5px solid #ffc107; padding: 15px; border-radius: 8px; margin-bottom: 25px; display: flex; gap: 15px; align-items: flex-start;">
+                    <span style="font-size: 1.5rem;">👷‍♂️</span>
+                    <div>
+                        <strong style="display:block; color: #856404; margin-bottom: 5px; font-size: 0.95rem;">Observação do Engenheiro:</strong>
+                        <div style="color: #666; font-size: 0.95rem; line-height: 1.5;">
+                            <?= nl2br(htmlspecialchars($detalhes['observacoes_gerais'])) ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
             <h3 style="font-size: 1rem; color: #555; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 5px;">Documentos Obrigatórios</h3>
             
             <?php foreach($proc_data['docs_obrigatorios'] as $d_key): 
@@ -191,11 +203,22 @@ $entregues = $stmt_entregues->fetchAll(PDO::FETCH_COLUMN);
                     <div class="doc-icon" style="background: <?= $is_ok ? '#d1e7dd' : '#f8d7da' ?>; color: <?= $is_ok ? '#198754' : '#dc3545' ?>;">
                         <?= $is_ok ? '✓' : '!' ?>
                     </div>
-                    <div class="doc-info">
-                        <div class="doc-title"><?= htmlspecialchars($todos_docs[$d_key] ?? $d_key) ?></div>
-                        <span class="doc-status <?= $is_ok ? 'status-ok' : 'status-pend' ?>">
-                            <?= $is_ok ? 'Recebido' : 'Pendente' ?>
-                        </span>
+                    <div class="doc-info" style="display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%;">
+                        <div>
+                            <div class="doc-title"><?= htmlspecialchars($todos_docs[$d_key] ?? $d_key) ?></div>
+                            <span class="doc-status <?= $is_ok ? 'status-ok' : 'status-pend' ?>">
+                                <?= $is_ok ? 'Recebido' : 'Pendente' ?>
+                            </span>
+                        </div>
+                        
+                        <?php if(!$is_ok): ?>
+                             <!-- Upload Trigger -->
+                             <label class="btn-anexar" style="cursor:pointer; display:flex; align-items:center; gap:5px; padding:6px 12px; background:#0d6efd; color:white; border-radius:20px; font-size:0.75rem; font-weight:600; text-decoration:none; transition:0.2s; white-space: nowrap; box-shadow: 0 2px 5px rgba(13, 110, 253, 0.2);">
+                                <span class="material-symbols-rounded" style="font-size:1rem;">attach_file</span> 
+                                <span style="display:none; @media(min-width:400px){display:inline;}">Anexar</span>
+                                <input type="file" style="display:none;" onchange="alert('O recurso de upload automático estará disponível em breve! Por favor, envie via WhatsApp ou email enquanto isso.')">
+                            </label>
+                        <?php endif; ?>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -227,6 +250,9 @@ $entregues = $stmt_entregues->fetchAll(PDO::FETCH_COLUMN);
                 <p>O tipo do seu processo ainda está sendo analisado pela nossa equipe. Em breve a lista de documentos aparecerá aqui.</p>
             </div>
         <?php endif; ?>
+
+        <!-- FOOTER -->
+        <?php include 'includes/footer.php'; ?>
 
     </div>
 

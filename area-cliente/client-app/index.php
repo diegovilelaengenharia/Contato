@@ -277,8 +277,16 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             <div class="ph-user-bar">
                 <div class="ph-user-info">
                     <?php 
+                        // Tenta achar avatar físico se não tiver no banco ou como fallback
                         $avatarPath = $cliente['foto_perfil'] ?? '';
-                        if($avatarPath && !str_starts_with($avatarPath, '../') && !str_starts_with($avatarPath, 'http')) $avatarPath = '../' . $avatarPath;
+                        
+                        // Lógica de fallback físico
+                        $files = glob("../uploads/avatars/avatar_{$cliente_id}.*");
+                        if (!empty($files)) {
+                            $avatarPath = $files[0];
+                        } elseif ($avatarPath && !str_starts_with($avatarPath, '../') && !str_starts_with($avatarPath, 'http')) {
+                            $avatarPath = '../' . $avatarPath;
+                        }
                     ?>
                     <?php if($avatarPath && file_exists($avatarPath) && !is_dir($avatarPath)): ?>
                         <img src="<?= htmlspecialchars($avatarPath) ?>?v=<?= time() ?>" class="ph-avatar">
@@ -434,27 +442,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
         </div>
 
         <!-- FOOTER PREMIUM -->
-        <footer class="premium-footer" style="padding: 20px 20px; background: #fff; border-top: 1px solid #eee; margin-top: 0; margin-bottom: 25px; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px;">
-            <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
-                <!-- Logo -->
-                <div style="flex-shrink: 0;">
-                    <img src="../../assets/logo.png" alt="Vilela Engenharia" style="max-height: 45px; opacity: 1;">
-                </div>
-                
-                <!-- Vertical Divider (Optional, subtle) -->
-                <div style="width:1px; height:35px; background:#eee;"></div>
-
-                <!-- Info -->
-                <div style="text-align: left;">
-                    <span style="display:block; font-size: 0.65rem; color: #999; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; line-height:1;">Engenheiro Responsável</span>
-                    <span style="display:block; font-size: 0.95rem; font-weight: 700; color: #333; margin: 2px 0; line-height:1.2;">Diego T. N. Vilela</span>
-                    <span style="display:block; font-size: 0.75rem; color: #666; line-height:1;">CREA 235.474/D</span>
-                </div>
-            </div>
-            <div style="margin-top: 15px; font-size: 0.7rem; color: #ccc; text-align: center;">
-                &copy; <?= date('Y') ?> Vilela Engenharia
-            </div>
-        </footer>
+        <?php include 'includes/footer.php'; ?>
 
         <!-- FLOATING SOCIAL BUTTONS (OFFICIAL LANDING PAGE STYLE) -->
         <div class="floating-buttons" style="z-index: 99999;">

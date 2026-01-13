@@ -262,6 +262,10 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     <div style="padding:25px; display:flex; align-items:flex-start; gap:20px;">
                         
                         <!-- Avatar / Iniciais (Com Upload) -->
+                        <form id="form_avatar_upload" method="POST" enctype="multipart/form-data" style="display:none;">
+                            <input type="file" name="avatar_upload" id="avatar_input" accept="image/*" onchange="document.getElementById('form_avatar_upload').submit();">
+                        </form>
+
                         <div style="position:relative; width:80px; height:80px; min-width:80px; cursor:pointer;" onclick="document.getElementById('avatar_input').click();" title="Clique para alterar a foto">
                             <?php if($avatar_url): ?>
                                 <img src="<?= $avatar_url ?>" style="width:100%; height:100%; object-fit:cover; border-radius:50%; border:3px solid var(--color-primary-light);">
@@ -271,11 +275,8 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                 </div>
                             <?php endif; ?>
                             
-                            <div style="position:absolute; bottom:0; right:0; background:var(--color-primary); color:white; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; border:2px solid white;">📷</div>
+                            <div style="position:absolute; bottom:0; right:0; background:var(--color-primary); color:white; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; border:2px solid white; box-shadow:0 2px 4px rgba(0,0,0,0.15);">📷</div>
                         </div>
-                        
-                        <!-- Form invisível para upload -->
-                        </form> <!-- Fechamento do form global (ajuste se necessário, mas mantendo estrutura original) -->
 
                         <div class="client-summary-card" style="flex:1;">
                             <h2 style="margin:0 0 5px 0; font-size:1.6rem; color:var(--color-text);"><?= htmlspecialchars($cliente_ativo['nome']) ?></h2>
