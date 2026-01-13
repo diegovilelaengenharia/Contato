@@ -144,125 +144,41 @@ if (ob_get_length()) ob_clean();
     <link rel="stylesheet" href="css/style.css?v=3.0">
     
     <style>
-        /* HEADER PORTAL STYLE */
-        .portal-header {
-            background: #fff;
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-            margin-bottom: 25px;
-            overflow: hidden;
-            border: 1px solid #f0f0f0;
-        }
-        .ph-top {
-            padding: 20px 30px;
+        /* HEADER MODULE STYLE (RED - PENDÊNCIAS) */
+        .page-header {
             display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        .ph-logo img {
-            height: 45px;
-        }
-        .ph-divider {
-            width: 2px;
-            height: 35px;
-            background: #eee;
-        }
-        .ph-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #444;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .ph-user-bar {
-            background: #146c43; /* Vilela Green */
-            padding: 15px 30px;
-            display: flex;
-            align-items: center;
             justify-content: space-between;
-            color: white;
-        }
-        .ph-user-info {
-            display: flex;
             align-items: center;
-            gap: 15px;
-        }
-        .ph-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-            border: 2px solid rgba(255,255,255,0.3);
-            object-fit: cover;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: white;
-        }
-        .ph-text-group {
-            line-height: 1.2;
-        }
-        .ph-welcome {
-            font-size: 0.8rem;
-            opacity: 0.9;
-            font-weight: 400;
-            display: block;
-        }
-        .ph-username {
-            font-size: 1.2rem;
-            font-weight: 700;
-            display: block;
-        }
-        .ph-logout-btn {
-            width: 38px;
-            height: 38px;
-            background: rgba(255,255,255,0.15);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            text-decoration: none;
-            transition: background 0.2s;
-        }
-        .ph-logout-btn:hover {
-            background: rgba(255,255,255,0.25);
-        }
-
-        /* MOBILE ADAPT */
-        @media(max-width: 600px) {
-            .ph-top { padding: 15px 20px; flex-direction: column; align-items: flex-start; gap: 10px; }
-            .ph-divider { display: none; }
-            .ph-logo img { height: 35px; }
-            .ph-title { font-size: 0.95rem; }
-            .ph-user-bar { padding: 15px 20px; }
-            .ph-username { font-size: 1rem; }
-        }
-
-        /* FORCE SOCIAL UPDATE v2 */
-        .floating-buttons { position: fixed; bottom: 25px; right: 25px; display: flex; flex-direction: column; gap: 16px; z-index: 99999 !important; }
-        .floating-btn { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: var(--btn-bg); color: #ffffff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 8px 24px rgba(0, 0, 0, 0.1); transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease; text-decoration: none; position: relative; border: none !important; }
-        .floating-btn svg { width: 28px; height: 28px; fill: currentColor; }
-        .floating-btn--whatsapp { --btn-bg: #25d366; }
-        .floating-btn--whatsapp:hover { background: #20bd5a; box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4); }
-        .floating-btn--instagram { --btn-bg: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
-        .floating-btn--instagram:hover { box-shadow: 0 6px 16px rgba(220, 39, 67, 0.4); }
-        .floating-btn:hover { transform: scale(1.1) rotate(-4deg); }
-        .floating-btn:active { transform: scale(0.95); }
-
-        body { background: #f4f6f8; }
-        
-        .status-badge {
-            padding: 4px 10px; border-radius: 20px;
-            font-size: 0.7rem; font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .empty-state {
-            text-align: center; padding: 40px; color: #999;
+            background: #fff;
+            padding: 20px 25px;
+            border-radius: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #f8f9fa;
         }
         
+        .btn-back {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 0.9rem; font-weight: 600; color: #666;
+            background: #f8f9fa; padding: 10px 18px; border-radius: 14px;
+            transition: all 0.2s ease; border: 1px solid #eee;
+        }
+        .btn-back:hover { background: #e9ecef; color: #333; transform: translateX(-3px); }
+        .btn-back span { font-size: 1.2rem; }
+
+        .header-title-box { text-align: right; line-height: 1.2; }
+        .header-title-main { display: block; font-size: 1.4rem; font-weight: 800; color: #333; letter-spacing: -0.5px; }
+        .header-title-sub { display: block; font-size: 0.85rem; font-weight: 500; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+        
+        /* Mobile overrides */
+        @media (max-width: 480px) {
+            .page-header { flex-direction: column-reverse; gap: 20px; text-align: center; padding: 20px; }
+            .header-title-box { text-align: center; } 
+            .btn-back { width: 100%; justify-content: center; }
+        }
+
         .section-title {
             font-size: 1.1rem;
             font-weight: 700;
@@ -277,47 +193,24 @@ if (ob_get_length()) ob_clean();
     <div class="app-container" style="padding: 20px;">
         
         <!-- HEADER PORTAL -->
-        <div class="portal-header">
-            <div class="ph-top">
-                
-                <!-- BACK BUTTON INSTEAD OF LOGO IF INSIDE PAGE? NO, KEEP CONSISTENT -->
-                <div style="display:flex; align-items:center; gap:15px;">
-                     <a href="index.php" style="background: #f8f9fa; border: 1px solid #ddd; width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #333; box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-decoration: none;">
-                        <span class="material-symbols-rounded">arrow_back</span>
-                     </a>
-                     
-                     <div class="ph-logo">
-                        <img src="../../assets/logo.png" alt="Vilela Engenharia">
-                     </div>
-                </div>
+        <!-- HEADER MODULE (RED) -->
+        <div class="page-header">
+            <!-- Left: Back Button -->
+            <a href="index.php" class="btn-back">
+                <span class="material-symbols-rounded">arrow_back</span> Voltar
+            </a>
 
-                <div class="ph-divider"></div>
-                <div class="ph-title">Portal de Acompanhamento</div>
-            </div>
-            
-            <div class="ph-user-bar">
-                <div class="ph-user-info">
-                    <?php 
-                        $avatarPath = $cliente['foto_perfil'] ?? '';
-                        if($avatarPath && !str_starts_with($avatarPath, '../') && !str_starts_with($avatarPath, 'http')) $avatarPath = '../' . $avatarPath;
-                    ?>
-                    <?php if($avatarPath && file_exists($avatarPath) && !is_dir($avatarPath)): ?>
-                        <img src="<?= htmlspecialchars($avatarPath) ?>?v=<?= time() ?>" class="ph-avatar">
-                    <?php else: ?>
-                        <div class="ph-avatar">
-                            <span class="material-symbols-rounded">person</span>
-                        </div>
-                    <?php endif; ?>
-                    
-                    <div class="ph-text-group">
-                        <span class="ph-welcome">Bem-vindo(a),</span>
-                        <span class="ph-username"><?= htmlspecialchars(explode(' ', $cliente['nome'] ?? 'Cliente')[0]) ?></span>
-                    </div>
-                </div>
-
-                <a href="logout.php" class="ph-logout-btn" title="Sair">
-                    <span class="material-symbols-rounded">logout</span>
-                </a>
+            <!-- Right: Title & Icon -->
+            <div style="display:flex; align-items:center; gap:15px; z-index:2;">
+                 <div class="header-title-box">
+                    <span class="header-title-main">Pendências</span>
+                    <span class="header-title-sub">Ações Necessárias</span>
+                 </div>
+                 
+                 <!-- Icon -->
+                 <div style="background: white; border:1px solid #dee2e6; color: #dc3545; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                    ⚠️
+                 </div>
             </div>
         </div>
 
