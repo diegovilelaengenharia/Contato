@@ -12,6 +12,11 @@ if (!isset($_SESSION['cliente_id'])) {
 
 $cliente_id = $_SESSION['cliente_id'];
 
+// BUSCAR DADOS DO CLIENTE (Necessário para o Header/Avatar)
+$stmt_cli = $pdo->prepare("SELECT * FROM clientes WHERE id = ?");
+$stmt_cli->execute([$cliente_id]);
+$cliente = $stmt_cli->fetch(PDO::FETCH_ASSOC);
+
 // BUSCAR DETALHES DO PROCESSO
 $stmt_det = $pdo->prepare("SELECT * FROM processo_detalhes WHERE cliente_id = ?");
 $stmt_det->execute([$cliente_id]);
