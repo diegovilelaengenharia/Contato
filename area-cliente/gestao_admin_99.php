@@ -812,48 +812,70 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             $proc_data = $processos[$active_proc_key];
                             $doc_list = array_merge($proc_data['docs_obrigatorios'], $proc_data['docs_excepcionais']);
                         ?>
-                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                            <style>
+                                .doc-item-card {
+                                    background:white; border:1px solid #eee; border-radius:8px; padding:12px 15px; margin-bottom:10px;
+                                    display:flex; align-items:center; gap:15px; transition:all 0.2s ease; cursor:pointer;
+                                    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+                                }
+                                .doc-item-card:hover { transform:translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-color:#ddd; }
+                                .doc-check-input { width:22px; height:22px; accent-color:#0d6efd; cursor:pointer; }
+                                .doc-status-badge { font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:12px; text-transform:uppercase; letter-spacing:0.5px; }
+                                .badge-pendente { background:#fff5f5; color:#dc3545; border:1px solid #ffebeb; }
+                                .badge-entregue { background:#e8f5e9; color:#198754; border:1px solid #d1e7dd; }
+                                .doc-label { flex:1; font-weight:500; color:#444; font-size:0.95rem; }
+                            </style>
+
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:25px;">
                                 
                                 <!-- COLUNA 1: Obrigatórios -->
-                                <div class="form-card" style="margin:0;">
-                                    <h4 style="color:#333; border-bottom:2px solid #ddd; padding-bottom:10px; margin-bottom:15px;">Documentos Obrigatórios</h4>
+                                <div>
+                                    <h4 style="color:#333; font-weight:700; font-size:1.1rem; margin-bottom:15px; display:flex; align-items:center; gap:8px;">
+                                        <span style="background:#e8f0fe; color:#0d6efd; padding:5px; border-radius:6px; font-size:1rem;">📋</span> 
+                                        Obrigatórios
+                                    </h4>
                                     <?php foreach($proc_data['docs_obrigatorios'] as $d_key): 
                                         $is_checked = in_array($d_key, $entregues);
                                     ?>
-                                        <div style="margin-bottom:10px; display:flex; align-items:center; gap:10px; padding:12px; background:<?= $is_checked ? '#d1e7dd' : '#f8d7da' ?>; border-radius:8px; border:1px solid <?= $is_checked ? '#badbcc' : '#f5c6cb' ?>; transition:all 0.2s;">
-                                            <input type="checkbox" name="docs_entregues[]" value="<?= $d_key ?>" id="chk_<?= $d_key ?>" style="width:20px; height:20px; accent-color:#198754;" <?= $is_checked ? 'checked' : '' ?>>
-                                            <label for="chk_<?= $d_key ?>" style="cursor:pointer; flex:1; font-weight:500; color:#333; display:flex; justify-content:space-between; align-items:center;">
-                                                <span><?= htmlspecialchars($todos_docs[$d_key] ?? $d_key) ?></span>
-                                                <span style="font-size:1.2rem;"><?= $is_checked ? '✅' : '❌' ?></span>
-                                            </label>
-                                        </div>
+                                        <label class="doc-item-card" style="border-left:4px solid <?= $is_checked ? '#198754' : '#dc3545' ?>;">
+                                            <input type="checkbox" name="docs_entregues[]" value="<?= $d_key ?>" class="doc-check-input" <?= $is_checked ? 'checked' : '' ?>>
+                                            <span class="doc-label"><?= htmlspecialchars($todos_docs[$d_key] ?? $d_key) ?></span>
+                                            <span class="doc-status-badge <?= $is_checked ? 'badge-entregue' : 'badge-pendente' ?>">
+                                                <?= $is_checked ? 'Entregue' : 'Pendente' ?>
+                                            </span>
+                                        </label>
                                     <?php endforeach; ?>
                                 </div>
 
                                 <!-- COLUNA 2: Excepcionais -->
-                                <div class="form-card" style="margin:0;">
-                                    <h4 style="color:#666; border-bottom:2px solid #ddd; padding-bottom:10px; margin-bottom:15px;">Excepcionais / Situacionais</h4>
+                                <div>
+                                    <h4 style="color:#555; font-weight:700; font-size:1.1rem; margin-bottom:15px; display:flex; align-items:center; gap:8px;">
+                                        <span style="background:#fff3cd; color:#856404; padding:5px; border-radius:6px; font-size:1rem;">⚠️</span> 
+                                        Excepcionais
+                                    </h4>
                                     <?php if(empty($proc_data['docs_excepcionais'])): ?>
-                                        <p style="color:#999; font-style:italic;">Nenhum documento extra para este processo.</p>
+                                        <div style="text-align:center; padding:30px; border:2px dashed #eee; border-radius:8px; color:#999;">
+                                            <small>Nenhum documento extra para este processo.</small>
+                                        </div>
                                     <?php else: ?>
                                         <?php foreach($proc_data['docs_excepcionais'] as $d_key): 
                                             $is_checked = in_array($d_key, $entregues);
                                         ?>
-                                            <div style="margin-bottom:10px; display:flex; align-items:center; gap:10px; padding:12px; background:<?= $is_checked ? '#d1e7dd' : '#fff3cd' ?>; border-radius:8px; border:1px solid <?= $is_checked ? '#badbcc' : '#ffeeba' ?>;">
-                                                <input type="checkbox" name="docs_entregues[]" value="<?= $d_key ?>" id="chk_<?= $d_key ?>" style="width:20px; height:20px; accent-color:#198754;" <?= $is_checked ? 'checked' : '' ?>>
-                                                <label for="chk_<?= $d_key ?>" style="cursor:pointer; flex:1; display:flex; justify-content:space-between; align-items:center;">
-                                                    <span><?= htmlspecialchars($todos_docs[$d_key] ?? $d_key) ?></span>
-                                                    <span style="font-size:1.2rem;"><?= $is_checked ? '✅' : '⚠️' ?></span>
-                                                </label>
-                                            </div>
+                                            <label class="doc-item-card" style="border-left:4px solid <?= $is_checked ? '#198754' : '#ffc107' ?>;">
+                                                <input type="checkbox" name="docs_entregues[]" value="<?= $d_key ?>" class="doc-check-input" <?= $is_checked ? 'checked' : '' ?>>
+                                                <span class="doc-label"><?= htmlspecialchars($todos_docs[$d_key] ?? $d_key) ?></span>
+                                                <span class="doc-status-badge" style="<?= $is_checked ? 'background:#e8f5e9; color:#198754; border:1px solid #d1e7dd;' : 'background:#fff3cd; color:#856404; border:1px solid #ffeeba;' ?>">
+                                                    <?= $is_checked ? 'Entregue' : 'Opcional' ?>
+                                                </span>
+                                            </label>
                                         <?php endforeach; ?>
                                     <?php endif; ?>
                                 </div>
 
                             </div>
                             
-                            <div style="margin-top:20px; text-align:center; color:#666; font-size:0.9rem;">
-                                <p>💡 <b>Legenda:</b> Marque a caixa para confirmar o recebimento (✅). Desmarque para indicar pendência (❌ ou ⚠️).</p>
+                            <div style="margin-top:30px; text-align:center; padding:15px; background:#f8f9fa; border-radius:8px; color:#666; font-size:0.9rem;">
+                                <p style="margin:0;">💡 <b>Dica:</b> Clique nos itens para marcar/desmarcar. As alterações são salvas ao clicar em "Salvar Alterações".</p>
                             </div>
                         <?php else: ?>
                             <div style="text-align:center; padding:50px; color:#999;">
