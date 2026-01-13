@@ -31,11 +31,16 @@ $todos_docs = $docs_config['document_registry'];
 $tipo_chave = ($detalhes && isset($detalhes['tipo_processo_chave'])) ? $detalhes['tipo_processo_chave'] : '';
 $proc_data = $processos[$tipo_chave] ?? null;
 
-// Buscar Status de Entrega
-$stmt_entregues = $pdo->prepare("SELECT doc_chave FROM processo_docs_entregues WHERE cliente_id = ?");
+// Buscar Status de Entrega (Mapeado por chave)
+$stmt_entregues = $pdo->prepare("SELECT doc_chave, arquivo_path, nome_original, data_entrega FROM processo_docs_entregues WHERE cliente_id = ?");
 $stmt_entregues->execute([$cliente_id]);
-$entregues = $stmt_entregues->fetchAll(PDO::FETCH_COLUMN);
+$entregues_raw = $stmt_entregues->fetchAll(PDO::FETCH_ASSOC);
 
+// Transform in Associative Array: [ 'chave' => {data} ]
+$entregues = [];
+foreach($entregues_raw as $row) {
+    $entregues[$row['doc_chave']] = $row;
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -53,7 +58,10 @@ $entregues = $stmt_entregues->fetchAll(PDO::FETCH_COLUMN);
     <!-- STYLES -->
     <link rel="stylesheet" href="css/style.css?v=3.0">
     <link rel="stylesheet" href="css/header-premium.css?v=<?= time() ?>">
-    
+    <!-- Toastify -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
     <style>
         /* FORCE SOCIAL UPDATE v2 */
         .floating-buttons { position: fixed; bottom: 25px; right: 25px; display: flex; flex-direction: column; gap: 16px; z-index: 99999 !important; }
@@ -178,59 +186,58 @@ $entregues = $stmt_entregues->fetchAll(PDO::FETCH_COLUMN);
 
         <?php if($proc_data): ?>
             
-            <!-- INFO CARDS (PREMIUM) -->
+            <!-- UNIFIED INFO HEADER -->
             <style>
-                .info-card-container {
-                    display: grid; gap: 20px; margin-bottom: 30px;
+                .unified-info-box {
+                    background: linear-gradient(135deg, #fffcf5 0%, #ffffff 100%);
+                    border: 1px solid #ffeeba;
+                    border-left: 5px solid #0d6efd; /* Blue accent for main process */
+                    border-radius: 16px;
+                    padding: 0;
+                    margin-bottom: 30px;
+                    box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+                    overflow: hidden;
                 }
-                .ic-processo {
-                    background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
-                    border: 1px solid #bbdefb;
-                    border-left: 5px solid #0d6efd;
-                    padding: 20px; border-radius: 12px;
+                .uib-main {
+                    padding: 20px;
                     display: flex; align-items: center; gap: 15px;
-                    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.05);
+                    border-bottom: 1px dashed #e0e0e0;
                 }
-                .ic-icon {
-                    width: 45px; height: 45px;
-                    background: #fff; border-radius: 50%;
-                    display: flex; align-items: center; justify-content: center;
-                    font-size: 1.5rem; color: #0d6efd;
-                    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+                .uib-obs {
+                    padding: 15px 20px;
+                    background: rgba(255, 193, 7, 0.05); /* Slight yellow tint */
+                    display: flex; gap: 12px; align-items: flex-start;
                 }
-                .ic-content h4 { font-size: 0.8rem; text-transform: uppercase; color: #555; letter-spacing: 0.5px; margin: 0; font-weight: 600; }
-                .ic-content p { font-size: 1.2rem; font-weight: 700; color: #084298; margin: 3px 0 0 0; }
+                /* Typography */
+                .uib-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #888; font-weight: 600; margin-bottom: 2px; }
+                .uib-title { font-size: 1.3rem; font-weight: 700; color: #084298; margin: 0; }
+                .uib-text  { font-size: 0.95rem; color: #555; font-style: italic; line-height: 1.5; }
                 
-                .ic-obs {
-                    background: linear-gradient(135deg, #fff9e6 0%, #ffffff 100%);
-                    border: 1px solid #ffecb5;
-                    border-left: 5px solid #ffc107;
-                    padding: 20px; border-radius: 12px;
-                    display: flex; gap: 15px;
-                    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.05);
+                .uib-icon { 
+                    width: 45px; height: 45px; background: white; border-radius: 50%; 
+                    display: flex; align-items: center; justify-content: center; 
+                    font-size: 1.4rem; color: #0d6efd; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+                    border: 1px solid #e7f1ff;
                 }
-                .ic-obs .ic-icon { color: #856404; }
-                .ic-obs h4 { color: #856404; }
-                .ic-obs p { font-size: 0.95rem; font-weight: 400; color: #555; line-height: 1.6; font-style: italic; }
             </style>
 
-            <div class="info-card-container">
-                <!-- Processo Card -->
-                <div class="ic-processo">
-                    <div class="ic-icon">🏗️</div>
-                    <div class="ic-content">
-                        <h4>Processo Identificado</h4>
-                        <p><?= htmlspecialchars($proc_data['titulo']) ?></p>
+            <div class="unified-info-box">
+                <!-- Top Section: Processo -->
+                <div class="uib-main">
+                    <div class="uib-icon">🏗️</div>
+                    <div>
+                        <div class="uib-label">PROCESSO IDENTIFICADO</div>
+                        <h2 class="uib-title"><?= htmlspecialchars($proc_data['titulo']) ?></h2>
                     </div>
                 </div>
 
-                <!-- Obs Card -->
+                <!-- Bottom Section: Observação (Connected) -->
                 <?php if(!empty($detalhes['observacoes_gerais'])): ?>
-                    <div class="ic-obs">
-                        <div class="ic-icon" style="align-self: flex-start;">👷‍♂️</div>
-                        <div class="ic-content">
-                            <h4>Observação do Engenheiro</h4>
-                            <p>“<?= nl2br(htmlspecialchars($detalhes['observacoes_gerais'])) ?>”</p>
+                    <div class="uib-obs">
+                        <span style="font-size:1.2rem; margin-top: -2px;">👷‍♂️</span>
+                        <div>
+                            <div class="uib-label" style="color:#d39e00;">OBSERVAÇÃO DO ENGENHEIRO</div>
+                            <div class="uib-text">“<?= nl2br(htmlspecialchars($detalhes['observacoes_gerais'])) ?>”</div>
                         </div>
                     </div>
                 <?php endif; ?>
@@ -254,11 +261,18 @@ $entregues = $stmt_entregues->fetchAll(PDO::FETCH_COLUMN);
                         </div>
                         
                         <?php if(!$is_ok): ?>
-                             <!-- Upload Trigger -->
+                             <!-- Upload Trigger (PENDING) -->
                              <label class="btn-anexar" style="cursor:pointer; display:flex; align-items:center; gap:5px; padding:6px 12px; background:#0d6efd; color:white; border-radius:20px; font-size:0.75rem; font-weight:600; text-decoration:none; transition:0.2s; white-space: nowrap; box-shadow: 0 2px 5px rgba(13, 110, 253, 0.2);">
                                 <span class="material-symbols-rounded" style="font-size:1rem;">attach_file</span> 
                                 <span style="display:none; @media(min-width:400px){display:inline;}">Anexar</span>
-                                <input type="file" style="display:none;" onchange="alert('O recurso de upload automático estará disponível em breve! Por favor, envie via WhatsApp ou email enquanto isso.')">
+                                <input type="file" style="display:none;" onchange="uploadDoc(this, '<?= $d_key ?>')">
+                            </label>
+                        <?php else: ?>
+                             <!-- Re-Upload Trigger (EDIT) -->
+                             <label class="btn-anexar" style="cursor:pointer; display:flex; align-items:center; gap:5px; padding:6px 12px; background:#6c757d; color:white; border-radius:20px; font-size:0.75rem; font-weight:600; text-decoration:none; transition:0.2s; white-space: nowrap; box-shadow: 0 2px 5px rgba(108, 117, 125, 0.2); opacity: 0.8;">
+                                <span class="material-symbols-rounded" style="font-size:1rem;">edit</span> 
+                                <span style="display:none; @media(min-width:400px){display:inline;}">Alterar</span>
+                                <input type="file" style="display:none;" onchange="uploadDoc(this, '<?= $d_key ?>')">
                             </label>
                         <?php endif; ?>
                     </div>

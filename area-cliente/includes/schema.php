@@ -90,4 +90,12 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS processo_docs_entregues (
     data_entrega DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
 )");
+
+// Update Schema: Add Path Columns to Documents
+try {
+    $pdo->query("SELECT arquivo_path FROM processo_docs_entregues LIMIT 1");
+} catch (Exception $e) {
+    $pdo->exec("ALTER TABLE processo_docs_entregues ADD COLUMN arquivo_path VARCHAR(255) DEFAULT NULL");
+    $pdo->exec("ALTER TABLE processo_docs_entregues ADD COLUMN nome_original VARCHAR(255) DEFAULT NULL");
+}
 ?>
