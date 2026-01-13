@@ -99,7 +99,7 @@ $entregues = $stmt_entregues->fetchAll(PDO::FETCH_COLUMN);
             </a>
             <div>
                 <span style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: #888; font-weight: 700;">Checklist</span>
-                <h1 style="font-size: 1.5rem; font-weight: 700; color: #222; margin: 0;">Documentos Iniciais</h1>
+                <h1 style="font-size: 1.5rem; font-weight: 700; color: #222; margin: 0;">Documentos Iniciais <span style="font-size:0.8rem; color:#aaa; font-weight:400;">v3.1</span></h1>
             </div>
         </header>
 

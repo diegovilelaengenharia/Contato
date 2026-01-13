@@ -777,7 +777,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 <div class="admin-tab-content" style="border-top: 4px solid #0d6efd;">
                     <div class="admin-header-row">
                         <div>
-                            <h3 class="admin-title" style="color:#0d6efd;">📑 Documentos Iniciais</h3>
+                            <h3 class="admin-title" style="color:#0d6efd;">📑 Documentos Iniciais <small style="font-size:0.7rem;">(v3.1 Fix)</small></h3>
                             <p class="admin-subtitle">Defina o tipo de processo e controle a entrega de documentos.</p>
                         </div>
                         
