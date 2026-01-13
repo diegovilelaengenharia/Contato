@@ -400,11 +400,17 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 .tab-link.t-arq.active {
                     background: #146c43;
                 }
+                .tab-link.t-docs.active {
+                    background: #0d6efd;
+                }
             </style>
             
             <div class="tabs-container">
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="tab-link t-hist <?= ($active_tab=='andamento'||$active_tab=='cadastro')?'active':'' ?>">
                     <span>📜</span> Histórico
+                </a>
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=docs_iniciais" class="tab-link t-docs <?= ($active_tab=='docs_iniciais')?'active':'' ?>">
+                    <span>📑</span> Docs. Iniciais
                 </a>
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="tab-link t-pend <?= ($active_tab=='pendencias')?'active':'' ?>">
                     <span>⚠️</span> Pendências
@@ -726,6 +732,113 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                 <!-- Modais Pendências -->
                 <?php require 'includes/modals/pendencias.php'; ?>
 
+
+
+            <?php elseif($active_tab == 'docs_iniciais'): ?>
+                <!-- DOCUMENTOS INICIAIS CONTENT (Azul) -->
+                 <?php 
+                    $docs_config = require 'config/docs_config.php';
+                    $processos = $docs_config['processes'];
+                    $todos_docs = $docs_config['document_registry'];
+                    
+                    // Fetch entregues
+                    $stmt_entregues = $pdo->prepare("SELECT doc_chave FROM processo_docs_entregues WHERE cliente_id = ?");
+                    $stmt_entregues->execute([$cliente_ativo['id']]);
+                    $entregues = $stmt_entregues->fetchAll(PDO::FETCH_COLUMN);
+
+                    $active_proc_key = $detalhes['tipo_processo_chave'] ?? '';
+                    
+                    // Se form enviado
+                    if(isset($_POST['update_docs_settings'])) {
+                        // 1. Save Transaction Type
+                        $new_proc = $_POST['tipo_processo_chave'];
+                        $pdo->prepare("UPDATE processo_detalhes SET tipo_processo_chave = ? WHERE cliente_id = ?")->execute([$new_proc, $cliente_ativo['id']]);
+                        
+                        // 2. Save Checks (Delete all and re-insert checked)
+                        $pdo->prepare("DELETE FROM processo_docs_entregues WHERE cliente_id = ?")->execute([$cliente_ativo['id']]);
+                        
+                        if(isset($_POST['docs_entregues'])) {
+                            $stmt_ins = $pdo->prepare("INSERT INTO processo_docs_entregues (cliente_id, doc_chave) VALUES (?, ?)");
+                            foreach($_POST['docs_entregues'] as $d_key) {
+                                $stmt_ins->execute([$cliente_ativo['id'], $d_key]);
+                            }
+                        }
+                        echo "<script>window.location.href='?cliente_id={$cliente_ativo['id']}&tab=docs_iniciais&msg=docs_updated';</script>";
+                    }
+                ?>
+                <div class="admin-tab-content" style="border-top: 4px solid #0d6efd;">
+                    <div class="admin-header-row">
+                        <div>
+                            <h3 class="admin-title" style="color:#0d6efd;">📑 Documentos Iniciais</h3>
+                            <p class="admin-subtitle">Defina o tipo de processo e controle a entrega de documentos.</p>
+                        </div>
+                        
+                         <button type="submit" form="formDocs" name="update_docs_settings" class="btn-save" style="background:#0d6efd; color:white; border:none; padding:10px 25px; box-shadow:0 4px 15px rgba(13, 110, 253, 0.3);">
+                            💾 Salvar Alterações
+                        </button>
+                    </div>
+
+                    <form id="formDocs" method="POST">
+                        <div class="form-card" style="box-shadow:none; border:1px solid #eee; padding:20px; margin-bottom:20px;">
+                            <label class="admin-form-label">Tipo de Processo (Define a lista de documentos)</label>
+                            <select name="tipo_processo_chave" class="admin-form-input" onchange="this.form.submit()" style="max-width:500px; font-weight:bold;">
+                                <option value="">-- Selecione o Processo --</option>
+                                <?php foreach($processos as $key => $proc): ?>
+                                    <option value="<?= $key ?>" <?= $active_proc_key == $key ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($proc['titulo']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <?php if($active_proc_key && isset($processos[$active_proc_key])): 
+                            $proc_data = $processos[$active_proc_key];
+                            $doc_list = array_merge($proc_data['docs_obrigatorios'], $proc_data['docs_excepcionais']);
+                        ?>
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                                
+                                <!-- COLUNA 1: Obrigatórios -->
+                                <div class="form-card" style="margin:0;">
+                                    <h4 style="color:#333; border-bottom:2px solid #ddd; padding-bottom:10px; margin-bottom:15px;">Obrigatórios</h4>
+                                    <?php foreach($proc_data['docs_obrigatorios'] as $d_key): ?>
+                                        <div style="margin-bottom:10px; display:flex; align-items:center; gap:10px; padding:10px; background:#f8f9fa; border-radius:8px;">
+                                            <input type="checkbox" name="docs_entregues[]" value="<?= $d_key ?>" id="chk_<?= $d_key ?>" style="width:20px; height:20px;" <?= in_array($d_key, $entregues) ? 'checked' : '' ?>>
+                                            <label for="chk_<?= $d_key ?>" style="cursor:pointer; flex:1; font-weight:500;">
+                                                <?= htmlspecialchars($todos_docs[$d_key] ?? $d_key) ?>
+                                            </label>
+                                            <?php if(in_array($d_key, $entregues)): ?>
+                                                <span style="font-size:0.8rem; background:#d1e7dd; color:#0f5132; padding:2px 8px; border-radius:10px;">Entregue</span>
+                                            <?php endif; ?>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+
+                                <!-- COLUNA 2: Excepcionais -->
+                                <div class="form-card" style="margin:0;">
+                                    <h4 style="color:#666; border-bottom:2px solid #ddd; padding-bottom:10px; margin-bottom:15px;">Excepcionais / Situacionais</h4>
+                                    <?php if(empty($proc_data['docs_excepcionais'])): ?>
+                                        <p style="color:#999; font-style:italic;">Nenhum documento extra para este processo.</p>
+                                    <?php else: ?>
+                                        <?php foreach($proc_data['docs_excepcionais'] as $d_key): ?>
+                                            <div style="margin-bottom:10px; display:flex; align-items:center; gap:10px; padding:10px; background:#fff3cd; border-radius:8px;">
+                                                <input type="checkbox" name="docs_entregues[]" value="<?= $d_key ?>" id="chk_<?= $d_key ?>" style="width:20px; height:20px;" <?= in_array($d_key, $entregues) ? 'checked' : '' ?>>
+                                                <label for="chk_<?= $d_key ?>" style="cursor:pointer; flex:1;">
+                                                    <?= htmlspecialchars($todos_docs[$d_key] ?? $d_key) ?>
+                                                </label>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </div>
+
+                            </div>
+                        <?php else: ?>
+                            <div style="text-align:center; padding:50px; color:#999;">
+                                <span style="font-size:3rem; display:block; margin-bottom:10px;">👆</span>
+                                Selecione um tipo de processo acima para ver a lista de documentos.
+                            </div>
+                        <?php endif; ?>
+                    </form>
+                </div>
 
             <?php elseif($active_tab == 'arquivos'): ?>
                 

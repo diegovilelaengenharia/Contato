@@ -253,6 +253,16 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                     } catch(Exception $e) { $last_fin_name = ''; }
                 ?>
 
+                <!-- 1. DOCS INICIAIS (CHECKLIST) -->
+                <a href="documentos_iniciais.php" class="app-button" style="border-left-color: #0d6efd;">
+                    <div class="app-btn-icon" style="background:#cfe2ff; color:#0d6efd;">📋</div>
+                    <div class="app-btn-content">
+                        <span class="app-btn-title">Checklist Inicial</span>
+                        <span class="app-btn-desc">Lista de documentos necessários</span>
+                    </div>
+                    <div class="app-btn-arrow" style="color:#0d6efd;">➔</div>
+                </a>
+
                 <!-- 2. TIMELINE -->
                 <a href="timeline.php" class="app-button" style="border-left-color: #198754;">
                     <div class="app-btn-icon" style="background:#e8f5e9; color:#198754;">🧭</div>
