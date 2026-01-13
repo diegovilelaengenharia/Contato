@@ -22,6 +22,10 @@ $stmt_det = $pdo->prepare("SELECT * FROM processo_detalhes WHERE cliente_id = ?"
 $stmt_det->execute([$cliente_id]);
 $detalhes = $stmt_det->fetch(PDO::FETCH_ASSOC);
 
+// FORCE SCHEMA UPDATE (Safe to run multiple times)
+// Ensures 'processo_docs_entregues' has 'arquivo_path' column
+require_once '../includes/schema.php';
+
 // LOAD CONFIG
 $docs_config = require '../config/docs_config.php';
 $processos = $docs_config['processes'];
@@ -32,9 +36,14 @@ $tipo_chave = ($detalhes && isset($detalhes['tipo_processo_chave'])) ? $detalhes
 $proc_data = $processos[$tipo_chave] ?? null;
 
 // Buscar Status de Entrega (Mapeado por chave)
-$stmt_entregues = $pdo->prepare("SELECT doc_chave, arquivo_path, nome_original, data_entrega FROM processo_docs_entregues WHERE cliente_id = ?");
-$stmt_entregues->execute([$cliente_id]);
-$entregues_raw = $stmt_entregues->fetchAll(PDO::FETCH_ASSOC);
+try {
+    $stmt_entregues = $pdo->prepare("SELECT doc_chave, arquivo_path, nome_original, data_entrega FROM processo_docs_entregues WHERE cliente_id = ?");
+    $stmt_entregues->execute([$cliente_id]);
+    $entregues_raw = $stmt_entregues->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    // Fallback if schema update failed weirdly
+    $entregues_raw = [];
+}
 
 // Transform in Associative Array: [ 'chave' => {data} ]
 $entregues = [];
