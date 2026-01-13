@@ -81,6 +81,7 @@ $obs_atual = $stmt_obs->fetchColumn();
 
         /* Override basic settings for full page view */
         body { background: #f4f6f8; }
+        /* HEADER MODULE STYLE (GREEN - TIMELINE) - MATCHING DOCS INICIAIS */
         .page-header {
             background: linear-gradient(135deg, #e8f5e9 0%, #c3e6cb 100%); /* Light Green Gradient */
             border-bottom: none;
@@ -121,13 +122,21 @@ $obs_atual = $stmt_obs->fetchColumn();
         }
         .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #0f5132; }
         .header-title-sub { font-size: 0.8rem; opacity: 0.8; font-weight: 500; margin-top: 2px; color: #198754; }
+
+        @keyframes compassWiggle {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(-15deg); }
+            50% { transform: rotate(10deg); }
+            75% { transform: rotate(-5deg); }
+            100% { transform: rotate(0deg); }
+        }
     </style>
 </head>
 <body>
 
     <div class="app-container">
         
-        <!-- HEADER COM BOTÃO VOLTAR + ANITMATED COMPASS -->
+        <!-- HEADER NOVA IDENTIDADE VISUAL (TIMELINE) -->
         <div class="page-header">
             <!-- Left: Back Button -->
             <a href="index.php" class="btn-back">
@@ -326,7 +335,7 @@ $obs_atual = $stmt_obs->fetchColumn();
              </div>
 
         </div>
-        </div>
+
         
         <!-- FLOATING SOCIAL BUTTONS (OFFICIAL LANDING PAGE STYLE) -->
         <div class="floating-buttons" style="z-index: 99999;">

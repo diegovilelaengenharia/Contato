@@ -70,15 +70,16 @@ if($drive_link) {
             padding: 30px 25px; 
             border-bottom-left-radius: 30px; 
             border-bottom-right-radius: 30px;
-            box-shadow: 0 10px 30px rgba(13, 202, 240, 0.15); 
+            box-shadow: 0 10px 30px rgba(13, 110, 253, 0.15); 
             margin-bottom: 30px;
             display: flex; align-items: center; justify-content: space-between;
-            color: #006064; /* Dark Cyan Text */
+            color: #084298; /* Dark Blue Text */
             position: relative;
             overflow: hidden;
-            border: 1px solid #bcecf5;
+            border: 1px solid #b6effb;
         }
         
+        /* Decorative Circle (Subtle) */
         .page-header::after {
             content: ''; position: absolute; top: -50px; right: -50px;
             width: 150px; height: 150px; background: rgba(255,255,255,0.4);
@@ -86,7 +87,7 @@ if($drive_link) {
         }
 
         .btn-back {
-            text-decoration: none; color: #006064; font-weight: 600; 
+            text-decoration: none; color: #084298; font-weight: 600; 
             display: flex; align-items: center; gap: 8px;
             padding: 10px 20px; 
             background: white; 
@@ -94,17 +95,23 @@ if($drive_link) {
             transition: 0.3s;
             font-size: 0.95rem;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            border: 1px solid #bcecf5;
+            border: 1px solid #b6effb;
         }
-        .btn-back:hover { background: #e6fcff; transform: translateX(-3px); }
-        .btn-back:active { transform: scale(0.95); }
+        .btn-back:hover { background: #f0f7ff; transform: translateX(-3px); }
         
         .header-title-box {
             display: flex; flex-direction: column; align-items: flex-end; text-align: right;
         }
-        .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #006064; }
-        .header-title-sub { font-size: 0.8rem; opacity: 0.8; font-weight: 500; margin-top: 2px; color: #00838f; }
+        .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #052c65; }
+        .header-title-sub { font-size: 0.8rem; opacity: 0.8; font-weight: 500; margin-top: 2px; color: #084298; }
 
+        @keyframes docWiggle {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+            75% { transform: rotate(-5deg); }
+            100% { transform: rotate(0deg); }
+        }
         .drive-card {
             background: white;
             border-radius: 20px;
@@ -152,7 +159,7 @@ if($drive_link) {
 
     <div class="app-container" style="padding: 0;">
         
-        <!-- HEADER -->
+        <!-- HEADER MODULE (BLUE) -->
         <div class="page-header">
             <!-- Left: Back Button -->
             <a href="index.php" class="btn-back">
@@ -162,12 +169,12 @@ if($drive_link) {
             <!-- Right: Title & Icon -->
             <div style="display:flex; align-items:center; gap:15px; z-index:2;">
                  <div class="header-title-box">
-                    <span class="header-title-main">Documentos</span>
-                    <span class="header-title-sub">Arquivos do Projeto</span>
+                    <span class="header-title-main">Arquivos do Processo</span>
+                    <span class="header-title-sub">Drive Integrado</span>
                  </div>
                  
-                 <!-- Icon -->
-                 <div style="background: white; border:1px solid #dee2e6; color: #0dcaf0; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                 <!-- Animated Icon -->
+                 <div style="background: white; border:1px solid #dee2e6; color: #0d6efd; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05); animation: docWiggle 4s ease-in-out infinite;">
                     📂
                  </div>
             </div>

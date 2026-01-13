@@ -75,9 +75,10 @@ function formatMoney($val) {
             color: #664d03; /* Dark Yellow/Brown Text */
             position: relative;
             overflow: hidden;
-            border: 1px solid #ffe69c;
+            border: 1px solid #ffecb5;
         }
         
+        /* Decorative Circle (Subtle) */
         .page-header::after {
             content: ''; position: absolute; top: -50px; right: -50px;
             width: 150px; height: 150px; background: rgba(255,255,255,0.4);
@@ -85,7 +86,7 @@ function formatMoney($val) {
         }
 
         .btn-back {
-            text-decoration: none; color: #664d03; font-weight: 600; 
+            text-decoration: none; color: #856404; font-weight: 600; 
             display: flex; align-items: center; gap: 8px;
             padding: 10px 20px; 
             background: white; 
@@ -93,42 +94,35 @@ function formatMoney($val) {
             transition: 0.3s;
             font-size: 0.95rem;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            border: 1px solid #ffe69c;
+            border: 1px solid #ffecb5;
         }
         .btn-back:hover { background: #fffdf5; transform: translateX(-3px); }
-        .btn-back:active { transform: scale(0.95); }
         
         .header-title-box {
             display: flex; flex-direction: column; align-items: flex-end; text-align: right;
         }
-        .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #664d03; }
+        .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #533f03; }
         .header-title-sub { font-size: 0.8rem; opacity: 0.8; font-weight: 500; margin-top: 2px; color: #856404; }
+        
+        /* Mobile overrides */
+        @media (max-width: 480px) {
+            .page-header { flex-direction: column-reverse; gap: 20px; text-align: center; padding: 25px; align-items: center; }
+            .header-title-box { text-align: center; align-items: center; } 
+            .btn-back { width: 100%; justify-content: center; }
+        }
 
-        .fin-summary {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
-            margin-bottom: 25px;
-        }
-        
-        .fin-card-kpi {
-            background: white; padding: 15px; border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-            border: 1px solid #eee; text-align: center;
-        }
-        
-        .fin-card-kpi small {
-            display: block; font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px;
-        }
-        
-        .fin-card-kpi strong {
-            display: block; font-size: 1.1rem; color: #333; margin-top: 5px;
+        .fin-card {
+            background: white; border-radius: 20px; padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 25px; border: 1px solid #f0f0f0;
         }
     </style>
 </head>
 <body>
 
     <div class="app-container" style="padding: 0;">
-        
-        <!-- HEADER -->
+
+        <!-- HEADER MODULE (GOLD) -->
         <div class="page-header">
             <!-- Left: Back Button -->
             <a href="index.php" class="btn-back">
@@ -139,7 +133,7 @@ function formatMoney($val) {
             <div style="display:flex; align-items:center; gap:15px; z-index:2;">
                  <div class="header-title-box">
                     <span class="header-title-main">Financeiro</span>
-                    <span class="header-title-sub">Pagamentos e Previsões</span>
+                    <span class="header-title-sub">Extrato e Custos</span>
                  </div>
                  
                  <!-- Icon -->
@@ -148,7 +142,8 @@ function formatMoney($val) {
                  </div>
             </div>
         </div>
-        <div style="padding: 0 20px;">
+
+        <div style="padding: 0 20px">
             <!-- KPI SUMMARY -->
             <div class="fin-summary">
                 <div class="fin-card-kpi">

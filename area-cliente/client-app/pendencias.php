@@ -144,38 +144,52 @@ if (ob_get_length()) ob_clean();
     <link rel="stylesheet" href="css/style.css?v=3.0">
     
     <style>
-        /* HEADER MODULE STYLE (RED - PENDÊNCIAS) */
+        /* HEADER MODULE STYLE (RED - PENDÊNCIAS) - MATCHING DOCS INICIAIS */
         .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #fff;
-            padding: 20px 25px;
-            border-radius: 24px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-            margin-bottom: 25px;
+            background: linear-gradient(135deg, #fcebec 0%, #f5c6cb 100%); /* Light Red Gradient */
+            border-bottom: none;
+            padding: 30px 25px; 
+            border-bottom-left-radius: 30px; 
+            border-bottom-right-radius: 30px;
+            box-shadow: 0 10px 30px rgba(220, 53, 69, 0.15); 
+            margin-bottom: 30px;
+            display: flex; align-items: center; justify-content: space-between;
+            color: #842029; /* Dark Red Text */
             position: relative;
             overflow: hidden;
-            border: 1px solid #f8f9fa;
+            border: 1px solid #f5c2c7;
         }
         
-        .btn-back {
-            display: flex; align-items: center; gap: 8px;
-            font-size: 0.9rem; font-weight: 600; color: #666;
-            background: #f8f9fa; padding: 10px 18px; border-radius: 14px;
-            transition: all 0.2s ease; border: 1px solid #eee;
+        /* Decorative Circle (Subtle) */
+        .page-header::after {
+            content: ''; position: absolute; top: -50px; right: -50px;
+            width: 150px; height: 150px; background: rgba(255,255,255,0.4);
+            border-radius: 50%; pointer-events: none;
         }
-        .btn-back:hover { background: #e9ecef; color: #333; transform: translateX(-3px); }
-        .btn-back span { font-size: 1.2rem; }
 
-        .header-title-box { text-align: right; line-height: 1.2; }
-        .header-title-main { display: block; font-size: 1.4rem; font-weight: 800; color: #333; letter-spacing: -0.5px; }
-        .header-title-sub { display: block; font-size: 0.85rem; font-weight: 500; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+        .btn-back {
+            text-decoration: none; color: #842029; font-weight: 600; 
+            display: flex; align-items: center; gap: 8px;
+            padding: 10px 20px; 
+            background: white; 
+            border-radius: 25px;
+            transition: 0.3s;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid #f5c2c7;
+        }
+        .btn-back:hover { background: #fff5f5; transform: translateX(-3px); }
+        
+        .header-title-box {
+            display: flex; flex-direction: column; align-items: flex-end; text-align: right;
+        }
+        .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #58151c; }
+        .header-title-sub { font-size: 0.8rem; opacity: 0.8; font-weight: 500; margin-top: 2px; color: #842029; }
         
         /* Mobile overrides */
         @media (max-width: 480px) {
-            .page-header { flex-direction: column-reverse; gap: 20px; text-align: center; padding: 20px; }
-            .header-title-box { text-align: center; } 
+            .page-header { flex-direction: column-reverse; gap: 20px; text-align: center; padding: 25px; align-items: center; }
+            .header-title-box { text-align: center; align-items: center; } 
             .btn-back { width: 100%; justify-content: center; }
         }
 
@@ -190,9 +204,8 @@ if (ob_get_length()) ob_clean();
 </head>
 <body>
 
-    <div class="app-container" style="padding: 20px;">
+    <div class="app-container" style="padding: 0;">
         
-        <!-- HEADER PORTAL -->
         <!-- HEADER MODULE (RED) -->
         <div class="page-header">
             <!-- Left: Back Button -->
@@ -208,12 +221,13 @@ if (ob_get_length()) ob_clean();
                  </div>
                  
                  <!-- Icon -->
-                 <div style="background: white; border:1px solid #dee2e6; color: #dc3545; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                 <div style="background: white; border:1px solid #f5c2c7; color: #dc3545; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
                     ⚠️
                  </div>
             </div>
         </div>
 
+        <div style="padding: 0 20px;">
         <?php if(isset($msg_success)): ?>
             <div style="background:#d1e7dd; color:#0f5132; padding:15px; border-radius:12px; margin-bottom:20px; font-size:0.9rem; border: 1px solid #badbcc;">
                 ✅ <?= $msg_success ?>
