@@ -512,3 +512,4 @@ foreach($entregues_raw as $row) {
     </script>
 </body>
 </html>
+<?php } ?>
