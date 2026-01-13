@@ -757,9 +757,9 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         $check = $pdo->prepare("SELECT id FROM processo_detalhes WHERE cliente_id = ?");
                         $check->execute([$cliente_ativo['id']]);
                         if($check->rowCount() > 0) {
-                            $pdo->prepare("UPDATE processo_detalhes SET tipo_processo_chave = ? WHERE cliente_id = ?")->execute([$new_proc, $cliente_ativo['id']]);
+                            $pdo->prepare("UPDATE processo_detalhes SET tipo_processo_chave = ?, observacoes_gerais = ? WHERE cliente_id = ?")->execute([$new_proc, $_POST['observacoes_gerais']??'', $cliente_ativo['id']]);
                         } else {
-                            $pdo->prepare("INSERT INTO processo_detalhes (cliente_id, tipo_processo_chave) VALUES (?, ?)")->execute([$cliente_ativo['id'], $new_proc]);
+                            $pdo->prepare("INSERT INTO processo_detalhes (cliente_id, tipo_processo_chave, observacoes_gerais) VALUES (?, ?, ?)")->execute([$cliente_ativo['id'], $new_proc, $_POST['observacoes_gerais']??'']);
                         }
                         
                         // 2. Save Checks (Delete all and re-insert checked)
@@ -787,16 +787,25 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     </div>
 
                     <form id="formDocs" method="POST">
+                        <input type="hidden" name="update_docs_settings" value="1">
+                        
                         <div class="form-card" style="box-shadow:none; border:1px solid #eee; padding:20px; margin-bottom:20px;">
-                            <label class="admin-form-label">Tipo de Processo (Define a lista de documentos)</label>
-                            <select name="tipo_processo_chave" class="admin-form-input" onchange="this.form.submit()" style="max-width:500px; font-weight:bold;">
-                                <option value="">-- Selecione o Processo --</option>
-                                <?php foreach($processos as $key => $proc): ?>
-                                    <option value="<?= $key ?>" <?= $active_proc_key == $key ? 'selected' : '' ?>>
-                                        <?= htmlspecialchars($proc['titulo']) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
+                            <div style="margin-bottom:15px;">
+                                <label class="admin-form-label">Tipo de Processo (Define a Checklist)</label>
+                                <select name="tipo_processo_chave" class="admin-form-input" onchange="this.form.submit()" style="max-width:500px; font-weight:bold;">
+                                    <option value="">-- Selecione o Processo --</option>
+                                    <?php foreach($processos as $key => $proc): ?>
+                                        <option value="<?= $key ?>" <?= $active_proc_key == $key ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($proc['titulo']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            
+                             <div>
+                                <label class="admin-form-label">📝 Observações do Engenheiro (Aparece para o cliente)</label>
+                                <textarea name="observacoes_gerais" class="admin-form-input" rows="3" placeholder="Ex: Aguardando emissão do protocolo..." style="resize:vertical;"><?= htmlspecialchars($detalhes['observacoes_gerais'] ?? '') ?></textarea>
+                            </div>
                         </div>
 
                         <?php if($active_proc_key && isset($processos[$active_proc_key])): 
@@ -807,16 +816,16 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                 
                                 <!-- COLUNA 1: Obrigatórios -->
                                 <div class="form-card" style="margin:0;">
-                                    <h4 style="color:#333; border-bottom:2px solid #ddd; padding-bottom:10px; margin-bottom:15px;">Obrigatórios</h4>
-                                    <?php foreach($proc_data['docs_obrigatorios'] as $d_key): ?>
-                                        <div style="margin-bottom:10px; display:flex; align-items:center; gap:10px; padding:10px; background:#f8f9fa; border-radius:8px;">
-                                            <input type="checkbox" name="docs_entregues[]" value="<?= $d_key ?>" id="chk_<?= $d_key ?>" style="width:20px; height:20px;" <?= in_array($d_key, $entregues) ? 'checked' : '' ?>>
-                                            <label for="chk_<?= $d_key ?>" style="cursor:pointer; flex:1; font-weight:500;">
-                                                <?= htmlspecialchars($todos_docs[$d_key] ?? $d_key) ?>
+                                    <h4 style="color:#333; border-bottom:2px solid #ddd; padding-bottom:10px; margin-bottom:15px;">Documentos Obrigatórios</h4>
+                                    <?php foreach($proc_data['docs_obrigatorios'] as $d_key): 
+                                        $is_checked = in_array($d_key, $entregues);
+                                    ?>
+                                        <div style="margin-bottom:10px; display:flex; align-items:center; gap:10px; padding:12px; background:<?= $is_checked ? '#d1e7dd' : '#f8d7da' ?>; border-radius:8px; border:1px solid <?= $is_checked ? '#badbcc' : '#f5c6cb' ?>; transition:all 0.2s;">
+                                            <input type="checkbox" name="docs_entregues[]" value="<?= $d_key ?>" id="chk_<?= $d_key ?>" style="width:20px; height:20px; accent-color:#198754;" <?= $is_checked ? 'checked' : '' ?>>
+                                            <label for="chk_<?= $d_key ?>" style="cursor:pointer; flex:1; font-weight:500; color:#333; display:flex; justify-content:space-between; align-items:center;">
+                                                <span><?= htmlspecialchars($todos_docs[$d_key] ?? $d_key) ?></span>
+                                                <span style="font-size:1.2rem;"><?= $is_checked ? '✅' : '❌' ?></span>
                                             </label>
-                                            <?php if(in_array($d_key, $entregues)): ?>
-                                                <span style="font-size:0.8rem; background:#d1e7dd; color:#0f5132; padding:2px 8px; border-radius:10px;">Entregue</span>
-                                            <?php endif; ?>
                                         </div>
                                     <?php endforeach; ?>
                                 </div>
@@ -827,17 +836,24 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                     <?php if(empty($proc_data['docs_excepcionais'])): ?>
                                         <p style="color:#999; font-style:italic;">Nenhum documento extra para este processo.</p>
                                     <?php else: ?>
-                                        <?php foreach($proc_data['docs_excepcionais'] as $d_key): ?>
-                                            <div style="margin-bottom:10px; display:flex; align-items:center; gap:10px; padding:10px; background:#fff3cd; border-radius:8px;">
-                                                <input type="checkbox" name="docs_entregues[]" value="<?= $d_key ?>" id="chk_<?= $d_key ?>" style="width:20px; height:20px;" <?= in_array($d_key, $entregues) ? 'checked' : '' ?>>
-                                                <label for="chk_<?= $d_key ?>" style="cursor:pointer; flex:1;">
-                                                    <?= htmlspecialchars($todos_docs[$d_key] ?? $d_key) ?>
+                                        <?php foreach($proc_data['docs_excepcionais'] as $d_key): 
+                                            $is_checked = in_array($d_key, $entregues);
+                                        ?>
+                                            <div style="margin-bottom:10px; display:flex; align-items:center; gap:10px; padding:12px; background:<?= $is_checked ? '#d1e7dd' : '#fff3cd' ?>; border-radius:8px; border:1px solid <?= $is_checked ? '#badbcc' : '#ffeeba' ?>;">
+                                                <input type="checkbox" name="docs_entregues[]" value="<?= $d_key ?>" id="chk_<?= $d_key ?>" style="width:20px; height:20px; accent-color:#198754;" <?= $is_checked ? 'checked' : '' ?>>
+                                                <label for="chk_<?= $d_key ?>" style="cursor:pointer; flex:1; display:flex; justify-content:space-between; align-items:center;">
+                                                    <span><?= htmlspecialchars($todos_docs[$d_key] ?? $d_key) ?></span>
+                                                    <span style="font-size:1.2rem;"><?= $is_checked ? '✅' : '⚠️' ?></span>
                                                 </label>
                                             </div>
                                         <?php endforeach; ?>
                                     <?php endif; ?>
                                 </div>
 
+                            </div>
+                            
+                            <div style="margin-top:20px; text-align:center; color:#666; font-size:0.9rem;">
+                                <p>💡 <b>Legenda:</b> Marque a caixa para confirmar o recebimento (✅). Desmarque para indicar pendência (❌ ou ⚠️).</p>
                             </div>
                         <?php else: ?>
                             <div style="text-align:center; padding:50px; color:#999;">

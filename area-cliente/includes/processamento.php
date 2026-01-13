@@ -748,6 +748,7 @@ if (isset($_POST['acao']) && $_POST['acao'] == 'editar_cliente_completo') {
             $_POST['tipo_pessoa'], $_POST['cpf_cnpj'], $_POST['rg_ie'], $_POST['nacionalidade']??'', $_POST['data_nascimento'] ?: null, $_POST['contato_email'], $_POST['contato_tel'],
             $_POST['res_rua'], $_POST['res_numero'], $_POST['res_bairro'], $_POST['res_complemento'], $_POST['res_cidade'], $_POST['res_uf'],
             $_POST['profissao'], $_POST['estado_civil'], $_POST['nome_conjuge']??null, $_POST['tipo_servico']??null, 
+            $_POST['tipo_processo_chave']??null, 
             $_POST['imovel_rua'], $_POST['imovel_numero'],
             $_POST['imovel_bairro'], $_POST['imovel_complemento'], $_POST['imovel_cidade'], $_POST['imovel_uf'], $_POST['inscricao_imob'],
             $_POST['num_matricula'], $_POST['imovel_area_lote'], $_POST['area_construida'],
