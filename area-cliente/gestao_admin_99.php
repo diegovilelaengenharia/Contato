@@ -965,61 +965,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                     </form>
                 </div>
             <?php endif; ?>
-                                <div>
-                                    <h4 style="color:#333; font-weight:700; font-size:1.1rem; margin-bottom:15px; display:flex; align-items:center; gap:8px;">
-                                        <span style="background:#e8f5e9; color:#198754; padding:5px; border-radius:6px; font-size:1rem;">📋</span> 
-                                        Obrigatórios
-                                    </h4>
-                                    <?php foreach($proc_data['docs_obrigatorios'] as $d_key): 
-                                        $is_checked = in_array($d_key, $entregues);
-                                    ?>
-                                        <label class="doc-item-card" style="border-left:4px solid <?= $is_checked ? '#198754' : '#dc3545' ?>;">
-                                            <input type="checkbox" name="docs_entregues[]" value="<?= $d_key ?>" class="doc-check-input" <?= $is_checked ? 'checked' : '' ?>>
-                                            <span class="doc-label"><?= htmlspecialchars($todos_docs[$d_key] ?? $d_key) ?></span>
-                                            <span class="doc-status-badge <?= $is_checked ? 'badge-entregue' : 'badge-pendente' ?>">
-                                                <?= $is_checked ? 'Entregue' : 'Pendente' ?>
-                                            </span>
-                                        </label>
-                                    <?php endforeach; ?>
-                                </div>
 
-                                <!-- COLUNA 2: Excepcionais -->
-                                <div>
-                                    <h4 style="color:#555; font-weight:700; font-size:1.1rem; margin-bottom:15px; display:flex; align-items:center; gap:8px;">
-                                        <span style="background:#fff3cd; color:#856404; padding:5px; border-radius:6px; font-size:1rem;">⚠️</span> 
-                                        Excepcionais
-                                    </h4>
-                                    <?php if(empty($proc_data['docs_excepcionais'])): ?>
-                                        <div style="text-align:center; padding:30px; border:2px dashed #eee; border-radius:8px; color:#999;">
-                                            <small>Nenhum documento extra para este processo.</small>
-                                        </div>
-                                    <?php else: ?>
-                                        <?php foreach($proc_data['docs_excepcionais'] as $d_key): 
-                                            $is_checked = in_array($d_key, $entregues);
-                                        ?>
-                                            <label class="doc-item-card" style="border-left:4px solid <?= $is_checked ? '#198754' : '#ffc107' ?>;">
-                                                <input type="checkbox" name="docs_entregues[]" value="<?= $d_key ?>" class="doc-check-input" <?= $is_checked ? 'checked' : '' ?>>
-                                                <span class="doc-label"><?= htmlspecialchars($todos_docs[$d_key] ?? $d_key) ?></span>
-                                                <span class="doc-status-badge" style="<?= $is_checked ? 'background:#e8f5e9; color:#198754; border:1px solid #d1e7dd;' : 'background:#fff3cd; color:#856404; border:1px solid #ffeeba;' ?>">
-                                                    <?= $is_checked ? 'Entregue' : 'Opcional' ?>
-                                                </span>
-                                            </label>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </div>
-
-                            </div>
-                            
-                            <div style="margin-top:30px; text-align:center; padding:15px; background:#f8f9fa; border-radius:8px; color:#666; font-size:0.9rem;">
-                                <p style="margin:0;">💡 <b>Dica:</b> Clique nos itens para marcar/desmarcar. As alterações são salvas ao clicar em "Salvar Alterações".</p>
-                            </div>
-                        <?php else: ?>
-                            <div style="text-align:center; padding:50px; color:#999;">
-                                <span style="font-size:3rem; display:block; margin-bottom:10px;">👆</span>
-                                Selecione um tipo de processo acima para ver a lista de documentos.
-                            </div>
-                    </form>
-                </div>
 
             <?php elseif($active_tab == 'arquivos'): ?>
                 
