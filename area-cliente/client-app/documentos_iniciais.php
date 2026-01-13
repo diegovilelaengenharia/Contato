@@ -23,7 +23,7 @@ $processos = $docs_config['processes'];
 $todos_docs = $docs_config['document_registry'];
 
 // Identificar Processo do Cliente
-$tipo_chave = $detalhes['tipo_processo_chave'] ?? '';
+$tipo_chave = ($detalhes && isset($detalhes['tipo_processo_chave'])) ? $detalhes['tipo_processo_chave'] : '';
 $proc_data = $processos[$tipo_chave] ?? null;
 
 // Buscar Status de Entrega

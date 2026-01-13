@@ -83,7 +83,7 @@ $fases_padrao = [
     'Processo Finalizado (Documentos Prontos)'
 ];
 
-$etapa_atual = $detalhes['etapa_atual'] ?? 'Levantamento de Dados';
+$etapa_atual = ($detalhes && isset($detalhes['etapa_atual'])) ? $detalhes['etapa_atual'] : 'Levantamento de Dados';
 $etapa_atual = trim($etapa_atual);
 $fase_index = array_search($etapa_atual, $fases_padrao);
 if($fase_index === false) $fase_index = 0; 
@@ -105,11 +105,105 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
     
     <!-- STYLES -->
     <link rel="stylesheet" href="css/style.css?v=3.0">
-    <link rel="stylesheet" href="css/header-premium.css?v=<?= time() ?>">
     
     <style>
-        /* Mobile adjustment for Header - Handled mostly in header-premium.css now, but ensuring overrides */
-        /* FORCE SOCIAL UPDATE v2 */
+        /* HEADER PORTAL STYLE */
+        .portal-header {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+            overflow: hidden;
+            border: 1px solid #f0f0f0;
+        }
+        .ph-top {
+            padding: 20px 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .ph-logo img {
+            height: 45px;
+        }
+        .ph-divider {
+            width: 2px;
+            height: 35px;
+            background: #eee;
+        }
+        .ph-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #444;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .ph-user-bar {
+            background: #146c43; /* Vilela Green */
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: white;
+        }
+        .ph-user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .ph-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            object-fit: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+        .ph-text-group {
+            line-height: 1.2;
+        }
+        .ph-welcome {
+            font-size: 0.8rem;
+            opacity: 0.9;
+            font-weight: 400;
+            display: block;
+        }
+        .ph-username {
+            font-size: 1.2rem;
+            font-weight: 700;
+            display: block;
+        }
+        .ph-logout-btn {
+            width: 38px;
+            height: 38px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .ph-logout-btn:hover {
+            background: rgba(255,255,255,0.25);
+        }
+
+        /* MOBILE ADAPT */
+        @media(max-width: 600px) {
+            .ph-top { padding: 15px 20px; flex-direction: column; align-items: flex-start; gap: 10px; }
+            .ph-divider { display: none; }
+            .ph-logo img { height: 35px; }
+            .ph-title { font-size: 0.95rem; }
+            .ph-user-bar { padding: 15px 20px; }
+            .ph-username { font-size: 1rem; }
+        }
+    </style>
+
         .floating-buttons { position: fixed; bottom: 25px; right: 25px; display: flex; flex-direction: column; gap: 16px; z-index: 99999 !important; }
         .floating-btn { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: var(--btn-bg); color: #ffffff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 8px 24px rgba(0, 0, 0, 0.1); transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease; text-decoration: none; position: relative; border: none !important; }
         .floating-btn svg { width: 28px; height: 28px; fill: currentColor; }
@@ -166,59 +260,49 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
 </head>
 <body>
 
-    <div class="app-container" style="padding: 0;"> <!-- Remove padding here, controlled by inner elements -->
+    <div class="app-container" style="padding: 20px;">
         
-        <!-- HEADER STYLE PREMIUM WOW (Glass + Gradient) -->
-        <!-- HEADER STYLE PREMIUM WOW (Glass + Gradient) -->
-        <div style="display: flex; justify-content: center; margin-bottom: 20px; margin-top: 20px;">
-            <div style="background: #222; padding: 12px 35px; border-radius: 50px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 215, 0, 0.2); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
-                <!-- Shine Effect Background -->
-                <div style="position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); animation: shine 3s infinite;"></div>
-                
-                <span style="font-size: 1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; background: linear-gradient(45deg, #B8860B, #FFD700, #F0E68C, #DAA520); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% auto; animation: textShine 4s linear infinite;">
-                    Área do Cliente
-                </span>
+        <!-- NOVO HARDER: PORTAL DE ACOMPANHAMENTO -->
+        <div class="portal-header">
+            <div class="ph-top">
+                <div class="ph-logo">
+                    <!-- Ajustar caminho do logo se necessário -->
+                    <img src="../../assets/logo.png" alt="Vilela Engenharia">
+                </div>
+                <div class="ph-divider"></div>
+                <div class="ph-title">Portal de Acompanhamento</div>
             </div>
-        </div>
-        <style>
-            @keyframes shine { 0% { left: -100%; } 20% { left: 100%; } 100% { left: 100%; } }
-            @keyframes textShine { to { background-position: 200% center; } }
-        </style>
-        <header class="premium-header" style="flex-direction: column; gap: 10px; align-items: stretch;">
             
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-                <div class="ph-content" style="flex: 1;">
-                    <!-- AVATAR (Re-added, small) -->
+            <div class="ph-user-bar">
+                <div class="ph-user-info">
                     <?php 
                         $avatarPath = $cliente['foto_perfil'] ?? '';
                         if($avatarPath && !str_starts_with($avatarPath, '../') && !str_starts_with($avatarPath, 'http')) $avatarPath = '../' . $avatarPath;
                     ?>
-                    <div class="ph-avatar-box" style="width: 45px; height: 45px; margin-right: 12px;">
-                        <?php if($avatarPath && file_exists($avatarPath) && !is_dir($avatarPath)): ?>
-                            <img src="<?= htmlspecialchars($avatarPath) ?>?v=<?= time() ?>" style="width:100%; height:100%; object-fit:cover;">
-                        <?php else: ?>
-                            <span style="font-size:1.2rem; color:white;">👤</span>
-                        <?php endif; ?>
-                    </div>
-
-                    <div class="ph-info">
-                        <h1 style="margin:0; font-size:1.4rem;">Olá, <?= htmlspecialchars(explode(' ', $cliente['nome'])[0]) ?>!</h1>
+                    <?php if($avatarPath && file_exists($avatarPath) && !is_dir($avatarPath)): ?>
+                        <img src="<?= htmlspecialchars($avatarPath) ?>?v=<?= time() ?>" class="ph-avatar">
+                    <?php else: ?>
+                        <div class="ph-avatar">
+                            <span class="material-symbols-rounded">person</span>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <div class="ph-text-group">
+                        <span class="ph-welcome">Bem-vindo(a),</span>
+                        <span class="ph-username"><?= htmlspecialchars(explode(' ', $cliente['nome'])[0]) ?></span>
                     </div>
                 </div>
 
-                <div class="ph-actions">
-                    <a href="logout.php" class="ph-logout" style="background: rgba(220, 53, 69, 0.2); color: #ffcccc; border: 1px solid rgba(220, 53, 69, 0.3); padding: 6px 12px; border-radius: 8px; text-decoration: none; display: flex; align-items: center; gap: 6px;">
-                        <span class="material-symbols-rounded" style="font-size:1.1rem;">logout</span>
-                        <span style="font-size: 0.85rem; font-weight: 600;">Sair</span>
-                    </a>
-                </div>
-
-        </header>
+                <a href="logout.php" class="ph-logout-btn" title="Sair">
+                    <span class="material-symbols-rounded">logout</span>
+                </a>
+            </div>
+        </div>
 
 
 
-        <!-- MAIN CONTENT (With Padding) -->
-        <div style="padding: 0 20px;">
+        <!-- MAIN CONTENT -->
+        <div style="">
             
             <div class="app-action-grid">
                 
