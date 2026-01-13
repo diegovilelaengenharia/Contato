@@ -287,17 +287,11 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                 <span style="background:#f8f9fa; padding:2px 8px; border-radius:6px; border:1px solid #e9ecef;">📄 <?= $detalhes['cpf_cnpj'] ?? '--' ?></span>
                             </div>
 
-                            <!-- NEW: Process Info & Address -->
-                            <div style="margin-top:12px; font-size:0.9rem; color:#444; display:flex; flex-direction:column; gap:6px;">
-                                <div style="display:flex; align-items:center; gap:6px;">
-                                    <span class="material-symbols-rounded" style="font-size:1.1rem; color:#6f42c1;">folder_open</span>
-                                    <span style="font-weight:600;"><?= !empty($detalhes['tipo_servico']) ? htmlspecialchars($detalhes['tipo_servico']) : 'Tipo de Processo não informado' ?></span>
-                                </div>
-                                <div style="display:flex; align-items:center; gap:6px; color:#666;">
-                                    <span class="material-symbols-rounded" style="font-size:1.1rem; color:#dc3545;">location_on</span>
-                                    <span><?= !empty($detalhes['endereco_imovel']) ? htmlspecialchars($detalhes['endereco_imovel']) : 'Endereço da obra não informado' ?></span>
-                                </div>
-                            </div>
+
+                            <!-- NEW: Process Info & Address (REMOVIDO POR SOLICITAÇÃO) -->
+                            <!-- <div style="margin-top:12px; font-size:0.9rem; color:#444; display:flex; flex-direction:column; gap:6px;">
+                                ... (Removido: Tipo de Processo e Endereço)
+                            </div> -->
                             
                             <div style="display:flex; gap:10px; font-size:0.9rem; align-items:center; margin-top:10px;">
                                 <a href="gerenciar_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-save" style="background:var(--color-primary-light); color:var(--color-primary); border:none; padding:5px 12px; font-size:0.8rem; box-shadow:none;">✏️ Editar Cadastro</a>
@@ -407,12 +401,15 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
             </style>
             
             <div class="tabs-container">
+                <!-- 1. CHECKLIST (Antigo Docs. Iniciais) -->
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=docs_iniciais" class="tab-link t-docs <?= ($active_tab=='docs_iniciais')?'active':'' ?>">
+                    <span>📑</span> Checklist
+                </a>
+                <!-- 2. HISTÓRICO -->
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="tab-link t-hist <?= ($active_tab=='andamento'||$active_tab=='cadastro')?'active':'' ?>">
                     <span>📜</span> Histórico
                 </a>
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=docs_iniciais" class="tab-link t-docs <?= ($active_tab=='docs_iniciais')?'active':'' ?>">
-                    <span>📑</span> Docs. Iniciais
-                </a>
+                
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="tab-link t-pend <?= ($active_tab=='pendencias')?'active':'' ?>">
                     <span>⚠️</span> Pendências
                 </a>
