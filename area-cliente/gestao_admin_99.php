@@ -480,19 +480,31 @@ if($cliente_ativo) {
                 .admin-container {
                     display: flex !important; /* Force Flex */
                     gap: 30px;
-                    max-width: 1400px !important;
+                    max-width: 100% !important; /* Full width minus sidebar */
                     align-items: flex-start;
+                    margin: 0; padding: 0;
                 }
                 
                 aside.sidebar {
-                    display: block !important; /* Ensure it shows */
+                    display: block !important;
                     flex-shrink: 0; 
+                    position: fixed; /* FIXED POSITION */
+                    top: 0; left: 0;
+                    width: 280px; /* Fixed width */
+                    height: 100vh; /* Full viewport height */
+                    overflow-y: auto; /* Scrollable if needed */
+                    z-index: 1000;
+                    margin: 0 !important;
+                    border-radius: 0 !important; /* Remove curvature if glued */
+                    box-shadow: 2px 0 10px rgba(0,0,0,0.05); /* Shadow to right */
                 }
                 
                 main {
                     flex: 1;
-                    width: 100%;
-                    max-width: 100%; /* Prevent overflow */
+                    width: calc(100% - 280px); /* Subtract sidebar width */
+                    margin-left: 280px; /* Offset content */
+                    max-width: calc(100% - 280px);
+                    padding: 30px; /* Content padding */
                 }
 
                 /* Ocultar navegação antiga */
