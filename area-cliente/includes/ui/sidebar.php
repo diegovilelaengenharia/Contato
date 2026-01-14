@@ -70,10 +70,7 @@
 
             <!-- NAVEGAÇÃO DO CLIENTE REMOVIDA (Agora são Abas no Topo) -->
 
-            <div style="margin-top:20px; padding:15px; background:#f0f7ff; border-radius:8px; border:1px solid #cce5ff; text-align:center;">
-                 <a href="gerenciar_cliente.php?id=<?= $cliente_ativo['id'] ?>" style="display:block; margin-bottom:8px; font-size:0.85rem; color:#0d6efd; text-decoration:none; font-weight:600;">✏️ Editar Dados</a>
-                 <a href="area_cliente.php" style="display:block; font-size:0.85rem; color:#666; text-decoration:none;">🔗 Ver como Cliente</a>
-            </div>
+
         </div>
         
         <hr class="nav-divider">
