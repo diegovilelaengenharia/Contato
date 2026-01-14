@@ -60,6 +60,37 @@
     </div>
 </dialog>
 
+<!-- MODAL VISUAL TIMELINE (IFRAME) -->
+<dialog id="modalVisualTimeline" style="border:none; border-radius:12px; padding:0; width:90%; height:80vh; max-width:1100px; box-shadow:0 10px 60px rgba(0,0,0,0.3);">
+    <div style="background:#fff; height:100%; display:flex; flex-direction:column;">
+        <!-- Header Modal -->
+        <div style="padding:15px 25px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center; background:#fff;">
+            <div>
+                <h3 style="margin:0; font-size:1.1rem; font-weight:700; color:#2c3e50; display:flex; align-items:center; gap:8px;">
+                    <span class="material-symbols-rounded" style="color:#0d6efd;">visibility</span> Timeline do Cliente
+                </h3>
+                <p style="margin:4px 0 0 0; font-size:0.85rem; color:#777;">Visualização exata que o cliente vê no painel dele.</p>
+            </div>
+            <button type="button" onclick="document.getElementById('modalVisualTimeline').close()" style="border:none; background:none; color:#999; font-size:2rem; cursor:pointer; line-height:1; transition:color 0.2s;">&times;</button>
+        </div>
+
+        <!-- iframe Content -->
+        <div style="flex:1; background:#f4f6f8; position:relative; overflow:hidden;">
+             <!-- Passamos o ID do cliente se necessário, aqui assume sessão ou parametro -->
+             <!-- Importante: Ajustar URL para incluir cliente_id se a sessão admin não passar pra iframe auto -->
+             <iframe src="area_cliente.php?simular_timeline=1" style="width:100%; height:100%; border:none; display:block;"></iframe>
+        </div>
+    </div>
+</dialog>
+<style>
+    #modalVisualTimeline::backdrop {
+        background: rgba(0,0,0,0.5);
+        backdrop-filter: blur(2px);
+    }
+    /* Button Hover for Close */
+    #modalVisualTimeline button:hover { color: #333; }
+</style>
+
 <!-- MODAL DE NOVO ANDAMENTO -->
 <dialog id="modalAndamento" style="border:none; border-radius:12px; padding:0; width:90%; max-width:600px; box-shadow:0 10px 40px rgba(0,0,0,0.2);">
     <div style="background: linear-gradient(135deg, var(--color-primary) 0%, #2980b9 100%); padding:20px; display:flex; justify-content:space-between; align-items:center; color:white;">
