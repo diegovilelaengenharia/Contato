@@ -247,7 +247,17 @@ if ($cliente_ativo) {
     ?>
 
     <div class="admin-container">
-        <?php require 'includes/ui/sidebar.php'; ?>
+        <!-- FLOATING NAVIGATION BUTTONS (Fixed Top Left) -->
+        <div style="position:fixed; top:30px; left:30px; display:flex; flex-direction:column; gap:15px; z-index:9999;">
+            <!-- Visão Geral -->
+            <a href="gestao_admin_99.php" title="Visão Geral" style="width:50px; height:50px; background:white; border-radius:50%; box-shadow:0 8px 20px rgba(0,0,0,0.08); display:flex; align-items:center; justify-content:center; color:#555; text-decoration:none; transition:all 0.3s; border:1px solid #f0f0f0;" onmouseover="this.style.transform='scale(1.1)'; this.style.color='#198754'" onmouseout="this.style.transform='scale(1)'; this.style.color='#555'">
+                <span class="material-symbols-rounded" style="font-size:26px;">grid_view</span>
+            </a>
+            <!-- Novo Cliente -->
+            <a href="gerenciar_cliente.php" title="Novo Cliente" style="width:50px; height:50px; background:#198754; border-radius:50%; box-shadow:0 8px 20px rgba(25,135,84,0.25); display:flex; align-items:center; justify-content:center; color:white; text-decoration:none; transition:all 0.3s;" onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 12px 25px rgba(25,135,84,0.35)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 20px rgba(25,135,84,0.25)'">
+                <span class="material-symbols-rounded" style="font-size:26px;">person_add</span>
+            </a>
+        </div>
 
         <main style="padding-bottom: 80px;"> <!-- Padding for fixed footer area -->
 
@@ -479,12 +489,23 @@ if ($cliente_ativo) {
 
                     main {
                         display: block;
-                        width: auto;
-                        margin-left: 280px;
-                        /* Offset content */
+                        width: 100%;
+                        max-width: 1400px;
+                        margin: 0 auto;
+                        /* Centered Layout */
                         padding: 30px;
+                        padding-left: 90px;
+                        /* Space for Floating Buttons */
                         position: relative;
-                        /* Context for absolute positioning */
+                        min-height: 80vh;
+                    }
+
+                    @media (max-width: 768px) {
+                        main {
+                            padding-left: 20px;
+                            padding-top: 100px;
+                            /* Push content down on mobile */
+                        }
                     }
 
                     /* Ocultar navegação antiga */
@@ -1793,32 +1814,42 @@ if ($cliente_ativo) {
 
 </div>
 
-<!-- GLOBAL DASHBOARD FOOTER (Full Vilela Style) -->
-<footer style="margin-top: 60px; border-top: 1px solid #eaeaea; background: #fff; padding: 40px 20px; text-align: center;">
-    <div style="max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 15px;">
+<!-- GLOBAL DASHBOARD FOOTER (Premium Vilela Style) -->
+<footer style="margin-top: 80px; background: #fff; box-shadow: 0 -5px 20px rgba(0,0,0,0.02); border-top-left-radius: 40px; border-top-right-radius: 40px; overflow: hidden; position: relative;">
+
+    <!-- White Content Section -->
+    <div style="padding: 50px 20px 40px 20px; display: flex; align-items: center; justify-content: center; gap: 60px; flex-wrap: wrap;">
 
         <!-- Logo -->
-        <img src="../assets/logo-vilela-mix.png" alt="Vilela Engenharia" style="height: 40px; opacity: 0.9;">
+        <img src="../assets/logo-vilela-mix.png" alt="Vilela Engenharia" style="height: 65px; object-fit: contain;">
 
-        <!-- Divider -->
-        <div style="width: 50px; height: 2px; background: #198754; opacity: 0.3; margin: 5px 0;"></div>
+        <!-- Vertical Divider -->
+        <div class="footer-divider" style="width: 1px; height: 60px; background: #e0e0e0;"></div>
 
         <!-- Engineer Info -->
-        <div style="line-height: 1.4;">
-            <span style="display: block; font-size: 0.75rem; color: #adb5bd; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 2px;">Engenheiro Responsável</span>
-            <strong style="display: block; font-size: 1rem; color: #2c3e50; font-weight: 700;">Diego T. N. Vilela</strong>
-            <span style="display: block; font-size: 0.85rem; color: #7f8c8d;">CREA 235.474/D</span>
+        <div style="text-align: left;">
+            <span style="display: block; font-size: 0.75rem; color: #adb5bd; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: 6px;">Engenheiro Responsável</span>
+            <strong style="display: block; font-size: 1.4rem; color: #2c3e50; font-weight: 800; letter-spacing: -0.5px; line-height: 1.1;">Diego T. N. Vilela</strong>
+            <span style="display: block; font-size: 0.95rem; color: #198754; font-weight: 600; margin-top: 4px;">CREA 235.474/D</span>
         </div>
 
-        <!-- Copyright -->
-        <div style="margin-top: 15px; font-size: 0.75rem; color: #ccc;">
-            &copy; <?= date('Y') ?> Vilela Engenharia. Todos os direitos reservados.
-        </div>
     </div>
+
+    <!-- Green Copyright Bar -->
+    <div style="background: #198754; color: white; text-align: center; padding: 18px; font-size: 0.9rem; font-weight: 500; letter-spacing: 0.5px;">
+        &copy; 2026 Vilela Engenharia
+    </div>
+
 </footer>
 
 <!-- STYLES FOR TABS (Ensuring they look like buttons) -->
 <style>
+    @media (max-width: 768px) {
+        .footer-divider {
+            display: none;
+        }
+    }
+
     .nav-pills {
         display: flex;
         flex-wrap: wrap;
