@@ -241,7 +241,7 @@ foreach($entregues_raw as $row) {
             <div style="display:flex; align-items:center; gap:15px; z-index:2;">
                  <div class="header-title-box">
                     <span class="header-title-main">Documentos Iniciais</span>
-                    <span class="header-title-sub">Checklist do Processo (v3.1)</span>
+                    <span class="header-title-sub">Checklist do Processo</span>
                  </div>
                  
                  <!-- Animated Icon -->
