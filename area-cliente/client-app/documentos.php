@@ -63,20 +63,20 @@ if($drive_link) {
 
         body { background: #f4f6f8; }
         
-        /* HEADER - BLUE THEME (Premium) */
+        /* HEADER - VILELA PREMIUM (GREEN) */
         .page-header {
-            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%); /* Light Blue/Cyan Gradient */
+            background: linear-gradient(135deg, #146C43 0%, #0d462b 100%); /* Vilela Green Gradient */
             border-bottom: none;
             padding: 30px 25px; 
             border-bottom-left-radius: 30px; 
             border-bottom-right-radius: 30px;
-            box-shadow: 0 10px 30px rgba(13, 110, 253, 0.15); 
+            box-shadow: 0 10px 30px rgba(20, 108, 67, 0.25); 
             margin-bottom: 30px;
             display: flex; align-items: center; justify-content: space-between;
-            color: #084298; /* Dark Blue Text */
+            color: #ffffff; /* White Text */
             position: relative;
             overflow: hidden;
-            border: 1px solid #b6effb;
+            border: none;
         }
         
         /* Decorative Circle (Subtle) */
@@ -87,23 +87,23 @@ if($drive_link) {
         }
 
         .btn-back {
-            text-decoration: none; color: #084298; font-weight: 600; 
+            text-decoration: none; color: #146C43; font-weight: 600; 
             display: flex; align-items: center; gap: 8px;
             padding: 10px 20px; 
             background: white; 
             border-radius: 25px;
             transition: 0.3s;
             font-size: 0.95rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            border: 1px solid #b6effb;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: none;
         }
-        .btn-back:hover { background: #f0f7ff; transform: translateX(-3px); }
+        .btn-back:hover { background: #f0fff4; transform: translateX(-3px); }
         
         .header-title-box {
             display: flex; flex-direction: column; align-items: flex-end; text-align: right;
         }
-        .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #052c65; }
-        .header-title-sub { font-size: 0.8rem; opacity: 0.8; font-weight: 500; margin-top: 2px; color: #084298; }
+        .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #ffffff; }
+        .header-title-sub { font-size: 0.8rem; opacity: 0.9; font-weight: 400; margin-top: 2px; color: #e9ecef; }
 
         @keyframes docWiggle {
             0% { transform: rotate(0deg); }
@@ -137,10 +137,10 @@ if($drive_link) {
         
         .btn-drive-primary {
             display: inline-flex; align-items: center; gap: 10px;
-            background: #0d6efd; color: white;
+            background: #146C43; color: white;
             padding: 12px 25px; border-radius: 30px;
             text-decoration: none; font-weight: 600;
-            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+            box-shadow: 0 4px 12px rgba(20, 108, 67, 0.3);
             transition: transform 0.2s;
         }
         
@@ -183,8 +183,8 @@ if($drive_link) {
                  </div>
                  
                  <!-- Animated Icon -->
-                 <div style="background: white; border:1px solid #dee2e6; color: #0d6efd; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05); animation: docWiggle 4s ease-in-out infinite;">
-                    📂
+                 <div style="background: rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.3); color: #ffffff; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; backdrop-filter: blur(5px); animation: docWiggle 4s ease-in-out infinite;">
+                    <span class="material-symbols-rounded" style="font-size: 2rem;">folder_open</span>
                  </div>
             </div>
         </div>
