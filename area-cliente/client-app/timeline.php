@@ -81,20 +81,20 @@ $obs_atual = $stmt_obs->fetchColumn();
 
         /* Override basic settings for full page view */
         body { background: #f4f6f8; }
-        /* HEADER MODULE STYLE (GREEN - TIMELINE) - MATCHING DOCS INICIAIS */
+        /* HEADER MODULE STYLE (VILELA PREMIUM) - TIMELINE */
         .page-header {
-            background: linear-gradient(135deg, #e8f5e9 0%, #c3e6cb 100%); /* Light Green Gradient */
+            background: linear-gradient(135deg, #146C43 0%, #0d462b 100%); /* Vilela Dark Green Gradient */
             border-bottom: none;
             padding: 30px 25px; 
             border-bottom-left-radius: 30px; 
             border-bottom-right-radius: 30px;
-            box-shadow: 0 10px 30px rgba(25, 135, 84, 0.15); 
+            box-shadow: 0 10px 30px rgba(20, 108, 67, 0.25); 
             margin-bottom: 30px;
             display: flex; align-items: center; justify-content: space-between;
-            color: #146c43; /* Dark Green Text */
+            color: #ffffff; /* White Text */
             position: relative;
             overflow: hidden;
-            border: 1px solid #badbcc;
+            border: none;
         }
         
         /* Decorative Circle (Subtle) */
@@ -105,23 +105,23 @@ $obs_atual = $stmt_obs->fetchColumn();
         }
 
         .btn-back {
-            text-decoration: none; color: #146c43; font-weight: 600; 
+            text-decoration: none; color: #146C43; font-weight: 600; 
             display: flex; align-items: center; gap: 8px;
             padding: 10px 20px; 
             background: white; 
             border-radius: 25px;
             transition: 0.3s;
             font-size: 0.95rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            border: 1px solid #badbcc;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: none;
         }
         .btn-back:hover { background: #f0fff4; transform: translateX(-3px); }
         
         .header-title-box {
             display: flex; flex-direction: column; align-items: flex-end; text-align: right;
         }
-        .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #0f5132; }
-        .header-title-sub { font-size: 0.8rem; opacity: 0.8; font-weight: 500; margin-top: 2px; color: #198754; }
+        .header-title-main { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; color: #ffffff; }
+        .header-title-sub { font-size: 0.8rem; opacity: 0.9; font-weight: 400; margin-top: 2px; color: #e9ecef; }
 
         @media (max-width: 480px) {
             .page-header { flex-direction: column-reverse; gap: 20px; text-align: center; padding: 25px; align-items: center; }
@@ -159,8 +159,8 @@ $obs_atual = $stmt_obs->fetchColumn();
                  </div>
                  
                  <!-- Animated Compass Icon -->
-                 <div style="background: white; border:1px solid #dee2e6; color: #343a40; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05); animation: compassWiggle 4s ease-in-out infinite;">
-                    🧭
+                 <div style="background: rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.3); color: #ffffff; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; backdrop-filter: blur(5px); animation: compassWiggle 4s ease-in-out infinite;">
+                    compass_calibration
                  </div>
             </div>
         </div>
@@ -180,9 +180,9 @@ $obs_atual = $stmt_obs->fetchColumn();
             
             <!-- STATUS CARD (Resumo Fase Atual) -->
             <?php if ($detalhes): ?>
-            <div style="border-radius:12px; overflow:hidden; border:1px solid #e0e0e0; margin-bottom:30px; box-shadow:0 10px 30px rgba(0,0,0,0.03);">
+            <div style="border-radius:12px; overflow:hidden; border:1px solid #146C43; margin-bottom:30px; box-shadow:0 4px 12px rgba(20, 108, 67, 0.1);">
                 <!-- Card Header -->
-                <div style="background: linear-gradient(135deg, #198754 0%, #146c43 100%); padding:20px; color:white;">
+                <div style="background: linear-gradient(135deg, #146C43 0%, #0d462b 100%); padding:20px; color:white;">
                     <span style="display:block; font-size:0.75rem; text-transform:uppercase; opacity:0.8; letter-spacing:1px; font-weight:600; margin-bottom:5px;">Fase Atual</span>
                     <h2 style="margin:0; font-size:1.3rem; font-weight:700; display:flex; align-items:center; gap:10px;">
                         📍 <?= htmlspecialchars($etapa_atual) ?>
