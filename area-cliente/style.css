@@ -97,9 +97,12 @@ body {
 
 .logo-area img {
     height: 56px;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
+    /* Reduced margin */
     /* Ensure logo is crisp */
     image-rendering: -webkit-optimize-contrast;
+    /* Brand Glow Effect */
+    filter: drop-shadow(0 4px 12px rgba(25, 126, 99, 0.4));
 }
 
 .logo-area h1 {
@@ -1112,9 +1115,18 @@ dialog.app-modal[open] {
 }
 
 .logo-area img {
-    max-width: 160px;
-    margin-bottom: 25px;
-    height: auto;
+    height: 56px;
+    margin-bottom: 12px;
+    /* Reduced specific to 20% closer per user request */
+    /* Ensure logo is crisp */
+    image-rendering: -webkit-optimize-contrast;
+    /* Brand Glow Effect */
+    filter: drop-shadow(0 4px 12px rgba(25, 126, 99, 0.4));
+    transition: filter 0.3s ease;
+}
+
+.logo-area img:hover {
+    filter: drop-shadow(0 6px 16px rgba(25, 126, 99, 0.6));
 }
 
 .logo-area h1 {
