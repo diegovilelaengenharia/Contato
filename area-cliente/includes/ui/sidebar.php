@@ -1,31 +1,203 @@
-<?php
-// Ensure metrics are available (or default to 0)
-$kpi_pre_pendentes = $kpi_pre_pendentes ?? 0;
-$count_ani = count($aniversariantes ?? []);
-$count_par = count($parados ?? []);
-?>
+<aside class="sidebar admin-nav-sidebar">
+    
+    <!-- SEÇÃO GERAL -->
+    <div class="nav-section">
+        <h6 class="nav-header">GERAL</h6>
+        
+        <a href="gestao_admin_99.php" class="nav-item <?= (!$cliente_ativo) ? 'active' : '' ?>">
+            <span class="material-symbols-rounded">grid_view</span>
+            Visão Geral
+        </a>
+        
+        <a href="gerenciar_cliente.php" class="nav-item">
+            <span class="material-symbols-rounded">person_add</span>
+            Novo Cliente
+        </a>
 
-<!-- FAB Removed by user request (Moved to Top Header) -->
+        <!-- Acesso Rápido (Dropdown placeholder or specific links) -->
+         <div class="nav-item-group">
+            <div class="nav-item" onclick="this.parentElement.classList.toggle('open')" style="cursor:pointer; justify-content:space-between;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="material-symbols-rounded">bolt</span>
+                    Acesso Rápido
+                </div>
+                <span class="material-symbols-rounded arrow">expand_more</span>
+            </div>
+            <div class="nav-subitems">
+                 <a href="?importar=1" class="nav-subitem">Solicitações Web</a>
+                 <a href="#" class="nav-subitem">Relatórios</a>
+            </div>
+        </div>
+    </div>
 
-<!-- Mobile Branding Footer (Optional: Fixed at bottom left or removed?) 
-     User requested discreet buttons. Let's keep it clean and remove branding from screen, 
-     maybe just keep it in the header if it exists or footer if we add one.
-     For now, removed from sidebar as requested.
--->
+    <!-- SEPARADOR -->
+    <?php if($cliente_ativo): ?>
+        <hr class="nav-divider">
 
-<script>
-    function toggleFab() {
-        document.querySelector('.fab-container').classList.toggle('active');
-        const icon = document.querySelector('.fab-main .material-symbols-rounded');
-        // Icon rotation handled by CSS
+        <!-- SEÇÃO CLIENTE SELECIONADO -->
+        <div class="nav-section">
+            <h6 class="nav-header" style="color:#198754;">CLIENTE SELECIONADO</h6>
+            
+            <div class="nav-client-info">
+                <h3 class="nav-client-name"><?= htmlspecialchars($cliente_ativo['nome']) ?></h3>
+                <span class="nav-client-id">ID: #<?= str_pad($cliente_ativo['id'], 3, '0', STR_PAD_LEFT) ?></span>
+            </div>
+
+            <!-- NAVEGAÇÃO DO CLIENTE -->
+            <nav class="client-nav">
+                <!-- TL -> Histórico -->
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="nav-item <?= ($active_tab=='andamento'||$active_tab=='cadastro') ? 'active' : '' ?>">
+                    <span class="material-symbols-rounded">history</span>
+                    Histórico
+                </a>
+
+                <!-- Docs -> Checklist -->
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=docs_iniciais" class="nav-item <?= ($active_tab=='docs_iniciais') ? 'active' : '' ?>">
+                    <span class="material-symbols-rounded">folder_open</span>
+                    Documentos
+                </a>
+
+                <!-- Pendências -->
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="nav-item <?= ($active_tab=='pendencias') ? 'active' : '' ?>">
+                    <span class="material-symbols-rounded">warning</span>
+                    Pendências
+                </a>
+
+                <!-- Financeiro -->
+                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=financeiro" class="nav-item <?= ($active_tab=='financeiro') ? 'active' : '' ?>">
+                    <span class="material-symbols-rounded">paid</span>
+                    Financeiro
+                </a>
+
+                 <!-- Arquivos Finais -->
+                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=arquivos" class="nav-item <?= ($active_tab=='arquivos') ? 'active' : '' ?>">
+                    <span class="material-symbols-rounded">inventory_2</span>
+                    Arquivos
+                </a>
+            </nav>
+
+            <div style="margin-top:20px; padding:15px; background:#f0f7ff; border-radius:8px; border:1px solid #cce5ff; text-align:center;">
+                 <a href="gerenciar_cliente.php?id=<?= $cliente_ativo['id'] ?>" style="display:block; margin-bottom:8px; font-size:0.85rem; color:#0d6efd; text-decoration:none; font-weight:600;">✏️ Editar Dados</a>
+                 <a href="area_cliente.php" style="display:block; font-size:0.85rem; color:#666; text-decoration:none;">🔗 Ver como Cliente</a>
+            </div>
+        </div>
+    <?php endif; ?>
+
+</aside>
+
+<!-- STYLE FOR SIDEBAR (Inline for component encapsulation) -->
+<style>
+    .admin-nav-sidebar {
+        width: 270px;
+        min-width: 270px;
+        background: white;
+        border-radius: 16px;
+        padding: 25px 0; /* Vertical padding only, internal pads handled by items */
+        box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+        border: 1px solid #eaeaea;
+        align-self: flex-start;
+        position: sticky;
+        top: 90px;
+        max-height: calc(100vh - 110px);
+        overflow-y: auto;
+    }
+
+    .nav-section {
+        padding: 0 20px;
+        margin-bottom: 15px;
+    }
+
+    .nav-header {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: #999;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        margin: 0 0 10px 10px; /* Indent slightly to align with text */
+    }
+
+    .nav-divider {
+        border: 0;
+        border-top: 1px solid #eee;
+        margin: 15px 0 20px 0;
+    }
+
+    /* Client Header */
+    .nav-client-info {
+        padding: 0 10px 15px 10px;
+        margin-bottom: 5px;
+    }
+    .nav-client-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #333;
+        margin: 0 0 4px 0;
+        line-height: 1.3;
+    }
+    .nav-client-id {
+        font-size: 0.8rem;
+        color: #888;
+        background: #f8f9fa;
+        padding: 2px 6px;
+        border-radius: 4px;
+        border: 1px solid #eee;
+    }
+
+    /* Items */
+    .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 15px;
+        color: #555;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.95rem;
+        border-radius: 8px; /* Rounded right only? Image shows boxy or slight round. Let's do standard rounded */
+        transition: all 0.2s;
+        margin-bottom: 4px;
+        border-left: 4px solid transparent; /* For active state strip */
+    }
+
+    .nav-item .material-symbols-rounded {
+        font-size: 1.3rem;
+        color: #888;
+        transition: 0.2s;
     }
     
-    // Auto-close on click outside
-    document.addEventListener('click', function(event) {
-        const fab = document.querySelector('.fab-container');
-        const isClickInside = fab.contains(event.target);
-        if (!isClickInside && fab.classList.contains('active')) {
-            fab.classList.remove('active');
-        }
-    });
-</script>
+    .nav-item:hover {
+        background: #fdfdfd;
+        color: #000;
+    }
+
+    /* Active State (Idea from photo: Green BG/Strip) */
+    .nav-item.active {
+        background: #e8f5e9; /* Light Green */
+        color: #146c43; /* Dark Green */
+        border-left-color: #146c43;
+        font-weight: 700;
+    }
+    .nav-item.active .material-symbols-rounded {
+        color: #146c43;
+    }
+
+    /* Subitems */
+    .nav-subitems {
+        display: none;
+        padding-left: 44px; /* Align with text */
+        margin-top: 5px;
+    }
+    .nav-item-group.open .nav-subitems { display: block; }
+    .nav-item-group.open .arrow { transform: rotate(180deg); }
+    
+    .nav-subitem {
+        display: block;
+        padding: 8px 0;
+        font-size: 0.9rem;
+        color: #666;
+        text-decoration: none;
+        transition: 0.2s;
+    }
+    .nav-subitem:hover { color: #146c43; }
+
+</style>

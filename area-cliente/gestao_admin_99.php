@@ -349,90 +349,42 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
             <!-- TAB NAVIGATION -->
             <!-- Styles for Tabs (Multi-Color) -->
+            <!-- STYLE FOR FLEX LAYOUT & HIDDEN TABS -->
             <style>
-                .tabs-container {
-                    margin-bottom: 0; /* Remove margin to connect with window below */
-                    border-bottom: none; 
-                    display: flex;
-                    gap: 10px;
-                    overflow-x: auto;
-                    padding: 10px 5px 0 5px; /* Bottom padding removed to sit on line */
-                    align-items: flex-end; /* Align tabs to bottom */
-                }
-                .tab-link {
-                    padding: 10px 20px;
-                    text-decoration: none;
-                    color: #666;
-                    font-weight: 700;
-                    font-size: 0.95rem;
-                    border-radius: 12px 12px 0 0; /* Top rounded only */
-                    transition: all 0.2s;
-                    white-space: nowrap;
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 8px;
-                    background: #f8f9fa;
-                    border: 1px solid #e0e0e0;
-                    border-bottom: none;
-                    opacity: 0.8;
-                    margin-bottom: -1px; /* Overlap border */
-                    position: relative;
-                    z-index: 1;
-                }
-                .tab-link:hover {
-                    opacity: 1;
-                    transform: translateY(-2px);
-                }
-                .tab-link.active {
-                    opacity: 1;
-                    background: #fff;
-                    color: #fff !important; /* Will be overridden by specific colors if needed, but lets use background */
-                    border: none;
-                    padding-top: 14px; /* Pop up effect */
-                    box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
-                    z-index: 10;
+                .admin-container {
+                    display: flex !important; /* Force Flex */
+                    gap: 30px;
+                    max-width: 1400px !important;
+                    align-items: flex-start;
                 }
                 
-                /* UNIFORM COLOR (Vilela Green) for all tabs */
-                .tab-link.active {
-                    background: #146c43 !important; /* Brand Green */
-                    color: white !important;
-                    box-shadow: 0 4px 15px rgba(20, 108, 67, 0.4);
+                aside.sidebar {
+                    display: block !important; /* Ensure it shows */
+                    flex-shrink: 0; 
                 }
-                .tab-link.active span { color: white; }
                 
-                /* Remove individual colors but keep classes for targeting if needed later */
-                .tab-link.t-hist.active, 
-                .tab-link.t-pend.active, 
-                .tab-link.t-fin.active, 
-                .tab-link.t-arq.active {
-                    background: #146c43;
+                main {
+                    flex: 1;
+                    width: 100%;
+                    max-width: 100%; /* Prevent overflow */
                 }
-                .tab-link.t-docs.active {
-                    background: #0d6efd;
+
+                /* Ocultar navegação antiga */
+                .tabs-container { display: none !important; }
+
+                /* Responsividade */
+                @media (max-width: 991px) {
+                    .admin-container {
+                        flex-direction: column;
+                    }
+                    .admin-nav-sidebar {
+                        width: 100%;
+                        position: relative;
+                        top: 0;
+                        margin-bottom: 20px;
+                    }
                 }
             </style>
-            
-            <div class="tabs-container">
-                <!-- 1. CHECKLIST -->
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=docs_iniciais" class="tab-link t-docs <?= ($active_tab=='docs_iniciais')?'active':'' ?>">
-                    <span>📑</span> Checklist
-                </a>
-                <!-- 2. TIMELINE -->
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="tab-link t-hist <?= ($active_tab=='andamento'||$active_tab=='cadastro')?'active':'' ?>">
-                    <span>📜</span> Timeline
-                </a>
-                
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="tab-link t-pend <?= ($active_tab=='pendencias')?'active':'' ?>">
-                    <span>⚠️</span> Pendências
-                </a>
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=financeiro" class="tab-link t-fin <?= ($active_tab=='financeiro')?'active':'' ?>">
-                    <span>💰</span> Financeiro
-                </a>
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=arquivos" class="tab-link t-arq <?= ($active_tab=='arquivos')?'active':'' ?>">
-                    <span>📂</span> Arquivos Finais
-                </a>
-            </div>
 
             <!-- Modal Timeline e Andamento -->
             <?php require 'includes/modals/timeline.php'; ?>
