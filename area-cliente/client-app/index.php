@@ -119,52 +119,47 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             border: 1px solid rgba(0,0,0,0.05);
         }
         .ph-top {
-            background: #fbfdfc; /* Almost white for cleaner look */
-            padding: 40px 32px !important;
+            background: #ffffff; /* Pure white for clean integration */
+            padding: 30px 32px !important; /* Balanced padding */
             display: flex;
             align-items: center;
             justify-content: flex-start;
-            gap: 0; /* Gap handled by padding/margin for divider */
-            border-bottom: 1px solid #e0e0e0;
+            gap: 25px; /* Clean gap, no divider */
+            border-bottom: 1px solid #f0f0f0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03); /* Very subtle depth */
         }
         .ph-logo {
-            padding-right: 30px;
-            margin-right: 30px;
-            border-right: 3px solid var(--color-accent); /* GOLD DIVIDER */
+            padding-right: 0;
+            margin-right: 0;
+            border-right: none; /* REMOVED DIVIDER */
             display: flex;
             align-items: center;
         }
         .ph-logo img {
-            height: 72px !important; /* Reduced another 20% (90 -> 72) */
+            height: 85px !important; /* Set directly here */
             display: block;
             width: auto;
+            object-fit: contain;
         }
         .ph-title {
-            font-size: 2.8rem; /* Maximized Title */
-            font-weight: 900; /* Heavy Weight */
+            font-size: 2.2rem; /* Clean large size */
+            font-weight: 800;
             color: var(--color-primary);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: -0.5px; /* Modern tight tracking */
             line-height: 1;
-            margin-bottom: 6px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Subtle depth */
+            margin-bottom: 4px;
         }
         .ph-subtitle {
             font-size: 0.85rem;
-            color: #777;
+            color: #888;
             font-weight: 400;
             letter-spacing: 0.5px;
-            font-style: italic; /* Elegant touch */
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            font-style: normal; /* Back to normal */
+            display: block;
         }
         .ph-subtitle::before {
-            content: "";
-            display: inline-block;
-            width: 20px;
-            height: 1px;
-            background: var(--color-accent); /* Gold dash */
+            content: none; /* Remove golden dash */
         }
         .ph-header-text {
             display: flex;
