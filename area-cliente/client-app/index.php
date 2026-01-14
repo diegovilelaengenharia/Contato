@@ -275,14 +275,26 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 border-radius: 16px;
             }
             .ph-top {
-                padding: 16px;
-                flex-direction: row; /* FORCE ROW even on mobile */
+                padding: 20px; /* More padding */
+                flex-direction: row; /* FORCE ROW */
                 align-items: center;
-                gap: 16px;
-                justify-content: flex-start;
+                justify-content: space-between; /* Logo Left, Title Right */
+                gap: 10px;
             }
-            .ph-logo img { height: 40px; }
-            .ph-title { font-size: 0.8rem; }
+            .ph-logo {
+                padding: 6px 10px; /* Compact logo badge */
+            }
+            .ph-logo img { height: 38px !important; } /* Balanced Logo */
+            .ph-header-text {
+                text-align: right; /* Align text to right */
+                align-items: flex-end;
+            }
+            .ph-title { 
+                font-size: 1.4rem; /* MUCH BIGGER (was 0.8rem) */
+                white-space: nowrap; /* Prevent breaking if possible */
+            }
+            .ph-subtitle { display: none; } /* Hide quote on mobile to save space */
+            
             .ph-user-bar { padding: 16px; flex-direction: row; }
             .ph-username { font-size: 1rem; }
         }
