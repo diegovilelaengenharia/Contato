@@ -135,12 +135,12 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             align-items: center;
         }
         .ph-logo img {
-            height: 110px !important; /* Balanced Size */
+            height: 90px !important; /* Reduced per request */
             display: block;
             width: auto;
         }
         .ph-title {
-            font-size: 2.2rem; /* Big & Impactful */
+            font-size: 2.8rem; /* Maximized Title */
             font-weight: 900; /* Heavy Weight */
             color: var(--color-primary);
             text-transform: uppercase;
