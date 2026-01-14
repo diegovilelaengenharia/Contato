@@ -1139,41 +1139,46 @@ body {
 
     .form-input {
         width: 100%;
-        padding: 14px 16px;
-        border: 1px solid var(--border-color);
-        border-radius: 12px;
+        padding: 12px 16px;
+        border: 1px solid #ced4da;
+        /* Darker border for visibility */
+        border-radius: var(--radius-md);
+        font-family: var(--font-base);
         font-size: 1rem;
-        font-family: inherit;
-        background: var(--color-surface-hover);
         color: var(--color-text);
-        transition: all 0.2s;
+        transition: all 0.2s ease;
+        background: #f8f9fa;
+        /* Slight grey background */
     }
 
     .form-input:focus {
         outline: none;
         border-color: var(--color-primary);
-        background: var(--color-surface-hover);
-        box-shadow: 0 0 0 2px var(--color-primary-light);
+        background: #ffffff;
+        box-shadow: 0 0 0 3px rgba(25, 126, 99, 0.1);
     }
 
     .btn-login {
         width: 100%;
-        padding: 16px;
-        background: var(--color-primary);
-        color: white;
+        padding: 14px;
         border: none;
-        border-radius: 12px;
-        font-size: 1.1rem;
+        border-radius: 50px;
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-strong) 100%);
+        color: white;
+        font-size: 1rem;
         font-weight: 700;
         cursor: pointer;
-        transition: transform 0.2s, background-color 0.2s;
-        margin-top: 10px;
+        transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+        margin-top: 12px;
     }
 
     .btn-login:hover {
-        background-color: var(--color-primary-dark);
         transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(20, 108, 67, 0.2);
+        box-shadow: 0 6px 20px rgba(25, 126, 99, 0.35);
+        filter: brightness(1.1);
+        /* Lighten slightly instead of changing background */
+        color: white;
+        /* Ensure text remains white */
     }
 
     .btn-login:active {
