@@ -180,29 +180,33 @@ $obs_atual = $stmt_obs->fetchColumn();
             
             <!-- STATUS CARD (Resumo Fase Atual) -->
             <?php if ($detalhes): ?>
-            <div style="border-radius:12px; overflow:hidden; border:1px solid #146C43; margin-bottom:30px; box-shadow:0 4px 12px rgba(20, 108, 67, 0.1);">
-                <!-- Card Header -->
-                <div style="background: linear-gradient(135deg, #146C43 0%, #0d462b 100%); padding:20px; color:white;">
-                    <span style="display:block; font-size:0.75rem; text-transform:uppercase; opacity:0.8; letter-spacing:1px; font-weight:600; margin-bottom:5px;">Fase Atual</span>
-                    <h2 style="margin:0; font-size:1.3rem; font-weight:700; display:flex; align-items:center; gap:10px;">
-                        📍 <?= htmlspecialchars($etapa_atual) ?>
-                    </h2>
-                </div>
+            <div style="border-radius:16px; overflow:hidden; border:1px solid #e0e0e0; margin-bottom:30px; background:#fff; box-shadow:0 4px 12px rgba(0,0,0,0.03);">
+                
+                <div style="padding:25px;">
+                     <!-- Discrete Phase Section -->
+                     <div style="margin-bottom:20px; border-bottom:1px solid #f0f0f0; padding-bottom:15px;">
+                        <span style="display:block; font-size:0.7rem; text-transform:uppercase; color:#999; letter-spacing:1px; font-weight:700; margin-bottom:5px;">Fase Atual</span>
+                        <h2 style="margin:0; font-size:1.1rem; font-weight:600; color:#333; display:flex; align-items:center; gap:8px;">
+                            <span style="font-size:1.2rem;">📍</span> <?= htmlspecialchars($etapa_atual) ?>
+                        </h2>
+                     </div>
 
-                <!-- Card Body -->
-                <div style="padding:20px; background:#fff;">
-                    
-                    <!-- Clean Observation (Text Only) -->
-                    <div style="margin-bottom:20px; color:#555; line-height:1.6; font-size:0.95rem; font-style:italic;">
-                        "<?= !empty($obs_atual) ? strip_tags($obs_atual) : 'O processo segue em análise conforme o cronograma previsto. Nenhuma pendência urgente no momento.' ?>"
+                    <!-- Emphasized Observation -->
+                    <div style="margin-bottom:20px;">
+                        <div style="color:#dc3545; font-weight:800; font-size:0.95rem; margin-bottom:8px;">
+                            Observação do Engenheiro:
+                        </div>
+                        <div style="color:#333; line-height:1.6; font-size:1rem; padding-left:2px;">
+                            "<?= !empty($obs_atual) ? strip_tags($obs_atual) : 'O processo segue em análise conforme o cronograma previsto. Nenhuma pendência urgente no momento.' ?>"
+                        </div>
                     </div>
 
                     <!-- Process Details Grid -->
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; border-top:1px solid #eee; padding-top:20px;">
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; border-top:1px solid #eee; padding-top:20px; opacity:0.9;">
                         <?php if (!empty($detalhes['numero_processo'])): ?>
                             <div>
                                 <label style="display:block; font-size:0.7rem; color:#999; text-transform:uppercase; font-weight:700; margin-bottom:3px;">Nº Protocolo</label>
-                                <span style="color:#333; font-weight:600; font-size:1rem;"><?= htmlspecialchars($detalhes['numero_processo']) ?></span>
+                                <span style="font-family:monospace; color:#555; font-weight:600; font-size:0.95rem;"><?= htmlspecialchars($detalhes['numero_processo']) ?></span>
                             </div>
                         <?php endif; ?>
 
@@ -214,7 +218,6 @@ $obs_atual = $stmt_obs->fetchColumn();
                         <?php endif; ?>
                     </div>
                 </div>
-                
 
             </div>
             <?php endif; ?>
