@@ -31,7 +31,7 @@ if (!isset($clientes)) {
 
             <?php if (count($clientes_menu) > 0): ?>
                 <?php foreach ($clientes_menu as $c): ?>
-                    <a href="gestao_admin_99.php?cliente_id=<?= $c['id'] ?>&tab=perfil"
+                    <a href="admin.php?cliente_id=<?= $c['id'] ?>&tab=perfil"
                         style="display:flex; align-items:center; gap:10px; padding:10px; border-radius:8px; text-decoration:none; color:#495057; font-size:0.9rem; transition:background 0.2s;">
                         <span class="material-symbols-rounded" style="font-size:1.2rem; color:#198754;">person</span>
                         <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><?= htmlspecialchars($c['nome']) ?></span>

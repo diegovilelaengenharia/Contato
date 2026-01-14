@@ -13,10 +13,10 @@ try {
     }
     require 'db.php';
 
-    
+
     // Verifica se a variável $pdo foi criada corretamente
     if (!isset($pdo)) {
-         throw new Exception("O arquivo db.php foi carregado, mas a conexão (\$pdo) não foi estabelecida.");
+        throw new Exception("O arquivo db.php foi carregado, mas a conexão (\$pdo) não foi estabelecida.");
     }
 } catch (Exception $e) {
     // Exibe erro amigável (mas técnico o suficiente para debug)
@@ -33,7 +33,7 @@ $erro = '';
 // 0. QUICK CHECK: ADMIN ALREADY LOGGED IN?
 // Bypass everything and go to dashboard
 if (isset($_SESSION['admin_logado']) && $_SESSION['admin_logado'] === true) {
-    header("Location: gestao_admin_99.php");
+    header("Location: admin.php");
     exit;
 }
 
@@ -46,11 +46,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // 1. Verifica se é ADMIN
     // Senha mestra definida em db.php
-    $senhaMestraAdmin = defined('ADMIN_PASSWORD') ? ADMIN_PASSWORD : 'VilelaAdmin2025'; 
-    
+    $senhaMestraAdmin = defined('ADMIN_PASSWORD') ? ADMIN_PASSWORD : 'VilelaAdmin2025';
+
     if ((strtolower($usuario) === 'admin' || strtolower($usuario) === 'vilela') && $senha === $senhaMestraAdmin) {
         $_SESSION['admin_logado'] = true;
-        header("Location: gestao_admin_99.php");
+        header("Location: admin.php");
         exit;
     }
 
@@ -61,37 +61,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $stmtMaint = $pdo->query("SELECT setting_value FROM admin_settings WHERE setting_key = 'maintenance_mode'");
         if ($stmtMaint && $stmtMaint->fetchColumn() == 1) {
-            
+
             // SE FOR ADMIN TENTANDO LOGAR (E ERROU A SENHA), NÃO MOSTRA MANUTENÇÃO, MOSTRA ERRO
             if (strtolower($usuario) !== 'admin' && strtolower($usuario) !== 'vilela') {
-                 // MOSTRAR AVISO DE MANUTENÇÃO (PÁGINA COMPLETA) PARA CLIENTES
+                // MOSTRAR AVISO DE MANUTENÇÃO (PÁGINA COMPLETA) PARA CLIENTES
                 require 'maintenance.php';
                 exit;
             }
         }
-        
-        // Se não caiu no exit acima, continua tentando logar (vai dar erro de senha se não for admin)
-            // 2. Se não for Admin, busca Cliente no banco
-            $stmt = $pdo->prepare("SELECT * FROM clientes WHERE usuario = ?");
-            $stmt->execute([$usuario]);
-            $user = $stmt->fetch();
-            
-            // Verifica a senha (usando hash seguro)
-            if ($user && password_verify($senha, $user['senha'])) {
-                session_regenerate_id(true);
-                // CLEAR PREVIOUS SESSION DATA (Prevent Admin/Client Mix)
-                session_unset();
-                
-                $_SESSION['cliente_id'] = $user['id'];
-                $_SESSION['cliente_nome'] = $user['nome'];
-                session_write_close();
-                header("Location: client-app/index.php");
-                exit;
-            } else {
-                $erro = "Usuário ou senha inválidos!";
-            }
 
-    } catch(Exception $e) {
+        // Se não caiu no exit acima, continua tentando logar (vai dar erro de senha se não for admin)
+        // 2. Se não for Admin, busca Cliente no banco
+        $stmt = $pdo->prepare("SELECT * FROM clientes WHERE usuario = ?");
+        $stmt->execute([$usuario]);
+        $user = $stmt->fetch();
+
+        // Verifica a senha (usando hash seguro)
+        if ($user && password_verify($senha, $user['senha'])) {
+            session_regenerate_id(true);
+            // CLEAR PREVIOUS SESSION DATA (Prevent Admin/Client Mix)
+            session_unset();
+
+            $_SESSION['cliente_id'] = $user['id'];
+            $_SESSION['cliente_nome'] = $user['nome'];
+            session_write_close();
+            header("Location: client-app/index.php");
+            exit;
+        } else {
+            $erro = "Usuário ou senha inválidos!";
+        }
+    } catch (Exception $e) {
         $erro = "Erro Login: " . $e->getMessage();
     }
 }
@@ -127,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p>Acesse seus projetos e documentos</p>
         </div>
 
-        <?php if($erro): ?>
+        <?php if ($erro): ?>
             <div class="alert-error"><?= $erro ?></div>
         <?php endif; ?>
 

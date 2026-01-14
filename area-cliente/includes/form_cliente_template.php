@@ -54,12 +54,12 @@ $p_obj = $detalhes['objeto_processo'] ?? '';
 
 <form action="<?= $action_url ?>" method="POST" enctype="multipart/form-data" class="main-wrapper" style="<?= $is_edit ? '' : 'box-shadow:none; padding:0;' ?>">
     <input type="hidden" name="acao" value="<?= $hidden_acao ?>">
-    <?php if($is_edit): ?>
+    <?php if ($is_edit): ?>
         <input type="hidden" name="cliente_id" value="<?= $cliente['id'] ?>">
     <?php endif; ?>
 
     <!-- 1. ACESSO -->
-<!-- ... (existing form content) ... -->
+    <!-- ... (existing form content) ... -->
 
     <div class="form-grid" style="margin-top:15px; background:#f8f9fa; padding:15px; border-radius:8px;">
         <div class="form-group"><label>Inscrição Imobiliária (IPTU)</label><input type="text" name="inscricao_imob" value="<?= htmlspecialchars($i_iptu) ?>"></div>
@@ -73,23 +73,23 @@ $p_obj = $detalhes['objeto_processo'] ?? '';
     <div class="form-grid">
         <div class="form-group"><label>Número do Processo</label><input type="text" name="processo_numero" value="<?= htmlspecialchars($p_num) ?>" placeholder="Ex: 2024/0058"></div>
         <div class="form-group"><label>Data de Início</label><input type="date" name="data_inicio" value="<?= htmlspecialchars($p_data) ?>"></div>
-        
+
         <div class="form-group" style="grid-column: span 2;">
             <label>Tipo de Processo (Lista de Documentos)</label>
-            <?php 
-                // Load Docs Config safely
-                $docs_config_path = __DIR__ . '/../config/docs_config.php';
-                if(file_exists($docs_config_path)) {
-                    $docs_data_conf = require $docs_config_path;
-                    $processos_opts = $docs_data_conf['processes'] ?? [];
-                } else {
-                    $processos_opts = [];
-                }
-                $p_tipo_chave = $detalhes['tipo_processo_chave'] ?? '';
+            <?php
+            // Load Docs Config safely
+            $docs_config_path = __DIR__ . '/../config/docs_config.php';
+            if (file_exists($docs_config_path)) {
+                $docs_data_conf = require $docs_config_path;
+                $processos_opts = $docs_data_conf['processes'] ?? [];
+            } else {
+                $processos_opts = [];
+            }
+            $p_tipo_chave = $detalhes['tipo_processo_chave'] ?? '';
             ?>
             <select name="tipo_processo_chave" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; background-color:#fff;">
                 <option value="">-- Selecione o Tipo (Define o Checklist) --</option>
-                <?php foreach($processos_opts as $chave => $proc): ?>
+                <?php foreach ($processos_opts as $chave => $proc): ?>
                     <option value="<?= $chave ?>" <?= ($p_tipo_chave == $chave) ? 'selected' : '' ?>>
                         <?= htmlspecialchars($proc['titulo']) ?>
                     </option>
@@ -105,31 +105,31 @@ $p_obj = $detalhes['objeto_processo'] ?? '';
             <label style="display:block; margin-bottom:5px; font-weight:bold;">📸 Foto de Perfil</label>
             <div style="display:flex; gap:10px; align-items:center;">
                 <input type="file" name="avatar_upload" accept="image/*" style="padding:10px; border:1px solid #ddd; border-radius:8px; width:100%;">
-                <?php 
-                if($is_edit) {
+                <?php
+                if ($is_edit) {
                     $avatar = glob("uploads/avatars/avatar_{$cliente['id']}.*");
-                    if(!empty($avatar)) echo "<img src='{$avatar[0]}?".time()."' style='width:40px; height:40px; border-radius:50%; object-fit:cover; border:1px solid #ddd;'>";
+                    if (!empty($avatar)) echo "<img src='{$avatar[0]}?" . time() . "' style='width:40px; height:40px; border-radius:50%; object-fit:cover; border:1px solid #ddd;'>";
                 }
                 ?>
             </div>
         </div>
     </div>
-    
+
     <div class="form-grid">
         <div class="form-group"><label>Nome Completo (Titular)</label><input type="text" name="nome" value="<?= htmlspecialchars($d_nome) ?>" required placeholder="Ex: João da Silva"></div>
         <div class="form-group">
             <label>Login de Acesso (Usuário) <span style="font-size:0.75rem; color:#888;">(Pode usar CPF ou Tel)</span></label>
             <input type="text" name="usuario" id="campo_usuario" value="<?= htmlspecialchars($d_usuario) ?>" required style="font-family:monospace; color:#2980b9; font-weight:bold; letter-spacing:1px;" placeholder="Digite ou gere automático...">
-            
-            <?php if(!$is_edit): ?>
+
+            <?php if (!$is_edit): ?>
                 <!-- Helper de Geração Automática -->
                 <div style="display:flex; gap:15px; align-items:center; margin-top:5px;">
-                     <label style="display:flex; align-items:center; gap:5px; font-size:0.8rem; cursor:pointer; color:#666;">
+                    <label style="display:flex; align-items:center; gap:5px; font-size:0.8rem; cursor:pointer; color:#666;">
                         <input type="radio" name="auto_login_source" value="cpf" checked onchange="atualizarLoginAuto()"> Usar CPF
-                     </label>
-                     <label style="display:flex; align-items:center; gap:5px; font-size:0.8rem; cursor:pointer; color:#666;">
+                    </label>
+                    <label style="display:flex; align-items:center; gap:5px; font-size:0.8rem; cursor:pointer; color:#666;">
                         <input type="radio" name="auto_login_source" value="tel" onchange="atualizarLoginAuto()"> Usar Telefone
-                     </label>
+                    </label>
                 </div>
             <?php endif; ?>
         </div>
@@ -152,9 +152,9 @@ $p_obj = $detalhes['objeto_processo'] ?? '';
         <div class="form-group">
             <label>Estado Civil</label>
             <select name="estado_civil" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
-                <?php 
+                <?php
                 $opts = ['Solteiro(a)', 'Casado(a)', 'Divorciado(a)', 'Viúvo(a)', 'União Estável'];
-                foreach($opts as $o) {
+                foreach ($opts as $o) {
                     $sel = ($d_civil == $o) ? 'selected' : '';
                     echo "<option value='$o' $sel>$o</option>";
                 }
@@ -184,9 +184,9 @@ $p_obj = $detalhes['objeto_processo'] ?? '';
         <div class="form-group" style="grid-column: span 3;">
             <label>Tipo de Serviço</label>
             <select name="tipo_servico" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
-                <?php 
+                <?php
                 $servicos = ['Regularização de Imóvel', 'Projeto Arquitetônico', 'Projeto Estrutural', 'Desmembramento', 'Laudo Técnico', 'Outros'];
-                foreach($servicos as $s) {
+                foreach ($servicos as $s) {
                     $sel = ($i_serv == $s) ? 'selected' : '';
                     echo "<option value='$s' $sel>$s</option>";
                 }
@@ -200,7 +200,7 @@ $p_obj = $detalhes['objeto_processo'] ?? '';
         <div class="form-group"><label>Cidade</label><input type="text" name="imovel_cidade" value="<?= htmlspecialchars($i_cid) ?>"></div>
         <div class="form-group"><label>UF</label><input type="text" name="imovel_uf" value="<?= htmlspecialchars($i_uf) ?>" maxlength="2" style="text-transform:uppercase;"></div>
     </div>
-    
+
     <div class="form-grid" style="margin-top:15px; background:#f8f9fa; padding:15px; border-radius:8px;">
         <div class="form-group"><label>Inscrição Imobiliária (IPTU)</label><input type="text" name="inscricao_imob" value="<?= htmlspecialchars($i_iptu) ?>"></div>
         <div class="form-group"><label>Matrícula Cartório</label><input type="text" name="num_matricula" value="<?= htmlspecialchars($i_mat) ?>"></div>
@@ -215,9 +215,9 @@ $p_obj = $detalhes['objeto_processo'] ?? '';
     </div>
     <div class="section-body">
         <p style="font-size:0.9rem; color:#666; margin-bottom:20px;">Use esta seção para adicionar dados personalizados (Ex: CNH, Nome do Cônjuge, etc).</p>
-        
+
         <div id="container-campos-extras" style="display:flex; flex-direction:column; gap:15px;">
-            <?php if(!empty($campos_extras)) foreach($campos_extras as $ex): ?>
+            <?php if (!empty($campos_extras)) foreach ($campos_extras as $ex): ?>
                 <div class="extra-field-row" style="background:#f9f9f9; padding:15px; border-radius:8px; border:1px solid #eee; display:flex; gap:15px; align-items:flex-end;">
                     <div style="flex:1;">
                         <label style="display:block; margin-bottom:5px; font-size:0.8rem; font-weight:bold; color:#555;">Título do Campo</label>
@@ -242,10 +242,10 @@ $p_obj = $detalhes['objeto_processo'] ?? '';
 
     <!-- Sticky Footer -->
     <div class="<?= $is_edit ? 'sticky-footer' : '' ?>" style="<?= $is_edit ? 'display:flex; justify-content:flex-end; gap:15px; padding:15px; background:white; border-top:1px solid #ddd; position:sticky; bottom:0; box-shadow:0 -2px 10px rgba(0,0,0,0.05); z-index:100;' : 'margin-top:20px;' ?>">
-        <?php if($is_edit): ?>
-            <a href="gestao_admin_99.php?cliente_id=<?= $cliente['id'] ?>&tab=andamento" class="btn-close" style="background:#f8d7da; color:#721c24; text-decoration:none; padding:10px 20px; border-radius:8px; border:1px solid #f5c6cb; font-weight:bold;">Cancelar</a>
+        <?php if ($is_edit): ?>
+            <a href="admin.php?cliente_id=<?= $cliente['id'] ?>&tab=andamento" class="btn-close" style="background:#f8d7da; color:#721c24; text-decoration:none; padding:10px 20px; border-radius:8px; border:1px solid #f5c6cb; font-weight:bold;">Cancelar</a>
         <?php endif; ?>
-        
+
         <button type="submit" name="<?= $btn_name ?>" class="btn-save" style="<?= $is_edit ? 'background:#0d6efd; color:white; border:none; padding:10px 30px; border-radius:8px; font-weight:bold; cursor:pointer;' : 'width:100%; justify-content:center;' ?>">
             <?= $btn_text ?>
         </button>
@@ -259,19 +259,19 @@ $p_obj = $detalhes['objeto_processo'] ?? '';
             // Mas a regra é: Se estiver vazio ou se for uma geração automatica recente.
             // Simplificação: Sempre atualiza se for "Create Mode" (input hidden acao=novo_cliente)
             // Mas aqui só temos checkbox.
-            
+
             const radioCpf = document.querySelector('input[name="auto_login_source"][value="cpf"]');
             const radioTel = document.querySelector('input[name="auto_login_source"][value="tel"]');
-            
-            if(!radioCpf) return; // Não estamos no modo create
+
+            if (!radioCpf) return; // Não estamos no modo create
 
             const inputCpf = document.querySelector('input[name="cpf_cnpj"]');
             const inputTel = document.querySelector('input[name="contato_tel"]');
             const inputUser = document.querySelector('input[name="usuario"]');
-            
-            if(radioCpf.checked && inputCpf) {
+
+            if (radioCpf.checked && inputCpf) {
                 inputUser.value = inputCpf.value.replace(/\D/g, '');
-            } else if(radioTel && radioTel.checked && inputTel) {
+            } else if (radioTel && radioTel.checked && inputTel) {
                 inputUser.value = inputTel.value.replace(/\D/g, '');
             }
         }
@@ -299,7 +299,7 @@ $p_obj = $detalhes['objeto_processo'] ?? '';
                 });
             }
         });
-        
+
         function addExtraField() {
             const div = document.createElement('div');
             div.className = 'extra-field-row';

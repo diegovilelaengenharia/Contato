@@ -25,12 +25,12 @@ if (isset($_POST['update_password'])) {
         // Read db.php
         $db_file = 'db.php';
         $content = file_get_contents($db_file);
-        
+
         // Replace constant define('ADMIN_PASSWORD', '... Old ...');
         // Pattern: define('ADMIN_PASSWORD',\s*'[^']*');
         $pattern = "/define\('ADMIN_PASSWORD',\s*'([^']*)'\);/";
         $replacement = "define('ADMIN_PASSWORD', '$new_pass');";
-        
+
         if (preg_match($pattern, $content)) {
             $new_content = preg_replace($pattern, $replacement, $content);
             if (file_put_contents($db_file, $new_content)) {
@@ -54,11 +54,11 @@ if (isset($_POST['save_settings'])) {
         'notify_email' => isset($_POST['notify_email']) ? 1 : 0
     ];
 
-    foreach($settings as $key => $val) {
+    foreach ($settings as $key => $val) {
         // Check if exists
         $chk = $pdo->prepare("SELECT id FROM admin_settings WHERE setting_key = ?");
         $chk->execute([$key]);
-        if($chk->fetch()) {
+        if ($chk->fetch()) {
             $pdo->prepare("UPDATE admin_settings SET setting_value = ? WHERE setting_key = ?")->execute([$val, $key]);
         } else {
             $pdo->prepare("INSERT INTO admin_settings (setting_key, setting_value) VALUES (?, ?)")->execute([$key, $val]);
@@ -73,19 +73,21 @@ if (isset($_GET['action']) && $_GET['action'] == 'backup') {
     $tables = ['clientes', 'processo_detalhes', 'processo_movimentos', 'processo_financeiro', 'processo_pendencias', 'processo_campos_extras', 'admin_settings'];
     $sql_dump = "-- Vilela Engenharia Database Backup\n-- Generated: " . date('Y-m-d H:i:s') . "\n\n";
 
-    foreach($tables as $table) {
+    foreach ($tables as $table) {
         $rows = $pdo->query("SELECT * FROM $table")->fetchAll(PDO::FETCH_ASSOC);
         $sql_dump .= "-- Table: $table\n";
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             $cols = array_keys($row);
-            $vals = array_map(function($v){ return $v === null ? "NULL" : "'".addslashes($v)."'"; }, array_values($row));
+            $vals = array_map(function ($v) {
+                return $v === null ? "NULL" : "'" . addslashes($v) . "'";
+            }, array_values($row));
             $sql_dump .= "INSERT INTO $table (`" . implode("`, `", $cols) . "`) VALUES (" . implode(", ", $vals) . ");\n";
         }
         $sql_dump .= "\n";
     }
 
     header('Content-Type: application/sql');
-    header('Content-Disposition: attachment; filename="backup_vilela_'.date('Ymd_His').'.sql"');
+    header('Content-Disposition: attachment; filename="backup_vilela_' . date('Ymd_His') . '.sql"');
     echo $sql_dump;
     exit;
 }
@@ -102,8 +104,8 @@ if (isset($_POST['clean_logs'])) {
 // --- FETCH CURRENT SETTINGS ---
 $curr_settings = [];
 $rows = $pdo->query("SELECT * FROM admin_settings")->fetchAll();
-foreach($rows as $r) {
-    echo "<!-- Loaded: {$r['setting_key']} -->"; 
+foreach ($rows as $r) {
+    echo "<!-- Loaded: {$r['setting_key']} -->";
     $curr_settings[$r['setting_key']] = $r['setting_value'];
 }
 
@@ -117,11 +119,12 @@ $notify = $curr_settings['notify_email'] ?? 0;
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <title>Configurações | Vilela Engenharia</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <!-- CSS -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
@@ -129,32 +132,100 @@ $notify = $curr_settings['notify_email'] ?? 0;
     <link rel="stylesheet" href="admin_style.css?v=<?= time() ?>">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-    
+
     <style>
-        .config-card { background:white; padding:25px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.05); margin-bottom:20px; }
-        .config-title { font-size:1.2rem; font-weight:700; color:var(--color-primary); margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px; display:flex; align-items:center; gap:10px; }
-        .form-row { display:flex; gap:20px; margin-bottom:15px; }
-        .form-col { flex:1; }
-        label { display:block; margin-bottom:5px; font-weight:600; color:#555; font-size:0.9rem; }
-        input[type="text"], input[type="password"], select { width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; }
-        .btn-action { padding:10px 20px; border:none; border-radius:8px; cursor:pointer; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px; transition:0.2s; }
-        .btn-primary { background:var(--color-primary); color:white; }
-        .btn-danger { background:#dc3545; color:white; }
-        .btn-warning { background:#ffc107; color:#333; }
-        .btn-primary:hover { opacity:0.9; }
+        .config-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        .config-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .form-col {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .btn-action {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
     </style>
 </head>
+
 <body>
     <?php require 'includes/ui/header.php'; ?>
 
     <div class="admin-container" style="max-width:900px; margin:30px auto; padding:0 20px;">
-        
+
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
             <h1 style="margin:0; color:#333;">⚙️ Configurações do Sistema</h1>
-            <a href="gestao_admin_99.php" class="btn-action" style="background:#e9ecef; color:#444;">← Voltar ao Painel</a>
+            <a href="admin.php" class="btn-action" style="background:#e9ecef; color:#444;">← Voltar ao Painel</a>
         </div>
 
-        <?php if($msg): ?>
+        <?php if ($msg): ?>
             <div style="padding:15px; border-radius:8px; margin-bottom:20px; font-weight:bold; text-align:center;
                 <?= strpos($msg, '✅') !== false ? 'background:#d1e7dd; color:#0f5132;' : 'background:#f8d7da; color:#842029;' ?>">
                 <?= $msg ?>
@@ -186,10 +257,10 @@ $notify = $curr_settings['notify_email'] ?? 0;
                 <span class="material-symbols-rounded">tune</span> Preferências & Sistema
             </div>
             <form method="POST">
-                
+
                 <div style="background:#fff3cd; color:#856404; padding:15px; border-radius:8px; margin-bottom:20px; border:1px solid #ffecb5;">
                     <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-weight:bold; font-size:1rem;">
-                        <input type="checkbox" name="maintenance_mode" value="1" <?= $maint_mode?'checked':'' ?> style="width:20px; height:20px;">
+                        <input type="checkbox" name="maintenance_mode" value="1" <?= $maint_mode ? 'checked' : '' ?> style="width:20px; height:20px;">
                         <span>🚧 Ativar MODO MANUTENÇÃO</span>
                     </label>
                     <p style="margin:5px 0 0 30px; font-size:0.9rem;">
@@ -208,15 +279,15 @@ $notify = $curr_settings['notify_email'] ?? 0;
                     </div>
                 </div>
                 <div class="form-row">
-                <div class="form-col">
+                    <div class="form-col">
                         <label>Registro Profissional (CREA/CAU)</label>
                         <input type="text" name="company_crea" value="<?= htmlspecialchars($c_crea) ?>">
                     </div>
                 </div>
-                
+
                 <div style="margin-bottom:15px;">
                     <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
-                        <input type="checkbox" name="notify_email" value="1" <?= $notify?'checked':'' ?> style="width:20px; height:20px;">
+                        <input type="checkbox" name="notify_email" value="1" <?= $notify ? 'checked' : '' ?> style="width:20px; height:20px;">
                         <span>Receber notificações por email (Novos clientes / Documentos enviados)</span>
                     </label>
                 </div>
@@ -233,7 +304,7 @@ $notify = $curr_settings['notify_email'] ?? 0;
                 <span class="material-symbols-rounded">database</span> Ferramentas de Banco de Dados
             </div>
             <div style="display:flex; gap:15px; flex-wrap:wrap;">
-                
+
                 <!-- Backup -->
                 <div style="flex:1; min-width:250px; background:#f8f9fa; padding:15px; border-radius:8px; border:1px solid #e9ecef;">
                     <h4 style="margin:0 0 10px 0;">📦 Backup Completo</h4>
@@ -251,17 +322,20 @@ $notify = $curr_settings['notify_email'] ?? 0;
     </div>
 
     <!-- Script para Toastify se necessário -->
-    <?php if(!empty($msg)): ?>
-    <script>
-        Toastify({
-            text: "<?= strip_tags($msg) ?>",
-            duration: 4000,
-            gravity: "top", 
-            position: "right", 
-            style: { background: "<?= strpos($msg, '✅')!==false ? '#198754' : '#dc3545' ?>" }
-        }).showToast();
-    </script>
+    <?php if (!empty($msg)): ?>
+        <script>
+            Toastify({
+                text: "<?= strip_tags($msg) ?>",
+                duration: 4000,
+                gravity: "top",
+                position: "right",
+                style: {
+                    background: "<?= strpos($msg, '✅') !== false ? '#198754' : '#dc3545' ?>"
+                }
+            }).showToast();
+        </script>
     <?php endif; ?>
 
 </body>
+
 </html>
