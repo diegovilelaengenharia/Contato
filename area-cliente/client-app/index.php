@@ -141,7 +141,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             margin-bottom: 4px;
         }
         .ph-subtitle {
-            font-size: 0.9rem; /* Smaller contrast */
+            font-size: 0.65rem; /* Reduced by ~30% (0.9rem -> 0.65rem) */
             color: #6c757d; /* Muted grey */
             font-weight: 500;
             letter-spacing: 0.2px;
