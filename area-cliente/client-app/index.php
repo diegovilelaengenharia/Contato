@@ -119,7 +119,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             border: 1px solid rgba(0,0,0,0.05);
         }
         .ph-top {
-            background: var(--color-primary) !important; /* Green Background */
+            background: #197e63 !important; /* Standard Vilela Green */
             padding: 30px 32px !important;
             display: flex;
             align-items: center;
@@ -147,12 +147,12 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             /* Filter removed to show original logo colors */
         }
         .ph-title {
-            font-size: 3.6rem; /* Increased 30% (2.8 -> ~3.6) */
+            font-size: 1.8rem; /* Reduced 50% (3.6 -> 1.8) */
             font-weight: 800;
             color: #ffffff !important; /* White Text */
             text-transform: uppercase;
             letter-spacing: -1px;
-            line-height: 0.9;
+            line-height: 1;
             margin-bottom: 8px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
