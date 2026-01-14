@@ -170,7 +170,7 @@ if (isset($_GET['cliente_id'])) {
     $penSnapshot = $stmtPen->fetch(PDO::FETCH_ASSOC);
 
     // 3. Última Movimentação (Timeline)
-    $stmtMov = $pdo->prepare("SELECT titulo, data_movimento FROM processo_movimentos WHERE cliente_id = ? ORDER BY data_movimento DESC, id DESC LIMIT 1");
+    $stmtMov = $pdo->prepare("SELECT titulo_fase as titulo, data_movimento FROM processo_movimentos WHERE cliente_id = ? ORDER BY data_movimento DESC, id DESC LIMIT 1");
     $stmtMov->execute([$id]);
     $lastMov = $stmtMov->fetch(PDO::FETCH_ASSOC);
 }
