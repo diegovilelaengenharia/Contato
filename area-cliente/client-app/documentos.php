@@ -42,7 +42,7 @@ if($drive_link) {
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
     
     <!-- STYLES -->
-    <link rel="stylesheet" href="css/style.css?v=3.0">
+    <link rel="stylesheet" href="css/style.css?v=4.0">
     
     <style>
         /* FORCE SOCIAL UPDATE v2 */
@@ -156,6 +156,27 @@ if($drive_link) {
             background: white; padding: 15px; border-radius: 12px;
             margin-bottom: 10px; display: flex; align-items: center; gap: 15px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.03); border: 1px solid #eee;
+        }
+
+        /* MOBILE OPTIMIZATION */
+        @media (max-width: 480px) {
+            .page-header { 
+                flex-direction: column-reverse; gap: 20px; text-align: center; padding: 25px; align-items: center; 
+            }
+            .header-title-box { text-align: center; align-items: center; } 
+            .btn-back { width: 100%; justify-content: center; }
+            
+            /* Full Bleed Card on Mobile to maximize Iframe width */
+            .drive-card {
+                margin-left: -20px; margin-right: -20px;
+                border-radius: 0; border-left: none; border-right: none;
+                padding: 15px 10px;
+                box-shadow: none; border-top: 1px solid #eee; border-bottom: 1px solid #eee;
+            }
+            .iframe-wrapper {
+                height: 75vh; /* Taller on mobile */
+                border: none;
+            }
         }
     </style>
 </head>
