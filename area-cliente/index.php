@@ -120,8 +120,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         Voltar ao site
     </a>
 
-    <div class="login-container">
+    <div class="login-container reveal">
         <div class="logo-area">
+            <img src="../assets/logo.png" alt="Vilela Engenharia" onerror="this.style.display='none'">
             <h1>Área do Cliente</h1>
             <p>Acesse seus projetos e documentos</p>
         </div>
@@ -147,6 +148,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- <a href="#" class="forgot-password">Esqueceu sua senha?</a> -->
         </form>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginCard = document.querySelector('.login-container');
+            if (loginCard) {
+                // Pequeno delay para garantir que a transição seja perceptível no carregamento
+                setTimeout(() => {
+                    loginCard.classList.add('active');
+                }, 100);
+            }
+        });
+    </script>
 </body>
 
 </html>
