@@ -131,11 +131,23 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             height: 80px; /* Increased size (30% boost) */
         }
         .ph-title {
-            font-size: 1.2rem; /* Increased from 0.95rem */
+            font-size: 1.4rem; /* Increased size */
             font-weight: 800; /* BOLD */
             color: var(--color-primary); /* Vilela Green */
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
+            line-height: 1;
+            margin-bottom: 2px;
+        }
+        .ph-subtitle {
+            font-size: 0.85rem;
+            color: #666;
+            font-weight: 400;
+        }
+        .ph-header-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         .ph-user-bar {
             background: #fff; /* White background */
@@ -281,8 +293,10 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                     <!-- Ajustar caminho do logo se necessário -->
                     <img src="../../assets/logo.png" alt="Vilela Engenharia">
                 </div>
-                <div class="ph-divider"></div>
-                <div class="ph-title">Portal de Acompanhamento</div>
+                <div class="ph-header-text">
+                    <div class="ph-title">Portal Cliente</div>
+                    <div class="ph-subtitle">Sempre atualizado com o seu Projeto</div>
+                </div>
             </div>
             
             <div class="ph-user-bar">
