@@ -22,7 +22,7 @@
 
     /* Shapes & Shadows */
     --shadow-soft: 0 10px 40px rgba(0, 0, 0, 0.06);
-    --radius-large: 24px;
+    --radius-large: 16px;
     --radius-small: 12px;
     --font-base: "Outfit", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 }
@@ -91,6 +91,17 @@ body {
     box-shadow: var(--shadow-soft);
     gap: 20px;
     overflow: hidden;
+}
+
+/* --- HEADER DETAIL (Premium Gradient) --- */
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
 }
 
 .hero-top {
@@ -1182,12 +1193,12 @@ input[type="checkbox"] {
     gap: 10px;
     padding: 14px 24px;
     border-radius: 999px;
-    background: linear-gradient(135deg, #25d366, #128c7e);
+    background: var(--color-primary);
     color: #ffffff;
     font-weight: 600;
     text-decoration: none;
     transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
-    box-shadow: 0 12px 32px -10px rgba(37, 211, 102, 0.5);
+    box-shadow: 0 12px 32px -10px rgba(25, 126, 99, 0.5);
     border: none;
     cursor: pointer;
     width: 100%;
@@ -1198,8 +1209,8 @@ input[type="checkbox"] {
 .whatsapp-submit-btn:hover,
 .whatsapp-submit-btn:focus-visible {
     transform: translateY(-3px);
-    box-shadow: 0 16px 40px -12px rgba(37, 211, 102, 0.6);
-    background: linear-gradient(135deg, #2cf576, #15a594);
+    box-shadow: 0 16px 40px -12px rgba(25, 126, 99, 0.6);
+    background: var(--color-primary-strong);
 }
 
 .whatsapp-submit-btn:focus-visible {
@@ -1322,54 +1333,79 @@ input[type="checkbox"] {
     max-height: none;
 }
 
+/* --- MODERN MODAL UI --- */
+
+/* 1. Interactive Rows */
 .service-option {
     display: flex;
     align-items: center;
-    padding: 16px 24px;
+    padding: 18px 24px;
     border-bottom: 1px solid #f0f0f0;
     margin: 0;
-    border: none;
-    background: transparent;
-    transition: background 0.2s;
-    cursor: pointer;
     border-radius: 0;
-}
-
-.service-option:last-child {
-    border-bottom: none;
+    background: transparent;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
 }
 
 .service-option:hover {
-    background: #f9fdfc;
+    background: #f8f9fa;
+}
+
+/* Row Highlight when Checked (Supported in modern browsers) */
+.service-option:has(input:checked) {
+    background: rgba(25, 126, 99, 0.06);
+}
+
+.service-option:has(input:checked)::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--color-primary);
 }
 
 .service-option span {
     font-size: 1rem;
-    color: #333;
+    color: var(--color-text);
     flex: 1;
-    line-height: 1.4;
+    line-height: 1.5;
+    font-weight: 500;
+    transition: color 0.2s;
 }
 
-/* Checkbox Customizado */
+.service-option:has(input:checked) span {
+    color: var(--color-primary-strong);
+    font-weight: 600;
+}
+
+/* 2. Modern Checkbox */
 .service-option input[type='checkbox'] {
     appearance: none;
     -webkit-appearance: none;
     width: 24px;
     height: 24px;
-    border: 2px solid #ddd;
-    border-radius: 6px;
-    margin-right: 16px;
+    border: 2px solid #cbd5e1;
+    border-radius: 8px;
+    /* Softer rounded corners */
+    margin-right: 18px;
     position: relative;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     flex-shrink: 0;
     outline: none;
     background: #fff;
 }
 
 .service-option input[type='checkbox']:checked {
-    border-color: #25d366;
-    background-color: #25d366;
+    border-color: var(--color-primary);
+    background-color: var(--color-primary);
+    box-shadow: 0 4px 12px rgba(25, 126, 99, 0.2);
+    transform: scale(1.05);
 }
 
 .service-option input[type='checkbox']::after {
@@ -1380,9 +1416,10 @@ input[type="checkbox"] {
     width: 6px;
     height: 12px;
     border: solid white;
-    border-width: 0 3px 3px 0;
+    border-width: 0 2.5px 2.5px 0;
     transform: rotate(45deg) scale(0);
-    transition: transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    /* Bouncy pop */
     opacity: 0;
 }
 
@@ -1391,12 +1428,107 @@ input[type="checkbox"] {
     opacity: 1;
 }
 
-.modal-footer {
-    padding: 20px 24px 24px;
-    background: #fff;
-    border-top: 1px solid #f0f0f0;
-    margin: 0;
-    flex-shrink: 0;
+/* 3. Premium CTA Button (Subtle & Professional) */
+.whatsapp-submit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px 32px;
+    border-radius: 12px;
+
+    /* Vilela Professional Green (Exact Match to Floating Button) */
+    background: var(--color-primary);
+
+    color: #ffffff;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1.05rem;
+    letter-spacing: 0.02em;
+
+    /* Subtle Shadow */
+    box-shadow: 0 4px 12px rgba(25, 126, 99, 0.25);
+
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.whatsapp-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(25, 126, 99, 0.35);
+    background: var(--color-primary-strong);
+}
+
+
+
+.whatsapp-submit-btn:active {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px -4px rgba(25, 126, 99, 0.4);
+}
+
+.whatsapp-submit-btn svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+/* --- SECTION: SOBRE MIM (Compact Mobile First) --- */
+.about-compact {
+    margin-top: 56px;
+    margin-bottom: 24px;
+}
+
+
+
+/* --- SECTION: SOBRE MIM (Footer Integration) --- */
+.about-full-section {
+    margin-top: 60px;
+    background: #ffffff;
+    border-radius: var(--radius-large);
+    padding: 40px;
+    box-shadow: var(--shadow-soft);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.about-full-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+}
+
+.about-profile-img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #ffffff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    margin-bottom: 24px;
+}
+
+.about-bio {
+    max-width: 700px;
+    margin: 0 auto;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--color-text-subtle);
+}
+
+.about-bio p {
+    margin-bottom: 16px;
+}
+
+.about-bio strong {
+    color: var(--color-primary-strong);
 }
 
 .select-all-container {
@@ -1493,90 +1625,306 @@ input[type="checkbox"] {
     font-weight: 500;
 }
 
-.whatsapp-submit-btn {
+/* --- CONFLICTING STYLES REMOVED --- */
+
+/* --- USER REQUESTED 'LONGO' BUTTON --- */
+/* --- LEGACY BUTTON STYLES REMOVED --- */
+/* --- CONFLICTING STYLES REMOVED --- */
+
+/* --- SECTION: SOBRE MIM (Compact Mobile First) --- */
+.about-compact {
+    margin-top: 56px;
+    margin-bottom: 24px;
+}
+
+.about-compact__card {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+    transition: transform 0.3s ease;
+}
+
+.about-compact__card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.about-compact__img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 12px rgba(19, 111, 92, 0.15);
+}
+
+.about-compact__content h3 {
+    font-size: 1.15rem;
+    color: var(--color-primary-strong);
+    margin: 0 0 4px;
+    font-weight: 700;
+}
+
+.about-compact__role {
+    font-size: 0.9rem;
+    background: rgba(19, 111, 92, 0.08);
+    color: var(--color-primary);
+    padding: 4px 12px;
+    border-radius: 99px;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 12px;
+}
+
+.about-compact__bio {
+    font-size: 0.95rem;
+    color: var(--color-text-subtle);
+    line-height: 1.5;
+    margin: 0;
+    max-width: 400px;
+}
+
+.about-more {
+    margin-top: 12px;
     width: 100%;
-    max-width: 100%;
-    border-radius: 16px;
-    padding: 18px 24px;
+}
+
+.about-more summary {
+    font-size: 0.9rem;
+    color: var(--color-primary);
+    cursor: pointer;
+    font-weight: 600;
+    list-style: none;
+    /* Remove default triangle */
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s;
+}
+
+.about-more summary:hover {
+    color: var(--color-primary-strong);
+    text-decoration: underline;
+}
+
+.about-more summary::after {
+    content: '+';
     font-size: 1.2rem;
-    background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
-    letter-spacing: 0.5px;
-    box-shadow: 0 10px 25px -5px rgba(37, 211, 102, 0.5);
-    text-transform: uppercase;
+    line-height: 0.8;
+}
+
+.about-more[open] summary::after {
+    content: '-';
+}
+
+.about-more__text {
+    margin-top: 16px;
+    text-align: left;
+    font-size: 0.95rem;
+    color: var(--color-text-subtle);
+    line-height: 1.6;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    padding-top: 16px;
+    animation: fadeIn 0.4s ease;
+}
+
+.about-more__text p {
+    margin-bottom: 12px;
+}
+
+@media (min-width: 640px) {
+    .about-compact__card {
+        flex-direction: row;
+        text-align: left;
+        align-items: flex-start;
+        padding: 32px;
+        gap: 24px;
+    }
+
+    .about-compact__img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .about-more__text {
+        text-align: left;
+    }
+}
+
+/* --- BIOGRAPHY POPUP (NEW) --- */
+.about-more-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: var(--color-primary);
+    cursor: pointer;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s;
     margin-top: 8px;
 }
 
-.whatsapp-submit-btn:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 15px 35px -5px rgba(37, 211, 102, 0.6);
+.about-more-btn:hover {
+    color: var(--color-primary-strong);
+    text-decoration: underline;
 }
 
-.service-list {
-    gap: 0;
+.about-more-btn::after {
+    content: '+';
+    font-size: 1.2rem;
+    line-height: 0.8;
 }
 
-/* --- USER REQUESTED BUTTON STYLE --- */
-.whatsapp-submit-btn {
-    display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 20px !important;
-    border-radius: 999px !important;
-    background: linear-gradient(135deg, #4fb09b, #136f5c) !important;
-    color: #ffffff !important;
-    font-weight: 600 !important;
-    letter-spacing: 0.02em;
-    text-decoration: none;
-    box-shadow: 0 8px 24px -6px rgba(19, 111, 92, 0.4) !important;
-    transition: transform 0.25s ease, box-shadow 0.25s ease !important;
-    width: auto !important;
-    max-width: 100% !important;
-    margin-top: 0 !important;
-    font-size: 1rem !important;
-    text-transform: none !important;
+
+/* --- FOOTER REFINEMENT (Green Detail) --- */
+.footer {
+    position: relative;
+    padding: 24px;
+    text-align: center;
+    background: #fff;
+    margin-top: 32px;
 }
 
-.whatsapp-submit-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 28px -6px rgba(19, 111, 92, 0.5) !important;
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
 }
 
-/* --- USER REQUESTED 'LONGO' BUTTON --- */
-.btn-whatsapp-longo {
+.bio-modal-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 3px solid #fff;
+    margin-bottom: 8px;
+}
+
+/* --- PREMIUM FOOTER REFINEMENT --- */
+.footer-premium {
+    background: #ffffff;
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-soft);
+    margin-top: 40px;
+    overflow: hidden;
+    text-align: left;
+}
+
+.footer-premium__content {
     display: flex;
-    width: 100%;
-    box-sizing: border-box;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    background-color: #25D366;
-    color: white;
-    text-decoration: none;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    font-weight: 600;
-    font-size: 18px;
-    padding: 16px 24px;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
+    padding: 32px 24px;
+    gap: 32px;
+}
+
+.footer-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--color-surface);
+    box-shadow: var(--shadow-soft);
+}
+
+.footer-divider {
+    width: 1px;
+    height: 60px;
+    background-color: #e0e0e0;
+}
+
+.footer-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.footer-label {
+    font-size: 0.65rem;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.footer-name {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--color-text);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.footer-crea {
+    font-size: 0.85rem;
+    color: var(--color-text-subtle);
+    font-weight: 400;
+    margin-top: 2px;
+}
+
+.footer-bio-link {
+    background: none;
     border: none;
+    padding: 0;
+    margin-top: 8px;
+    color: var(--color-primary);
+    font-size: 0.9rem;
+    font-weight: 600;
     cursor: pointer;
+    text-align: left;
+    text-decoration: underline;
+    transition: color 0.2s;
 }
 
-.btn-whatsapp-longo:hover {
-    background-color: #128C7E;
-    transform: translateY(-2px);
-    box-shadow: 0 7px 14px rgba(37, 211, 102, 0.3);
+.footer-bio-link:hover {
+    color: var(--color-primary-strong);
 }
 
-.btn-whatsapp-longo svg {
-    flex-shrink: 0;
+.footer-premium__bottom {
+    background: var(--color-primary-strong);
+    /* Dark Green */
+    color: #ffffff;
+    text-align: center;
+    padding: 12px;
+    font-size: 0.9rem;
+    font-weight: 500;
 }
 
+/* Mobile Responsiveness for Footer */
+@media (max-width: 600px) {
+    .footer-premium__content {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+    }
 
-/* --- MODERN BOX BUTTON --- */
-.btn-whatsapp-longo {
-    border-radius: 12px !important;
-    box-shadow: 0 10px 30px -10px rgba(37, 211, 102, 0.6) !important;
-    background: linear-gradient(135deg, #1fa855 0%, #128c7e 100%) !important;
+    .footer-divider {
+        width: 60px;
+        height: 1px;
+    }
+
+    .footer-info {
+        align-items: center;
+    }
+
+    .footer-logo {
+        width: 100px;
+    }
 }
