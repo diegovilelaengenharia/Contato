@@ -123,7 +123,8 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             padding: 24px 24px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: flex-start; /* Aligned to start */
+            gap: 20px; /* Space between logo and text */
             border-bottom: 1px solid #e0e0e0;
         }
         .ph-logo img {
