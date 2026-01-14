@@ -1,43 +1,7 @@
 <aside class="sidebar admin-nav-sidebar">
     
-    <!-- SEÇÃO GERAL -->
-    <div class="nav-section">
-        <h6 class="nav-header">GERAL</h6>
-        
-        <a href="gestao_admin_99.php" class="nav-item <?= (!$cliente_ativo) ? 'active' : '' ?>">
-            <span class="material-symbols-rounded">grid_view</span>
-            Visão Geral
-        </a>
-        
-        <a href="gerenciar_cliente.php" class="nav-item">
-            <span class="material-symbols-rounded">person_add</span>
-            Novo Cliente
-        </a>
-
-        <!-- Acesso Rápido -->
-         <div class="nav-item-group">
-            <div class="nav-item" onclick="this.parentElement.classList.toggle('open')" style="cursor:pointer; justify-content:space-between;">
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="material-symbols-rounded">bolt</span>
-                    Acesso Rápido
-                </div>
-                <span class="material-symbols-rounded arrow">expand_more</span>
-            </div>
-            <div class="nav-subitems">
-                 <a href="?importar=1" class="nav-subitem">Solicitações Web</a>
-                 <a href="https://oliveira.atende.net/atendenet?source=pwa" target="_blank" class="nav-subitem">Atende Oliveira</a>
-                 <a href="https://ridigital.org.br/VisualizarMatricula/DefaultVM.aspx?from=menu" target="_blank" class="nav-subitem">Matrículas</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- ADMIN PROFILE FOOTER REMOVED (Moved to Top Right) -->
-
-    <!-- SEPARADOR -->
+    <!-- SEÇÃO CLIENTE SELECIONADO (Topo) -->
     <?php if($cliente_ativo): ?>
-        <hr class="nav-divider">
-
-        <!-- SEÇÃO CLIENTE SELECIONADO -->
         <div class="nav-section">
             <h6 class="nav-header" style="color:#198754;">CLIENTE SELECIONADO</h6>
             
@@ -58,7 +22,7 @@
                     
                     <div style="font-size:0.75rem; color:#666; display:flex; flex-direction:column; gap:0;">
                         <span>📱 <?= $detalhes['contato_tel'] ?? '--' ?></span>
-                        <span style="font-size:0.7rem; color:#999;">ID: #<?= str_pad($cliente_ativo['id'], 3, '0', STR_PAD_LEFT) ?></span>
+                        <!-- ID Removed as requested -->
                     </div>
                 </div>
             </div>
@@ -107,7 +71,40 @@
                  <a href="area_cliente.php" style="display:block; font-size:0.85rem; color:#666; text-decoration:none;">🔗 Ver como Cliente</a>
             </div>
         </div>
+        
+        <hr class="nav-divider">
     <?php endif; ?>
+
+    <!-- SEÇÃO GERAL -->
+    <div class="nav-section">
+        <h6 class="nav-header">GERAL</h6>
+        
+        <a href="gestao_admin_99.php" class="nav-item <?= (!$cliente_ativo) ? 'active' : '' ?>">
+            <span class="material-symbols-rounded">grid_view</span>
+            Visão Geral
+        </a>
+        
+        <a href="gerenciar_cliente.php" class="nav-item">
+            <span class="material-symbols-rounded">person_add</span>
+            Novo Cliente
+        </a>
+
+        <!-- Acesso Rápido -->
+         <div class="nav-item-group">
+            <div class="nav-item" onclick="this.parentElement.classList.toggle('open')" style="cursor:pointer; justify-content:space-between;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="material-symbols-rounded">bolt</span>
+                    Acesso Rápido
+                </div>
+                <span class="material-symbols-rounded arrow">expand_more</span>
+            </div>
+            <div class="nav-subitems">
+                 <a href="?importar=1" class="nav-subitem">Solicitações Web</a>
+                 <a href="https://oliveira.atende.net/atendenet?source=pwa" target="_blank" class="nav-subitem">Atende Oliveira</a>
+                 <a href="https://ridigital.org.br/VisualizarMatricula/DefaultVM.aspx?from=menu" target="_blank" class="nav-subitem">Matrículas</a>
+            </div>
+        </div>
+    </div>
 
 </aside>
 
