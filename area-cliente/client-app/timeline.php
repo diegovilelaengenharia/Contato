@@ -160,7 +160,7 @@ $obs_atual = $stmt_obs->fetchColumn();
                  
                  <!-- Animated Compass Icon -->
                  <div style="background: rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.3); color: #ffffff; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; backdrop-filter: blur(5px); animation: compassWiggle 4s ease-in-out infinite;">
-                    compass_calibration
+                    <span class="material-symbols-rounded" style="font-size: 1.8rem;">compass_calibration</span>
                  </div>
             </div>
         </div>
@@ -192,15 +192,9 @@ $obs_atual = $stmt_obs->fetchColumn();
                 <!-- Card Body -->
                 <div style="padding:20px; background:#fff;">
                     
-                    <!-- Engineer Observation -->
-                    <div style="background:#fff8e1; border-left:4px solid #ffc107; padding:15px; border-radius:4px; margin-bottom:20px;">
-                        <div style="display:flex; gap:10px; margin-bottom:8px;">
-                            <span style="font-size:1.2rem;">👷‍♂️</span>
-                            <strong style="color:#856404; font-size:0.9rem;">Observação do Engenheiro:</strong>
-                        </div>
-                        <div style="color:#555; line-height:1.5; font-size:0.95rem; font-style:italic;">
-                            "<?= !empty($obs_atual) ? strip_tags($obs_atual) : 'O processo segue em análise conforme o cronograma previsto. Nenhuma pendência urgente no momento.' ?>"
-                        </div>
+                    <!-- Clean Observation (Text Only) -->
+                    <div style="margin-bottom:20px; color:#555; line-height:1.6; font-size:0.95rem; font-style:italic;">
+                        "<?= !empty($obs_atual) ? strip_tags($obs_atual) : 'O processo segue em análise conforme o cronograma previsto. Nenhuma pendência urgente no momento.' ?>"
                     </div>
 
                     <!-- Process Details Grid -->
