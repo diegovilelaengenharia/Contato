@@ -657,7 +657,6 @@ body {
     position: relative;
 }
 
-/* Mobile Adjustment for Floating Buttons */
 @media (max-width: 480px) {
     .floating-btn {
         width: 48px;
@@ -670,13 +669,7 @@ body {
     }
 }
 
-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15),
-0 8px 24px rgba(0, 0, 0, 0.1);
-transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
-box-shadow 0.25s ease;
-text-decoration: none;
-position: relative;
-}
+/* Removed malformed duplicate block */
 
 .floating-btn svg {
     width: 28px;
@@ -1164,11 +1157,28 @@ body.modal-open {
         padding: 10px 16px;
         /* Reduced Mobile Padding */
         font-size: 0.85rem;
+        flex: 1;
+        /* Ensure equal width on mobile flex container */
+        min-width: 0;
+        /* Prevent overflow */
+        white-space: nowrap;
     }
 
     .hero-client-btn svg {
         width: 18px;
         height: 18px;
+    }
+
+    .whatsapp-submit-btn {
+        flex: 1;
+        /* Equal width */
+        min-width: 0;
+        padding: 10px 16px;
+        /* Match hero-client-btn padding */
+        font-size: 0.85rem;
+        /* Match font size */
+        white-space: nowrap;
+        justify-content: center;
     }
 
     .budget-form__submit {
