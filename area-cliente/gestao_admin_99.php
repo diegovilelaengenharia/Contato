@@ -274,6 +274,69 @@ if($cliente_ativo) {
 
             <!-- Old Client Summary Card Removed (Moved to Profile Tab) -->
             
+            <!-- HEADER DO CLIENTE (Fixo no topo da área do cliente) -->
+            <div class="form-card" style="background:#fff; border-radius:18px; box-shadow:0 2px 12px rgba(0,0,0,0.04); padding:25px; border:1px solid #eee; margin-bottom: 25px;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; height:100%;">
+                    
+                    <!-- ESQUERDA: Avatar + Dados -->
+                    <div style="display:flex; align-items:center; gap:20px;">
+                        
+                        <!-- Avatar / Upload -->
+                        <div style="position:relative;">
+                                <form id="form_avatar_upload_page" method="POST" enctype="multipart/form-data" style="display:none;">
+                                <input type="file" name="avatar_upload" id="avatar_input_page" accept="image/*" onchange="document.getElementById('form_avatar_upload_page').submit();">
+                            </form>
+                            <div style="width:72px; height:72px; cursor:pointer;" onclick="document.getElementById('avatar_input_page').click();" title="Alterar Foto">
+                                <?php if($avatar_url): ?>
+                                    <img src="<?= $avatar_url ?>" style="width:100%; height:100%; object-fit:cover; border-radius:50%; border:3px solid #fff; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
+                                <?php else: ?>
+                                    <div style="width:100%; height:100%; background:#198754; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2rem; font-weight:700; border:3px solid #fff; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
+                                        <?= strtoupper(substr($cliente_ativo['nome'], 0, 1)) ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <!-- Infos -->
+                        <div>
+                            <h2 style="margin:0 0 6px 0; font-size:1.4rem; color:#333; font-weight:700; line-height:1.2;"><?= htmlspecialchars($cliente_ativo['nome']) ?></h2>
+                            
+                            <div style="display:flex; gap:15px; font-size:0.9rem; color:#666; align-items:center;">
+                                <span style="display:flex; align-items:center; gap:5px;">
+                                    <span class="material-symbols-rounded" style="font-size:1.1rem; color:#999;">badge</span>
+                                    <?= $detalhes['cpf_cnpj'] ?? 'N/A' ?>
+                                </span>
+                                <span style="display:flex; align-items:center; gap:5px;">
+                                    <span class="material-symbols-rounded" style="font-size:1.1rem; color:#999;">call</span>
+                                    <?= $detalhes['contato_tel'] ?? 'N/A' ?>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DIREITA: Status + Ações -->
+                    <div style="text-align:right;">
+                            <!-- Status Badge -->
+                            <?php 
+                            $etapa_label = $detalhes['etapa_atual'] ?? 'Novo Cliente';
+                            // Simple color logic
+                            $badge_bg = '#e8f5e9'; $badge_color = '#198754'; // Default Green
+                            ?>
+                            <div style="background:<?= $badge_bg ?>; color:<?= $badge_color ?>; display:inline-block; padding:5px 15px; border-radius:20px; font-weight:700; font-size:0.85rem; margin-bottom:8px;">
+                            <?= htmlspecialchars($etapa_label) ?>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div style="margin-top:10px; display:flex; gap:8px; justify-content:flex-end;">
+                            <a href="gerenciar_cliente.php?id=<?= $cliente_ativo['id'] ?>" class="btn-icon" style="background:#f0f2f5; color:#555; border:none;" title="Editar">✏️</a>
+                            <a href="relatorio_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-icon" style="background:#f0f2f5; color:#555; border:none;" title="PDF">📄</a>
+                            <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" class="btn-delete-confirm btn-icon" data-confirm-text="Excluir?" style="background:#fff5f5; color:#dc3545; border:none;" title="Excluir">🗑️</a>
+                            </div>
+                    </div>
+
+                </div>
+            </div>
+
             <!-- TAB NAVIGATION PILLS -->
             <style>
                 .nav-pills {
@@ -315,10 +378,6 @@ if($cliente_ativo) {
             
             <!-- ABAS DE NAVEGAÇÃO (Pills) -->
             <div class="nav-pills">
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=perfil" class="nav-pill <?= ($active_tab=='perfil')?'active':'' ?>">
-                    <span class="material-symbols-rounded">person</span>
-                    Perfil
-                </a>
                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=docs_iniciais" class="nav-pill <?= ($active_tab=='docs_iniciais')?'active':'' ?>">
                     <span class="material-symbols-rounded">folder_open</span>
                     Documentos
@@ -344,78 +403,8 @@ if($cliente_ativo) {
             <!-- Modal Timeline e Andamento -->
             <?php require 'includes/modals/timeline.php'; ?>
             
-            <!-- CONTEÚDO DA ABA PERFIL (Novo Layout "Simple Header") -->
-            <?php if($active_tab == 'perfil'): ?>
-                 <div class="form-card" style="background:#fff; border-radius:18px; box-shadow:0 2px 12px rgba(0,0,0,0.04); padding:25px; border:1px solid #eee; margin-bottom: 25px;">
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start; height:100%;">
-                        
-                        <!-- ESQUERDA: Avatar + Dados -->
-                        <div style="display:flex; align-items:center; gap:20px;">
-                            
-                            <!-- Avatar / Upload -->
-                            <div style="position:relative;">
-                                 <form id="form_avatar_upload_page" method="POST" enctype="multipart/form-data" style="display:none;">
-                                    <input type="file" name="avatar_upload" id="avatar_input_page" accept="image/*" onchange="document.getElementById('form_avatar_upload_page').submit();">
-                                </form>
-                                <div style="width:72px; height:72px; cursor:pointer;" onclick="document.getElementById('avatar_input_page').click();" title="Alterar Foto">
-                                    <?php if($avatar_url): ?>
-                                        <img src="<?= $avatar_url ?>" style="width:100%; height:100%; object-fit:cover; border-radius:50%; border:3px solid #fff; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
-                                    <?php else: ?>
-                                        <div style="width:100%; height:100%; background:#198754; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2rem; font-weight:700; border:3px solid #fff; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
-                                            <?= strtoupper(substr($cliente_ativo['nome'], 0, 1)) ?>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
+            <!-- CONTEÚDO DA ABA PERFIL (Removido, agora é Fixo acima) -->
 
-                            <!-- Infos -->
-                            <div>
-                                <h2 style="margin:0 0 6px 0; font-size:1.4rem; color:#333; font-weight:700; line-height:1.2;"><?= htmlspecialchars($cliente_ativo['nome']) ?></h2>
-                                
-                                <div style="display:flex; gap:15px; font-size:0.9rem; color:#666; align-items:center;">
-                                    <span style="display:flex; align-items:center; gap:5px;">
-                                        <span class="material-symbols-rounded" style="font-size:1.1rem; color:#999;">badge</span>
-                                        <?= $detalhes['cpf_cnpj'] ?? 'N/A' ?>
-                                    </span>
-                                    <span style="display:flex; align-items:center; gap:5px;">
-                                        <span class="material-symbols-rounded" style="font-size:1.1rem; color:#999;">call</span>
-                                        <?= $detalhes['contato_tel'] ?? 'N/A' ?>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- DIREITA: Status + Ações -->
-                        <div style="text-align:right;">
-                             <!-- Status Badge -->
-                             <?php 
-                             $etapa_label = $detalhes['etapa_atual'] ?? 'Novo Cliente';
-                             // Simple color logic
-                             $badge_bg = '#e8f5e9'; $badge_color = '#198754'; // Default Green
-                             ?>
-                             <div style="background:<?= $badge_bg ?>; color:<?= $badge_color ?>; display:inline-block; padding:5px 15px; border-radius:20px; font-weight:700; font-size:0.85rem; margin-bottom:8px;">
-                                <?= htmlspecialchars($etapa_label) ?>
-                             </div>
-                             
-                             <!-- Back Link (Functional but subtle) -->
-                             <!-- <div style="font-size:0.8rem;">
-                                 <a href="gestao_admin_99.php" style="color:#999; text-decoration:none; display:flex; align-items:center; justify-content:flex-end; gap:4px; transition:0.2s;">
-                                     <span class="material-symbols-rounded" style="font-size:1rem;">arrow_back</span>
-                                     Voltar ao Painel
-                                 </a>
-                             </div> -->
-
-                             <!-- Action Buttons (Keep them accessible) -->
-                             <div style="margin-top:10px; display:flex; gap:8px; justify-content:flex-end;">
-                                <a href="gerenciar_cliente.php?id=<?= $cliente_ativo['id'] ?>" class="btn-icon" style="background:#f0f2f5; color:#555; border:none;" title="Editar">✏️</a>
-                                <a href="relatorio_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="btn-icon" style="background:#f0f2f5; color:#555; border:none;" title="PDF">📄</a>
-                                <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" class="btn-delete-confirm btn-icon" data-confirm-text="Excluir?" style="background:#fff5f5; color:#dc3545; border:none;" title="Excluir">🗑️</a>
-                             </div>
-                        </div>
-
-                    </div>
-                 </div>
-            <?php endif; ?>
 
             <!-- TAB NAVIGATION -->
             <!-- Styles for Tabs (Multi-Color) -->
