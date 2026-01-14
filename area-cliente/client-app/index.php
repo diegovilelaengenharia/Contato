@@ -119,7 +119,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             border: 1px solid rgba(0,0,0,0.05);
         }
         .ph-top {
-            background: #197e63 !important; /* Standard Vilela Green */
+            background: #146C43 !important; /* Matches Footer Dark Green */
             padding: 30px 32px !important;
             display: flex;
             align-items: center;
