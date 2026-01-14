@@ -549,9 +549,14 @@ if($cliente_ativo) {
                         </div>
                         
                         <div style="display:flex; gap:12px; align-items:center;">
-                             <!-- Botão Novo Andamento (Integrado) -->
+                            <!-- Botão Novo Andamento (Integrado) -->
                             <button type="button" onclick="document.getElementById('modalAndamento').showModal()" style="padding:12px 24px; background:#198754; border:none; border-radius:12px; font-size:0.95rem; font-weight:600; color:white; cursor:pointer; display:flex; align-items:center; gap:8px; transition:all 0.2s; box-shadow:0 4px 12px rgba(25, 135, 84, 0.25);">
                                 <span class="material-symbols-rounded">add_circle</span> Novo Andamento
+                            </button>
+
+                            <!-- Botão Ver Timeline (Popup) -->
+                            <button type="button" onclick="document.getElementById('modalVisualTimeline').showModal()" style="padding:12px 18px; background:#e9ecef; border:none; border-radius:12px; font-size:0.95rem; font-weight:600; color:#495057; cursor:pointer; display:flex; align-items:center; gap:8px; transition:all 0.2s;">
+                                <span class="material-symbols-rounded">visibility</span> Ver Timeline
                             </button>
                             
                              <!-- Botão Apagar Histórico (Perigo) -->
