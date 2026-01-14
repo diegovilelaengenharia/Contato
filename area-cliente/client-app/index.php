@@ -356,7 +356,6 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                 </div>
                 <div class="ph-header-text">
                     <div class="ph-title">Portal Cliente</div>
-                    <div class="ph-subtitle">Sempre atualizado com o seu Projeto</div>
                 </div>
             </div>
             
