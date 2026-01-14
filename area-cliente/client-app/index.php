@@ -147,11 +147,11 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             /* Filter removed to show original logo colors */
         }
         .ph-title {
-            font-size: 1.8rem; /* Reduced 50% (3.6 -> 1.8) */
+            font-size: 1.8rem;
             font-weight: 800;
             color: #ffffff !important; /* White Text */
-            text-transform: uppercase;
-            letter-spacing: -1px;
+            text-transform: none; /* No uppercase */
+            letter-spacing: -0.5px;
             line-height: 1;
             margin-bottom: 8px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.1);
