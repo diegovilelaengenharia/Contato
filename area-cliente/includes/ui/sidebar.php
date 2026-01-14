@@ -97,21 +97,7 @@
             Novo Cliente
         </a>
 
-        <!-- Acesso Rápido -->
-         <div class="nav-item-group">
-            <div class="nav-item" onclick="this.parentElement.classList.toggle('open')" style="cursor:pointer; justify-content:space-between;">
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="material-symbols-rounded">bolt</span>
-                    Acesso Rápido
-                </div>
-                <span class="material-symbols-rounded arrow">expand_more</span>
-            </div>
-            <div class="nav-subitems">
-                 <a href="?importar=1" class="nav-subitem">Solicitações Web</a>
-                 <a href="https://oliveira.atende.net/atendenet?source=pwa" target="_blank" class="nav-subitem">Atende Oliveira</a>
-                 <a href="https://ridigital.org.br/VisualizarMatricula/DefaultVM.aspx?from=menu" target="_blank" class="nav-subitem">Matrículas</a>
-            </div>
-        </div>
+        <!-- Acesso Rápido Removed -->
     </div>
 
 </aside>

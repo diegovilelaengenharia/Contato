@@ -1347,5 +1347,26 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <!-- Modal Aprovar Removed (Included in cadastro.php) -->
+    <!-- FLOATING ACTION BUTTONS (External Links) -->
+    <div style="position:fixed; bottom:30px; right:30px; display:flex; flex-direction:column; gap:15px; z-index:9999;">
+        
+        <!-- Botão Matrícula -->
+        <a href="https://ridigital.org.br/VisualizarMatricula/DefaultVM.aspx?from=menu" target="_blank" 
+           style="display:flex; align-items:center; gap:10px; background:#2c3e50; color:white; padding:12px 20px; border-radius:50px; text-decoration:none; font-weight:700; box-shadow:0 4px 15px rgba(0,0,0,0.3); transition:transform 0.2s;"
+           onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <span class="material-symbols-rounded">description</span>
+            Matrícula
+        </a>
+
+        <!-- Botão IPM Prefeitura -->
+        <a href="https://oliveira.atende.net/atendenet?source=pwa" target="_blank" 
+           style="display:flex; align-items:center; gap:10px; background:#0d6efd; color:white; padding:12px 20px; border-radius:50px; text-decoration:none; font-weight:700; box-shadow:0 4px 15px rgba(13, 110, 253, 0.4); transition:transform 0.2s;"
+           onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <span class="material-symbols-rounded">account_balance</span>
+            IPM Prefeitura
+        </a>
+
+    </div>
+
 </body>
 </html>
