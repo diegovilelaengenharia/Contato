@@ -130,7 +130,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             height: 60px; /* Increased size (was 48px) */
         }
         .ph-title {
-            font-size: 0.95rem;
+            font-size: 1.2rem; /* Increased from 0.95rem */
             font-weight: 800; /* BOLD */
             color: var(--color-primary); /* Vilela Green */
             text-transform: uppercase;
