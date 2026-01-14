@@ -5,27 +5,68 @@
         <div class="nav-section">
             <h6 class="nav-header" style="color:#198754;">CLIENTE SELECIONADO</h6>
             
-            <div class="nav-client-info" style="display:flex; align-items:center; gap:12px; padding: 12px; background: #f8f9fa; border-radius: 12px; margin-bottom: 20px;">
-                <!-- AVATAR (Compact) -->
-                <div style="width:45px; height:45px; min-width:45px; position:relative;">
-                    <?php if($avatar_url): ?>
-                        <img src="<?= $avatar_url ?>" style="width:100%; height:100%; object-fit:cover; border-radius:50%; border:2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                    <?php else: ?>
-                        <div style="width:100%; height:100%; background:#d1e7dd; color:#146c43; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem; font-weight:800; border:2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                            <?= strtoupper(substr($cliente_ativo['nome'], 0, 1)) ?>
-                        </div>
-                    <?php endif; ?>
-                </div>
+            <!-- CLIENTE HEADER & AÇÕES -->
+            <div class="nav-client-card" style="background: white; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border:1px solid #eee; overflow:hidden;">
+                
+                <!-- Info Principal -->
+                <div style="padding: 15px; display:flex; align-items:center; gap:12px; border-bottom:1px solid #f0f0f0;">
+                    <!-- Avatar -->
+                    <div style="width:42px; height:42px; min-width:42px; position:relative;">
+                        <?php if($avatar_url): ?>
+                            <img src="<?= $avatar_url ?>" style="width:100%; height:100%; object-fit:cover; border-radius:50%; border:2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <?php else: ?>
+                            <div style="width:100%; height:100%; background:#198754; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.1rem; font-weight:700; border:2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                <?= strtoupper(substr($cliente_ativo['nome'], 0, 1)) ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
 
-                <div style="flex:1; overflow:hidden;">
-                    <h3 class="nav-client-name" style="font-size:0.9rem; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="<?= htmlspecialchars($cliente_ativo['nome']) ?>"><?= htmlspecialchars($cliente_ativo['nome']) ?></h3>
-                    
-                    <div style="font-size:0.75rem; color:#666; display:flex; flex-direction:column; gap:0;">
-                        <span>📱 <?= $detalhes['contato_tel'] ?? '--' ?></span>
-                        <!-- ID Removed as requested -->
+                    <!-- Texto -->
+                    <div style="flex:1; overflow:hidden;">
+                        <h3 style="font-size:0.9rem; margin:0 0 2px 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#333; font-weight:700;" title="<?= htmlspecialchars($cliente_ativo['nome']) ?>">
+                            <?= htmlspecialchars($cliente_ativo['nome']) ?>
+                        </h3>
+                        <div style="font-size:0.75rem; color:#777;">
+                            📱 <?= $detalhes['contato_tel'] ?? '--' ?>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Barra de Ações (Icones) -->
+                <div style="display:flex; background:#f8f9fa;">
+                    <a href="gerenciar_cliente.php?id=<?= $cliente_ativo['id'] ?>" class="client-action-btn" title="Editar Cadastro">
+                        <span class="material-symbols-rounded">edit</span>
+                    </a>
+                    <a href="relatorio_cliente.php?id=<?= $cliente_ativo['id'] ?>" target="_blank" class="client-action-btn" title="Resumo PDF">
+                        <span class="material-symbols-rounded">description</span>
+                    </a>
+                    <a href="area_cliente.php" target="_blank" class="client-action-btn" title="Ver como Cliente">
+                        <span class="material-symbols-rounded">visibility</span>
+                    </a>
+                    <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" class="client-action-btn btn-danger-hover" onclick="return confirm('Deseja excluir este cliente?')" title="Excluir Cliente">
+                        <span class="material-symbols-rounded">delete</span>
+                    </a>
+                </div>
             </div>
+
+            <style>
+                .client-action-btn {
+                    flex: 1;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 10px 0;
+                    color: #555;
+                    text-decoration: none;
+                    transition: all 0.2s;
+                    border-right: 1px solid #eee;
+                }
+                .client-action-btn:last-child { border-right: none; }
+                .client-action-btn:hover { background: #e9ecef; color: #198754; }
+                .client-action-btn .material-symbols-rounded { font-size: 1.1rem; }
+                
+                .btn-danger-hover:hover { background: #fff5f5 !important; color: #dc3545 !important; }
+            </style>
 
             <!-- NAVEGAÇÃO DO CLIENTE REMOVIDA (Agora são Abas no Topo) -->
 
