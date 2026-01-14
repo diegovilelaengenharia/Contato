@@ -51,22 +51,7 @@
     --safe-bottom: env(safe-area-inset-bottom, 20px);
 }
 
-/* --- DARK MODE OVERRIDES (The "Corporate Dark" Theme) --- */
-body.dark-mode {
-    --color-bg: #121212;
-    --color-surface: #1e2321;
-    --color-surface-hover: #2a302e;
 
-    --color-text: #e1e3e1;
-    --color-text-subtle: #a0a5a3;
-
-    --border-color: #333333;
-
-    /* In dark mode, shadows are less visible, rely on borders/surface contrast */
-    --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.5);
-    --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.4);
-    --shadow-nav: 0 -4px 20px rgba(0, 0, 0, 0.5);
-}
 
 /* Dark Mode is now default. Old overrides removed. */
 

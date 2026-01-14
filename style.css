@@ -1,20 +1,30 @@
 ﻿:root {
-    --color-bg: #e6f2ee;
+    /* --- VILELA PROFESSIONAL PALETTE --- */
+    --color-bg: #f8f9fa;
+    /* Clean Light Grey */
     --color-surface: #ffffff;
-    --color-surface-soft: #e6ede9;
-    --color-primary: #1b9a80;
-    --color-primary-strong: #23806d;
-    --color-accent: #efb524;
-    --color-text: #1f2521;
-    --color-text-subtle: #4e5a57;
-    --shadow-soft: 0 18px 48px -28px rgba(15, 111, 92, 0.55);
+    /* Pure White */
+    --color-surface-soft: #e9ecef;
+
+    /* Brand Colors */
+    --color-primary: #197e63;
+    /* Vilela Green */
+    --color-primary-strong: #146c43;
+    /* Darker Green for interactions */
+    --color-accent: #ffba35;
+    /* Window Yellow */
+
+    /* Typography */
+    --color-text: #343a40;
+    /* Charcoal */
+    --color-text-subtle: #6c757d;
+    /* Muted Grey */
+
+    /* Shapes & Shadows */
+    --shadow-soft: 0 10px 40px rgba(0, 0, 0, 0.06);
     --radius-large: 24px;
     --radius-small: 12px;
-    --font-base: "Outfit",
-        "Segoe UI",
-        "Helvetica Neue",
-        Arial,
-        sans-serif;
+    --font-base: "Outfit", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 }
 
 
@@ -30,7 +40,8 @@ body {
     min-height: 100vh;
     font-family: var(--font-base);
     line-height: 1.6;
-    background: radial-gradient(circle at top, rgba(19, 111, 92, 0.12), transparent 55%), var(--color-bg);
+    background: var(--color-bg);
+    /* Clean solid background */
     color: var(--color-text);
     display: flex;
     align-items: center;
@@ -98,22 +109,22 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 10px 20px;
+    padding: 10px 24px;
     border-radius: 999px;
-    background: linear-gradient(135deg, #4fb09b, #136f5c);
+    background: var(--color-primary);
     color: #ffffff;
     font-weight: 600;
     letter-spacing: 0.02em;
     text-decoration: none;
-    box-shadow: 0 8px 24px -6px rgba(19, 111, 92, 0.4);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 4px 12px rgba(25, 126, 99, 0.25);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .client-area-button:hover,
 .client-area-button:focus-visible {
     transform: translateY(-2px);
-    box-shadow: 0 12px 32px -8px rgba(19, 111, 92, 0.5);
-    background: linear-gradient(135deg, #5ccbb0, #16806a);
+    box-shadow: 0 6px 16px rgba(25, 126, 99, 0.35);
+    background: var(--color-primary-strong);
 }
 
 .client-area-button:focus-visible {
@@ -125,22 +136,24 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 10px 20px;
+    padding: 10px 24px;
     border-radius: 999px;
-    background: linear-gradient(135deg, #efb524, #dfa210);
-    color: #1f2521;
-    font-weight: 700;
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    color: var(--color-text);
+    font-weight: 600;
     letter-spacing: 0.02em;
     text-decoration: none;
-    box-shadow: 0 8px 24px -6px rgba(239, 181, 36, 0.4);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
 }
 
 .tips-button:hover,
 .tips-button:focus-visible {
     transform: translateY(-2px);
-    box-shadow: 0 12px 32px -8px rgba(239, 181, 36, 0.5);
-    background: linear-gradient(135deg, #fcd05f, #e5ab15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-color: var(--color-accent);
+    color: #b48308;
 }
 
 .tips-button:focus-visible {
@@ -243,16 +256,16 @@ body {
 }
 
 .hero-whatsapp {
-    background: linear-gradient(135deg, #4fb09b, #136f5c);
+    background: var(--color-primary);
     color: #ffffff;
-    box-shadow: 0 8px 24px -6px rgba(19, 111, 92, 0.4);
+    box-shadow: 0 4px 12px rgba(25, 126, 99, 0.25);
 }
 
 .hero-whatsapp:hover,
 .hero-whatsapp:focus-visible {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 32px -8px rgba(19, 111, 92, 0.5);
-    background: linear-gradient(135deg, #5ccbb0, #16806a);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(25, 126, 99, 0.35);
+    background: var(--color-primary-strong);
 }
 
 .hero-whatsapp:focus-visible {
@@ -415,22 +428,22 @@ body {
     padding: 14px 32px;
     font-weight: 600;
     letter-spacing: 0.02em;
-    background: linear-gradient(135deg, #4fb09b, #136f5c);
+    background: var(--color-primary);
     color: #ffffff;
     cursor: pointer;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 8px 24px -6px rgba(19, 111, 92, 0.4);
+    box-shadow: 0 4px 12px rgba(25, 126, 99, 0.25);
     font-size: 1.05rem;
 }
 
 .budget-form__submit:hover,
 .budget-form__submit:focus-visible {
     transform: translateY(-2px);
-    box-shadow: 0 12px 32px -8px rgba(19, 111, 92, 0.5);
-    background: linear-gradient(135deg, #5ccbb0, #16806a);
+    box-shadow: 0 6px 16px rgba(25, 126, 99, 0.35);
+    background: var(--color-primary-strong);
 }
 
 
@@ -511,32 +524,14 @@ body {
     z-index: 0;
 }
 
-.icon svg,
-.icon img {
-    width: 24px;
-    height: 24px;
-    fill: currentColor;
-    object-fit: contain;
+.icon .material-symbols-rounded {
+    font-size: 28px;
+    color: #ffffff;
     position: relative;
     z-index: 1;
 }
 
-#acesso-rapido .icon svg {
-    /* Aumentando zoom em 150% (24px * 1.5 = 36px) */
-    width: 36px;
-    height: 36px;
-}
 
-#regularizacoes .icon img {
-    /* Aumentando zoom em ~40% (28px * 1.4 = ~40px) */
-    width: 40px;
-    height: 40px;
-}
-
-#projetos .icon img {
-    width: 40px;
-    height: 40px;
-}
 
 .link-card:hover .icon,
 .link-card:focus-visible .icon {
@@ -616,12 +611,12 @@ body {
 }
 
 .floating-btn--whatsapp {
-    --btn-bg: #25d366;
+    --btn-bg: var(--color-primary);
 }
 
 .floating-btn--whatsapp:hover {
-    background: #20bd5a;
-    box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4);
+    background: var(--color-primary-strong);
+    box-shadow: 0 6px 16px rgba(25, 126, 99, 0.4);
 }
 
 .floating-btn--instagram {
