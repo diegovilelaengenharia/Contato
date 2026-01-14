@@ -119,39 +119,58 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             border: 1px solid rgba(0,0,0,0.05);
         }
         .ph-top {
-            background: #f2f7f5; /* Light Green/Grey for contrast */
-            padding: 50px 32px !important; /* FORCE INCREASED HEIGHT */
+            background: #fbfdfc; /* Almost white for cleaner look */
+            padding: 40px 32px !important;
             display: flex;
             align-items: center;
-            justify-content: flex-start; /* Logo left, Text right */
-            gap: 30px; /* Space between logo and text */
+            justify-content: flex-start;
+            gap: 0; /* Gap handled by padding/margin for divider */
             border-bottom: 1px solid #e0e0e0;
         }
+        .ph-logo {
+            padding-right: 30px;
+            margin-right: 30px;
+            border-right: 3px solid var(--color-accent); /* GOLD DIVIDER */
+            display: flex;
+            align-items: center;
+        }
         .ph-logo img {
-            height: 115px !important; /* Reduced 30% (160 -> 115) */
+            height: 110px !important; /* Balanced Size */
             display: block;
             width: auto;
         }
         .ph-title {
-            font-size: 2.4rem; /* Increased 30% (1.8 -> 2.4) */
-            font-weight: 800; /* Extra Bold */
-            color: var(--color-primary); /* Vilela Green */
+            font-size: 2.2rem; /* Big & Impactful */
+            font-weight: 900; /* Heavy Weight */
+            color: var(--color-primary);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            line-height: 1.1;
-            margin-bottom: 4px;
+            line-height: 1;
+            margin-bottom: 6px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Subtle depth */
         }
         .ph-subtitle {
-            font-size: 0.65rem; /* Reduced by ~30% (0.9rem -> 0.65rem) */
-            color: #6c757d; /* Muted grey */
-            font-weight: 500;
-            letter-spacing: 0.2px;
+            font-size: 0.85rem;
+            color: #777;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            font-style: italic; /* Elegant touch */
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .ph-subtitle::before {
+            content: "";
+            display: inline-block;
+            width: 20px;
+            height: 1px;
+            background: var(--color-accent); /* Gold dash */
         }
         .ph-header-text {
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: flex-start; /* Ensure left align */
+            align-items: flex-start;
         }
         .ph-user-bar {
             background: #fff; /* White background */
