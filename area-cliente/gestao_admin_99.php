@@ -745,28 +745,19 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
 
 
 
-            <?php elseif($active_tab == 'docs_iniciais'): ?>
-                <!-- DOCUMENTOS INICIAIS CONTENT (Azul) -->
-                 <?php 
+                <!-- DOCUMENTOS INICIAIS CONTENT (Azul Moderno) -->
+                <?php 
                     $docs_config = require 'config/docs_config.php';
                     $processos = $docs_config['processes'];
                     $todos_docs = $docs_config['document_registry'];
                     
-                    // Fetch entregues
-                    $stmt_entregues = $pdo->prepare("SELECT doc_chave FROM processo_docs_entregues WHERE cliente_id = ?");
-                    $stmt_entregues->execute([$cliente_ativo['id']]);
-                    $entregues = $stmt_entregues->fetchAll(PDO::FETCH_COLUMN);
-
                     $active_proc_key = $detalhes['tipo_processo_chave'] ?? '';
                     
-                    // Se form enviado
+                    // --- LÓGICA DE ATUALIZAÇÃO (Backend) ---
                     if(isset($_POST['update_docs_settings'])) {
-                        // 1. Save Transaction Type
+                        // 1. Salvar Tipo de Processo e Observações
                         $new_proc = $_POST['tipo_processo_chave'];
                         
-                        // Busca o título legível para atualizar o cabeçalho (tipo_servico)
-                        $titulo_servico = isset($processos[$new_proc]) ? $processos[$new_proc]['titulo'] : null;
-
                         // Check if record exists
                         $check = $pdo->prepare("SELECT id FROM processo_detalhes WHERE cliente_id = ?");
                         $check->execute([$cliente_ativo['id']]);
@@ -777,7 +768,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             $pdo->prepare("INSERT INTO processo_detalhes (cliente_id, tipo_processo_chave, observacoes_gerais) VALUES (?, ?, ?)")->execute([$cliente_ativo['id'], $new_proc, $_POST['observacoes_gerais']??'']);
                         }
                         
-                        // 2. Process Actions (New Workflow)
+                        // 2. Processar Ações nos Documentos (Aprovar/Rejeitar)
                         if(isset($_POST['action_doc'])) {
                             $act = $_POST['action_doc'];
                             $d_key = $_POST['doc_chave'];
@@ -791,50 +782,88 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                 if($exists) {
                                     $pdo->prepare("UPDATE processo_docs_entregues SET status = 'aprovado' WHERE id = ?")->execute([$exists['id']]);
                                 } else {
-                                    // Manually approve without file (Manual Check)
+                                    // Aprovação manual sem arquivo
                                     $pdo->prepare("INSERT INTO processo_docs_entregues (cliente_id, doc_chave, status, data_entrega) VALUES (?, ?, 'aprovado', NOW())")->execute([$cliente_ativo['id'], $d_key]);
                                 }
                             }
                             elseif($act == 'reopen') {
-                                // Reopen -> Back to 'em_analise' (if file exists) or 'pendente'
                                 if($exists) {
-                                    // Check if has file
-                                    $pdo->prepare("UPDATE processo_docs_entregues SET status = 'em_analise' WHERE id = ?")->execute([$exists['id']]);
+                                    // Reabrir: volta para em_analise se tiver arquivo, senão deleta a aprovação manual
+                                    $check_file = $pdo->prepare("SELECT arquivo_path FROM processo_docs_entregues WHERE id = ?");
+                                    $check_file->execute([$exists['id']]);
+                                    $has_file = $check_file->fetchColumn();
+
+                                    if($has_file) {
+                                        $pdo->prepare("UPDATE processo_docs_entregues SET status = 'em_analise' WHERE id = ?")->execute([$exists['id']]);
+                                    } else {
+                                        $pdo->prepare("DELETE FROM processo_docs_entregues WHERE id = ?")->execute([$exists['id']]);
+                                    }
                                 }
                             }
                             elseif($act == 'reject') {
-                                // Reject -> DELETE record (Reset)
-                                // Optional: Delete file physically? Maybe safer to keep file in uploads folder but remove DB ref.
+                                // Rejeitar: remove registro (reset status p/ pendente no front)
                                 if($exists) {
                                     $pdo->prepare("DELETE FROM processo_docs_entregues WHERE id = ?")->execute([$exists['id']]);
                                 }
                             }
                         }
                         
-                        // Clean redirect
-                        echo "<script>window.location.href='?cliente_id={$cliente_ativo['id']}&tab=docs_iniciais&msg=docs_updated';</script>";
+                        // Refresh
+                        echo "<script>window.location.href='?cliente_id={$cliente_ativo['id']}&tab=docs_iniciais&msg=saved';</script>";
                     }
                 ?>
-                <div class="admin-tab-content" style="border-top: 4px solid #198754;">
-                    <div class="admin-header-row">
-                        <div>
-                            <h3 class="admin-title" style="color:#198754;">📑 Documentos Iniciais <small style="font-size:0.7rem;">(v3.1 Fix)</small></h3>
-                            <p class="admin-subtitle">Defina o tipo de processo e controle a entrega de documentos.</p>
-                        </div>
-                        
-                         <button type="submit" form="formDocs" name="update_docs_settings" class="btn-save" style="background:#198754; color:white; border:none; padding:10px 25px; box-shadow:0 4px 15px rgba(25, 135, 84, 0.3);">
-                            💾 Salvar Alterações
-                        </button>
-                    </div>
 
-                    <form id="formDocs" method="POST">
+                <!-- ESTILOS ESPECÍFICOS DA ABA -->
+                <style>
+                    .docs-header { background: #f0f7ff; padding: 20px; border-radius: 8px; border: 1px solid #cce5ff; margin-bottom: 25px; }
+                    .proc-select { padding: 10px; font-size: 1rem; border: 2px solid #0d6efd; border-radius: 6px; color: #0d6efd; font-weight: 600; width: 100%; max-width: 400px; outline: none; background: white; cursor: pointer; }
+                    .proc-select:focus { box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25); }
+                    
+                    .section-title { font-size: 1.1rem; font-weight: 700; color: #444; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #eee; display: flex; align-items: center; gap: 8px; }
+                    
+                    .doc-card-admin { display: flex; align-items: center; justify-content: space-between; background: white; border: 1px solid #e0e0e0; padding: 15px; border-radius: 8px; margin-bottom: 10px; transition: all 0.2s; gap: 15px; }
+                    .doc-card-admin:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.05); transform: translateY(-2px); border-color: #becfda; }
+                    
+                    .dca-info { display: flex; align-items: center; gap: 15px; flex: 1; }
+                    .dca-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+                    .dca-text h4 { margin: 0 0 4px 0; font-size: 0.95rem; color: #333; font-weight: 600; }
+                    .dca-text span { font-size: 0.8rem; color: #666; }
+                    
+                    .dca-file { display: inline-flex; align-items: center; gap: 5px; background: #e9ecef; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; color: #495057; text-decoration: none; font-weight: 500; transition: 0.2s; white-space: nowrap; max-width: 200px; overflow: hidden; text-overflow: ellipsis; }
+                    .dca-file:hover { background: #dde2e6; color: #000; }
+                    
+                    .dca-actions { display: flex; gap: 8px; }
+                    .btn-act { border: none; width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-size: 1rem; }
+                    .btn-act:hover { transform: scale(1.1); filter: brightness(0.95); }
+                    
+                    /* Status Colors */
+                    .st-pendente { background: #f8f9fa; color: #adb5bd; border: 1px solid #dee2e6; }
+                    .st-analise  { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+                    .st-aprovado { background: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; }
+                    .st-rejeitado{ background: #f8d7da; color: #842029; border: 1px solid #f5c2c7; }
+                </style>
+
+                <div class="admin-tab-content" style="border-top: 4px solid #0d6efd;">
+                    
+                    <form id="formDocsGlobal" method="POST">
                         <input type="hidden" name="update_docs_settings" value="1">
                         
-                        <div class="form-card" style="box-shadow:none; border:1px solid #eee; padding:20px; margin-bottom:20px;">
-                            <div style="margin-bottom:15px;">
-                                <label class="admin-form-label">Tipo de Processo (Define a Checklist)</label>
-                                <select name="tipo_processo_chave" class="admin-form-input" onchange="this.form.submit()" style="max-width:500px; font-weight:bold;">
-                                    <option value="">-- Selecione o Processo --</option>
+                        <!-- HEADER CONFIG DO PROCESSO -->
+                        <div class="admin-header-row">
+                            <div>
+                                <h3 class="admin-title" style="color:#0d6efd;">📑 Checklist de Documentos</h3>
+                                <p class="admin-subtitle">Gerencie o recebimento e aprovação de documentos do cliente.</p>
+                            </div>
+                            <button type="submit" class="btn-save" style="background:#0d6efd; color:white; border:none; padding:10px 25px;">
+                                💾 Salvar Alterações
+                            </button>
+                        </div>
+
+                        <div class="docs-header">
+                            <div style="margin-bottom: 20px;">
+                                <label style="display:block; margin-bottom:8px; font-weight:600; color:#444;">Selecione o Tipo de Processo:</label>
+                                <select name="tipo_processo_chave" class="proc-select" onchange="this.form.submit()">
+                                    <option value="">-- Selecione para carregar checklist --</option>
                                     <?php foreach($processos as $key => $proc): ?>
                                         <option value="<?= $key ?>" <?= $active_proc_key == $key ? 'selected' : '' ?>>
                                             <?= htmlspecialchars($proc['titulo']) ?>
@@ -843,130 +872,143 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                 </select>
                             </div>
                             
-                             <div>
-                                <label class="admin-form-label" style="color:#198754;">📝 Observações do Engenheiro (Aparece para o cliente)</label>
-                                <textarea name="observacoes_gerais" class="admin-form-input" rows="3" placeholder="Ex: Aguardando emissão do protocolo..." style="resize:vertical;"><?= htmlspecialchars($detalhes['observacoes_gerais'] ?? '') ?></textarea>
+                            <div>
+                                <label style="display:block; margin-bottom:8px; font-weight:600; color:#444;">📝 Observações (Visível para o Cliente):</label>
+                                <textarea name="observacoes_gerais" class="admin-form-input" rows="2" placeholder="Ex: Documentos recebidos, iniciando análise..."><?= htmlspecialchars($detalhes['observacoes_gerais'] ?? '') ?></textarea>
                             </div>
                         </div>
-
-                        <?php if($active_proc_key && isset($processos[$active_proc_key])): 
-                            $proc_data = $processos[$active_proc_key];
-                            $doc_list = array_merge($proc_data['docs_obrigatorios'], $proc_data['docs_excepcionais']);
-
-                            // Fetch detailed docs info map
-                            $stmt_map = $pdo->prepare("SELECT doc_chave, arquivo_path, nome_original, data_entrega, status FROM processo_docs_entregues WHERE cliente_id = ?");
-                            $stmt_map->execute([$cliente_ativo['id']]);
-                            $entregues_map = [];
-                            foreach($stmt_map->fetchAll(PDO::FETCH_ASSOC) as $row) {
-                                $entregues_map[$row['doc_chave']] = $row;
-                            }
-                        ?>
-                            <!-- TABLE VIEW for Approval -->
-                            <div class="table-container" style="margin-top:20px;">
-                                <table class="admin-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Documento Exigido</th>
-                                            <th style="width:150px;">Status</th>
-                                            <th>Arquivo</th>
-                                            <th style="text-align:right; width:140px;">Ações</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach($doc_list as $key => $doc_name): 
-                                            // Get Data
-                                            $doc_data = $entregues_map[$key] ?? null;
-                                            $status = $doc_data['status'] ?? 'pendente';
-                                            $has_file = !empty($doc_data['arquivo_path']);
-                                            
-                                            // Status Badge Logic
-                                            $badge_class = 'warning'; $badge_text = 'PENDENTE';
-                                            if($status == 'em_analise') { $badge_class = 'info'; $badge_text = 'EM ANÁLISE'; }
-                                            if($status == 'aprovado') { $badge_class = 'success'; $badge_text = 'APROVADO'; }
-                                            if($status == 'rejeitado') { $badge_class = 'danger'; $badge_text = 'REJEITADO'; }
-                                        ?>
-                                            <tr>
-                                                <td>
-                                                    <div style="font-weight:600; color:#333;"><?= htmlspecialchars($doc_name) ?></div>
-                                                    <div style="font-size:0.75rem; color:#888;">Chave: <?= $key ?></div>
-                                                </td>
-                                                <td>
-                                                    <span class="status-badge <?= $badge_class ?>"><?= $badge_text ?></span>
-                                                </td>
-                                                <td>
-                                                    <?php if($has_file): ?>
-                                                        <a href="<?= htmlspecialchars($doc_data['arquivo_path']) ?>" target="_blank" style="text-decoration:none; color:#0d6efd; display:flex; align-items:center; gap:5px; font-weight:500;">
-                                                            <span class="material-symbols-rounded">description</span>
-                                                            <?= htmlspecialchars($doc_data['nome_original'] ?? 'Ver Arquivo') ?>
-                                                        </a>
-                                                        <div style="font-size:0.7rem; color:#aaa; margin-top:2px;">
-                                                            <?= date('d/m/Y H:i', strtotime($doc_data['data_entrega'])) ?>
-                                                        </div>
-                                                    <?php else: ?>
-                                                        <span style="color:#ccc; font-style:italic; font-size:0.85rem;">Nenhum arquivo</span>
-                                                    <?php endif; ?>
-                                                </td>
-                                                <td style="text-align:right;">
-                                                    <div style="display:flex; justify-content:flex-end; gap:5px;">
-                                                        <?php if($status == 'aprovado'): ?>
-                                                            <!-- Reopen -->
-                                                            <form method="POST">
-                                                                <input type="hidden" name="update_docs_settings" value="1">
-                                                                <input type="hidden" name="action_doc" value="reopen">
-                                                                <input type="hidden" name="doc_chave" value="<?= $key ?>">
-                                                                <input type="hidden" name="tipo_processo_chave" value="<?= $active_proc_key ?>">
-                                                                <button type="submit" class="btn-icon" style="background:#fff3cd; color:#856404; border:1px solid #ffeeba;" title="Reabrir">↩️</button>
-                                                            </form>
-                                                        <?php else: ?>
-                                                            <?php if($has_file || $status == 'pendente'): ?>
-                                                                <!-- Accept -->
-                                                                <form method="POST">
-                                                                    <input type="hidden" name="update_docs_settings" value="1">
-                                                                    <input type="hidden" name="action_doc" value="approve">
-                                                                    <input type="hidden" name="doc_chave" value="<?= $key ?>">
-                                                                    <input type="hidden" name="tipo_processo_chave" value="<?= $active_proc_key ?>">
-                                                                    <button type="submit" class="btn-icon" style="background:#d1e7dd; color:#198754; border:1px solid #badbcc;" title="Aprovar">✅</button>
-                                                                </form>
-                                                            <?php endif; ?>
-                                                            
-                                                            <!-- Reject/Reset -->
-                                                            <form method="POST" onsubmit="return confirm('Recusar/Limpar este documento?')">
-                                                                <input type="hidden" name="update_docs_settings" value="1">
-                                                                <input type="hidden" name="action_doc" value="reject">
-                                                                <input type="hidden" name="doc_chave" value="<?= $key ?>">
-                                                                <input type="hidden" name="tipo_processo_chave" value="<?= $active_proc_key ?>">
-                                                                <button type="submit" class="btn-icon" style="background:#f8d7da; color:#dc3545; border:1px solid #f5c2c7;" title="Rejeitar">🗑️</button>
-                                                            </form>
-                                                        <?php endif; ?>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-
-
-                             <!-- CSS para Tabela (Novo) -->
-                             <style>
-                                .admin-table { width:100%; border-collapse:collapse; margin-top:10px; }
-                                .admin-table th { text-align:left; padding:12px 15px; background:#f8f9fa; color:#444; border-bottom:2px solid #ddd; font-weight:600; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.5px; }
-                                .admin-table td { padding:15px; border-bottom:1px solid #eee; vertical-align:middle; }
-                                .admin-table tr:hover { background: #fdfdfd; }
-                                .status-badge { display:inline-block; padding:5px 10px; border-radius:12px; font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
-                                .status-badge.warning { background:#fff3cd; color:#856404; }
-                                .status-badge.info { background:#cff4fc; color:#055160; }
-                                .status-badge.success { background:#d1e7dd; color:#0f5132; }
-                                .status-badge.danger { background:#f8d7da; color:#842029; }
-                                .btn-icon { width:32px; height:32px; display:inline-flex; align-items:center; justify-content:center; border-radius:6px; cursor:pointer; font-size:1rem; transition:0.2s; text-decoration:none; }
-                                .btn-icon:hover { transform:scale(1.1); filter:brightness(0.95); }
-                             </style>
-
                     </form>
+
+                    <!-- LIST LISTING -->
+                    <?php if($active_proc_key && isset($processos[$active_proc_key])): 
+                        $proc_data = $processos[$active_proc_key];
+                        
+                        // Busca dados entregues mapeados
+                        $stmt_map = $pdo->prepare("SELECT doc_chave, arquivo_path, nome_original, data_entrega, status FROM processo_docs_entregues WHERE cliente_id = ?");
+                        $stmt_map->execute([$cliente_ativo['id']]);
+                        $entregues_map = [];
+                        foreach($stmt_map->fetchAll(PDO::FETCH_ASSOC) as $row) {
+                            $entregues_map[$row['doc_chave']] = $row;
+                        }
+
+                        // Função Helper para Renderizar Card
+                        function renderDocCard($label, $key, $entregues_map, $active_proc_key) {
+                            global $pdo; // Access PDO inside function
+                            $doc_data = $entregues_map[$key] ?? null;
+                            $status = $doc_data['status'] ?? 'pendente';
+                            $has_file = !empty($doc_data['arquivo_path']);
+                            
+                            // Visual Props
+                            $color = '#adb5bd'; $icon = 'check_box_outline_blank'; $status_bg = '#f8f9fa'; $status_txt = 'Pendente';
+                            if($status == 'em_analise') { $color = '#ffc107'; $icon = 'hourglass_top'; $status_bg = '#fff3cd'; $status_txt = 'Em Análise'; }
+                            if($status == 'aprovado')   { $color = '#198754'; $icon = 'check_circle'; $status_bg = '#d1e7dd'; $status_txt = 'Aprovado'; }
+                            if($status == 'rejeitado')  { $color = '#dc3545'; $icon = 'error'; $status_bg = '#f8d7da'; $status_txt = 'Rejeitado'; }
+                            
+                            echo '<div class="doc-card-admin" style="border-left: 5px solid '.$color.';">';
+                                
+                                // Left: Info
+                                echo '<div class="dca-info">';
+                                    echo '<div class="dca-icon" style="background:'.$status_bg.'; color:'.$color.';"><span class="material-symbols-rounded">'.$icon.'</span></div>';
+                                    echo '<div class="dca-text">';
+                                        echo '<h4>'.htmlspecialchars($label).'</h4>';
+                                        
+                                        // Status Chip
+                                        echo '<span style="background:'.$status_bg.'; color:'.$color.'; padding:2px 8px; border-radius:10px; font-weight:700; font-size:0.7rem; text-transform:uppercase;">'.$status_txt.'</span>';
+                                        
+                                        // Metadata (Date)
+                                        if($has_file) {
+                                            echo ' <span style="margin-left:8px; font-size:0.75rem;">Entregue: '.date('d/m/y H:i', strtotime($doc_data['data_entrega'])).'</span>';
+                                        }
+                                    echo '</div>';
+                                echo '</div>';
+
+                                // Center: File Link
+                                echo '<div>';
+                                    if($has_file) {
+                                        echo '<a href="'.htmlspecialchars($doc_data['arquivo_path']).'" target="_blank" class="dca-file" title="'.$doc_data['nome_original'].'">
+                                                <span class="material-symbols-rounded" style="font-size:1rem;">description</span> 
+                                                '.htmlspecialchars($doc_data['nome_original']).'
+                                              </a>';
+                                    } else {
+                                        echo '<span style="font-size:0.8rem; color:#ccc; font-style:italic;">-- Sem arquivo --</span>';
+                                    }
+                                echo '</div>';
+
+                                // Right: Actions
+                                echo '<div class="dca-actions">';
+                                    // Form Wrappers for Actions
+                                    $common_hidden = '<input type="hidden" name="update_docs_settings" value="1">
+                                                      <input type="hidden" name="doc_chave" value="'.$key.'">
+                                                      <input type="hidden" name="tipo_processo_chave" value="'.$active_proc_key.'">';
+                                    
+                                    if($status == 'aprovado') {
+                                        // Reopen
+                                        echo '<form method="POST">'.$common_hidden.'
+                                                <input type="hidden" name="action_doc" value="reopen">
+                                                <button type="submit" class="btn-act" style="background:#fff3cd; color:#856404;" title="Reabrir / Desaprovar">↩️</button>
+                                              </form>';
+                                    } else {
+                                        // Approve
+                                        echo '<form method="POST">'.$common_hidden.'
+                                                <input type="hidden" name="action_doc" value="approve">
+                                                <button type="submit" class="btn-act" style="background:#d1e7dd; color:#198754;" title="Aprovar">✅</button>
+                                              </form>';
+                                        
+                                        // Reject (Only if not pending clean)
+                                        if($status != 'pendente' || $has_file) {
+                                            echo '<form method="POST" onsubmit="return confirm(\'Rejeitar e limpar este item?\')">'.$common_hidden.'
+                                                    <input type="hidden" name="action_doc" value="reject">
+                                                    <button type="submit" class="btn-act" style="background:#f8d7da; color:#dc3545;" title="Rejeitar / Limpar">🗑️</button>
+                                                  </form>';
+                                        }
+                                    }
+
+                                echo '</div>';
+
+                            echo '</div>';
+                        }
+                    ?>
+
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 40px; margin-top: 20px;">
+                        
+                        <!-- COLUMN 1: OBRIGATÓRIOS -->
+                        <div>
+                            <div class="section-title">
+                                <span style="background:#e8f5e9; color:#198754; padding:5px; border-radius:6px; font-size:1.1rem;">📋</span> 
+                                Documentos Obrigatórios
+                            </div>
+                            <?php foreach($proc_data['docs_obrigatorios'] as $doc_key): 
+                                $doc_label = $todos_docs[$doc_key] ?? $doc_key;
+                                renderDocCard($doc_label, $doc_key, $entregues_map, $active_proc_key);
+                            endforeach; ?>
+                        </div>
+
+                        <!-- COLUMN 2: EXCEPCIONAIS (Se houver) -->
+                        <?php if(!empty($proc_data['docs_excepcionais'])): ?>
+                            <div>
+                                <div class="section-title">
+                                    <span style="background:#fff3cd; color:#856404; padding:5px; border-radius:6px; font-size:1.1rem;">⚠️</span> 
+                                    Documentos Excepcionais (Opcionais)
+                                </div>
+                                <?php foreach($proc_data['docs_excepcionais'] as $doc_key): 
+                                    $doc_label = $todos_docs[$doc_key] ?? $doc_key;
+                                    renderDocCard($doc_label, $doc_key, $entregues_map, $active_proc_key);
+                                endforeach; ?>
+                            </div>
+                        <?php endif; ?>
+
+                    </div>
+
+                    <?php else: ?>
+                        <!-- Empty State -->
+                        <div style="text-align:center; padding: 60px 20px; color:#999;">
+                            <span style="font-size:4rem; display:block; margin-bottom:15px; opacity:0.5;">👆</span>
+                            <h3 style="color:#666;">Nenhum checklist carregado</h3>
+                            <p>Selecione o <b>Tipo de Processo</b> acima para visualizar a lista de documentos.</p>
+                        </div>
+                    <?php endif; ?>
+
                 </div>
-            <?php endif; ?>
-
-
             <?php elseif($active_tab == 'arquivos'): ?>
                 
                 <!-- ARQUIVOS CONTENT (Verde Vilela) -->
