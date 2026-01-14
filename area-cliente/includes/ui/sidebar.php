@@ -27,44 +27,7 @@
                 </div>
             </div>
 
-            <!-- NAVEGAÇÃO DO CLIENTE -->
-            <nav class="client-nav">
-                <!-- Perfil (Novo) -->
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=perfil" class="nav-item <?= ($active_tab=='perfil') ? 'active' : '' ?>">
-                    <span class="material-symbols-rounded">person</span>
-                    Perfil
-                </a>
-
-                <!-- TL -> Histórico -->
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="nav-item <?= ($active_tab=='andamento'||$active_tab=='cadastro') ? 'active' : '' ?>">
-                    <span class="material-symbols-rounded">history</span>
-                    Histórico
-                </a>
-
-                <!-- Docs -> Checklist -->
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=docs_iniciais" class="nav-item <?= ($active_tab=='docs_iniciais') ? 'active' : '' ?>">
-                    <span class="material-symbols-rounded">folder_open</span>
-                    Documentos
-                </a>
-
-                <!-- Pendências -->
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="nav-item <?= ($active_tab=='pendencias') ? 'active' : '' ?>">
-                    <span class="material-symbols-rounded">warning</span>
-                    Pendências
-                </a>
-
-                <!-- Financeiro -->
-                <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=financeiro" class="nav-item <?= ($active_tab=='financeiro') ? 'active' : '' ?>">
-                    <span class="material-symbols-rounded">paid</span>
-                    Financeiro
-                </a>
-
-                 <!-- Arquivos Finais -->
-                 <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=arquivos" class="nav-item <?= ($active_tab=='arquivos') ? 'active' : '' ?>">
-                    <span class="material-symbols-rounded">inventory_2</span>
-                    Arquivos
-                </a>
-            </nav>
+            <!-- NAVEGAÇÃO DO CLIENTE REMOVIDA (Agora são Abas no Topo) -->
 
             <div style="margin-top:20px; padding:15px; background:#f0f7ff; border-radius:8px; border:1px solid #cce5ff; text-align:center;">
                  <a href="gerenciar_cliente.php?id=<?= $cliente_ativo['id'] ?>" style="display:block; margin-bottom:8px; font-size:0.85rem; color:#0d6efd; text-decoration:none; font-weight:600;">✏️ Editar Dados</a>
