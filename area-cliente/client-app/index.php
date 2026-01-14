@@ -328,9 +328,9 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
                     <?php if($avatarPath && file_exists($avatarPath) && !is_dir($avatarPath)): ?>
                         <img src="<?= htmlspecialchars($avatarPath) ?>?v=<?= time() ?>" class="ph-avatar">
                     <?php else: ?>
-                        <!-- Fallback visual (Iniciais) -->
+                        <!-- Fallback visual (Ícone Genérico) -->
                         <div class="ph-avatar">
-                            <?= strtoupper(substr($cliente['nome'] ?? 'C', 0, 1)) ?>
+                            <span class="material-symbols-rounded">person</span>
                         </div>
                     <?php endif; ?>
                     
