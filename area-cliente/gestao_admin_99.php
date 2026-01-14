@@ -258,16 +258,19 @@ if ($cliente_ativo) {
                 </div>
 
                 <!-- ADMIN PROFILE (Moved from Sidebar) -->
-                <div style="display:flex; align-items:center; gap:15px; background:white; padding:8px 15px; border-radius:50px; box-shadow:0 2px 10px rgba(0,0,0,0.05); border:1px solid #f0f0f0;">
-                    <div style="text-align:right;">
-                        <div style="font-weight:700; color:#333; font-size:0.9rem; line-height:1.2;">Diego Vilela</div>
-                        <div style="font-size:0.75rem; color:#198754; font-weight:600;">Administrador</div>
+                <div style="background:white; padding:8px 15px; border-radius:30px; border:1px solid #e0e0e0; display:flex; align-items:center; gap:12px; box-shadow:0 2px 5px rgba(0,0,0,0.03);">
+                    <div style="text-align:right; line-height:1.2;">
+                        <span style="display:block; font-weight:700; color:#333; font-size:0.9rem;">Diego Vilela</span>
+                        <span style="display:block; font-size:0.75rem; color:#198754; font-weight:600;">Administrador</span>
                     </div>
-                    <div style="width:40px; height:40px; border-radius:50%; background:#f0f2f5; overflow:hidden; border:2px solid #fff; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
-                        <img src="../assets/foto-diego-new.jpg" onerror="this.src='https://ui-avatars.com/api/?name=Diego+Vilela&background=198754&color=fff'" style="width:100%; height:100%; object-fit:cover;">
-                    </div>
-                    <div style="height:25px; width:1px; background:#eee; margin:0 5px;"></div>
-                    <a href="logout.php" title="Sair" style="color:#dc3545; display:flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:50%; transition:0.2s;" onmouseover="this.style.background='#fff0f0'" onmouseout="this.style.background='transparent'">
+                    <img src="https://ui-avatars.com/api/?name=Diego+Vilela&background=e8f5e9&color=198754" style="width:38px; height:38px; border-radius:50%; border:2px solid #fff; box-shadow:0 2px 4px rgba(0,0,0,0.1);">
+
+                    <!-- NEW CONFIG BUTTON -->
+                    <a href="configuracoes.php" class="btn-icon-header" title="Configurações" style="text-decoration:none; color:#555; display:flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:50%; transition:background 0.2s;">
+                        <span class="material-symbols-rounded" style="font-size:1.2rem;">settings</span>
+                    </a>
+
+                    <a href="logout.php" class="btn-icon-header" title="Sair" style="text-decoration:none; color:#dc3545; display:flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:50%; transition:background 0.2s;">
                         <span class="material-symbols-rounded" style="font-size:1.2rem;">logout</span>
                     </a>
                 </div>
@@ -384,8 +387,53 @@ if ($cliente_ativo) {
                         border-radius: 3px;
                         transition: width 1s ease;
                     }
+                </style>
 
-                    < !-- TAB NAVIGATION PILLS --><div class="nav-pills">< !-- 1. Perfil --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=perfil" class="nav-pill <?= ($active_tab == 'perfil' || $active_tab == 'cadastro') ? 'active' : '' ?>"><span class="material-symbols-rounded">person</span>Perfil </a>< !-- 2. Abertura de Processo (Antigo Documentos) --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=docs_iniciais" class="nav-pill <?= ($active_tab == 'docs_iniciais') ? 'active' : '' ?>"><span class="material-symbols-rounded">folder_open</span>Abertura de Processo </a>< !-- 3. Linha do Tempo (Antigo Timeline) --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="nav-pill <?= ($active_tab == 'andamento') ? 'active' : '' ?>"><span class="material-symbols-rounded">history</span>Linha do Tempo </a>< !-- 4. Pendências --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="nav-pill <?= ($active_tab == 'pendencias') ? 'active' : '' ?>"><span class="material-symbols-rounded">warning</span>Pendências </a>< !-- 5. Financeiro --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=financeiro" class="nav-pill <?= ($active_tab == 'financeiro') ? 'active' : '' ?>"><span class="material-symbols-rounded">paid</span>Financeiro </a>< !-- 6. Documentos Finais (Antigo Arquivos) --><a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=arquivos" class="nav-pill <?= ($active_tab == 'arquivos') ? 'active' : '' ?>"><span class="material-symbols-rounded">inventory_2</span>Documentos Finais </a></div>< !-- Modal Timeline e Andamento --><?php require 'includes/modals/timeline.php'; ?>< !-- STYLE FOR FLEX LAYOUT & HIDDEN TABS --><style>.admin-container {
+                <!-- TAB NAVIGATION PILLS -->
+                <div class="nav-pills">
+                    <!-- 1. Perfil -->
+                    <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=perfil" class="nav-pill <?= ($active_tab == 'perfil' || $active_tab == 'cadastro') ? 'active' : '' ?>">
+                        <span class="material-symbols-rounded">person</span>
+                        Perfil
+                    </a>
+
+                    <!-- 2. Abertura de Processo -->
+                    <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=docs_iniciais" class="nav-pill <?= ($active_tab == 'docs_iniciais') ? 'active' : '' ?>">
+                        <span class="material-symbols-rounded">folder_open</span>
+                        Abertura de Processo
+                    </a>
+
+                    <!-- 3. Linha do Tempo -->
+                    <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento" class="nav-pill <?= ($active_tab == 'andamento') ? 'active' : '' ?>">
+                        <span class="material-symbols-rounded">history</span>
+                        Linha do Tempo
+                    </a>
+
+                    <!-- 4. Pendências -->
+                    <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=pendencias" class="nav-pill <?= ($active_tab == 'pendencias') ? 'active' : '' ?>">
+                        <span class="material-symbols-rounded">warning</span>
+                        Pendências
+                    </a>
+
+                    <!-- 5. Financeiro -->
+                    <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=financeiro" class="nav-pill <?= ($active_tab == 'financeiro') ? 'active' : '' ?>">
+                        <span class="material-symbols-rounded">paid</span>
+                        Financeiro
+                    </a>
+
+                    <!-- 6. Documentos Finais -->
+                    <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=arquivos" class="nav-pill <?= ($active_tab == 'arquivos') ? 'active' : '' ?>">
+                        <span class="material-symbols-rounded">inventory_2</span>
+                        Documentos Finais
+                    </a>
+                </div>
+
+                <!-- Modal Timeline e Andamento -->
+                <?php require 'includes/modals/timeline.php'; ?>
+
+                <!-- STYLE FOR FLEX LAYOUT & HIDDEN TABS -->
+                <style>
+                    .admin-container {
                         display: block !important;
                         /* Sidebar is fixed, so block is safer */
                         max-width: 100% !important;
@@ -1743,6 +1791,13 @@ if ($cliente_ativo) {
         <span class="material-symbols-rounded" style="font-size:1.4rem;">account_balance</span>
     </a>
 
+</div>
+
+<!-- TECHNICAL RESPONSIBLE FOOTER (Global Dashboard Footer) -->
+<div style="margin-top:50px; padding:25px; border-top:1px solid #e0e0e0; text-align:center; opacity:0.8;">
+    <span style="display: block; font-size: 0.7rem; color: #adb5bd; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom:4px;">Engenheiro Responsável</span>
+    <strong style="display: block; font-size: 0.95rem; color: #495057; line-height: 1.2;">Diego T. N. Vilela</strong>
+    <span style="display: block; font-size: 0.8rem; color: #888;">CREA 235.474/D</span>
 </div>
 
 </body>
