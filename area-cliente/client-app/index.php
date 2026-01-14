@@ -128,7 +128,7 @@ $porcentagem = round((($fase_index + 1) / count($fases_padrao)) * 100);
             border-bottom: 1px solid #e0e0e0;
         }
         .ph-logo img {
-            height: 60px; /* Increased size (was 48px) */
+            height: 80px; /* Increased size (30% boost) */
         }
         .ph-title {
             font-size: 1.2rem; /* Increased from 0.95rem */
