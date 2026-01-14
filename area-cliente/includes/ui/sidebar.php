@@ -26,15 +26,8 @@
         </a>
     </div>
 
-    <!-- TECHNICAL RESPONSIBLE FOOTER (Pinned to Bottom) -->
-    <div style="margin-top:auto; padding:20px; border-top:1px solid #f0f0f0; background: linear-gradient(to bottom, #fff 0%, #f1f8f5 100%); border-radius: 0 0 16px 16px; text-align:center; position:relative; overflow:hidden;">
-        <!-- Green Accent Line Bottom -->
-        <div style="position:absolute; bottom:0; left:0; width:100%; height:4px; background:#198754;"></div>
-
-        <span style="display: block; font-size: 0.65rem; color: #adb5bd; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; margin-bottom:2px;">Engenheiro Responsável</span>
-        <strong style="display: block; font-size: 0.85rem; color: #495057; line-height: 1.2;">Diego T. N. Vilela</strong>
-        <span style="display: block; font-size: 0.75rem; color: #888;">CREA 235.474/D</span>
-    </div>
+    <!-- TECHNICAL RESPONSIBLE FOOTER (REMOVED) -->
+    <!-- Content moved to main dashboard footer -->
 
 </aside>
 

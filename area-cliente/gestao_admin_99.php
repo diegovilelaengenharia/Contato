@@ -1793,12 +1793,74 @@ if ($cliente_ativo) {
 
 </div>
 
-<!-- TECHNICAL RESPONSIBLE FOOTER (Global Dashboard Footer) -->
-<div style="margin-top:50px; padding:25px; border-top:1px solid #e0e0e0; text-align:center; opacity:0.8;">
-    <span style="display: block; font-size: 0.7rem; color: #adb5bd; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom:4px;">Engenheiro Responsável</span>
-    <strong style="display: block; font-size: 0.95rem; color: #495057; line-height: 1.2;">Diego T. N. Vilela</strong>
-    <span style="display: block; font-size: 0.8rem; color: #888;">CREA 235.474/D</span>
-</div>
+<!-- GLOBAL DASHBOARD FOOTER (Full Vilela Style) -->
+<footer style="margin-top: 60px; border-top: 1px solid #eaeaea; background: #fff; padding: 40px 20px; text-align: center;">
+    <div style="max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 15px;">
+
+        <!-- Logo -->
+        <img src="../assets/logo-vilela-mix.png" alt="Vilela Engenharia" style="height: 40px; opacity: 0.9;">
+
+        <!-- Divider -->
+        <div style="width: 50px; height: 2px; background: #198754; opacity: 0.3; margin: 5px 0;"></div>
+
+        <!-- Engineer Info -->
+        <div style="line-height: 1.4;">
+            <span style="display: block; font-size: 0.75rem; color: #adb5bd; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 2px;">Engenheiro Responsável</span>
+            <strong style="display: block; font-size: 1rem; color: #2c3e50; font-weight: 700;">Diego T. N. Vilela</strong>
+            <span style="display: block; font-size: 0.85rem; color: #7f8c8d;">CREA 235.474/D</span>
+        </div>
+
+        <!-- Copyright -->
+        <div style="margin-top: 15px; font-size: 0.75rem; color: #ccc;">
+            &copy; <?= date('Y') ?> Vilela Engenharia. Todos os direitos reservados.
+        </div>
+    </div>
+</footer>
+
+<!-- STYLES FOR TABS (Ensuring they look like buttons) -->
+<style>
+    .nav-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 25px;
+        background: #fff;
+        padding: 10px;
+        border-radius: 12px;
+        border: 1px solid #eee;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+    }
+
+    .nav-pill {
+        text-decoration: none;
+        color: #555;
+        font-weight: 600;
+        font-size: 0.9rem;
+        padding: 8px 16px;
+        border-radius: 8px;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid transparent;
+    }
+
+    .nav-pill:hover {
+        background: #f8f9fa;
+        color: #198754;
+    }
+
+    .nav-pill.active {
+        background: #e8f5e9;
+        color: #198754;
+        border-color: #c3e6cb;
+        box-shadow: 0 2px 5px rgba(25, 135, 84, 0.1);
+    }
+
+    .nav-pill .material-symbols-rounded {
+        font-size: 1.2rem;
+    }
+</style>
 
 </body>
 
