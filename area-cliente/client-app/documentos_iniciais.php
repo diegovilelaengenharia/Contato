@@ -510,5 +510,8 @@ foreach($entregues_raw as $row) {
         window.history.replaceState({path:newUrl},'',newUrl);
     }
     </script>
+    
+    <?php endif; ?>
+    
 </body>
 </html>
