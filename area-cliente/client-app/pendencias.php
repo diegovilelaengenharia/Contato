@@ -141,7 +141,7 @@ if (ob_get_length()) ob_clean();
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
     
     <!-- STYLES -->
-    <link rel="stylesheet" href="css/style.css?v=4.1">
+    <link rel="stylesheet" href="css/style.css?v=4.2">
     
     <style>
         /* HEADER MODULE STYLE (VILELA PREMIUM) - PENDÊNCIAS */
@@ -188,12 +188,23 @@ if (ob_get_length()) ob_clean();
         
         /* Mobile overrides */
         @media (max-width: 480px) {
-            .page-header { flex-direction: column-reverse; gap: 15px; text-align: center; padding: 20px; align-items: center; }
-            .header-title-box { text-align: center; align-items: center; } 
-            .header-title-main { font-size: 1.5rem; }
-            .btn-back { width: auto; padding: 8px 25px; justify-content: center; font-size: 0.9rem; }
-            .page-header img { height: 45px !important; margin-bottom: 10px; }
-            .page-header > div:first-child { flex-direction: column-reverse; width: 100%; gap: 15px; align-items: center; }
+            .page-header { 
+                padding: 15px 20px; 
+                flex-direction: row; 
+                align-items: center; 
+                justify-content: space-between;
+                border-radius: 0 0 25px 25px;
+            }
+            .header-title-box { text-align: right; margin-left: 10px; } 
+            .header-title-main { font-size: 1.1rem; line-height: 1.1; }
+            .header-title-sub { font-size: 0.75rem; display: none; }
+            .btn-back { 
+                width: auto; 
+                padding: 8px 16px; 
+                font-size: 0.85rem; 
+                flex-shrink: 0;
+            }
+            .page-header > div:first-child { width: auto; }
         }
 
         .section-title {

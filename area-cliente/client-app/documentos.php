@@ -42,7 +42,7 @@ if($drive_link) {
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
     
     <!-- STYLES -->
-    <link rel="stylesheet" href="css/style.css?v=4.1">
+    <link rel="stylesheet" href="css/style.css?v=4.2">
     
     <style>
         /* FORCE SOCIAL UPDATE v2 */
@@ -160,10 +160,22 @@ if($drive_link) {
 
         /* MOBILE OPTIMIZATION */
         @media (max-width: 480px) {
-            .page-header { flex-direction: column-reverse; gap: 15px; text-align: center; padding: 20px; align-items: center; }
-            .header-title-box { text-align: center; align-items: center; } 
-            .header-title-main { font-size: 1.5rem; }
-            .btn-back { width: auto; padding: 8px 25px; justify-content: center; font-size: 0.9rem; }
+            .page-header { 
+                padding: 15px 20px; 
+                flex-direction: row; 
+                align-items: center; 
+                justify-content: space-between;
+                border-radius: 0 0 25px 25px;
+            }
+            .header-title-box { text-align: right; margin-left: 10px; } 
+            .header-title-main { font-size: 1.1rem; line-height: 1.1; }
+            .header-title-sub { font-size: 0.75rem; display: none; }
+            .btn-back { 
+                width: auto; 
+                padding: 8px 16px; 
+                font-size: 0.85rem; 
+                flex-shrink: 0;
+            }
             
             /* Full Bleed Card on Mobile to maximize Iframe width */
             .drive-card {
@@ -198,8 +210,8 @@ if($drive_link) {
                  </div>
                  
                  <!-- Animated Icon -->
-                 <div style="background: rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.3); color: #ffffff; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; backdrop-filter: blur(5px); animation: docWiggle 4s ease-in-out infinite;">
-                    <span class="material-symbols-rounded" style="font-size: 2rem;">folder_open</span>
+                 <div style="color: #ffffff; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; animation: docWiggle 4s ease-in-out infinite;">
+                    <span class="material-symbols-rounded" style="font-size: 2.2rem; text-shadow: 0 2px 10px rgba(0,0,0,0.1);">folder_open</span>
                  </div>
             </div>
         </div>

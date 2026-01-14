@@ -65,7 +65,7 @@ $obs_atual = $stmt_obs->fetchColumn();
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
     
     <!-- STYLES -->
-    <link rel="stylesheet" href="css/style.css?v=4.1"> 
+    <link rel="stylesheet" href="css/style.css?v=4.2"> 
     
     <style>
         /* FORCE SOCIAL UPDATE v2 */
@@ -124,12 +124,23 @@ $obs_atual = $stmt_obs->fetchColumn();
         .header-title-sub { font-size: 0.8rem; opacity: 0.9; font-weight: 400; margin-top: 2px; color: #e9ecef; }
 
         @media (max-width: 480px) {
-            .page-header { flex-direction: column-reverse; gap: 15px; text-align: center; padding: 20px; align-items: center; }
-            .header-title-box { text-align: center; align-items: center; } 
-            .header-title-main { font-size: 1.5rem; } /* Turn up the volume */
-            .btn-back { width: auto; padding: 8px 25px; justify-content: center; font-size: 0.9rem; } /* Back to normal size */
-            .page-header img { height: 45px !important; margin-bottom: 10px; }
-            .page-header > div:first-child { flex-direction: column-reverse; width: 100%; gap: 15px; align-items: center; }
+            .page-header { 
+                padding: 15px 20px; 
+                flex-direction: row; /* Keep row */
+                align-items: center; 
+                justify-content: space-between;
+                border-radius: 0 0 25px 25px;
+            }
+            .header-title-box { text-align: right; margin-left: 10px; } 
+            .header-title-main { font-size: 1.1rem; line-height: 1.1; }
+            .header-title-sub { font-size: 0.75rem; display: none; } /* Simplify mobile */
+            .btn-back { 
+                width: auto; 
+                padding: 8px 16px; 
+                font-size: 0.85rem; 
+                flex-shrink: 0;
+            }
+            .page-header > div:first-child { width: auto; } /* Reset */
         }
 
         @keyframes compassWiggle {
@@ -160,8 +171,8 @@ $obs_atual = $stmt_obs->fetchColumn();
                  </div>
                  
                  <!-- Animated Compass Icon -->
-                 <div style="background: rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.3); color: #ffffff; width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; backdrop-filter: blur(5px); animation: compassWiggle 4s ease-in-out infinite;">
-                    <span class="material-symbols-rounded" style="font-size: 1.8rem;">compass_calibration</span>
+                 <div style="color: #ffffff; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; animation: compassWiggle 4s ease-in-out infinite;">
+                    <span class="material-symbols-rounded" style="font-size: 2.2rem; text-shadow: 0 2px 10px rgba(0,0,0,0.1);">compass_calibration</span>
                  </div>
             </div>
         </div>
