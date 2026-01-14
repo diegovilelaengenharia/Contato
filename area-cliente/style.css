@@ -1,51 +1,48 @@
 :root {
-    /* --- BRAND PALETTE (Premium) --- */
-    --color-primary: #146c43;
-    /* Vilela Green */
-    --color-primary-dark: #0f5132;
-    --color-primary-light: #d1e7dd;
-    --color-accent: #ffd700;
-    /* Gold Accent for Premium feel */
+    /* --- NEW CORPORATE DARK PALETTE --- */
+    --color-bg: #121212;
+    --color-surface: #1e2321;
+    --color-surface-hover: #2a302e;
+
+    --color-primary: #197e63;
+    --color-primary-light: #25a884;
+    --color-accent: #ffba35;
+
+    --color-text: #e1e3e1;
+    --color-text-subtle: #a0a5a3;
+    --color-danger: #e04f5f;
+    --color-success: #197e63;
+    /* Defined for status usage */
+    --color-warning: #ffba35;
+    /* Defined for status usage */
+
+    /* WhatsApp - Keep it unchanged or fit palette? Keeping standard */
     --color-accent-secondary: #25d366;
-    /* WhatsApp Green */
 
-    /* --- STATUS --- */
-    --color-success: #198754;
-    --color-warning: #ffc107;
-    --color-danger: #dc3545;
+    /* --- MAPPING LEGACY VARIABLES (LOGIC SAFETY) --- */
+    --bg-app: var(--color-bg);
+    --bg-card: var(--color-surface);
+    --bg-nav: var(--color-surface);
 
-    /* --- UI BASICS --- */
-    --bg-app: #f4f6f8;
-    /* Slightly more elegant gray */
-    --bg-card: #ffffff;
-    --bg-nav: #ffffff;
-    --text-main: #1a1a1a;
-    /* Darker text for contrast */
-    --text-muted: #666666;
-    --border-color: #e0e0e0;
+    --text-main: var(--color-text);
+    --text-muted: var(--color-text-subtle);
+    --border-color: #333333;
+    /* Subtle dark border */
 
-    /* --- SHAPES --- */
+    /* --- SHAPES & SHADOWS --- */
     --radius-sm: 12px;
     --radius-md: 20px;
     --radius-lg: 32px;
-    /* More rounded for modern feel */
-    --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.04);
-    --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.06);
-    --shadow-nav: 0 -4px 20px rgba(0, 0, 0, 0.05);
+
+    /* Dark mode optimized shadows */
+    --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.5);
+    --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-nav: 0 -4px 20px rgba(0, 0, 0, 0.5);
 
     --safe-bottom: env(safe-area-inset-bottom, 20px);
 }
 
-/* --- DARK MODE OVERRIDES --- */
-body.dark-mode {
-    --bg-app: #121212;
-    --bg-card: #1e1e1e;
-    --bg-nav: #1e1e1e;
-    --text-main: #ffffff;
-    --text-muted: #aaaaaa;
-    --border-color: #333333;
-    --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.2);
-}
+/* Dark Mode is now default. Old overrides removed. */
 
 /* --- RESET & BASE --- */
 * {
@@ -116,11 +113,12 @@ a {
 
 /* --- HEADER PREMIUM v3.0 --- */
 .header-premium-card {
-    background: linear-gradient(145deg, var(--color-primary), #0a3622);
-    color: white;
+    background: var(--color-surface);
+    color: var(--color-text);
     padding: 25px;
     border-radius: var(--radius-lg);
-    box-shadow: 0 15px 30px -10px rgba(20, 108, 67, 0.5);
+    box-shadow: none;
+    border: 1px solid var(--border-color);
     margin-bottom: 30px;
     position: relative;
     overflow: hidden;
@@ -270,11 +268,12 @@ a {
 
 /* --- STORY CARD (Refined) --- */
 .story-card {
-    background: linear-gradient(135deg, var(--color-primary) 0%, #0a3622 100%);
-    color: white;
+    background: var(--color-surface);
+    color: var(--color-text);
     padding: 25px;
     border-radius: var(--radius-lg);
-    box-shadow: 0 10px 20px -5px rgba(20, 108, 67, 0.4);
+    box-shadow: none;
+    border: 1px solid var(--border-color);
     margin-bottom: 25px;
 }
 
@@ -690,7 +689,7 @@ a {
     background: var(--bg-card);
     padding: 25px;
     border-radius: var(--radius-md);
-    box-shadow: var(--shadow-soft);
+    box-shadow: none;
     text-align: center;
     border: 1px solid var(--border-color);
 }
@@ -801,7 +800,9 @@ a {
     padding: 20px;
     margin-bottom: 15px;
     border-left: 5px solid var(--color-warning);
-    box-shadow: var(--shadow-soft);
+    box-shadow: none;
+    border: 1px solid var(--border-color);
+    /* border-left handles status */
 }
 
 .card-pendency.resolved {
@@ -1315,19 +1316,20 @@ dialog.app-modal[open] {
 .form-input {
     width: 100%;
     padding: 14px 16px;
-    border: 2px solid var(--border-color);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     font-size: 1rem;
     font-family: inherit;
-    background: var(--bg-app);
+    background: var(--color-surface-hover);
+    color: var(--color-text);
     transition: all 0.2s;
 }
 
 .form-input:focus {
     outline: none;
     border-color: var(--color-primary);
-    background: white;
-    box-shadow: 0 0 0 4px var(--color-primary-light);
+    background: var(--color-surface-hover);
+    box-shadow: 0 0 0 2px var(--color-primary-light);
 }
 
 .btn-login {
@@ -1384,6 +1386,39 @@ dialog.app-modal[open] {
 }
 
 .back-link:hover {
-    background: rgba(0, 0, 0, 0.05);
-    color: var(--text-main);
+    background: var(--color-surface-hover);
+    color: var(--color-text);
+}
+
+/* --- STATUS VISUALIZATION UTILITIES (DARK MODE) --- */
+.status-concluido {
+    color: var(--color-success) !important;
+    font-weight: 700;
+}
+
+.status-pendente {
+    color: var(--color-warning) !important;
+    font-weight: 700;
+}
+
+.status-erro {
+    color: var(--color-danger) !important;
+    font-weight: 700;
+}
+
+.badge-status-pendente {
+    background-color: var(--color-warning);
+    color: #121212;
+    /* Black text for readability on yellow */
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: 700;
+}
+
+.badge-status-concluido {
+    background-color: var(--color-success);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: 700;
 }
