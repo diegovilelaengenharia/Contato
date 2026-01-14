@@ -414,6 +414,43 @@
             transform: translateY(-1px);
         }
     </style>
+    <!-- Schema.org - SEO Local -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EngineeringService",
+      "name": "Vilela Engenharia",
+      "image": "https://vilela.eng.br/assets/logo.png",
+      "@id": "https://vilela.eng.br",
+      "url": "https://vilela.eng.br",
+      "telephone": "+5535984529577",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Minas Gerais",
+        "addressCountry": "BR"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": -21.25,
+        "longitude": -45.00
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday"
+        ],
+        "opens": "08:00",
+        "closes": "18:00"
+      },
+      "sameAs": [
+        "https://www.instagram.com/diegovilela.eng/"
+      ]
+    }
+    </script>
 </head>
 
 <body>
@@ -569,7 +606,8 @@
             </div>
             <!-- Bottom Bar -->
             <div class="footer-premium__bottom">
-                &copy; <span id="year">2026</span> Vilela Engenharia
+                &copy; <span id="year">2026</span> Vilela Engenharia •
+                <a href="#" class="footer-privacy-link">Política de Privacidade</a>
             </div>
         </footer>
 
@@ -799,6 +837,30 @@
                 }
             });
         }
+
+        // --- SCROLL REVEAL ANIMATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target); // Animate only once
+                    }
+                });
+            }, observerOptions);
+
+            const revealElements = document.querySelectorAll('.service-card, .btn-primary, .about-content, .footer-premium');
+            revealElements.forEach(el => {
+                el.classList.add('reveal'); // Ensure class is present
+                observer.observe(el);
+            });
+        });
     </script>
 </body>
 
