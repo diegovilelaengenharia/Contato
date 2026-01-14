@@ -852,16 +852,53 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         }
 
                         // Função Helper Render Doc Card Compacto
-                        function renderDocCard($label, $key, $entregues_map, $active_proc_key) {
+                        function renderDocCard($label, $key, $entregues_map, $active_proc_key, $tipo_obrigatoriedade) {
                             global $pdo; 
                             $doc_data = $entregues_map[$key] ?? null;
                             $status = $doc_data['status'] ?? 'pendente';
                             $has_file = !empty($doc_data['arquivo_path']);
                             
+                            // Default Colors
                             $color = '#adb5bd'; $icon = 'check_box_outline_blank'; $status_bg = '#f8f9fa'; $status_txt = 'Pendente';
-                            if($status == 'em_analise') { $color = '#ffc107'; $icon = 'hourglass_top'; $status_bg = '#fff8e1'; $status_txt = 'Em Análise'; }
-                            if($status == 'aprovado')   { $color = '#198754'; $icon = 'check_circle'; $status_bg = '#d1e7dd'; $status_txt = 'Aprovado'; }
-                            if($status == 'rejeitado')  { $color = '#dc3545'; $icon = 'error'; $status_bg = '#f8d7da'; $status_txt = 'Rejeitado'; }
+                            
+                            // Lógica Personalizada Solicitada
+                            if ($status == 'pendente') {
+                                if ($tipo_obrigatoriedade == 'obrigatorio') {
+                                    // Obrigatório não entregue -> VERMELHO
+                                    $color = '#dc3545'; 
+                                    $icon = 'priority_high'; 
+                                    $status_bg = '#f8d7da'; 
+                                    $status_txt = 'Pendente (Obrigatório)';
+                                } else {
+                                    // Excepcional não entregue -> AMARELO
+                                    $color = '#ffc107'; 
+                                    $icon = 'warning'; 
+                                    $status_bg = '#fff3cd'; 
+                                    $status_txt = 'Pendente (Opcional)';
+                                }
+                            } else {
+                                // Se tem status (em anlise, aprovado, rejeitado)
+                                if($status == 'em_analise') {
+                                    // Anexado (Em Análise) -> VERDE (Solicitado: "sempre q for annexado... transformar em verde")
+                                    // Vamos usar um verde um pouco diferente do aprovado para diferenciar sutilmente, ou o mesmo.
+                                    $color = '#198754'; 
+                                    $icon = 'hourglass_top'; 
+                                    $status_bg = '#e8f5e9'; // Verde bem claro
+                                    $status_txt = 'Anexado / Em Análise';
+                                }
+                                elseif($status == 'aprovado') {
+                                    $color = '#198754'; 
+                                    $icon = 'check_circle'; 
+                                    $status_bg = '#d1e7dd'; 
+                                    $status_txt = 'Aprovado';
+                                }
+                                elseif($status == 'rejeitado') {
+                                    $color = '#dc3545'; 
+                                    $icon = 'error'; 
+                                    $status_bg = '#f8d7da'; 
+                                    $status_txt = 'Rejeitado';
+                                }
+                            }
                             
                             echo '<div class="doc-card-admin" style="border-left: 4px solid '.$color.';">';
                                 
@@ -870,7 +907,14 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                                     echo '<div class="dca-icon" style="background:'.$status_bg.'; color:'.$color.';"><span class="material-symbols-rounded">'.$icon.'</span></div>';
                                     echo '<div class="dca-text">';
                                         echo '<h4 title="'.htmlspecialchars($label).'">'.htmlspecialchars($label).'</h4>';
+                                        
+                                        // Status Chip
                                         echo '<span style="background:'.$status_bg.'; color:'.$color.'; padding:1px 6px; border-radius:4px; font-weight:700; font-size:0.65rem; text-transform:uppercase;">'.$status_txt.'</span>';
+                                        
+                                        // Metadata (Date)
+                                        if($has_file) {
+                                           // Compact link next to status if needed, or just let the file link handle it
+                                        }
                                     echo '</div>';
                                 echo '</div>';
 
@@ -908,7 +952,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                         </div>
                         <?php foreach($proc_data['docs_obrigatorios'] as $doc_key): 
                             $doc_label = $todos_docs[$doc_key] ?? $doc_key;
-                            renderDocCard($doc_label, $doc_key, $entregues_map, $active_proc_key);
+                            renderDocCard($doc_label, $doc_key, $entregues_map, $active_proc_key, 'obrigatorio');
                         endforeach; ?>
                         
                         <!-- EXCEPCIONAIS (Se houver) -->
@@ -921,7 +965,7 @@ $active_tab = $_GET['tab'] ?? 'cadastro';
                             <div style="grid-column: 1 / -1; display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
                                 <?php foreach($proc_data['docs_excepcionais'] as $doc_key): 
                                     $doc_label = $todos_docs[$doc_key] ?? $doc_key;
-                                    renderDocCard($doc_label, $doc_key, $entregues_map, $active_proc_key);
+                                    renderDocCard($doc_label, $doc_key, $entregues_map, $active_proc_key, 'excepcional');
                                 endforeach; ?>
                             </div>
                         <?php endif; ?>
