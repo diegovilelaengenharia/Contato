@@ -668,16 +668,15 @@ body {
 }
 
 .floating-btn--vcard {
-    --btn-bg: var(--color-accent);
-    /* Gold */
+    background: linear-gradient(135deg, #ecd279 0%, #d4ac36 100%);
+    /* Champagne Gold */
     color: var(--color-text);
     /* Dark icon for contrast */
 }
 
 .floating-btn--vcard:hover {
-    background: #e6a72e;
-    /* Slightly darker gold */
-    box-shadow: 0 6px 16px rgba(255, 186, 53, 0.4);
+    background: linear-gradient(135deg, #f5db89 0%, #e0bc4e 100%);
+    box-shadow: 0 6px 16px rgba(212, 172, 55, 0.4);
     transform: scale(1.05) translateY(-2px);
 }
 
