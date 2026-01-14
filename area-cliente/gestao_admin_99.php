@@ -496,9 +496,15 @@ if($cliente_ativo) {
                     border-radius: 0 !important;
                     box-shadow: 2px 0 15px rgba(0,0,0,0.06);
                     background: #fff; /* Ensure solid background */
-                    padding-bottom: 50px; /* Prevent bottom cut-off */
+                    padding-bottom: 120px; /* Increased to prevent cutting */
                 }
                 
+                /* Custom Scrollbar for Sidebar */
+                aside.sidebar::-webkit-scrollbar { width: 6px; }
+                aside.sidebar::-webkit-scrollbar-track { background: transparent; }
+                aside.sidebar::-webkit-scrollbar-thumb { background: #dfe6e9; border-radius: 3px; }
+                aside.sidebar::-webkit-scrollbar-thumb:hover { background: #b2bec3; }
+
                 main {
                     display: block;
                     width: auto;
@@ -519,12 +525,15 @@ if($cliente_ativo) {
                         position: relative;
                         top: 0;
                         margin-bottom: 20px;
+                        height: auto;
+                        position: relative;
                     }
+                    main { margin-left: 0; width: 100%; max-width: 100%; }
                 }
             </style>
 
-            <!-- Modal Timeline e Andamento -->
-            <?php require 'includes/modals/timeline.php'; ?>
+            <!-- Modal Timeline e Andamento (Already included below) -->
+            <!-- REMOVED DUPLICATE INCLUDE OF timeline.php -->
             
             <!-- WINDOW CONTENT CONTAINER -->
             <?php 
