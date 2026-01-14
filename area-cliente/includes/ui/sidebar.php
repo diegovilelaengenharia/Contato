@@ -1,7 +1,32 @@
 <aside class="sidebar admin-nav-sidebar">
     
-    <!-- BRANDING HEADER (Adjusted) -->
-    <div style="text-align:center; padding: 30px 20px 15px 20px; margin-bottom: 20px;">
+    <!-- ADMIN PROFILE (Sidebar Header) -->
+    <div style="padding: 15px 15px 15px 15px; border-bottom: 1px solid #f0f0f0; margin-bottom: 15px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+            <!-- Avatar -->
+            <div style="width:38px; height:38px; border-radius:50%; background:#f0f2f5; overflow:hidden; border:2px solid #fff; box-shadow:0 2px 4px rgba(0,0,0,0.1); flex-shrink:0;">
+                <img src="../assets/foto-diego-new.jpg" onerror="this.src='https://ui-avatars.com/api/?name=Diego+Vilela&background=0D8ABC&color=fff'" style="width:100%; height:100%; object-fit:cover;">
+            </div>
+            
+            <!-- Info -->
+            <div style="flex:1; overflow:hidden; text-align:left;">
+                <div style="font-weight:700; color:#333; font-size:0.85rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Diego Vilela</div>
+                <div style="font-size:0.7rem; color:#888;">Administrador</div>
+            </div>
+
+            <!-- Settings (Icon Only) -->
+            <a href="admin_config.php" title="Configurações" style="color:#555; display:flex; padding:5px; border-radius:50%; transition:0.2s;" onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='transparent'">
+                <span class="material-symbols-rounded" style="font-size:1.1rem;">settings</span>
+            </a>
+            <!-- Logout (Icon Only) -->
+             <a href="logout.php" title="Sair" style="color:#dc3545; display:flex; padding:5px; border-radius:50%; transition:0.2s;" onmouseover="this.style.background='#fff0f0'" onmouseout="this.style.background='transparent'">
+                <span class="material-symbols-rounded" style="font-size:1.1rem;">logout</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- BRANDING HEADER -->
+    <div style="text-align:center; padding: 0 20px 15px 20px; margin-bottom: 20px;">
         <img src="../assets/logo.png" style="max-width: 90px; height: auto; margin-bottom: 15px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));">
         <h5 style="color: #6c757d; font-size: 0.85rem; font-weight: 800; letter-spacing: 1px; margin:0; text-transform: uppercase;">Painel Administrativo</h5>
     </div>

@@ -229,35 +229,10 @@ if($cliente_ativo) {
         
         <main style="padding-bottom: 80px;"> <!-- Padding for fixed footer area -->
             
-            <!-- GLOBAL HEADLINE & ADMIN PROFILE -->
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:30px; position:relative; z-index:1001;">
+            <!-- GLOBAL HEADLINE (Removed Admin Profile from here) -->
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                 <div>
                     <!-- Optional Page Title or Breadcrumb could go here -->
-                </div>
-
-                <!-- ADMIN PROFILE (Top Right) -->
-                <div style="display:flex; align-items:center; gap:12px; background:white; padding:6px 15px; border-radius:50px; box-shadow:0 4px 15px rgba(0,0,0,0.08); border:1px solid #f0f0f0;">
-                    
-                    <!-- Avatar (FIRST) -->
-                    <div style="width:40px; height:40px; border-radius:50%; background:#f0f2f5; overflow:hidden; border:2px solid #fff; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
-                       <img src="../assets/foto-diego-new.jpg" onerror="this.src='https://ui-avatars.com/api/?name=Diego+Vilela&background=0D8ABC&color=fff'" style="width:100%; height:100%; object-fit:cover;">
-                    </div>
-
-                    <!-- Info (SECOND) -->
-                    <div style="text-align:left; line-height:1.2; padding-right:10px; border-right:1px solid #eee;">
-                        <div style="font-weight:700; color:#333; font-size:0.9rem;">Diego Vilela</div>
-                        <div style="font-size:0.75rem; color:#777;">Administrador</div>
-                    </div>
-
-                    <!-- Menu Dropdown (Simplified as Buttons) -->
-                    <div style="display:flex; gap:6px; margin-left:5px;">
-                        <a href="admin_config.php" title="Configurações" style="width:34px; height:34px; display:flex; align-items:center; justify-content:center; border-radius:50%; color:#555; text-decoration:none; transition:0.2s; background:#f8f9fa;" onmouseover="this.style.background='#e9ecef'" onmouseout="this.style.background='#f8f9fa'">
-                            <span class="material-symbols-rounded" style="font-size:1.2rem;">settings</span>
-                        </a>
-                        <a href="logout.php" title="Sair" style="width:34px; height:34px; display:flex; align-items:center; justify-content:center; border-radius:50%; color:#dc3545; text-decoration:none; transition:0.2s; background:#fff5f5; border:1px solid #f5c2c7;" onmouseover="this.style.background='#f8d7da'" onmouseout="this.style.background='#fff5f5'">
-                            <span class="material-symbols-rounded" style="font-size:1.2rem;">logout</span>
-                        </a>
-                    </div>
                 </div>
             </div>
 
