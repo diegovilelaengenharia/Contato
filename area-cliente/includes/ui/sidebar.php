@@ -1,21 +1,21 @@
 <aside class="sidebar admin-nav-sidebar">
     
-    <!-- BRANDING HEADER -->
-    <div style="text-align:center; padding: 25px 15px 10px 15px; margin-bottom: 10px;">
-        <img src="../assets/logo.png" style="max-width: 130px; height: auto; margin-bottom: 12px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));">
-        <h5 style="color: #adb5bd; font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; margin:0; text-transform: uppercase;">Painel Administrativo</h5>
+    <!-- BRANDING HEADER (Adjusted) -->
+    <div style="text-align:center; padding: 30px 20px 15px 20px; margin-bottom: 20px;">
+        <img src="../assets/logo.png" style="max-width: 90px; height: auto; margin-bottom: 15px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));">
+        <h5 style="color: #6c757d; font-size: 0.85rem; font-weight: 800; letter-spacing: 1px; margin:0; text-transform: uppercase;">Painel Administrativo</h5>
     </div>
 
     <!-- SEÇÃO CLIENTE SELECIONADO (Topo) -->
     <?php if($cliente_ativo): ?>
         <div class="nav-section">
-            <h6 class="nav-header" style="color:#198754;">CLIENTE SELECIONADO</h6>
+            <h6 class="nav-header" style="color:#198754; font-size:0.8rem; letter-spacing:0.5px;">CLIENTE ATUAL</h6>
             
             <!-- CLIENTE HEADER & AÇÕES -->
-            <div class="nav-client-card" style="background: white; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border:1px solid #eee; overflow:hidden;">
+            <div class="nav-client-card" style="background: white; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); border:1px solid #f1f1f1; overflow:hidden;">
                 
                 <!-- Info Principal -->
-                <div style="padding: 15px; display:flex; align-items:center; gap:12px; border-bottom:1px solid #f0f0f0;">
+                <div style="padding: 15px; display:flex; align-items:center; gap:12px; border-bottom:1px solid #f8f9fa;">
                     <!-- Avatar -->
                     <div style="width:42px; height:42px; min-width:42px; position:relative;">
                         <?php if($avatar_url): ?>
@@ -38,7 +38,7 @@
                     </div>
                 </div>
 
-                <!-- Barra de Ações (Icones Coloridos) -->
+                <!-- Barra de Ações (Icones Coloridos e VERMELHOS onde precisa) -->
                 <div style="display:flex; background:#fff;">
                     <a href="gerenciar_cliente.php?id=<?= $cliente_ativo['id'] ?>" class="client-action-btn" style="color:#0d6efd;" title="Editar Cadastro">
                         <span class="material-symbols-rounded">edit</span>
@@ -49,7 +49,8 @@
                     <a href="area_cliente.php" target="_blank" class="client-action-btn" style="color:#198754;" title="Ver como Cliente">
                         <span class="material-symbols-rounded">visibility</span>
                     </a>
-                    <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" class="client-action-btn btn-danger-hover" onclick="return confirm('Deseja excluir este cliente?')" style="color:#dc3545;" title="Excluir Cliente">
+                    <!-- BOTAO EXCLUIR VERMELHO -->
+                    <a href="?delete_cliente=<?= $cliente_ativo['id'] ?>" class="client-action-btn btn-danger-hover" onclick="return confirm('Deseja excluir este cliente?')" style="color:#dc3545; background:#fff5f5;" title="Excluir Cliente">
                         <span class="material-symbols-rounded">delete</span>
                     </a>
                 </div>

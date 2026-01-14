@@ -561,7 +561,7 @@ if($cliente_ativo) {
                              <!-- Botão Apagar Histórico (Perigo) -->
                             <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento&del_all_hist=true" 
                                onclick="return confirm('ATENÇÃO EXTREMA: \n\nVocê está prestes a APAGAR TODO O HISTÓRICO deste processo.\n\nIsso limpará todas as movimentações, datas e logs.\n\nTem certeza absoluta que deseja fazer isso?');"
-                               style="background:#fff; color:#dc3545; padding:11px 16px; border:1px solid #f5c2c7; border-radius:12px; font-size:0.9rem; text-decoration:none; font-weight:600; display:flex; align-items:center; gap:6px; transition:all 0.2s;" title="Limpar Tudo">
+                               style="background:#fff5f5; color:#dc3545; padding:11px 16px; border:1px solid #f5c2c7; border-radius:12px; font-size:0.9rem; text-decoration:none; font-weight:700; display:flex; align-items:center; gap:6px; transition:all 0.2s;" title="Limpar Tudo">
                                 <span class="material-symbols-rounded">delete_sweep</span> Limpar
                             </a>
                         </div>
@@ -595,7 +595,7 @@ if($cliente_ativo) {
                                                 // Lógica de exibição de comentários estilizados
                                                 $parts = explode("||COMENTARIO_USER||", $h['descricao']);
                                                 // Permite HTML rico da primeira parte (descrição do sistema/admin)
-                                                // Mas previne XSS grosseiro se quiser, porem aqui confiamos no admin.
+                                                // But previne XSS grosseiro se quiser, porem aqui confiamos no admin.
                                                 // removemos htmlspecialchars e nl2br pois o CKEditor já formata p/ html
                                                 $sys_desc = $parts[0]; 
                                                 echo "<div style='color:var(--color-text-subtle); line-height:1.5; font-size:0.95rem;'>{$sys_desc}</div>";
@@ -612,7 +612,9 @@ if($cliente_ativo) {
                                         </td>
 
                                         <td style="text-align:center; vertical-align:top;">
-                                            <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento&del_hist=<?= $h['id'] ?>" onclick="confirmAction(event, 'ATENÇÃO: Deseja realmente apagar este histórico? Essa ação é irreversível.')" style="text-decoration:none; color:#dc3545; font-size:1.1rem; padding:5px;" title="Excluir Histórico">🗑️</a>
+                                            <a href="?cliente_id=<?= $cliente_ativo['id'] ?>&tab=andamento&del_hist=<?= $h['id'] ?>" onclick="confirmAction(event, 'ATENÇÃO: Deseja realmente apagar este histórico? Essa ação é irreversível.')" style="text-decoration:none; color:#dc3545; font-size:1.1rem; padding:8px; background:#fff5f5; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; transition:0.2s;" title="Excluir Histórico">
+                                                <span class="material-symbols-rounded" style="font-size:1.1rem;">delete</span>
+                                            </a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
