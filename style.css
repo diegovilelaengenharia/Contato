@@ -558,17 +558,17 @@ body {
 }
 
 .link-card--engineering {
-    --icon-bg: linear-gradient(135deg, #e9ecef 0%, #adb5bd 100%);
-    /* Soft Silver */
-    --icon-glow: rgba(173, 181, 189, 0.6);
-    --icon-border: rgba(255, 255, 255, 0.8);
+    --icon-bg: linear-gradient(135deg, #dee2e6 0%, #868e96 100%);
+    /* Silver um pouco mais forte */
+    --icon-glow: rgba(108, 117, 125, 0.5);
+    --icon-border: rgba(255, 255, 255, 0.9);
 }
 
 .link-card--consultancy {
-    --icon-bg: linear-gradient(135deg, #fff3b0 0%, #ffe66d 100%);
-    /* Soft Champagne */
-    --icon-glow: rgba(255, 230, 109, 0.6);
-    --icon-border: rgba(255, 255, 255, 0.8);
+    --icon-bg: linear-gradient(135deg, #ffe066 0%, #fcc419 100%);
+    /* Yellow/Gold mais intenso */
+    --icon-glow: rgba(250, 176, 5, 0.5);
+    --icon-border: rgba(255, 255, 255, 0.9);
 }
 
 .link-card::after {
