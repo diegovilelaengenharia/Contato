@@ -317,7 +317,7 @@ body {
     border-color: var(--color-primary);
 }
 
-.hero-client-btn {
+.hero-vcard-btn {
     background: linear-gradient(135deg, #ecd279 0%, #d4ac36 100%);
     /* Softer, Champagne Gold */
     color: #ffffff;
@@ -337,7 +337,7 @@ body {
     box-shadow: 0 4px 10px rgba(212, 172, 55, 0.25);
 }
 
-.hero-client-btn:hover {
+.hero-vcard-btn:hover {
     background: linear-gradient(135deg, #f5db89 0%, #e0bc4e 100%);
     /* Lighter on Hover */
     transform: translateY(-2px);
@@ -768,6 +768,17 @@ body {
 
 .floating-btn--email:hover {
     box-shadow: 0 6px 16px rgba(252, 74, 26, 0.4);
+}
+
+.floating-btn--client {
+    background: var(--color-primary-strong);
+    /* Green */
+    color: #ffffff;
+}
+
+.floating-btn--client:hover {
+    background: var(--color-primary);
+    box-shadow: 0 6px 16px rgba(25, 126, 99, 0.4);
 }
 
 .floating-btn--phone {
