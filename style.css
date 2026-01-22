@@ -53,8 +53,10 @@ body {
     min-height: 100vh;
     font-family: var(--font-base);
     line-height: 1.6;
-    background: var(--color-bg);
-    /* Clean solid background */
+    /* Clean solid background -> Now Gradient for Glass Effect */
+    background: radial-gradient(circle at 50% 0%, #ebf5f0 0%, #f4f6f8 100%);
+    background-attachment: fixed;
+    /* Clean atmosphere */
     color: var(--color-text);
     display: flex;
     align-items: center;
@@ -584,8 +586,14 @@ body {
 
 .link-card:hover,
 .link-card:focus-visible {
-    transform: translateY(-4px);
-    box-shadow: 0 26px 52px -30px rgba(15, 111, 92, 0.78);
+    transform: translateY(-4px) scale(1.01);
+    background: rgba(255, 255, 255, 0.85);
+    /* Mais opaco/branco no hover */
+    border-color: #ffffff;
+    box-shadow:
+        0 14px 28px rgba(0, 0, 0, 0.06),
+        0 10px 10px rgba(0, 0, 0, 0.04),
+        inset 0 0 20px rgba(255, 255, 255, 0.8);
 }
 
 .link-card:hover::after,
