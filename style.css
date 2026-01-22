@@ -256,10 +256,10 @@ body {
 /* Botão de Canto no Header (O antigo flutuante, agora fixo no card) */
 .header-corner-btn {
     position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 48px;
-    height: 48px;
+    top: 16px;
+    right: 16px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
     display: grid;
     place-items: center;
@@ -279,8 +279,8 @@ body {
 }
 
 .header-corner-btn svg {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
 }
 
 .hero-actions {
