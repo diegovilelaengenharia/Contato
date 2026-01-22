@@ -772,14 +772,15 @@ body {
 }
 
 .floating-btn--client {
-    background: var(--color-primary-strong);
-    /* Green */
+    background: linear-gradient(135deg, #d4ac36 0%, #b48308 100%);
+    /* Dourado mais forte para botão pequeno */
     color: #ffffff;
 }
 
 .floating-btn--client:hover {
-    background: var(--color-primary);
-    box-shadow: 0 6px 16px rgba(25, 126, 99, 0.4);
+    background: linear-gradient(135deg, #e0bc4e 0%, #c4961b 100%);
+    box-shadow: 0 6px 16px rgba(212, 172, 55, 0.4);
+    transform: scale(1.1) rotate(-4deg);
 }
 
 .floating-btn--phone {
