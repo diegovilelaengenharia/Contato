@@ -7,7 +7,7 @@ RewriteCond %{HTTPS} off
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 # 2. Redirect /contato to Homepage
-RewriteRule ^contato/?$ / [L,R=301]
+# RewriteRule ^contato/?$ / [L,R=301]
 
 # Optional: Handle other common errors or basic security headers can vary by host, 
 # but keeping it simple as requested for now.
